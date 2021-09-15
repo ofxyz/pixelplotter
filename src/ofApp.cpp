@@ -2,6 +2,8 @@
 
 //--------------------------------------------------------------
 void ofApp::setup() {
+	ofLogToConsole();
+	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofEnableAntiAliasing();
 
 	oneShot   = false;
@@ -12,7 +14,7 @@ void ofApp::setup() {
 	penColor = ofColor(0, 0, 0, 200);
 	paperColor = ofColor(250, 250, 250);
 
-	img_name = "travel-bubbles-covid-19";
+	img_name = "spherereference";
 	img_ext  = "jpg";
 	img.load("src_img/"+ img_name + "." + img_ext);
 
@@ -26,7 +28,7 @@ void ofApp::setup() {
 	ofSetBackgroundAuto(false);
 	ofBackground(paperColor);
 	tileSize = float(ofGetWidth()) / tilesX;
-	tileAddon = 10;
+	tileAddon = 4;
 	
 	penWidth = 1.5;
 
@@ -50,6 +52,7 @@ void ofApp::draw(){
 
 		if (oneShot) {
 			ofBeginSaveScreenAsPDF("pixelplotted_" + img_name + "_" + ofGetTimestampString() + ".pdf", false);
+			ofBeginSaveScreenAsSVG("pixelplotted_" + img_name + "_" + ofGetTimestampString() + ".svg", false);
 		}
 		
 		ofNoFill();
@@ -68,19 +71,20 @@ void ofApp::draw(){
 				ofColor c = pixels.getColor(x, y);
 				float l = c.getLightness();
 
-				float size = (((180.0f - l) / 255.0f)*tileSize)+tileAddon;
-
-
-				float cx = (xCount * tileSize) - (size / 2);
-				float cy = (yCount * tileSize) - (size / 2);
+				float size = (((255.0f - l) / 255.0f)*tileSize)+tileAddon;
+				float cx = (xCount * tileSize) - (tileSize / 2);
+				float cy = (yCount * tileSize) - (tileSize / 2);
 				ofPushMatrix();
 				ofTranslate(cx, cy, 0);
 				ofRotateZDeg(l);
-				ofDrawRectangle(0, 0, size, size);
+				drawPixel(size);
 				ofPopMatrix();
-				
-				
 			}
+		}
+
+		if (oneShot) {
+			ofEndSaveScreenAsPDF();
+			ofEndSaveScreenAsSVG();
 		}
 
 		drawImage = false;
@@ -90,8 +94,15 @@ void ofApp::draw(){
 }
 
 //--------------------------------------------------------------
-void ofApp::drawPixel(float size, ofColor color) {
-	int x = 0;
+void ofApp::drawPixel(float size) {
+	int stepCount = (size / (penWidth * 4)) + 1; //  min 1;
+	float stepSize = tileSize / float(stepCount);
+	float startX = -(tileSize/2);
+	for (int i(0); i <= stepCount; i++) {
+		float x = startX + ofRandom(penWidth, stepSize-penWidth);
+		ofDrawLine(x, -(tileSize / 2)+ ofRandom(-2, 2), x, size + (tileSize / 4) + ofRandom(-2, 2));
+		startX += stepSize;
+	}
 }
 
 //--------------------------------------------------------------
