@@ -6,26 +6,24 @@ void ofApp::setup() {
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetBackgroundAuto(false);
 
-	oneShot   = false;
+	oneShot   = true;
 	drawImage = true;
-
 	showImage = false;
 
-	penColor = ofColor(0, 0, 0);
-	paperColor = ofColor(250, 250, 250);
+	paperColor = ofColor(255, 255, 255);
 
-	img_name = "32-32";
-	img_ext  = "png";
-	img.load("src_img/"+ img_name + "." + img_ext);
+	img_name = "treeman texture_01C_smaller.png";
+	img.load("src_img/"+ img_name);
 
 	//(img.getWidth() > img.getHeight()) ? isLandscape = true : isLandscape = false;
 
-	//imgRatio = float(img.getWidth()) / float(img.getHeight());
-	//img.resize(ofGetHeight()* imgRatio, ofGetHeight());
-	//img.resize(ofGetHeight(), ofGetHeight());
+	imgRatio = float(img.getWidth()) / float(img.getHeight());
+	//img.resize(32* imgRatio, ofGetHeight());
+	img.resize(64*4, 64*4);
 
-	tilesX = 32;
-	tilesY = 32;//imgRatio * tilesX;
+	tilesX = 64*4;
+	tilesY = 64*4;
+
 	ofSetBackgroundAuto(false);
 	//ofBackground(paperColor);
 	tileSize = ofGetWidth() / tilesX;
@@ -42,18 +40,17 @@ void ofApp::draw(){
 	
 	if (drawImage) {
 		
-		//ofBackground(paperColor);
+		ofBackground(paperColor);
 		
 		if (showImage) {
 			img.draw(0, 0);
 		}
 
 		if (oneShot) {
-			ofBeginSaveScreenAsPDF("pixelplotted_" + img_name + "_" + ofGetTimestampString() + ".pdf", false);
 			ofBeginSaveScreenAsSVG("pixelplotted_" + img_name + "_" + ofGetTimestampString() + ".svg", false);
 		}
 		
-		ofNoFill();
+		//ofNoFill();
 
 		pixels = img.getPixels();
 		int w = img.getWidth();
@@ -75,21 +72,27 @@ void ofApp::draw(){
 				float centery = aY + halfTile;
 
 				ofColor c = pixels.getColor( x, y);
-				float l = c.getHueAngle();
-				
-				ofSetColor(c);
-				ofSetLineWidth(halfTile);
+				float l = c.getLightness();
+
+				//c.normalize();
+				//c.setSaturation(255);
 
 				ofPushMatrix();
 				ofTranslate(centerx, centery, 0);
-				ofRotateZDeg(c.getHueAngle());
-				ofDrawLine(-halfTile, 0, halfTile, 0);
+				ofRotateZDeg(ofMap(l, 0, 255, 0, 360) );
+				
+				ofSetColor(c);
+				//ofSetLineWidth(100);
+				//ofDrawLine(-halfTile, 0, halfTile, 0);
+				float lineLength = halfTile + (abs(ofRandomf())* tileSize);
+				float thickness = halfTile;
+				ofDrawRectangle(-(lineLength*0.5), -(thickness * 0.5), lineLength, thickness);
+
 				ofPopMatrix();
 			}
 		}
 
 		if (oneShot) {
-			ofEndSaveScreenAsPDF();
 			ofEndSaveScreenAsSVG();
 		}
 
@@ -98,7 +101,6 @@ void ofApp::draw(){
 	}
 
 }
-
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
