@@ -9,6 +9,7 @@ class ofApp : public ofBaseApp{
 		void update();
 		void draw();
 		void drawPixel(float size);
+		void drawPixelLine(float size);
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -30,8 +31,7 @@ class ofApp : public ofBaseApp{
 		string img_name, img_ext;
 
 		float imgRatio;
-		float tilesX, tilesY, tileSize, tileAddon;
-		float penWidth;
+		int tilesX, tilesY, tileSize;
 
 		bool drawImage, showImage, isLandscape;
 		bool oneShot;

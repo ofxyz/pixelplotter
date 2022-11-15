@@ -4,34 +4,32 @@
 void ofApp::setup() {
 	ofLogToConsole();
 	ofSetLogLevel(OF_LOG_VERBOSE);
-	ofEnableAntiAliasing();
+	ofSetBackgroundAuto(false);
 
 	oneShot   = false;
-	drawImage = false;
+	drawImage = true;
 
 	showImage = false;
 
-	penColor = ofColor(0, 0, 0, 200);
+	penColor = ofColor(0, 0, 0);
 	paperColor = ofColor(250, 250, 250);
 
-	img_name = "spherereference";
-	img_ext  = "jpg";
+	img_name = "32-32";
+	img_ext  = "png";
 	img.load("src_img/"+ img_name + "." + img_ext);
 
-	(img.getWidth() > img.getHeight()) ? isLandscape = true : isLandscape = false;
+	//(img.getWidth() > img.getHeight()) ? isLandscape = true : isLandscape = false;
 
-	imgRatio = float(img.getWidth()) / float(img.getHeight());
-	img.resize(ofGetHeight()* imgRatio, ofGetHeight());
-	
-	tilesX = 120;
-	tilesY = imgRatio * tilesX;
+	//imgRatio = float(img.getWidth()) / float(img.getHeight());
+	//img.resize(ofGetHeight()* imgRatio, ofGetHeight());
+	//img.resize(ofGetHeight(), ofGetHeight());
+
+	tilesX = 32;
+	tilesY = 32;//imgRatio * tilesX;
 	ofSetBackgroundAuto(false);
-	ofBackground(paperColor);
-	tileSize = float(ofGetWidth()) / tilesX;
-	tileAddon = 4;
-	
-	penWidth = 1.5;
-
+	//ofBackground(paperColor);
+	tileSize = ofGetWidth() / tilesX;
+	ofLog() << "Tilesize: " << tileSize;
 }
 
 //--------------------------------------------------------------
@@ -44,7 +42,7 @@ void ofApp::draw(){
 	
 	if (drawImage) {
 		
-		ofBackground(paperColor);
+		//ofBackground(paperColor);
 		
 		if (showImage) {
 			img.draw(0, 0);
@@ -56,28 +54,36 @@ void ofApp::draw(){
 		}
 		
 		ofNoFill();
-		ofSetLineWidth(penWidth);
-		ofSetColor(penColor);
 
 		pixels = img.getPixels();
 		int w = img.getWidth();
 		int h = img.getHeight();
+
+		float halfTile = (float)tileSize / 2.0;
+
 		int yCount = 0;
-		for (int y = 0; y < h; y += tileSize) {
+		for (int y = 0; y < h; y += 1) {
 			yCount++;
 			int xCount = 0;
-			for (int x = 0; x < w; x += tileSize) {
+			for (int x = 0; x < w; x += 1) {
 				xCount++;
-				ofColor c = pixels.getColor(x, y);
-				float l = c.getLightness();
 
-				float size = (((255.0f - l) / 255.0f)*tileSize)+tileAddon;
-				float cx = (xCount * tileSize) - (tileSize / 2);
-				float cy = (yCount * tileSize) - (tileSize / 2);
+				int aX = (x * tileSize);
+				int aY = (y * tileSize);
+
+				float centerx = aX + halfTile;
+				float centery = aY + halfTile;
+
+				ofColor c = pixels.getColor( x, y);
+				float l = c.getHueAngle();
+				
+				ofSetColor(c);
+				ofSetLineWidth(halfTile);
+
 				ofPushMatrix();
-				ofTranslate(cx, cy, 0);
-				ofRotateZDeg(l);
-				drawPixel(size);
+				ofTranslate(centerx, centery, 0);
+				ofRotateZDeg(c.getHueAngle());
+				ofDrawLine(-halfTile, 0, halfTile, 0);
 				ofPopMatrix();
 			}
 		}
@@ -93,22 +99,13 @@ void ofApp::draw(){
 
 }
 
-//--------------------------------------------------------------
-void ofApp::drawPixel(float size) {
-	int stepCount = (size / (penWidth * 4)) + 1; //  min 1;
-	float stepSize = tileSize / float(stepCount);
-	float startX = -(tileSize/2);
-	for (int i(0); i <= stepCount; i++) {
-		float x = startX + ofRandom(penWidth, stepSize-penWidth);
-		ofDrawLine(x, -(tileSize / 2)+ ofRandom(-2, 2), x, size + (tileSize / 4) + ofRandom(-2, 2));
-		startX += stepSize;
-	}
-}
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 	drawImage = true;
-	oneShot = true;
+	if (key == 'p') {
+		oneShot = true;
+	}
 }
 
 //--------------------------------------------------------------
