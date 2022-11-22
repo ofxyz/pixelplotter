@@ -114,3 +114,6 @@ Desktop.ini
 
 # Visual Studio
 /.vs
+
+# App Data
+/bin/data/*.svg
