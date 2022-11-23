@@ -8,8 +8,12 @@ class ofApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
-		void drawPixel(float size);
-		void drawPixelLine(float size);
+		
+		void drawPixel_style000(float w, float h, ofColor c);
+		void drawPixel_style001(float w, float h, ofColor c);
+		void drawPixel_style002(float w, float h, ofColor c);
+		void drawPixel_style003(float w, float h, ofColor c);
+		void drawPixel_style004(float w, float h, ofColor c);
 
 		void keyPressed(int key);
 		void keyReleased(int key);
