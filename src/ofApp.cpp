@@ -5,44 +5,60 @@ void ofApp::setup() {
 	ofLogToConsole();
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetBackgroundAuto(false);
+	
+	// Setup Listeners Before adding GUI
+	// ---------------------------------
+	imageDropdown.populateFromDirectory(ofToDataPath("src_img"), { "png", "jpg", "jpeg"});	
+	imageDropdown.addListener(this, &ofApp::onImageChange);
+	imageDropdown.setSelectedValueByIndex(0, true);
 
-	oneShot   = true;
-	drawImage = true;
-	showImage = false;
+	styleDropdown = make_unique<ofxDropdown>("String Dropdown");
+	for (int i = 0; i < 5; i++) {
+		styleDropdown->add("Style " + std::to_string(i));
+	}
+	styleDropdown->disableMultipleSelection();
+	styleDropdown->enableCollapseOnSelection();
+	styleDropdown->setSelectedValueByIndex(0, false);
+
+	exportSVG.addListener(this, &ofApp::gui_exportSVG_pressed);
+	// ---------------------------------
+
+	gui.setup("Pixel Plotter", "guiSettings.xml");
+	gui.setPosition(ofGetWidth() - gui_width, ofGetHeight() - 200);
+	
+	gui.add(&imageDropdown);
+	gui.add(styleDropdown.get());
+
+	gui.add(tilesX.setup("Tile Count X", 64, 2, ofGetWidth()/3));
+	gui.add(showImage.setup("Show Image", false));
+	//gui.add(updateScreen.setup("Update"));
+	gui.add(exportSVG.setup("Export SVG"));
+
+	// ---------------------------------
 
 	paperColor = ofColor(200, 200, 200);
 
-	img_name = "32-32.png";
-	img.load("src_img/" + img_name);
+	ofBackground(paperColor);
 
-	(img.getWidth() >= img.getHeight()) ? isLandscape = true : isLandscape = false;
+}
 
-	if (isLandscape) {
-		imgRatio = float(img.getHeight()) / float(img.getWidth());
-		img.resize(ofGetWidth(), ofGetHeight() * imgRatio);
-	} else {
-		imgRatio = float(img.getWidth()) / float(img.getHeight());
-		img.resize(ofGetWidth() * imgRatio, ofGetHeight());
-	}
-	 
-	tilesX = 64*2;
-	tilesY = 64*2;
-
-	ofSetBackgroundAuto(false);
-	//ofBackground(paperColor);
-	tileSize = ofGetWidth() / tilesX;
-
+//--------------------------------------------------------------
+void ofApp::exit() {
+	//clean
+	exportSVG.removeListener(this, &ofApp::gui_exportSVG_pressed);
+	imageDropdown.removeListener(this, &ofApp::onImageChange);
+	return;
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	
+	tileSize = img.getWidth() / tilesX;
+	//ofLog() << styleDropdown->selectedValue;
+
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	
-	if (drawImage) {
 	
 		ofBackground(paperColor);
 		
@@ -51,12 +67,9 @@ void ofApp::draw(){
 		}
 
 		if (oneShot) {
-			ofBeginSaveScreenAsSVG("pixelplotted_" + img_name + "_" + ofGetTimestampString() + ".svg", false);
+			ofBeginSaveScreenAsSVG("pixelplotted_" + ofGetTimestampString() + ".svg", false);
 		}
 		
-		//ofNoFill();
-
-		pixels = img.getPixels();
 		int w = img.getWidth();
 		int h = img.getHeight();
 
@@ -72,7 +85,7 @@ void ofApp::draw(){
 				float centerx = x + halfTile;
 				float centery = y + halfTile;
 
-				ofColor c = pixels.getColor( x, y);
+				ofColor c = img.getPixels().getColor( x, y);
 
 				//if (l >= 250) continue;
 
@@ -84,7 +97,7 @@ void ofApp::draw(){
 				
 				//float lineLength = halfTile + (abs(ofRandomf())* tileSize);
 				
-				drawPixel_style004(tileSize, tileSize, c);
+				callStyle(styleDropdown->selectedValue, tileSize, tileSize, c);
 			
 				ofPopMatrix();
 			}
@@ -94,13 +107,38 @@ void ofApp::draw(){
 			ofEndSaveScreenAsSVG();
 		}
 
-		drawImage = false;
-		oneShot = false;
+		//if (ofGetFrameNum() > 10) {
+		//	drawScreen = false;
+		//}
+	//}
+
+	gui.draw();
+	oneShot = false;
+}
+
+void ofApp::callStyle(string stylename, float w, float h, ofColor c) {
+	if (stylename == "Style 1") {
+		Style_1(w, h, c);
+	}
+	else if (stylename == "Style 2") {
+		Style_2(w, h, c);
+	}
+	else if (stylename == "Style 3") {
+		Style_3(w, h, c);
+	}
+	else if (stylename == "Style 4") {
+		Style_4(w, h, c);
+	}
+	else if (stylename == "Style 5") {
+		Style_5(w, h, c);
+	}
+	else {
+		Style_0(w, h, c);
 	}
 }
 
 //--------------------------------------------------------------
-void ofApp::drawPixel_style000(float w, float h, ofColor c) {
+void ofApp::Style_0(float w, float h, ofColor c) {
 	ofPushStyle();
 	ofFill();
 	ofSetColor(c);
@@ -109,15 +147,15 @@ void ofApp::drawPixel_style000(float w, float h, ofColor c) {
 }
 
 //--------------------------------------------------------------
-void ofApp::drawPixel_style001( float w, float h, ofColor c) {
+void ofApp::Style_1( float w, float h, ofColor c) {
 	ofPushMatrix();
 	ofRotateZDeg(ofMap(c.getLightness(), 0, 255, 0, 360));
-	drawPixel_style000(w, h, c);
+	Style_0(w, h, c);
 	ofPopMatrix();
 }
 
 //--------------------------------------------------------------
-void ofApp::drawPixel_style002(float w, float h, ofColor c) {
+void ofApp::Style_2(float w, float h, ofColor c) {
 
 	// Needs to be CMY!
 
@@ -141,7 +179,7 @@ void ofApp::drawPixel_style002(float w, float h, ofColor c) {
 	ofPopStyle();
 }
 
-void ofApp::drawPixel_style003(float w, float h, ofColor c) {
+void ofApp::Style_3(float w, float h, ofColor c) {
 
 	ofPushStyle();
 	ofFill();
@@ -164,7 +202,7 @@ void ofApp::drawPixel_style003(float w, float h, ofColor c) {
 	ofPopStyle();
 }
 
-void ofApp::drawPixel_style004(float w, float h, ofColor c) {
+void ofApp::Style_4(float w, float h, ofColor c) {
 
 	ofPushStyle();
 	ofFill();
@@ -180,8 +218,63 @@ void ofApp::drawPixel_style004(float w, float h, ofColor c) {
 
 
 //--------------------------------------------------------------
+void ofApp::Style_5(float w, float h, ofColor c) {
+
+	// Needs to be CMY!
+
+	ofPushStyle();
+	ofFill();
+
+	float cHeight;
+
+	ofSetColor(255, 0, 0); // Red
+	cHeight = ofMap(c.r, 0, 255, 0, h);
+	ofDrawRectangle(-(w * 0.5), -(cHeight * 0.5), w, cHeight);
+
+	ofSetColor(0, 255, 0); // green
+	cHeight = ofMap(c.g, 0, 255, 0, h);
+	ofDrawRectangle(-(w * 0.5), -(cHeight * 0.5), w, cHeight);
+
+	ofSetColor(0, 0, 255); // Blue
+	cHeight = ofMap(c.b, 0, 255, 0, h);
+	ofDrawRectangle(-(w * 0.5), -(cHeight * 0.5), w, cHeight);
+
+	ofPopStyle();
+}
+
+void ofApp::loadImage(string& filepath) {
+	img.load(filepath);
+
+	(img.getWidth() >= img.getHeight()) ? isLandscape = true : isLandscape = false;
+
+	if (isLandscape) {
+		imgRatio = float(img.getHeight()) / float(img.getWidth());
+		img.resize(ofGetWidth(), ofGetHeight() * imgRatio);
+	}
+	else {
+		imgRatio = float(img.getWidth()) / float(img.getHeight());
+		img.resize(ofGetWidth() * imgRatio, ofGetHeight());
+	}
+}
+
+void ofApp::onImageChange(string& filepath) {
+	loadImage(filepath);
+}
+
+//--------------------------------------------------------------
+void ofApp::gui_updateScreen_pressed() {
+	drawScreen = true;
+}
+
+//--------------------------------------------------------------
+void ofApp::gui_exportSVG_pressed() {
+	drawScreen = true;
+	oneShot = true;
+}
+
+//--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-	drawImage = true;
+	drawScreen = true;
 	if (key == 'p') {
 		oneShot = true;
 	}

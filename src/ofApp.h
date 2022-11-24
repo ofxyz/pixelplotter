@@ -1,6 +1,8 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxGui.h"
+#include "ofxDropdown.h"
 
 class ofApp : public ofBaseApp{
 
@@ -8,12 +10,35 @@ class ofApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
+		void exit();
+
+		void onImageChange(string& file);
+		void loadImage(string& filepath);
+
+		ofxDropdown_<string> imageDropdown{ "Source Image" };
 		
-		void drawPixel_style000(float w, float h, ofColor c);
-		void drawPixel_style001(float w, float h, ofColor c);
-		void drawPixel_style002(float w, float h, ofColor c);
-		void drawPixel_style003(float w, float h, ofColor c);
-		void drawPixel_style004(float w, float h, ofColor c);
+		int gui_width = 320;
+
+		ofxPanel gui;
+		ofxIntSlider tilesX;
+		ofxFloatSlider gui_radial_noise_step, gui_radial_noise_amount;
+		ofxColorSlider gui_bar_colour;
+		ofxToggle showImage;
+		ofxButton exportSVG, updateScreen;
+
+		ofParameter<string> styleParameter;
+		unique_ptr<ofxDropdown> styleDropdown;
+
+		void gui_updateScreen_pressed();
+		void gui_exportSVG_pressed();
+
+		void callStyle(string stylename, float w, float h, ofColor c);
+		void Style_0(float w, float h, ofColor c);
+		void Style_1(float w, float h, ofColor c);
+		void Style_2(float w, float h, ofColor c);
+		void Style_3(float w, float h, ofColor c);
+		void Style_4(float w, float h, ofColor c);
+		void Style_5(float w, float h, ofColor c);
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -32,12 +57,10 @@ class ofApp : public ofBaseApp{
 		ofMesh mesh;
 		ofColor penColor, paperColor;
 
-		string img_name, img_ext;
+		float imgRatio, tileSize;
 
-		float imgRatio;
-		int tilesX, tilesY, tileSize;
+		bool drawScreen, oneShot, isLandscape;
 
-		bool drawImage, showImage, isLandscape;
-		bool oneShot;
-	
+		string style = "Style 0";
+
 };
