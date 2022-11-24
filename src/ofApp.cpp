@@ -12,13 +12,24 @@ void ofApp::setup() {
 	imageDropdown.addListener(this, &ofApp::onImageChange);
 	imageDropdown.setSelectedValueByIndex(0, true);
 
-	styleDropdown = make_unique<ofxDropdown>("String Dropdown");
-	for (int i = 0; i < 5; i++) {
+	styleDropdown = make_unique<ofxDropdown>("Plot Style");
+	for (int i = 0; i <= 5; i++) {
 		styleDropdown->add("Style " + std::to_string(i));
 	}
 	styleDropdown->disableMultipleSelection();
 	styleDropdown->enableCollapseOnSelection();
 	styleDropdown->setSelectedValueByIndex(0, false);
+
+	blendDropdown = make_unique<ofxDropdown>("Blend Mode");
+	blendDropdown->add("OF_BLENDMODE_DISABLED");
+	blendDropdown->add("OF_BLENDMODE_ALPHA");
+	blendDropdown->add("OF_BLENDMODE_ADD");
+	blendDropdown->add("OF_BLENDMODE_SUBTRACT");
+	blendDropdown->add("OF_BLENDMODE_MULTIPLY");
+	blendDropdown->add("OF_BLENDMODE_SCREEN");
+	blendDropdown->disableMultipleSelection();
+	blendDropdown->enableCollapseOnSelection();
+	blendDropdown->setSelectedValueByIndex(0, false);
 
 	exportSVG.addListener(this, &ofApp::gui_exportSVG_pressed);
 	// ---------------------------------
@@ -28,15 +39,17 @@ void ofApp::setup() {
 	
 	gui.add(&imageDropdown);
 	gui.add(styleDropdown.get());
+	gui.add(blendDropdown.get());
+
+	gui.add(normalise.setup("Normalise Colours", false));
 
 	gui.add(tilesX.setup("Tile Count X", 64, 2, ofGetWidth()/3));
+	gui.add(paperColor.setup("Paper Color", ofColor(200, 200, 200), ofColor(0, 0, 0), ofColor(255, 255, 255)));
+
 	gui.add(showImage.setup("Show Image", false));
-	//gui.add(updateScreen.setup("Update"));
 	gui.add(exportSVG.setup("Export SVG"));
 
 	// ---------------------------------
-
-	paperColor = ofColor(200, 200, 200);
 
 	ofBackground(paperColor);
 
@@ -53,8 +66,6 @@ void ofApp::exit() {
 //--------------------------------------------------------------
 void ofApp::update(){
 	tileSize = img.getWidth() / tilesX;
-	//ofLog() << styleDropdown->selectedValue;
-
 }
 
 //--------------------------------------------------------------
@@ -73,7 +84,7 @@ void ofApp::draw(){
 		int w = img.getWidth();
 		int h = img.getHeight();
 
-		float halfTile = (float)tileSize / 2.0;
+		float halfTile = (float)tileSize / 2.0; 
 
 		int yCount = 0;
 		for (int y = 0; y < h; y += tileSize) {
@@ -89,7 +100,10 @@ void ofApp::draw(){
 
 				//if (l >= 250) continue;
 
-				//c.normalize();
+				if (normalise) {
+					c.normalize();
+				}
+
 				//c.setSaturation(255);
 
 				ofPushMatrix();
@@ -117,6 +131,29 @@ void ofApp::draw(){
 }
 
 void ofApp::callStyle(string stylename, float w, float h, ofColor c) {
+
+	string currentBlendmode = blendDropdown->selectedValue;
+
+	if (currentBlendmode == "OF_BLENDMODE_ALPHA") {
+		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+	}
+	else if (currentBlendmode == "OF_BLENDMODE_ADD") {
+		ofEnableBlendMode(OF_BLENDMODE_ADD);
+	}
+	else if (currentBlendmode == "OF_BLENDMODE_SUBTRACT") {
+		ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
+	}
+	else if (currentBlendmode == "OF_BLENDMODE_MULTIPLY") {
+		ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
+	}
+	else if (currentBlendmode == "OF_BLENDMODE_SCREEN") {
+		ofEnableBlendMode(OF_BLENDMODE_SCREEN);
+	}
+	else {
+		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+	}
+
+
 	if (stylename == "Style 1") {
 		Style_1(w, h, c);
 	}
@@ -135,6 +172,8 @@ void ofApp::callStyle(string stylename, float w, float h, ofColor c) {
 	else {
 		Style_0(w, h, c);
 	}
+
+	ofDisableBlendMode();
 }
 
 //--------------------------------------------------------------
@@ -220,25 +259,24 @@ void ofApp::Style_4(float w, float h, ofColor c) {
 //--------------------------------------------------------------
 void ofApp::Style_5(float w, float h, ofColor c) {
 
-	// Needs to be CMY!
-
+	
 	ofPushStyle();
 	ofFill();
-
+	ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 	float cHeight;
 
-	ofSetColor(255, 0, 0); // Red
+	ofSetColor(255, 0, 0); // Cyan
 	cHeight = ofMap(c.r, 0, 255, 0, h);
 	ofDrawRectangle(-(w * 0.5), -(cHeight * 0.5), w, cHeight);
 
-	ofSetColor(0, 255, 0); // green
+	ofSetColor(0, 255, 0); // Magenta
 	cHeight = ofMap(c.g, 0, 255, 0, h);
 	ofDrawRectangle(-(w * 0.5), -(cHeight * 0.5), w, cHeight);
 
 	ofSetColor(0, 0, 255); // Blue
 	cHeight = ofMap(c.b, 0, 255, 0, h);
 	ofDrawRectangle(-(w * 0.5), -(cHeight * 0.5), w, cHeight);
-
+	ofDisableBlendMode();
 	ofPopStyle();
 }
 

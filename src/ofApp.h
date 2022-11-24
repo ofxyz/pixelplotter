@@ -16,18 +16,15 @@ class ofApp : public ofBaseApp{
 		void loadImage(string& filepath);
 
 		ofxDropdown_<string> imageDropdown{ "Source Image" };
-		
-		int gui_width = 320;
 
 		ofxPanel gui;
 		ofxIntSlider tilesX;
-		ofxFloatSlider gui_radial_noise_step, gui_radial_noise_amount;
-		ofxColorSlider gui_bar_colour;
-		ofxToggle showImage;
-		ofxButton exportSVG, updateScreen;
+		ofxColorSlider paperColor;
+		ofxToggle showImage, normalise;
+		ofxButton exportSVG;
 
-		ofParameter<string> styleParameter;
 		unique_ptr<ofxDropdown> styleDropdown;
+		unique_ptr<ofxDropdown> blendDropdown;
 
 		void gui_updateScreen_pressed();
 		void gui_exportSVG_pressed();
@@ -55,12 +52,11 @@ class ofApp : public ofBaseApp{
 		ofImage img;
 		ofPixels pixels;
 		ofMesh mesh;
-		ofColor penColor, paperColor;
+		ofColor penColor;
 
+		int gui_width = 320;
 		float imgRatio, tileSize;
 
 		bool drawScreen, oneShot, isLandscape;
-
-		string style = "Style 0";
 
 };

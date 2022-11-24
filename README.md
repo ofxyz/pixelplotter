@@ -4,5 +4,5 @@
 
 ## dependencies
 
-  - [ofxCv](https://github.com/kylemcdonald/ofxCv)
-  - [ofxImGui](https://github.com/jvcleave/ofxImGui)
+- ofxDropdown
+- ofxGui
