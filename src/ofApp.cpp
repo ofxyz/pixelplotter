@@ -5,6 +5,8 @@ void ofApp::setup() {
 	ofLogToConsole();
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetBackgroundAuto(false);
+
+	fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
 	
 	// Setup Listeners Before adding GUI
 	// ---------------------------------
@@ -48,11 +50,10 @@ void ofApp::setup() {
 
 	gui.add(showImage.setup("Show Image", false));
 	gui.add(exportSVG.setup("Export SVG"));
-
+	
 	// ---------------------------------
 
 	ofBackground(paperColor);
-
 }
 
 //--------------------------------------------------------------
@@ -64,74 +65,102 @@ void ofApp::exit() {
 }
 
 //--------------------------------------------------------------
-void ofApp::update(){
-	tileSize = img.getWidth() / tilesX;
+void ofApp::update() {
+	if (ofGetFrameNum() % 250 == 0) updateFbo();
+}
+
+void ofApp::updateFbo() {
+	fbo.begin();
+	ofClear(paperColor);
+	setBlendmode();
+
+	int w = img.getWidth();
+	int h = img.getHeight();
+	float tileSize = w / tilesX;
+
+	float halfTile = (float)tileSize / 2.0;
+
+	int yCount = 0;
+	for (int y = 0; y < h; y += tileSize) {
+		yCount++;
+		int xCount = 0;
+		for (int x = 0; x < w; x += tileSize) {
+			xCount++;
+
+			float centerx = x + halfTile;
+			float centery = y + halfTile;
+
+			ofColor c = img.getPixels().getColor(x, y);
+
+			//if (l >= 250) continue;
+
+			if (normalise) {
+				c.normalize();
+			}
+
+			//c.setSaturation(255);
+
+			ofPushMatrix();
+			ofTranslate(centerx, centery, 0);
+
+			//float lineLength = halfTile + (abs(ofRandomf())* tileSize);
+
+			callStyle(styleDropdown->selectedValue, tileSize, tileSize, c);
+
+			ofPopMatrix();
+		}
+	}
+
+	ofDisableBlendMode();
+	fbo.end();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	
-		ofBackground(paperColor);
+
+	ofBackground(paperColor);
 		
-		if (showImage) {
-			img.draw(0, 0);
-		}
+	if (showImage) {
+		img.draw(0, 0);
+	}
 
-		if (oneShot) {
-			ofBeginSaveScreenAsSVG("pixelplotted_" + ofGetTimestampString() + ".svg", false);
-		}
-		
-		int w = img.getWidth();
-		int h = img.getHeight();
+	if (oneShot) {
+		ofBeginSaveScreenAsSVG("pixelplotted_" + ofGetTimestampString() + ".svg", false);
+	}
 
-		float halfTile = (float)tileSize / 2.0; 
+	fbo.draw(0, 0);
 
-		int yCount = 0;
-		for (int y = 0; y < h; y += tileSize) {
-			yCount++;
-			int xCount = 0;
-			for (int x = 0; x < w; x += tileSize) {
-				xCount++;
-
-				float centerx = x + halfTile;
-				float centery = y + halfTile;
-
-				ofColor c = img.getPixels().getColor( x, y);
-
-				//if (l >= 250) continue;
-
-				if (normalise) {
-					c.normalize();
-				}
-
-				//c.setSaturation(255);
-
-				ofPushMatrix();
-				ofTranslate(centerx, centery, 0);
-				
-				//float lineLength = halfTile + (abs(ofRandomf())* tileSize);
-				
-				callStyle(styleDropdown->selectedValue, tileSize, tileSize, c);
-			
-				ofPopMatrix();
-			}
-		}
-
-		if (oneShot) {
-			ofEndSaveScreenAsSVG();
-		}
-
-		//if (ofGetFrameNum() > 10) {
-		//	drawScreen = false;
-		//}
-	//}
+	if (oneShot) {
+		ofEndSaveScreenAsSVG();
+		oneShot = false;
+	}
 
 	gui.draw();
-	oneShot = false;
 }
 
 void ofApp::callStyle(string stylename, float w, float h, ofColor c) {
 
+	if (stylename == "Style 1") {
+		Style_1(w, h, c);
+	}
+	else if (stylename == "Style 2") {
+		Style_2(w, h, c);
+	}
+	else if (stylename == "Style 3") {
+		Style_3(w, h, c);
+	}
+	else if (stylename == "Style 4") {
+		Style_4(w, h, c);
+	}
+	else if (stylename == "Style 5") {
+		Style_5(w, h, c);
+	}
+	else {
+		Style_0(w, h, c);
+	}
+}
+
+void ofApp::setBlendmode() {
 	string currentBlendmode = blendDropdown->selectedValue;
 
 	if (currentBlendmode == "OF_BLENDMODE_ALPHA") {
@@ -152,28 +181,6 @@ void ofApp::callStyle(string stylename, float w, float h, ofColor c) {
 	else {
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 	}
-
-
-	if (stylename == "Style 1") {
-		Style_1(w, h, c);
-	}
-	else if (stylename == "Style 2") {
-		Style_2(w, h, c);
-	}
-	else if (stylename == "Style 3") {
-		Style_3(w, h, c);
-	}
-	else if (stylename == "Style 4") {
-		Style_4(w, h, c);
-	}
-	else if (stylename == "Style 5") {
-		Style_5(w, h, c);
-	}
-	else {
-		Style_0(w, h, c);
-	}
-
-	ofDisableBlendMode();
 }
 
 //--------------------------------------------------------------
@@ -195,8 +202,6 @@ void ofApp::Style_1( float w, float h, ofColor c) {
 
 //--------------------------------------------------------------
 void ofApp::Style_2(float w, float h, ofColor c) {
-
-	// Needs to be CMY!
 
 	ofPushStyle();
 	ofFill();
@@ -258,25 +263,28 @@ void ofApp::Style_4(float w, float h, ofColor c) {
 
 //--------------------------------------------------------------
 void ofApp::Style_5(float w, float h, ofColor c) {
-
-	
 	ofPushStyle();
 	ofFill();
-	ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+
 	float cHeight;
+	ofVec4f cmyk = getCMYK(c);
 
-	ofSetColor(255, 0, 0); // Cyan
-	cHeight = ofMap(c.r, 0, 255, 0, h);
+	ofSetColor(0, 174, 239); // Cyan
+	cHeight = ofMap(cmyk[0], 0, 1, 0, h);
 	ofDrawRectangle(-(w * 0.5), -(cHeight * 0.5), w, cHeight);
 
-	ofSetColor(0, 255, 0); // Magenta
-	cHeight = ofMap(c.g, 0, 255, 0, h);
+	ofSetColor(236, 0, 140); // Magenta
+	cHeight = ofMap(cmyk[1], 0, 1, 0, h);
 	ofDrawRectangle(-(w * 0.5), -(cHeight * 0.5), w, cHeight);
 
-	ofSetColor(0, 0, 255); // Blue
-	cHeight = ofMap(c.b, 0, 255, 0, h);
+	ofSetColor(255, 242, 0); // Yellow
+	cHeight = ofMap(cmyk[2], 0, 1, 0, h);
 	ofDrawRectangle(-(w * 0.5), -(cHeight * 0.5), w, cHeight);
-	ofDisableBlendMode();
+
+	ofSetColor(0, 0, 0); // Black
+	cHeight = ofMap(cmyk[3], 0, 1, 0, h);
+	ofDrawRectangle(-(w * 0.5), -(cHeight * 0.5), w, cHeight);
+
 	ofPopStyle();
 }
 
@@ -293,26 +301,33 @@ void ofApp::loadImage(string& filepath) {
 		imgRatio = float(img.getWidth()) / float(img.getHeight());
 		img.resize(ofGetWidth() * imgRatio, ofGetHeight());
 	}
+
 }
 
 void ofApp::onImageChange(string& filepath) {
 	loadImage(filepath);
 }
 
-//--------------------------------------------------------------
-void ofApp::gui_updateScreen_pressed() {
-	drawScreen = true;
+ofVec4f ofApp::getCMYK(ofColor rgb) {
+	double dr = (double)rgb.r / 255;
+	double dg = (double)rgb.g / 255;
+	double db = (double)rgb.b / 255;
+	double k = 1 - max(max(dr, dg), db);
+	double c = (1 - dr - k) / (1 - k);
+	double m = (1 - dg - k) / (1 - k);
+	double y = (1 - db - k) / (1 - k);
+
+	return ofVec4f(c, m, y, k);
 }
 
 //--------------------------------------------------------------
 void ofApp::gui_exportSVG_pressed() {
-	drawScreen = true;
 	oneShot = true;
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-	drawScreen = true;
+	updateFbo();
 	if (key == 'p') {
 		oneShot = true;
 	}

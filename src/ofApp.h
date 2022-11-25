@@ -29,6 +29,9 @@ class ofApp : public ofBaseApp{
 		void gui_updateScreen_pressed();
 		void gui_exportSVG_pressed();
 
+		void setBlendmode();
+		void updateFbo();
+
 		void callStyle(string stylename, float w, float h, ofColor c);
 		void Style_0(float w, float h, ofColor c);
 		void Style_1(float w, float h, ofColor c);
@@ -55,8 +58,13 @@ class ofApp : public ofBaseApp{
 		ofColor penColor;
 
 		int gui_width = 320;
-		float imgRatio, tileSize;
+		float imgRatio;
 
-		bool drawScreen, oneShot, isLandscape;
+		bool oneShot, isLandscape;
+
+		ofVec4f getCMYK(ofColor rgb);
+
+		ofFbo fbo;
+		
 
 };
