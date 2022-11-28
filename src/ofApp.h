@@ -19,8 +19,9 @@ class ofApp : public ofBaseApp{
 
 		ofxPanel gui;
 		ofxIntSlider tilesX;
+		ofxFloatSlider addonx, addony;
 		ofxColorSlider paperColor;
-		ofxToggle showImage, normalise;
+		ofxToggle showImage, normalise, roundPixels;
 		ofxButton exportSVG;
 
 		unique_ptr<ofxDropdown> styleDropdown;
@@ -33,12 +34,14 @@ class ofApp : public ofBaseApp{
 		void updateFbo();
 
 		void callStyle(string stylename, float w, float h, ofColor c);
-		void Style_0(float w, float h, ofColor c);
-		void Style_1(float w, float h, ofColor c);
-		void Style_2(float w, float h, ofColor c);
-		void Style_3(float w, float h, ofColor c);
-		void Style_4(float w, float h, ofColor c);
-		void Style_5(float w, float h, ofColor c);
+		void Style_Pixelate(float w, float h, ofColor c);
+		void Style_Lightness_Rotation(float w, float h, ofColor c);
+		void Style_RGB_Seperation_1(float w, float h, ofColor c);
+		void Style_RGB_Seperation_2(float w, float h, ofColor c);
+		void Style_RGB_Seperation_3(float w, float h, ofColor c);
+		void Style_Pixelate_Brightness_Width(float w, float h, ofColor c);
+		void Style_CMYK_Seperation_1(float w, float h, ofColor c);
+		void Style_CMYK_Seperation_2(float w, float h, ofColor c);
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -60,7 +63,7 @@ class ofApp : public ofBaseApp{
 		int gui_width = 320;
 		float imgRatio;
 
-		bool oneShot, isLandscape;
+		bool saveSVG, isLandscape;
 
 		ofVec4f getCMYK(ofColor rgb);
 
