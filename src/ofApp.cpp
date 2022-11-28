@@ -1,5 +1,12 @@
 #include "ofApp.h"
 
+/*
+   Use colour pallete, restrict colours
+   Make some dots!
+   Posterise to a pallette. Set high mid low to start?
+   Or dumb down the colours then ability to remap?
+*/
+
 //--------------------------------------------------------------
 void ofApp::setup() {
 	ofLogToConsole();
@@ -22,8 +29,10 @@ void ofApp::setup() {
 	styleDropdown->add("RGB Seperation 1"); // Order Control?
 	styleDropdown->add("RGB Seperation 2");
 	styleDropdown->add("RGB Seperation 3");
+	styleDropdown->add("RGB Seperation 4");
 	styleDropdown->add("CMYK Seperation 1");
 	styleDropdown->add("CMYK Seperation 2");
+	styleDropdown->add("CMYK Seperation 3");
 
 	styleDropdown->disableMultipleSelection();
 	styleDropdown->enableCollapseOnSelection();
@@ -76,7 +85,7 @@ void ofApp::exit() {
 
 //--------------------------------------------------------------
 void ofApp::update() {
-	if (ofGetFrameNum() % 250 == 0) updateFbo();
+	if (ofGetFrameNum() % 500 == 0) updateFbo();
 }
 
 void ofApp::updateFbo() {
@@ -91,9 +100,9 @@ void ofApp::updateFbo() {
 
 	int w = img.getWidth();
 	int h = img.getHeight();
-	float tileSize = w / tilesX;
+	float tileSize = (float)w / (float)tilesX;
 
-	float halfTile = (float)tileSize / 2.0;
+	float halfTile = tileSize / 2.0;
 
 	int yCount = 0;
 	for (int y = 0; y < h; y += tileSize) {
@@ -170,11 +179,17 @@ void ofApp::callStyle(string stylename, float w, float h, ofColor c) {
 	else if (stylename == "RGB Seperation 3") {
 		Style_RGB_Seperation_3(w, h, c);
 	}
+	else if (stylename == "RGB Seperation 4") {
+		Style_RGB_Seperation_4(w, h, c);
+	}
 	else if (stylename == "CMYK Seperation 1") {
 		Style_CMYK_Seperation_1(w, h, c);
 	}
 	else if (stylename == "CMYK Seperation 2") {
 		Style_CMYK_Seperation_2(w, h, c);
+	}
+	else if (stylename == "CMYK Seperation 3") {
+		Style_CMYK_Seperation_3(w, h, c);
 	}
 }
 
@@ -277,6 +292,35 @@ void ofApp::Style_RGB_Seperation_3(float w, float h, ofColor c) {
 	ofPopMatrix();
 }
 
+//--------------------------------------------------------------
+void ofApp::Style_RGB_Seperation_4(float w, float h, ofColor c) {
+
+	float cWidth;
+	float maxC = 765; // 255 * 3;
+
+	float left = maxC - (c.r + c.g + c.b);
+	float addon = ceil(left / 3);
+
+	ofPushMatrix(); // offset
+
+	cWidth = ofMap(c.r + addon, 0, maxC, 0, w);
+	ofTranslate(-(w*0.5)+(cWidth*0.5), 0, 0);
+	Style_Pixelate(cWidth, h, ofColor(255, 0, 0));
+
+	ofTranslate(cWidth*0.5, 0, 0);
+	cWidth = ofMap(c.g + addon, 0, maxC, 0, w);
+	ofTranslate(cWidth * 0.5, 0, 0);
+	Style_Pixelate(cWidth, h, ofColor(0, 255, 0));
+
+	ofTranslate(cWidth * 0.5, 0, 0);
+	cWidth = ofMap(c.b + addon, 0, maxC, 0, w);
+	ofTranslate(cWidth * 0.5, 0, 0);
+	Style_Pixelate(cWidth, h, ofColor(0, 0, 255));
+
+	ofPopMatrix();
+
+}
+
 void ofApp::Style_Pixelate_Brightness_Width(float w, float h, ofColor c) {
 
 	float cWidth = ofMap(c.getBrightness(), 0, 255, 0, w);
@@ -284,28 +328,41 @@ void ofApp::Style_Pixelate_Brightness_Width(float w, float h, ofColor c) {
 
 }
 
-
 //--------------------------------------------------------------
-void ofApp::Style_CMYK_Seperation_1(float w, float h, ofColor c) {
+void ofApp::Style_CMYK_Seperation_2(float w, float h, ofColor c) {
 	float cHeight;
 	ofVec4f cmyk = getCMYK(c);
 
+	float maxOffset = w*0.5;
+	float minOffset = -maxOffset;
+
+	ofPushMatrix();
+	ofTranslate(ofRandom(minOffset, maxOffset), 0, 0);
 	cHeight = ofMap(cmyk[0], 0, 1, 0, h);
-	Style_Pixelate(w, cHeight, ofColor(0, 174, 239)); // Cyan
+	Style_Pixelate(cHeight, cHeight, ofColor(0, 174, 239)); // Cyan
+	ofPopMatrix();
 
+	ofPushMatrix();
+	ofTranslate(ofRandom(minOffset, maxOffset), 0, 0);
 	cHeight = ofMap(cmyk[1], 0, 1, 0, h);
-	Style_Pixelate(w, cHeight, ofColor(236, 0, 140)); // Magenta
+	Style_Pixelate(cHeight, cHeight, ofColor(236, 0, 140)); // Magenta
+	ofPopMatrix();
 
+	ofPushMatrix();
+	ofTranslate(ofRandom(minOffset, maxOffset), 0, 0);
 	cHeight = ofMap(cmyk[2], 0, 1, 0, h);
-	Style_Pixelate(w, cHeight, ofColor(255, 242, 0)); // Yellow
+	Style_Pixelate(cHeight, cHeight, ofColor(255, 242, 0)); // Yellow
+	ofPopMatrix();
 
+	ofPushMatrix();
+	ofTranslate(ofRandom(minOffset, maxOffset), 0, 0);
 	cHeight = ofMap(cmyk[3], 0, 1, 0, h);
-	Style_Pixelate(w, cHeight, ofColor(0, 0, 0)); // Black
-
+	Style_Pixelate(cHeight, cHeight, ofColor(0, 0, 0)); // Black
+	ofPopMatrix();
 }
 
 //--------------------------------------------------------------
-void ofApp::Style_CMYK_Seperation_2(float w, float h, ofColor c) {
+void ofApp::Style_CMYK_Seperation_1(float w, float h, ofColor c) {
 	float cWidth, cHeight;
 	ofVec4f cmyk = getCMYK(c);
 
@@ -324,6 +381,25 @@ void ofApp::Style_CMYK_Seperation_2(float w, float h, ofColor c) {
 	cWidth  = ofMap(cmyk[3], 0, 1, 0, w);
 	cHeight = ofMap(cmyk[3], 0, 1, 0, h);
 	Style_Pixelate(cWidth, cHeight, ofColor(0, 0, 0)); // Black
+
+}
+
+//--------------------------------------------------------------
+void ofApp::Style_CMYK_Seperation_3(float w, float h, ofColor c) {
+	float cWidth;
+	ofVec4f cmyk = getCMYK(c);
+
+	cWidth = ofMap(cmyk[0], 0, 1, 0, w);
+	Style_Pixelate(cWidth, cWidth, ofColor(0, 174, 239)); // Cyan
+
+	cWidth = ofMap(cmyk[1], 0, 1, 0, w);
+	Style_Pixelate(cWidth, cWidth, ofColor(236, 0, 140)); // Magenta
+
+	cWidth = ofMap(cmyk[2], 0, 1, 0, w);
+	Style_Pixelate(cWidth, cWidth, ofColor(255, 242, 0)); // Yellow
+
+	cWidth = ofMap(cmyk[3], 0, 1, 0, w);
+	Style_Pixelate(cWidth, cWidth, ofColor(0, 0, 0)); // Black
 
 }
 

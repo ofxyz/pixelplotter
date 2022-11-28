@@ -39,9 +39,11 @@ class ofApp : public ofBaseApp{
 		void Style_RGB_Seperation_1(float w, float h, ofColor c);
 		void Style_RGB_Seperation_2(float w, float h, ofColor c);
 		void Style_RGB_Seperation_3(float w, float h, ofColor c);
+		void Style_RGB_Seperation_4(float w, float h, ofColor c);
 		void Style_Pixelate_Brightness_Width(float w, float h, ofColor c);
 		void Style_CMYK_Seperation_1(float w, float h, ofColor c);
 		void Style_CMYK_Seperation_2(float w, float h, ofColor c);
+		void Style_CMYK_Seperation_3(float w, float h, ofColor c);
 
 		void keyPressed(int key);
 		void keyReleased(int key);
