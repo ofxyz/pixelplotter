@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<Pixel_Plotter>
+	<Source_Image>D:\OpenFrameworks\apps\pixelplotter\bin\data\src_img\PART 01_AH.png</Source_Image>
+	<Plot_Style>CMYK Seperation 6</Plot_Style>
+	<Blend_Mode>OF_BLENDMODE_MULTIPLY</Blend_Mode>
+	<Normalise_Colours>0</Normalise_Colours>
+	<Tile_Count_X>210</Tile_Count_X>
+	<X_addon>8</X_addon>
+	<Y_addon>0</Y_addon>
+	<Paper_Color>255, 255, 255, 255</Paper_Color>
+	<Round_Pixels>0</Round_Pixels>
+	<Show_Image>0</Show_Image>
+</Pixel_Plotter>

@@ -44,6 +44,9 @@ class ofApp : public ofBaseApp{
 		void Style_CMYK_Seperation_1(float w, float h, ofColor c);
 		void Style_CMYK_Seperation_2(float w, float h, ofColor c);
 		void Style_CMYK_Seperation_3(float w, float h, ofColor c);
+		void Style_CMYK_Seperation_4(float w, float h, ofColor c);
+		void Style_CMYK_Seperation_5(float w, float h, ofColor c);
+		void Style_CMYK_Seperation_6(float w, float h, ofColor c);
 
 		void keyPressed(int key);
 		void keyReleased(int key);
