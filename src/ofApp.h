@@ -27,6 +27,7 @@ class ofApp : public ofBaseApp{
 		unique_ptr<ofxDropdown> styleDropdown;
 		unique_ptr<ofxDropdown> blendDropdown;
 
+		float percentage(float percent, float total);
 		void gui_updateScreen_pressed();
 		void gui_exportSVG_pressed();
 
@@ -47,6 +48,7 @@ class ofApp : public ofBaseApp{
 		void Style_CMYK_Seperation_4(float w, float h, ofColor c);
 		void Style_CMYK_Seperation_5(float w, float h, ofColor c);
 		void Style_CMYK_Seperation_6(float w, float h, ofColor c);
+		void Style_CMYK_Seperation_7(float w, float h, ofColor c);
 
 		void keyPressed(int key);
 		void keyReleased(int key);

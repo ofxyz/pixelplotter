@@ -44,6 +44,7 @@ void ofApp::setup() {
 	styleDropdown->add("CMYK Seperation 4");
 	styleDropdown->add("CMYK Seperation 5");
 	styleDropdown->add("CMYK Seperation 6");
+	styleDropdown->add("CMYK Seperation 7");
 
 	styleDropdown->disableMultipleSelection();
 	styleDropdown->enableCollapseOnSelection();
@@ -211,6 +212,9 @@ void ofApp::callStyle(string stylename, float w, float h, ofColor c) {
 	}
 	else if (stylename == "CMYK Seperation 6") {
 		Style_CMYK_Seperation_6(w, h, c);
+	}
+	else if (stylename == "CMYK Seperation 7") {
+		Style_CMYK_Seperation_7(w, h, c);
 	}
 }
 
@@ -525,6 +529,43 @@ void ofApp::Style_CMYK_Seperation_6(float w, float h, ofColor c) {
 	cHeight = ofMap(cmyk[2], 0, 1, 2, h / 2);
 	Style_Pixelate(w, cHeight, ofColor(255, 242, 0, 130)); // Yellow
 
+}
+
+float ofApp::percentage(float percent, float total) {
+	return (percent / 100) * total;
+}
+
+//--------------------------------------------------------------
+void ofApp::Style_CMYK_Seperation_7(float w, float h, ofColor c) {
+	float cHeight;
+	ofVec4f cmyk = getCMYK(c);
+
+	float total = cmyk[0] + cmyk[1] + cmyk[2];
+	float pc = (100 * cmyk[0]) / total;
+	float pm = (100 * cmyk[1]) / total;
+	float py = (100 * cmyk[2]) / total;
+
+	cHeight = percentage(pc, h);
+	ofPushMatrix();
+	ofTranslate(0, (-h * 0.5) + (cHeight * 0.5), 0);
+	Style_Pixelate(w, cHeight, ofColor(0, 174, 239)); // Cyan
+	
+	ofTranslate(0, cHeight * 0.5, 0);
+
+	cHeight = percentage(pm, h);
+	ofTranslate(0, cHeight * 0.5, 0);
+	Style_Pixelate(w, cHeight, ofColor(236, 0, 140)); // Magenta
+
+	ofTranslate(0, cHeight * 0.5, 0);
+
+	cHeight = percentage(py, h);
+	ofTranslate(0, cHeight * 0.5, 0);
+	Style_Pixelate(w, cHeight, ofColor(255, 242, 0)); // Yellow
+
+	ofPopMatrix();
+
+	cHeight = ofMap(cmyk[3], 0, 1, 0, h);
+	Style_Pixelate(w, cHeight, ofColor(0, 0, 0)); // Black
 }
 
 void ofApp::loadImage(string& filepath) {
