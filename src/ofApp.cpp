@@ -2,9 +2,17 @@
 
 /*
    Use colour pallete, restrict colours
-   Make some dots!
+   Make some dots
    Posterise to a pallette. Set high mid low to start?
    Or dumb down the colours then ability to remap?
+
+   // Test file bigger size
+   // Load image? NOt always correct dimension
+   // overprint does not always looks as good
+   // Export ellipses working?
+   // Calculate for xaddon yaddon // Move 
+   // Add CMYK rotate
+
 */
 
 //--------------------------------------------------------------
@@ -14,11 +22,11 @@ void ofApp::setup() {
 	ofSetBackgroundAuto(false);
 	ofSetCircleResolution(100);
 
-	fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+	
 	
 	// Setup Listeners Before adding GUI
 	// ---------------------------------
-	imageDropdown.populateFromDirectory(ofToDataPath("src_img"), { "png", "jpg", "jpeg"});	
+	imageDropdown.populateFromDirectory(ofToDataPath("src_img"), { "gif", "png", "jpg", "jpeg"});	
 	imageDropdown.addListener(this, &ofApp::onImageChange);
 	imageDropdown.setSelectedValueByIndex(ofRandom(0, 5), true);
 
@@ -89,11 +97,12 @@ void ofApp::update() {
 }
 
 void ofApp::updateFbo() {
+	fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
 	fbo.begin();
 	ofClear(paperColor);
 
 	if (saveSVG) {
-		ofBeginSaveScreenAsSVG("pixelplotted_" + ofGetTimestampString() + ".svg", false);
+		ofBeginSaveScreenAsPDF("pixelplotted_" + ofGetTimestampString() + ".pdf", false);
 	}
 
 	setBlendmode();
@@ -138,7 +147,7 @@ void ofApp::updateFbo() {
 	ofDisableBlendMode();
 
 	if (saveSVG) {
-		ofEndSaveScreenAsSVG();
+		ofEndSaveScreenAsPDF();
 		saveSVG = false;
 	}
 
@@ -218,6 +227,9 @@ void ofApp::setBlendmode() {
 
 //--------------------------------------------------------------
 void ofApp::Style_Pixelate(float w, float h, ofColor c) {
+	if (abs(w) < 1) return;
+	if (abs(h) < 1) return;
+
 	ofPushStyle();
 	ofFill();
 	ofSetColor(c);
@@ -337,25 +349,25 @@ void ofApp::Style_CMYK_Seperation_2(float w, float h, ofColor c) {
 	float minOffset = -maxOffset;
 
 	ofPushMatrix();
-	ofTranslate(ofRandom(minOffset, maxOffset), 0, 0);
+	ofTranslate(ofRandom(minOffset, maxOffset), ofRandom(minOffset, maxOffset), 0);
 	cHeight = ofMap(cmyk[0], 0, 1, 0, h);
 	Style_Pixelate(cHeight, cHeight, ofColor(0, 174, 239)); // Cyan
 	ofPopMatrix();
 
 	ofPushMatrix();
-	ofTranslate(ofRandom(minOffset, maxOffset), 0, 0);
+	ofTranslate(ofRandom(minOffset, maxOffset), ofRandom(minOffset, maxOffset), 0);
 	cHeight = ofMap(cmyk[1], 0, 1, 0, h);
 	Style_Pixelate(cHeight, cHeight, ofColor(236, 0, 140)); // Magenta
 	ofPopMatrix();
 
 	ofPushMatrix();
-	ofTranslate(ofRandom(minOffset, maxOffset), 0, 0);
+	ofTranslate(ofRandom(minOffset, maxOffset), ofRandom(minOffset, maxOffset), 0);
 	cHeight = ofMap(cmyk[2], 0, 1, 0, h);
 	Style_Pixelate(cHeight, cHeight, ofColor(255, 242, 0)); // Yellow
 	ofPopMatrix();
 
 	ofPushMatrix();
-	ofTranslate(ofRandom(minOffset, maxOffset), 0, 0);
+	ofTranslate(ofRandom(minOffset, maxOffset), ofRandom(minOffset, maxOffset), 0);
 	cHeight = ofMap(cmyk[3], 0, 1, 0, h);
 	Style_Pixelate(cHeight, cHeight, ofColor(0, 0, 0)); // Black
 	ofPopMatrix();
@@ -404,19 +416,18 @@ void ofApp::Style_CMYK_Seperation_3(float w, float h, ofColor c) {
 }
 
 void ofApp::loadImage(string& filepath) {
+	float ratio = 1;
 	img.load(filepath);
 
-	(img.getWidth() >= img.getHeight()) ? isLandscape = true : isLandscape = false;
+	//(img.getWidth() >= img.getHeight()) ? isLandscape = true : isLandscape = false;
 
-	if (isLandscape) {
-		imgRatio = float(img.getHeight()) / float(img.getWidth());
-		img.resize(ofGetWidth(), ofGetHeight() * imgRatio);
+	// Resize to always fit screen
+	ratio = img.getHeight() / img.getWidth();
+	img.resize(ofGetWidth(), ofGetWidth() * ratio);	
+	if (img.getHeight() > ofGetHeight()) {
+		ratio = img.getWidth() / img.getHeight();
+		img.resize(ofGetHeight() * ratio, ofGetHeight());
 	}
-	else {
-		imgRatio = float(img.getWidth()) / float(img.getHeight());
-		img.resize(ofGetWidth() * imgRatio, ofGetHeight());
-	}
-
 }
 
 void ofApp::onImageChange(string& filepath) {
