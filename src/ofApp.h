@@ -34,13 +34,14 @@ class ofApp : public ofBaseApp{
 		void setBlendmode();
 		void updateFbo();
 
-		void callStyle(string stylename, float w, float h, ofColor c);
+		void callStyle(string stylename, float w, float h, ofColor c, float r);
 		void Style_Pixelate(float w, float h, ofColor c);
 		void Style_Lightness_Rotation(float w, float h, ofColor c);
 		void Style_RGB_Seperation_1(float w, float h, ofColor c);
 		void Style_RGB_Seperation_2(float w, float h, ofColor c);
 		void Style_RGB_Seperation_3(float w, float h, ofColor c);
 		void Style_RGB_Seperation_4(float w, float h, ofColor c);
+		void Style_RGB_Seperation_5(float w, float h, ofColor c);
 		void Style_Pixelate_Brightness_Width(float w, float h, ofColor c);
 		void Style_CMYK_Seperation_1(float w, float h, ofColor c);
 		void Style_CMYK_Seperation_2(float w, float h, ofColor c);
@@ -49,6 +50,9 @@ class ofApp : public ofBaseApp{
 		void Style_CMYK_Seperation_5(float w, float h, ofColor c);
 		void Style_CMYK_Seperation_6(float w, float h, ofColor c);
 		void Style_CMYK_Seperation_7(float w, float h, ofColor c);
+		void Style_CMYK_Seperation_8(float w, float h, ofColor c);
+		void Style_CMYK_Seperation_9(float w, float h, ofColor c);
+		void Style_CMYK_Seperation_10(float w, float h, ofColor c, float rot);
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -69,6 +73,8 @@ class ofApp : public ofBaseApp{
 
 		int gui_width = 320;
 		float imgRatio;
+
+		float rotation = 0;
 
 		bool saveSVG, isLandscape;
 

@@ -38,6 +38,8 @@ void ofApp::setup() {
 	styleDropdown->add("RGB Seperation 2");
 	styleDropdown->add("RGB Seperation 3");
 	styleDropdown->add("RGB Seperation 4");
+	styleDropdown->add("RGB Seperation 5");
+
 	styleDropdown->add("CMYK Seperation 1");
 	styleDropdown->add("CMYK Seperation 2");
 	styleDropdown->add("CMYK Seperation 3");
@@ -45,6 +47,9 @@ void ofApp::setup() {
 	styleDropdown->add("CMYK Seperation 5");
 	styleDropdown->add("CMYK Seperation 6");
 	styleDropdown->add("CMYK Seperation 7");
+	styleDropdown->add("CMYK Seperation 8");
+	styleDropdown->add("CMYK Seperation 9");
+	styleDropdown->add("CMYK Seperation 10");
 
 	styleDropdown->disableMultipleSelection();
 	styleDropdown->enableCollapseOnSelection();
@@ -65,7 +70,7 @@ void ofApp::setup() {
 	// ---------------------------------
 
 	gui.setup("Pixel Plotter", "guiSettings.xml");
-	gui.setPosition(10, ofGetHeight() - 300);
+	gui.setPosition(10, ofGetHeight() - 500);
 	
 	gui.add(&imageDropdown);
 	gui.add(styleDropdown.get());
@@ -141,8 +146,8 @@ void ofApp::updateFbo() {
 			ofTranslate(centerx, centery, 0);
 
 			//float lineLength = halfTile + (abs(ofRandomf())* tileSize);
-			 
-			callStyle(styleDropdown->selectedValue, tileSize + addonx, tileSize + addony, c);
+			float rotation = ofMap(x, 0, w, -360, 360);
+			callStyle(styleDropdown->selectedValue, tileSize + addonx, tileSize + addony, c, rotation);
 
 			ofPopMatrix();
 		}
@@ -173,7 +178,7 @@ void ofApp::draw(){
 
 }
 
-void ofApp::callStyle(string stylename, float w, float h, ofColor c) {
+void ofApp::callStyle(string stylename, float w, float h, ofColor c, float r = 0) {
 	if (stylename == "Pixelate") {
 		Style_Pixelate(w, h, c);
 	}
@@ -195,6 +200,9 @@ void ofApp::callStyle(string stylename, float w, float h, ofColor c) {
 	else if (stylename == "RGB Seperation 4") {
 		Style_RGB_Seperation_4(w, h, c);
 	}
+	else if (stylename == "RGB Seperation 5") {
+		Style_RGB_Seperation_5(w, h, c);
+	}
 	else if (stylename == "CMYK Seperation 1") {
 		Style_CMYK_Seperation_1(w, h, c);
 	}
@@ -215,6 +223,15 @@ void ofApp::callStyle(string stylename, float w, float h, ofColor c) {
 	}
 	else if (stylename == "CMYK Seperation 7") {
 		Style_CMYK_Seperation_7(w, h, c);
+	}
+	else if (stylename == "CMYK Seperation 8") {
+		Style_CMYK_Seperation_8(w, h, c);
+	}
+	else if (stylename == "CMYK Seperation 9") {
+		Style_CMYK_Seperation_9(w, h, c);
+	}
+	else if (stylename == "CMYK Seperation 10") {
+		Style_CMYK_Seperation_10(w, h, c, r);
 	}
 }
 
@@ -350,6 +367,35 @@ void ofApp::Style_RGB_Seperation_4(float w, float h, ofColor c) {
 	cWidth = ofMap(c.b + addon, 0, maxC, 0, w);
 	ofTranslate(cWidth * 0.5, 0, 0);
 	Style_Pixelate(cWidth, h, ofColor(0, 0, 255));
+
+	ofPopMatrix();
+
+}
+
+void ofApp::Style_RGB_Seperation_5(float w, float h, ofColor c) {
+	float cHeight;
+	ofVec4f cmyk = getCMYK(c);
+	Style_Pixelate(w, h, c);
+
+	cHeight = ofMap(cmyk[3], 0, 1, 0, h);
+	Style_Pixelate(w, cHeight, ofColor(0, 0, 0)); // Black
+
+	cHeight = ofMap(c.r, 0, 255, 0, h / 4);
+	ofPushMatrix();
+	ofTranslate(0, (-h * 0.5) + (cHeight * 0.5), 0);
+	Style_Pixelate(w, cHeight, ofColor(255, 0, 0, c.getBrightness())); // Red
+
+	ofTranslate(0, cHeight * 0.5, 0);
+
+	cHeight = ofMap(c.g, 0, 255, 0, h / 4);
+	ofTranslate(0, cHeight * 0.5, 0);
+	Style_Pixelate(w, cHeight, ofColor(0, 255, 0, c.getBrightness())); // Green
+
+	ofTranslate(0, cHeight * 0.5, 0);
+
+	cHeight = ofMap(c.b, 0, 255, 0, h / 4);
+	ofTranslate(0, cHeight * 0.5, 0);
+	Style_Pixelate(w, cHeight, ofColor(0, 0, 255, c.getBrightness())); // Blue
 
 	ofPopMatrix();
 
@@ -566,6 +612,128 @@ void ofApp::Style_CMYK_Seperation_7(float w, float h, ofColor c) {
 
 	cHeight = ofMap(cmyk[3], 0, 1, 0, h);
 	Style_Pixelate(w, cHeight, ofColor(0, 0, 0)); // Black
+}
+
+void ofApp::Style_CMYK_Seperation_8(float w, float h, ofColor c) {
+	float cHeight;
+	ofVec4f cmyk = getCMYK(c);
+
+	float total = cmyk[0] + cmyk[1] + cmyk[2];
+	float pc = (100 * cmyk[0]) / total;
+	float pm = (100 * cmyk[1]) / total;
+	float py = (100 * cmyk[2]) / total;
+
+	cHeight = ofMap(cmyk[3], 0, 1, 0, h);
+	Style_Pixelate(w, cHeight, ofColor(0, 0, 0)); // Black
+
+	cHeight = ofMap(cmyk[0], 0, 1, 0, h/3);
+	ofPushMatrix();
+	ofTranslate(0, (-h * 0.5) + (cHeight * 0.5), 0);
+	Style_Pixelate(w, cHeight, ofColor(0, 174, 239)); // Cyan
+
+	ofTranslate(0, cHeight * 0.5, 0);
+
+	cHeight = ofMap(cmyk[1], 0, 1, 0, h/3);
+	ofTranslate(0, cHeight * 0.5, 0);
+	Style_Pixelate(w, cHeight, ofColor(236, 0, 140)); // Magenta
+
+	ofTranslate(0, cHeight * 0.5, 0);
+
+	cHeight = ofMap(cmyk[2], 0, 1, 0, h/3);
+	ofTranslate(0, cHeight * 0.5, 0);
+	Style_Pixelate(w, cHeight, ofColor(255, 242, 0)); // Yellow
+
+	ofPopMatrix();
+
+}
+
+void ofApp::Style_CMYK_Seperation_9(float w, float h, ofColor c) {
+	// Devide height in 3 and add colour at percentage.
+
+	ofVec4f cmyk = getCMYK(c);
+
+	Style_Pixelate(w, h, c);
+
+	
+	float cHeight = h / 3;
+	
+	ofPushMatrix();
+
+	int brightnessThreshhold = 10;
+
+	ofTranslate(0, (-h * 0.5) + (cHeight * 0.5), 0);
+	float brightness = ofMap(cmyk[0], 0, 1, 0, 255);
+	if (brightness > brightnessThreshhold) {
+		Style_Pixelate(w, cHeight, ofColor(0, 174, 239, brightness)); // Cyan
+	}
+	
+	
+	ofTranslate(0, cHeight, 0);
+	brightness = ofMap(cmyk[1], 0, 1, 0, 255);
+	if (brightness > brightnessThreshhold) {
+		Style_Pixelate(w, cHeight, ofColor(236, 0, 140, brightness)); // Magenta
+	}
+
+	ofTranslate(0, cHeight, 0);
+	brightness = ofMap(cmyk[2], 0, 1, 0, 255);
+	if (brightness > brightnessThreshhold) {
+		Style_Pixelate(w, cHeight, ofColor(255, 242, 0, brightness)); // Yellow
+	}
+
+	ofPopMatrix();
+
+	cHeight = ofMap(cmyk[3], 0, 1, 0, h);
+	Style_Pixelate(w, cHeight, ofColor(0, 0, 0)); // Black
+
+}
+
+
+void ofApp::Style_CMYK_Seperation_10(float w, float h, ofColor c, float rot) {
+	// Devide height in 3 and add colour at percentage.
+
+	ofVec4f cmyk = getCMYK(c);
+
+	ofPushMatrix();
+	//rotation = rotation + 0.25;
+	//if (rotation > 360) rotation = rotation - 360;
+
+	ofRotateZDeg(rot);
+	
+	Style_Pixelate(w, h, c);
+
+
+	float cHeight = h / 3;
+
+	ofPushMatrix();
+
+	int brightnessThreshhold = 10;
+
+	ofTranslate(0, (-h * 0.5) + (cHeight * 0.5), 0);
+	float brightness = ofMap(cmyk[0], 0, 1, 0, 255);
+	if (brightness > brightnessThreshhold) {
+		Style_Pixelate(w, cHeight, ofColor(0, 174, 239, brightness)); // Cyan
+	}
+
+
+	ofTranslate(0, cHeight, 0);
+	brightness = ofMap(cmyk[1], 0, 1, 0, 255);
+	if (brightness > brightnessThreshhold) {
+		Style_Pixelate(w, cHeight, ofColor(236, 0, 140, brightness)); // Magenta
+	}
+
+	ofTranslate(0, cHeight, 0);
+	brightness = ofMap(cmyk[2], 0, 1, 0, 255);
+	if (brightness > brightnessThreshhold) {
+		Style_Pixelate(w, cHeight, ofColor(255, 242, 0, brightness)); // Yellow
+	}
+
+	ofPopMatrix();
+
+	cHeight = ofMap(cmyk[3], 0, 1, 0, h);
+	Style_Pixelate(w, cHeight, ofColor(0, 0, 0)); // Black
+
+	ofPopMatrix();
+
 }
 
 void ofApp::loadImage(string& filepath) {
