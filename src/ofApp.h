@@ -19,17 +19,24 @@ class ofApp : public ofBaseApp{
 
 		ofxPanel gui;
 		ofxIntSlider tilesX;
-		ofxFloatSlider addonx, addony;
+		ofxFloatSlider addonx, addony, randomOffset;
+		
 		ofxColorSlider paperColor;
+		ofxColorSlider magentaRed;
+		ofxColorSlider cyanBlue;
+		ofxColorSlider yellowGreen;
+		ofxColorSlider black;
+
 		ofxToggle showImage, normalise, roundPixels;
-		ofxButton exportSVG;
+		ofxButton exportSVG, setRGB, setCMYK;
 
 		unique_ptr<ofxDropdown> styleDropdown;
 		unique_ptr<ofxDropdown> blendDropdown;
 
 		float percentage(float percent, float total);
-		void gui_updateScreen_pressed();
 		void gui_exportSVG_pressed();
+		void gui_setRGB_pressed();
+		void gui_setCMYK_pressed();
 
 		void setBlendmode();
 		void updateFbo();
@@ -75,7 +82,6 @@ class ofApp : public ofBaseApp{
 		float imgRatio;
 
 		float rotation = 0;
-
 		bool saveSVG, isLandscape;
 
 		ofVec4f getCMYK(ofColor rgb);
