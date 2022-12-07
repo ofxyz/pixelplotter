@@ -1,8 +1,9 @@
 #include "ofApp.h"
 
 /*
-   Use colour pallete, restrict colours
+   
    Make some dots
+   
    Posterise to a pallette. Set high mid low to start?
    Or dumb down the colours then ability to remap?
 
@@ -12,7 +13,6 @@
    // GUI update on every change. ofxGUI doesn't seem to be able to do that.
    // Use external functions or change to ImGUI?
 
-   // overprint does not always looks as good
    // Add CMYK rotate
 
 */
@@ -70,6 +70,7 @@ void ofApp::setup() {
 
 	setRGB.addListener(this, &ofApp::gui_setRGB_pressed);
 	setCMYK.addListener(this, &ofApp::gui_setCMYK_pressed);
+	setPosterize.addListener(this, &ofApp::gui_setPosterize_pressed);
 	exportSVG.addListener(this, &ofApp::gui_exportSVG_pressed);
 
 	// ---------------------------------
@@ -95,6 +96,7 @@ void ofApp::setup() {
 
 	gui.add(setRGB.setup("Set RGB"));
 	gui.add(setCMYK.setup("Set CMYK"));
+	gui.add(setPosterize.setup("Set Posterize"));
 
 	gui.add(roundPixels.setup("Round Pixels", false));
 
@@ -821,11 +823,22 @@ void ofApp::gui_setCMYK_pressed() {
 }
 
 //--------------------------------------------------------------
+void ofApp::gui_setPosterize_pressed() {
+	swatches = ofxPosterize::getClusterColors(img, 4);
+	if (swatches.size() > 3) {
+		magentaRed = swatches[0];
+		cyanBlue = swatches[1];
+		yellowGreen = swatches[2];
+		black = swatches[3];
+	}
+}
+
+//--------------------------------------------------------------
 void ofApp::gui_exportSVG_pressed() {
 	saveSVG = true;
 }
 
-//--------------------------------------------------------------
+//-------------------------------------------------------------
 void ofApp::keyPressed(int key){
 	updateFbo();
 	if (key == 'p') {

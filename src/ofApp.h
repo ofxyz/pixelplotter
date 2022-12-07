@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 #include "ofxDropdown.h"
+#include "ofxPosterize.h"
 
 class ofApp : public ofBaseApp{
 
@@ -28,7 +29,7 @@ class ofApp : public ofBaseApp{
 		ofxColorSlider black;
 
 		ofxToggle showImage, normalise, roundPixels;
-		ofxButton exportSVG, setRGB, setCMYK;
+		ofxButton exportSVG, setRGB, setCMYK, setPosterize;
 
 		unique_ptr<ofxDropdown> styleDropdown;
 		unique_ptr<ofxDropdown> blendDropdown;
@@ -37,6 +38,7 @@ class ofApp : public ofBaseApp{
 		void gui_exportSVG_pressed();
 		void gui_setRGB_pressed();
 		void gui_setCMYK_pressed();
+		void gui_setPosterize_pressed();
 
 		void setBlendmode();
 		void updateFbo();
@@ -77,6 +79,8 @@ class ofApp : public ofBaseApp{
 		ofPixels pixels;
 		ofMesh mesh;
 		ofColor penColor;
+
+		std::vector<ofColor> swatches;
 
 		int gui_width = 320;
 		float imgRatio;
