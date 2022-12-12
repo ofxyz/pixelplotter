@@ -19,7 +19,7 @@ class ofApp : public ofBaseApp{
 		ofxDropdown_<string> imageDropdown{ "Source Image" };
 
 		ofxPanel gui;
-		ofxIntSlider tilesX;
+		ofxIntSlider tilesX, tilesY;
 		ofxFloatSlider addonx, addony, randomOffset;
 		
 		ofxColorSlider paperColor;
@@ -28,7 +28,7 @@ class ofApp : public ofBaseApp{
 		ofxColorSlider yellowGreen;
 		ofxColorSlider black;
 
-		ofxToggle showImage, normalise, roundPixels;
+		ofxToggle showImage, normalise, roundPixels, showZoom;
 		ofxButton exportSVG, setRGB, setCMYK, setPosterize;
 
 		unique_ptr<ofxDropdown> styleDropdown;
@@ -43,7 +43,7 @@ class ofApp : public ofBaseApp{
 		void setBlendmode();
 		void updateFbo();
 
-		void callStyle(string stylename, float w, float h, ofColor c, float r);
+		void callStyle(string stylename, ofVec2f size, ofVec2f loc, ofDefaultVec2 xycount, ofColor c);
 		void Style_Pixelate(float w, float h, ofColor c);
 		void Style_Lightness_Rotation(float w, float h, ofColor c);
 		void Style_RGB_Seperation_1(float w, float h, ofColor c);
@@ -61,7 +61,8 @@ class ofApp : public ofBaseApp{
 		void Style_CMYK_Seperation_7(float w, float h, ofColor c);
 		void Style_CMYK_Seperation_8(float w, float h, ofColor c);
 		void Style_CMYK_Seperation_9(float w, float h, ofColor c);
-		void Style_CMYK_Seperation_10(float w, float h, ofColor c, float rot);
+		void Style_CMYK_Seperation_10(float w, float h, ofColor c, ofVec2f loc);
+		void Style_CMYK_Seperation_11(float w, float h, ofColor c, ofDefaultVec2 xycount);
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -75,7 +76,7 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
-		ofImage img;
+		ofImage original, img;
 		ofPixels pixels;
 		ofMesh mesh;
 		ofColor penColor;

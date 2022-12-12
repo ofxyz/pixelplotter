@@ -7,6 +7,8 @@
    Posterise to a pallette. Set high mid low to start?
    Or dumb down the colours then ability to remap?
 
+   // Add Polkadots
+
    // RGB needs K
    // Add zoom function for closeup view bases on mouse x/y
 
@@ -52,6 +54,7 @@ void ofApp::setup() {
 	styleDropdown->add("CMYK Seperation 8");
 	styleDropdown->add("CMYK Seperation 9");
 	styleDropdown->add("CMYK Seperation 10");
+	styleDropdown->add("CMYK Seperation 11");
 
 	styleDropdown->disableMultipleSelection();
 	styleDropdown->enableCollapseOnSelection();
@@ -84,7 +87,9 @@ void ofApp::setup() {
 
 	gui.add(normalise.setup("Normalise Colours", false));
 
-	gui.add(tilesX.setup("Tile Count X", 64, 2, ofGetWidth()/3));
+	gui.add(tilesX.setup("Tile Count X", 64, 2, ofGetWidth() / 3));
+	gui.add(tilesY.setup("Tile Count Y", 64, 2, ofGetWidth() / 3));
+
 	gui.add(addonx.setup("X addon", 0, -100, 100));
 	gui.add(addony.setup("Y addon", 0, -100, 100));
 
@@ -103,9 +108,10 @@ void ofApp::setup() {
 	gui.add(randomOffset.setup("Random Offset", 0, 0, 10));
 
 	gui.add(showImage.setup("Show Image", false));
+	gui.add(showZoom.setup("Show Zoom", false));
 	gui.add(exportSVG.setup("Export SVG"));
 	
-	// ---------------------------------
+	// --------------------------------- 
 
 	ofBackground(paperColor);
 }
@@ -136,39 +142,52 @@ void ofApp::updateFbo() {
 
 	int w = img.getWidth();
 	int h = img.getHeight();
-	float tileSize = (float)w / (float)tilesX;
+	float tileW = (float)w / (float)tilesX;
+	float tileH = (float)h / (float)tilesY;
+	float halfTileW = tileW / 2.0;
+	float halfTileH = tileH / 2.0;
 
-	float halfTile = tileSize / 2.0;
+	/* Process All Pixels of Original Image 
+	int o_w = original.getWidth();
+	int o_h = original.getHeight();
+	
+	for (int y = 0; y < o_h; y += 1) {
+		for (int x = 0; x < o_w; x += 1) {
+			ofColor c = original.getPixels().getColor(x, y);
+			if (normalise) {
+				c.normalize();
+			}
 
-	int yCount = 0;
-	for (int y = 0; y < h; y += tileSize) {
-		yCount++;
-		int xCount = 0;
-		for (int x = 0; x < w; x += tileSize) {
-			xCount++;
+			ofPushMatrix();
+			ofTranslate((x * tileW) + halfTileW, (y * tileH) + halfTileH, 0);
 
-			float centerx = x + halfTile;
-			float centery = y + halfTile;
+			float rotation = ofMap(x, 0, o_w, -360, 360);
+			callStyle(styleDropdown->selectedValue, tileW + addonx, tileH + addony, c, rotation);
 
-			ofColor c = img.getPixels().getColor(x, y);
+			ofPopMatrix();
 
-			//if (l >= 250) continue;
+		}
+	}
+	*/
+	int ycount = 0;
+	int xcount = 0;
+	for (float y = 0; y < h - halfTileW; y += tileH) {
+		for (float x = 0; x < w - halfTileW; x += tileW) {
+			int cx = floor(x + halfTileW);
+			int cy = floor(y + halfTileW);
+			ofColor c = img.getPixels().getColor(cx, cy);
 
 			if (normalise) {
 				c.normalize();
 			}
 
-			//c.setSaturation(255);
-
 			ofPushMatrix();
-			ofTranslate(centerx, centery, 0);
-
-			//float lineLength = halfTile + (abs(ofRandomf())* tileSize);
-			float rotation = ofMap(x, 0, w, -360, 360);
-			callStyle(styleDropdown->selectedValue, tileSize + addonx, tileSize + addony, c, rotation);
-
+			ofTranslate(cx, cy, 0);
+			callStyle(styleDropdown->selectedValue, ofVec2f(tileW + addonx, tileH + addony), ofVec2f(cx, cy), ofVec2f(xcount, ycount), c);
 			ofPopMatrix();
+			xcount++;
 		}
+		ycount++;
 	}
 
 	ofDisableBlendMode();
@@ -196,7 +215,10 @@ void ofApp::draw(){
 
 }
 
-void ofApp::callStyle(string stylename, float w, float h, ofColor c, float r = 0) {
+void ofApp::callStyle(string stylename, ofVec2f size, ofVec2f loc, ofDefaultVec2 xycount, ofColor c) {
+	float w = size[0];
+	float h = size[1];
+
 	if (stylename == "Pixelate") {
 		Style_Pixelate(w, h, c);
 	}
@@ -249,7 +271,10 @@ void ofApp::callStyle(string stylename, float w, float h, ofColor c, float r = 0
 		Style_CMYK_Seperation_9(w, h, c);
 	}
 	else if (stylename == "CMYK Seperation 10") {
-		Style_CMYK_Seperation_10(w, h, c, r);
+		Style_CMYK_Seperation_10(w, h, c, loc);
+	}
+	else if (stylename == "CMYK Seperation 11") {
+		Style_CMYK_Seperation_11(w, h, c, xycount);
 	}
 }
 
@@ -511,7 +536,7 @@ void ofApp::Style_CMYK_Seperation_4(float w, float h, ofColor c) {
 	ofVec4f cmyk = getCMYK(c);
 
 	cWidth = ofMap(cmyk[3], 0, 1, 0, w/2);
-	//ofTranslate(cWidth * 0.5, 0, 0);
+
 	if (cWidth > w * 0.1) {
 		Style_Pixelate(cWidth, h, black); // Black
 	}
@@ -536,13 +561,6 @@ void ofApp::Style_CMYK_Seperation_4(float w, float h, ofColor c) {
 	Style_Pixelate(cWidth, h, yellowGreen); // Yellow
 
 	ofPopMatrix();
-
-	//ofTranslate(cWidth * 0.5, 0, 0);
-	
-	//cWidth = ofMap(cmyk[3], 0, 1, 0, w/3);
-	//ofTranslate(cWidth * 0.5, 0, 0);
-	//Style_Pixelate(cWidth, h, black); // Black
-
 }
 
 //--------------------------------------------------------------
@@ -686,7 +704,7 @@ void ofApp::Style_CMYK_Seperation_9(float w, float h, ofColor c) {
 	
 	ofPushMatrix();
 	
-	int brightnessThreshhold = 10;
+	int brightnessThreshhold = 20;
 
 	ofTranslate(0, (-h * 0.5) + (cHeight * 0.5), 0);
 	float brightness = ofMap(cmyk[0], 0, 1, 0, 255);
@@ -717,8 +735,9 @@ void ofApp::Style_CMYK_Seperation_9(float w, float h, ofColor c) {
 }
 
 
-void ofApp::Style_CMYK_Seperation_10(float w, float h, ofColor c, float rot) {
+void ofApp::Style_CMYK_Seperation_10(float w, float h, ofColor c, ofVec2f loc) {
 	// Devide height in 3 and add colour at percentage.
+	float rot = ofMap(loc[0], 0, img.getWidth(), -360, 360);
 
 	ofVec4f cmyk = getCMYK(c);
 
@@ -730,12 +749,11 @@ void ofApp::Style_CMYK_Seperation_10(float w, float h, ofColor c, float rot) {
 	
 	Style_Pixelate(w, h, c);
 
-
 	float cHeight = h / 3;
 
 	ofPushMatrix();
 
-	int brightnessThreshhold = 10;
+	int brightnessThreshhold = 20;
 
 	ofTranslate(0, (-h * 0.5) + (cHeight * 0.5), 0);
 	float brightness = ofMap(cmyk[0], 0, 1, 0, 255);
@@ -768,8 +786,58 @@ void ofApp::Style_CMYK_Seperation_10(float w, float h, ofColor c, float rot) {
 
 }
 
+void ofApp::Style_CMYK_Seperation_11(float w, float h, ofColor c, ofDefaultVec2 xycount) {
+
+	//Style_Pixelate(w, h, c);
+	
+	int xcount = xycount[0];
+	int ycount = xycount[1];
+	int rc = 1 + rand() % 8;
+	if (xcount % 2 == 0 && ycount %rc == 0) {
+		c.setHueAngle(c.getHueAngle() + (ofRandomf() * 40));
+		c.normalize();
+		c.setBrightness(c.getBrightness() + ofRandom(-10,20));
+	}
+	Style_Pixelate(w, h, c);
+	ofVec4f cmyk = getCMYK(c);
+
+	float cHeight = h / 3;
+
+	ofPushMatrix();
+
+	int brightnessThreshhold = 20;
+
+	ofTranslate(0, (-h * 0.5) + (cHeight * 0.5), 0);
+	float brightness = ofMap(cmyk[0], 0, 1, 0, 255);
+	if (brightness > brightnessThreshhold) {
+		ofColor cc = cyanBlue;
+		Style_Pixelate(w, cHeight, ofColor(cc.r, cc.g, cc.b, brightness)); // Cyan 
+	}
+
+	ofTranslate(0, cHeight, 0);
+	brightness = ofMap(cmyk[1], 0, 1, 0, 255);
+	if (brightness > brightnessThreshhold) {
+		ofColor cc = magentaRed;
+		Style_Pixelate(w, cHeight, ofColor(cc.r, cc.g, cc.b, brightness)); // Magenta
+	}
+
+	ofTranslate(0, cHeight, 0);
+	brightness = ofMap(cmyk[2], 0, 1, 0, 255);
+	if (brightness > brightnessThreshhold) {
+		ofColor cc = yellowGreen;
+		Style_Pixelate(w, cHeight, ofColor(cc.r, cc.g, cc.b, brightness)); // Yellow
+	}
+
+	ofPopMatrix();
+
+	cHeight = ofMap(cmyk[3], 0, 1, 0, h);
+	Style_Pixelate(w, cHeight, black); // Black
+
+}
+
 void ofApp::loadImage(string& filepath) {
 	float ratio = 1;
+	original.load(filepath);
 	img.load(filepath);
 
 	//(img.getWidth() >= img.getHeight()) ? isLandscape = true : isLandscape = false;
