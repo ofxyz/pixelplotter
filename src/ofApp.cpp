@@ -685,32 +685,28 @@ void ofApp::Style_CMYK_Seperation_9(float w, float h, ofColor c) {
 	float cHeight = h / 3;
 	
 	ofPushMatrix();
-
+	
 	int brightnessThreshhold = 10;
 
 	ofTranslate(0, (-h * 0.5) + (cHeight * 0.5), 0);
 	float brightness = ofMap(cmyk[0], 0, 1, 0, 255);
-	ofColor cc = cyanBlue;
-	cc.setBrightness(brightness);
 	if (brightness > brightnessThreshhold) {
-		Style_Pixelate(w, cHeight, cc); // Cyan
+		ofColor cc = cyanBlue;
+		Style_Pixelate(w, cHeight, ofColor(cc.r, cc.g, cc.b, brightness)); // Cyan 
 	}
-	
 	
 	ofTranslate(0, cHeight, 0);
 	brightness = ofMap(cmyk[1], 0, 1, 0, 255);
 	if (brightness > brightnessThreshhold) {
 		ofColor cc = magentaRed;
-		cc.setBrightness(brightness);
-		Style_Pixelate(w, cHeight, cc); // Magenta
+		Style_Pixelate(w, cHeight, ofColor(cc.r, cc.g, cc.b, brightness)); // Magenta
 	}
-
+	
 	ofTranslate(0, cHeight, 0);
 	brightness = ofMap(cmyk[2], 0, 1, 0, 255);
 	if (brightness > brightnessThreshhold) {
 		ofColor cc = yellowGreen;
-		cc.setBrightness(brightness);
-		Style_Pixelate(w, cHeight, cc); // Yellow
+		Style_Pixelate(w, cHeight, ofColor(cc.r, cc.g, cc.b, brightness)); // Yellow
 	}
 
 	ofPopMatrix();
@@ -745,8 +741,7 @@ void ofApp::Style_CMYK_Seperation_10(float w, float h, ofColor c, float rot) {
 	float brightness = ofMap(cmyk[0], 0, 1, 0, 255);
 	if (brightness > brightnessThreshhold) {
 		ofColor cc = cyanBlue;
-		cc.setBrightness(brightness);
-		Style_Pixelate(w, cHeight, cc); // Cyan
+		Style_Pixelate(w, cHeight, ofColor(cc.r, cc.g, cc.b, brightness)); // Cyan
 	}
 
 
@@ -754,16 +749,14 @@ void ofApp::Style_CMYK_Seperation_10(float w, float h, ofColor c, float rot) {
 	brightness = ofMap(cmyk[1], 0, 1, 0, 255);
 	if (brightness > brightnessThreshhold) {
 		ofColor cc = magentaRed;
-		cc.setBrightness(brightness);
-		Style_Pixelate(w, cHeight, cc); // Magenta
+		Style_Pixelate(w, cHeight, ofColor(cc.r, cc.g, cc.b, brightness)); // Magenta
 	}
 
 	ofTranslate(0, cHeight, 0);
 	brightness = ofMap(cmyk[2], 0, 1, 0, 255);
 	if (brightness > brightnessThreshhold) {
 		ofColor cc = yellowGreen;
-		cc.setBrightness(brightness);
-		Style_Pixelate(w, cHeight, cc); // Yellow
+		Style_Pixelate(w, cHeight, ofColor(cc.r, cc.g, cc.b, brightness)); // Yellow
 	}
 
 	ofPopMatrix();
