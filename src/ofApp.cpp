@@ -122,9 +122,9 @@ void ofApp::setup() {
 	gui.add(showZoom.setup("Show Zoom", false));
 	gui.add(exportSVG.setup("Export SVG"));
 	
-	// --------------------------------- 
-
+	zoomFbo.allocate(zoomW, zoomH, GL_RGBA,8);
 	ofBackground(paperColor);
+	ofLog() << ofFbo::checkGLSupport();
 }
 
 //--------------------------------------------------------------
@@ -139,10 +139,15 @@ void ofApp::exit() {
 //--------------------------------------------------------------
 void ofApp::update() {
 	if (ofGetFrameNum() % 500 == 0) updateFbo();
+	if (showZoom) {
+		zoomFbo.begin();
+		fbo.getTexture().drawSubsection(0, 0, zoomW, zoomH, mouseX - (zoomW * 0.5), mouseY - (zoomH * 0.5));
+		zoomFbo.end();
+	}
 }
 
 void ofApp::updateFbo() {
-	fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+	fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA, 8);
 	fbo.begin();
 	ofClear(paperColor);
 
@@ -207,12 +212,12 @@ void ofApp::updateFbo() {
 
 	ofDisableBlendMode();
 
+	/*
 	// Draw Grid ...
 	ofPushStyle();
 	ofFill();
 	ofSetColor(ofColor(255,255,255));
 
-	/*
 	float x = 0;
 	float y = 0;
 	float lineWidth = 4;
@@ -226,6 +231,7 @@ void ofApp::updateFbo() {
 
 	ofPopStyle();
 	*/
+
 	if (saveVector) {
 		ofEndSaveScreenAsPDF();
 		saveVector = false;
@@ -246,7 +252,8 @@ void ofApp::draw(){
 	}
 
 	if (showZoom) {
-		fbo.getTexture().drawSubsection(mouseX, mouseY, 400, 200, mouseX - 200, mouseY - 100);
+		// TODO: map values to screen - zoomWH
+		zoomFbo.draw(glm::vec2(mouseX, mouseY), zoomW*4, zoomH*4);
 	}
 
 	gui.draw();

@@ -97,6 +97,8 @@ class ofApp : public ofBaseApp{
 		ofVec4f getCMYK(ofColor rgb);
 
 		ofFbo fbo;
-		
+		ofFbo zoomFbo;
+		int zoomW = 100;
+		int zoomH = 75;
 
 };
