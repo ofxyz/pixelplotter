@@ -14,12 +14,16 @@ class ofApp : public ofBaseApp{
 		void exit();
 
 		void onImageChange(string& file);
+		void onPresetChange(string& file);
 		void loadImage(string& filepath);
 
 		ofxDropdown_<string> imageDropdown{ "Source Image" };
+		ofxDropdown_<string> presetDropdown{ "Preset" };
+
+		string img_name = "PixelPlotted";
 
 		ofxPanel gui;
-		ofxIntSlider tilesX, tilesY;
+		ofxIntSlider tilesX, tilesY, everynx, everyny, noisepercentX, noisepercentY;
 		ofxFloatSlider addonx, addony, randomOffset;
 		
 		ofxColorSlider paperColor;
@@ -63,6 +67,7 @@ class ofApp : public ofBaseApp{
 		void Style_CMYK_Seperation_9(float w, float h, ofColor c);
 		void Style_CMYK_Seperation_10(float w, float h, ofColor c, ofVec2f loc);
 		void Style_CMYK_Seperation_11(float w, float h, ofColor c, ofDefaultVec2 xycount);
+		void Style_CMYK_Seperation_12(float w, float h, ofColor c, ofDefaultVec2 xycount);
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -87,7 +92,7 @@ class ofApp : public ofBaseApp{
 		float imgRatio;
 
 		float rotation = 0;
-		bool saveSVG, isLandscape;
+		bool saveVector, isLandscape;
 
 		ofVec4f getCMYK(ofColor rgb);
 

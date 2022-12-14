@@ -2,6 +2,9 @@
 
 /*
    
+   Export image size dimensions not screen dimensions.
+   Reload FBO on every image change
+
    Make some dots
    
    Posterise to a pallette. Set high mid low to start?
@@ -10,12 +13,12 @@
    // Add Polkadots
 
    // RGB needs K
-   // Add zoom function for closeup view bases on mouse x/y
+   // Finish zoom function - Draw bigger ... 
 
    // GUI update on every change. ofxGUI doesn't seem to be able to do that.
    // Use external functions or change to ImGUI?
 
-   // Add CMYK rotate
+   // Save multiple Settings
 
 */
 
@@ -25,14 +28,16 @@ void ofApp::setup() {
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetBackgroundAuto(false);
 	ofSetCircleResolution(100);
-
-	
 	
 	// Setup Listeners Before adding GUI
 	// ---------------------------------
-	imageDropdown.populateFromDirectory(ofToDataPath("src_img"), { "gif", "png", "jpg", "jpeg"});	
+	imageDropdown.populateFromDirectory(ofToDataPath("src_img"), { "gif", "png", "jpg", "jpeg"});
+	presetDropdown.populateFromDirectory(ofToDataPath("presets"), { "xml"});
+
 	imageDropdown.addListener(this, &ofApp::onImageChange);
-	imageDropdown.setSelectedValueByIndex(ofRandom(0, 5), true);
+	imageDropdown.setSelectedValueByIndex(ofRandom(0, imageDropdown.getNumOptions()), true);
+	presetDropdown.addListener(this, &ofApp::onPresetChange);
+	//presetDropdown.setSelectedValueByIndex(ofRandom(0, presetDropdown.getNumOptions()), true);
 
 	styleDropdown = make_unique<ofxDropdown>("Plot Style");
 	styleDropdown->add("Pixelate");
@@ -55,6 +60,7 @@ void ofApp::setup() {
 	styleDropdown->add("CMYK Seperation 9");
 	styleDropdown->add("CMYK Seperation 10");
 	styleDropdown->add("CMYK Seperation 11");
+	styleDropdown->add("CMYK Seperation 12");
 
 	styleDropdown->disableMultipleSelection();
 	styleDropdown->enableCollapseOnSelection();
@@ -81,6 +87,7 @@ void ofApp::setup() {
 	gui.setup("Pixel Plotter", "guiSettings.xml");
 	gui.setPosition(10, 10);
 	
+	gui.add(&presetDropdown);
 	gui.add(&imageDropdown);
 	gui.add(styleDropdown.get());
 	gui.add(blendDropdown.get());
@@ -106,6 +113,10 @@ void ofApp::setup() {
 	gui.add(roundPixels.setup("Round Pixels", false));
 
 	gui.add(randomOffset.setup("Random Offset", 0, 0, 10));
+	gui.add(everynx.setup("Every N X", 4, 1, 15));
+	gui.add(everyny.setup("Every N Y", 3, 1, 15));
+	gui.add(noisepercentX.setup("Noise % X", 0, 0, 100));
+	gui.add(noisepercentY.setup("Noise % Y", 0, 0, 100));
 
 	gui.add(showImage.setup("Show Image", false));
 	gui.add(showZoom.setup("Show Zoom", false));
@@ -121,6 +132,7 @@ void ofApp::exit() {
 	//clean
 	exportSVG.removeListener(this, &ofApp::gui_exportSVG_pressed);
 	imageDropdown.removeListener(this, &ofApp::onImageChange);
+	presetDropdown.removeListener(this, &ofApp::onPresetChange);
 	return;
 }
 
@@ -134,8 +146,8 @@ void ofApp::updateFbo() {
 	fbo.begin();
 	ofClear(paperColor);
 
-	if (saveSVG) {
-		ofBeginSaveScreenAsPDF("pixelplotted_" + ofGetTimestampString() + ".pdf", false);
+	if (saveVector) {
+		ofBeginSaveScreenAsPDF(img_name + "_" + ofGetTimestampString() + ".pdf", false);
 	}
 
 	setBlendmode();
@@ -173,8 +185,11 @@ void ofApp::updateFbo() {
 	int xcount = 0;
 	for (float y = 0; y < h - halfTileW; y += tileH) {
 		for (float x = 0; x < w - halfTileW; x += tileW) {
-			int cx = floor(x + halfTileW);
-			int cy = floor(y + halfTileW);
+			
+			float fx = x + halfTileW;
+			float fy = y + halfTileW;
+			int cx = floor(fx);
+			int cy = floor(fy);
 			ofColor c = img.getPixels().getColor(cx, cy);
 
 			if (normalise) {
@@ -182,8 +197,8 @@ void ofApp::updateFbo() {
 			}
 
 			ofPushMatrix();
-			ofTranslate(cx, cy, 0);
-			callStyle(styleDropdown->selectedValue, ofVec2f(tileW + addonx, tileH + addony), ofVec2f(cx, cy), ofVec2f(xcount, ycount), c);
+			ofTranslate(fx, fy, 0);
+			callStyle(styleDropdown->selectedValue, ofVec2f(tileW + addonx, tileH + addony), ofVec2f(fx, fy), ofVec2f(xcount, ycount), c);
 			ofPopMatrix();
 			xcount++;
 		}
@@ -192,9 +207,28 @@ void ofApp::updateFbo() {
 
 	ofDisableBlendMode();
 
-	if (saveSVG) {
+	// Draw Grid ...
+	ofPushStyle();
+	ofFill();
+	ofSetColor(ofColor(255,255,255));
+
+	/*
+	float x = 0;
+	float y = 0;
+	float lineWidth = 4;
+	float halfLine = lineWidth * 0.5;
+	for (y = -halfLine; y < h; y += tileH) {
+		ofDrawRectangle(0, y, w, lineWidth);
+		for (x = -halfLine; x < w; x += tileW) {
+			ofDrawRectangle(x, y, lineWidth, h);
+		}
+	}
+
+	ofPopStyle();
+	*/
+	if (saveVector) {
 		ofEndSaveScreenAsPDF();
-		saveSVG = false;
+		saveVector = false;
 	}
 
 	fbo.end();
@@ -209,6 +243,10 @@ void ofApp::draw(){
 
 	if (showImage) {
 		img.draw(0, 0);
+	}
+
+	if (showZoom) {
+		fbo.getTexture().drawSubsection(mouseX, mouseY, 400, 200, mouseX - 200, mouseY - 100);
 	}
 
 	gui.draw();
@@ -275,6 +313,9 @@ void ofApp::callStyle(string stylename, ofVec2f size, ofVec2f loc, ofDefaultVec2
 	}
 	else if (stylename == "CMYK Seperation 11") {
 		Style_CMYK_Seperation_11(w, h, c, xycount);
+	}
+	else if (stylename == "CMYK Seperation 12") {
+		Style_CMYK_Seperation_12(w, h, c, xycount);
 	}
 }
 
@@ -448,10 +489,8 @@ void ofApp::Style_RGB_Seperation_5(float w, float h, ofColor c) {
 }
 
 void ofApp::Style_Pixelate_Brightness_Width(float w, float h, ofColor c) {
-
 	float cWidth = ofMap(c.getBrightness(), 0, 255, 0, w);
 	Style_Pixelate(cWidth, h, c);
-
 }
 
 //--------------------------------------------------------------
@@ -793,7 +832,7 @@ void ofApp::Style_CMYK_Seperation_11(float w, float h, ofColor c, ofDefaultVec2 
 	int xcount = xycount[0];
 	int ycount = xycount[1];
 	int rc = 1 + rand() % 8;
-	if (xcount % 2 == 0 && ycount %rc == 0) {
+	if (xcount % 4 == 0 && ofRandom(0, 100) > 30) {
 		c.setHueAngle(c.getHueAngle() + (ofRandomf() * 40));
 		c.normalize();
 		c.setBrightness(c.getBrightness() + ofRandom(-10,20));
@@ -835,12 +874,89 @@ void ofApp::Style_CMYK_Seperation_11(float w, float h, ofColor c, ofDefaultVec2 
 
 }
 
+void ofApp::Style_CMYK_Seperation_12(float w, float h, ofColor c, ofDefaultVec2 xycount) {
+
+	vector<ofColor> cCMY;
+	cCMY.push_back(cyanBlue);
+	cCMY.push_back(magentaRed);
+	cCMY.push_back(yellowGreen);
+
+	vector<int> cIndex;
+	int xcount = xycount[0];
+	int ycount = xycount[1];
+	
+	if (ofRandom(0, 100) < noisepercentY) {
+	//if (ycount % everyny == 0) {
+		c.setHueAngle(c.getHueAngle() + (ofRandomf() * 35));
+		if (ofRandom(0, 100) > 50) {
+			c.normalize();
+		}
+		c.setBrightness(c.getBrightness() + ofRandom(-10, 20));
+	}
+
+	//if (ofRandom(0, 100) < noisepercentX) {
+	if (xcount % everynx == 0) {
+		//c.normalize();
+		cIndex.push_back(1);
+		cIndex.push_back(2);
+		cIndex.push_back(0);
+		
+	}
+	else {
+		cIndex.push_back(0);
+		cIndex.push_back(1);
+		cIndex.push_back(2);
+	}
+
+	Style_Pixelate(w, h, c);
+	ofVec4f cmyk = getCMYK(c);
+
+	float cHeight = h / 3;
+
+	ofPushMatrix();
+
+	int brightnessThreshhold = 20;
+
+	ofTranslate(0, (-h * 0.5) + (cHeight * 0.5), 0);
+	float brightness = ofMap(cmyk[cIndex[0]], 0, 1, 0, 255);
+	if (brightness > brightnessThreshhold) {
+		ofColor cc = cCMY[cIndex[0]];
+		Style_Pixelate(w, cHeight, ofColor(cc.r, cc.g, cc.b, brightness)); // Cyan 
+	}
+
+	ofTranslate(0, cHeight, 0);
+	brightness = ofMap(cmyk[cIndex[1]], 0, 1, 0, 255);
+	if (brightness > brightnessThreshhold) {
+		ofColor cc = cCMY[cIndex[1]];
+		Style_Pixelate(w, cHeight, ofColor(cc.r, cc.g, cc.b, brightness)); // Magenta
+	}
+
+	ofTranslate(0, cHeight, 0);
+	brightness = ofMap(cmyk[cIndex[2]], 0, 1, 0, 255);
+	if (brightness > brightnessThreshhold) {
+		ofColor cc = cCMY[cIndex[2]];
+		Style_Pixelate(w, cHeight, ofColor(cc.r, cc.g, cc.b, brightness)); // Yellow
+	}
+
+	ofPopMatrix();
+
+	cHeight = ofMap(cmyk[3], 0, 1, 0, h);
+	Style_Pixelate(w, cHeight, black); // Black
+
+}
+
 void ofApp::loadImage(string& filepath) {
 	float ratio = 1;
 	original.load(filepath);
 	img.load(filepath);
 
 	//(img.getWidth() >= img.getHeight()) ? isLandscape = true : isLandscape = false;
+	
+	std::string base_filename = filepath.substr(filepath.find_last_of("/\\") + 1);
+	std::string::size_type const p(base_filename.find_last_of('.'));
+	std::string file_without_extension = base_filename.substr(0, p);
+
+	img_name = file_without_extension;
 
 	// Resize to always fit screen
 	ratio = img.getHeight() / img.getWidth();
@@ -853,6 +969,10 @@ void ofApp::loadImage(string& filepath) {
 
 void ofApp::onImageChange(string& filepath) {
 	loadImage(filepath);
+}
+
+void ofApp::onPresetChange(string& filepath) {
+	gui.loadFromFile(filepath);
 }
 
 ofVec4f ofApp::getCMYK(ofColor rgb) {
@@ -896,14 +1016,14 @@ void ofApp::gui_setPosterize_pressed() {
 
 //--------------------------------------------------------------
 void ofApp::gui_exportSVG_pressed() {
-	saveSVG = true;
+	saveVector = true;
 }
 
 //-------------------------------------------------------------
 void ofApp::keyPressed(int key){
 	updateFbo();
 	if (key == 'p') {
-		saveSVG = true;
+		saveVector = true;
 	}
 }
 

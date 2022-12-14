@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<Pixel_Plotter>
+	<Source_Image>D:\OpenFrameworks\apps\pixelplotter\bin\data\src_img\32-32.png</Source_Image>
+	<Plot_Style>CMYK Seperation 12</Plot_Style>
+	<Blend_Mode>OF_BLENDMODE_DISABLED</Blend_Mode>
+	<Normalise_Colours>0</Normalise_Colours>
+	<Tile_Count_X>162</Tile_Count_X>
+	<X_addon>0</X_addon>
+	<Y_addon>0</Y_addon>
+	<Paper_Color>255, 255, 255, 255</Paper_Color>
+	<Round_Pixels>0</Round_Pixels>
+	<Show_Image>0</Show_Image>
+	<Random_Offset>0</Random_Offset>
+	<Tile_Count_Y>57</Tile_Count_Y>
+	<Magenta___Red>255, 0, 0, 255</Magenta___Red>
+	<Cyan___Blue>167, 233, 255, 255</Cyan___Blue>
+	<Yellow___Green>213, 93, 179, 255</Yellow___Green>
+	<Black>0, 0, 255, 255</Black>
+	<Show_Zoom>0</Show_Zoom>
+	<Every_N_X>8</Every_N_X>
+	<Every_N_Y>1</Every_N_Y>
+</Pixel_Plotter>
