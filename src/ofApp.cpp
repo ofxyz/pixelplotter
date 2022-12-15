@@ -28,7 +28,7 @@ void ofApp::setup() {
 	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetBackgroundAuto(false);
 	ofSetCircleResolution(100);
-	
+
 	// Setup Listeners Before adding GUI
 	// ---------------------------------
 	imageDropdown.populateFromDirectory(ofToDataPath("src_img"), { "gif", "png", "jpg", "jpeg"});
@@ -122,7 +122,7 @@ void ofApp::setup() {
 	gui.add(showZoom.setup("Show Zoom", false));
 	gui.add(exportSVG.setup("Export SVG"));
 	
-	zoomFbo.allocate(zoomW, zoomH, GL_RGBA,8);
+	zoomFbo.allocate(zoomWindowW, zoomWindowH, GL_RGBA,8);
 	ofBackground(paperColor);
 	ofLog() << ofFbo::checkGLSupport();
 }
@@ -141,13 +141,13 @@ void ofApp::update() {
 	if (ofGetFrameNum() % 500 == 0) updateFbo();
 	if (showZoom) {
 		zoomFbo.begin();
-		fbo.getTexture().drawSubsection(0, 0, zoomW, zoomH, mouseX - (zoomW * 0.5), mouseY - (zoomH * 0.5));
+		ofClear(paperColor);
+		fbo.getTexture().drawSubsection(0, 0, zoomWindowW, zoomWindowH, (mouseX*zoomMultiplier) - (zoomWindowW * 0.5), (mouseY*zoomMultiplier) - (zoomWindowH * 0.5));
 		zoomFbo.end();
 	}
 }
 
 void ofApp::updateFbo() {
-	fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA, 8);
 	fbo.begin();
 	ofClear(paperColor);
 
@@ -157,39 +157,17 @@ void ofApp::updateFbo() {
 
 	setBlendmode();
 
-	int w = img.getWidth();
-	int h = img.getHeight();
-	float tileW = (float)w / (float)tilesX;
-	float tileH = (float)h / (float)tilesY;
+	int imgW = img.getWidth();
+	int imgH = img.getHeight();
+	float tileW = (float)imgW / (float)tilesX;
+	float tileH = (float)imgH / (float)tilesY;
 	float halfTileW = tileW / 2.0;
 	float halfTileH = tileH / 2.0;
 
-	/* Process All Pixels of Original Image 
-	int o_w = original.getWidth();
-	int o_h = original.getHeight();
-	
-	for (int y = 0; y < o_h; y += 1) {
-		for (int x = 0; x < o_w; x += 1) {
-			ofColor c = original.getPixels().getColor(x, y);
-			if (normalise) {
-				c.normalize();
-			}
-
-			ofPushMatrix();
-			ofTranslate((x * tileW) + halfTileW, (y * tileH) + halfTileH, 0);
-
-			float rotation = ofMap(x, 0, o_w, -360, 360);
-			callStyle(styleDropdown->selectedValue, tileW + addonx, tileH + addony, c, rotation);
-
-			ofPopMatrix();
-
-		}
-	}
-	*/
 	int ycount = 0;
 	int xcount = 0;
-	for (float y = 0; y < h - halfTileW; y += tileH) {
-		for (float x = 0; x < w - halfTileW; x += tileW) {
+	for (float y = 0; y < imgH - halfTileW; y += tileH) {
+		for (float x = 0; x < imgW - halfTileW; x += tileW) {
 			
 			float fx = x + halfTileW;
 			float fy = y + halfTileW;
@@ -202,8 +180,8 @@ void ofApp::updateFbo() {
 			}
 
 			ofPushMatrix();
-			ofTranslate(fx, fy, 0);
-			callStyle(styleDropdown->selectedValue, ofVec2f(tileW + addonx, tileH + addony), ofVec2f(fx, fy), ofVec2f(xcount, ycount), c);
+			ofTranslate(fx * zoomMultiplier, fy * zoomMultiplier, 0);
+			callStyle(styleDropdown->selectedValue, ofVec2f((tileW + addonx)*zoomMultiplier, (tileH + addony) * zoomMultiplier), ofVec2f(fx * zoomMultiplier, fy * zoomMultiplier), ofVec2f(xcount, ycount), c);
 			ofPopMatrix();
 			xcount++;
 		}
@@ -245,15 +223,32 @@ void ofApp::draw(){
 
 	ofBackground(paperColor);
 
-	fbo.draw(0, 0);
+	fbo.draw(glm::vec2(0, 0), img.getWidth(), img.getHeight());
 
 	if (showImage) {
-		img.draw(0, 0);
+		img.draw(0,0);
 	}
 
 	if (showZoom) {
 		// TODO: map values to screen - zoomWH
-		zoomFbo.draw(glm::vec2(mouseX, mouseY), zoomW*4, zoomH*4);
+
+		float zX = mouseX - (zoomWindowW * 0.5);
+		float zY = mouseY - (zoomWindowH * 0.5);
+
+		ofPushStyle();
+		// White Background
+		ofSetColor(0xffffff);
+		ofDrawRectangle(glm::vec2(zX, zY), zoomWindowW, zoomWindowH);
+		ofPopStyle();
+		
+		zoomFbo.draw(glm::vec2(zX, zY), zoomWindowW, zoomWindowH);
+
+		ofPushStyle();
+		ofSetColor(0x000000);
+		ofNoFill();
+		ofSetLineWidth(2);
+		ofDrawRectangle(glm::vec2(zX, zY), zoomWindowW, zoomWindowH);
+		ofPopStyle();
 	}
 
 	gui.draw();
@@ -286,7 +281,7 @@ void ofApp::callStyle(string stylename, ofVec2f size, ofVec2f loc, ofDefaultVec2
 		Style_RGB_Seperation_4(w, h, c);
 	}
 	else if (stylename == "RGB Seperation 5") {
-		Style_RGB_Seperation_5(w, h, c);
+		Style_RGB_Seperation_5(w, h, c); 
 	}
 	else if (stylename == "CMYK Seperation 1") {
 		Style_CMYK_Seperation_1(w, h, c);
@@ -953,25 +948,27 @@ void ofApp::Style_CMYK_Seperation_12(float w, float h, ofColor c, ofDefaultVec2 
 }
 
 void ofApp::loadImage(string& filepath) {
-	float ratio = 1;
+	
 	original.load(filepath);
 	img.load(filepath);
 
-	//(img.getWidth() >= img.getHeight()) ? isLandscape = true : isLandscape = false;
-	
 	std::string base_filename = filepath.substr(filepath.find_last_of("/\\") + 1);
 	std::string::size_type const p(base_filename.find_last_of('.'));
 	std::string file_without_extension = base_filename.substr(0, p);
-
 	img_name = file_without_extension;
 
-	// Resize to always fit screen
-	ratio = img.getHeight() / img.getWidth();
-	img.resize(ofGetWidth(), ofGetWidth() * ratio);	
-	if (img.getHeight() > ofGetHeight()) {
+	// Resize image fit screen
+	(img.getWidth() > img.getHeight()) ? isLandscape = true : isLandscape = false;
+	if (isLandscape) {
+		ratio = img.getHeight() / img.getWidth();
+		img.resize(ofGetWidth(), ofGetWidth() * ratio);	
+	}
+	else {
 		ratio = img.getWidth() / img.getHeight();
 		img.resize(ofGetHeight() * ratio, ofGetHeight());
 	}
+
+	fbo.allocate(img.getWidth()*zoomMultiplier, img.getHeight() * zoomMultiplier, GL_RGBA, 8);
 }
 
 void ofApp::onImageChange(string& filepath) {
