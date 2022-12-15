@@ -98,7 +98,11 @@ class ofApp : public ofBaseApp{
 
 		ofFbo fbo;
 		ofFbo zoomFbo;
-		int zoomW = 100;
-		int zoomH = 75;
+
+		float ratio = 1;
+		int zoomWindowW = 300;
+		int zoomWindowH = 300;
+		int zoomMultiplier = 4;
+		int exportCounter = 0;
 
 };
