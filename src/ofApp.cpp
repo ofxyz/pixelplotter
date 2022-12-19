@@ -86,6 +86,7 @@ void ofApp::setup() {
 
 	gui.setup("Pixel Plotter", "guiSettings.xml");
 	gui.setPosition(10, 10);
+	//gui.disableHeader();
 	
 	gui.add(&presetDropdown);
 	gui.add(&imageDropdown);
@@ -100,11 +101,11 @@ void ofApp::setup() {
 	gui.add(addonx.setup("X addon", 0, -100, 100));
 	gui.add(addony.setup("Y addon", 0, -100, 100));
 
-	gui.add(paperColor.setup("Paper Color", ofColor(255, 255, 255), ofColor(0, 0, 0), ofColor(255, 255, 255)));
-	gui.add(magentaRed.setup("Magenta / Red", ofColor(236, 0, 140), ofColor(0, 0, 0), ofColor(255, 255, 255)));
-	gui.add(cyanBlue.setup("Cyan / Blue", ofColor(0, 174, 239), ofColor(0, 0, 0), ofColor(255, 255, 255)));
-	gui.add(yellowGreen.setup("Yellow / Green", ofColor(255, 242, 0), ofColor(0, 0, 0), ofColor(255, 255, 255)));
-	gui.add(black.setup("Black", ofColor(0, 0, 0), ofColor(0, 0, 0), ofColor(255, 255, 255)));
+	gui.add(paperColor.setup("Paper Color", ofColor(255, 255, 255, 255), ofColor(0, 0, 0, 255), ofColor(255, 255, 255, 255)));
+	gui.add(magentaRed.setup("Magenta / Red", ofColor(236, 0, 140, 255), ofColor(0, 0, 0, 0), ofColor(255, 255, 255, 255)));
+	gui.add(cyanBlue.setup("Cyan / Blue", ofColor(0, 174, 239, 255), ofColor(0, 0, 0, 0), ofColor(255, 255, 255, 255)));
+	gui.add(yellowGreen.setup("Yellow / Green", ofColor(255, 242, 0, 255), ofColor(0, 0, 0, 0), ofColor(255, 255, 255, 255)));
+	gui.add(black.setup("Black", ofColor(0, 0, 0, 255), ofColor(0, 0, 0, 0), ofColor(255, 255, 255, 255)));
 
 	gui.add(setRGB.setup("Set RGB"));
 	gui.add(setCMYK.setup("Set CMYK"));
@@ -142,7 +143,11 @@ void ofApp::update() {
 	if (showZoom) {
 		zoomFbo.begin();
 		ofClear(paperColor);
-		fbo.getTexture().drawSubsection(0, 0, zoomWindowW, zoomWindowH, (mouseX*zoomMultiplier) - (zoomWindowW * 0.5), (mouseY*zoomMultiplier) - (zoomWindowH * 0.5));
+
+		float fX = max((float)0, min((mouseX * zoomMultiplier) - halfZoomWindowW, fbo.getWidth() - zoomWindowW));
+		float fY = max((float)0, min((mouseY * zoomMultiplier) - halfZoomWindowH, fbo.getHeight() - zoomWindowH));
+
+		fbo.getTexture().drawSubsection(0, 0, zoomWindowW, zoomWindowH, fX, fY);
 		zoomFbo.end();
 	}
 }
@@ -190,26 +195,6 @@ void ofApp::updateFbo() {
 
 	ofDisableBlendMode();
 
-	/*
-	// Draw Grid ...
-	ofPushStyle();
-	ofFill();
-	ofSetColor(ofColor(255,255,255));
-
-	float x = 0;
-	float y = 0;
-	float lineWidth = 4;
-	float halfLine = lineWidth * 0.5;
-	for (y = -halfLine; y < h; y += tileH) {
-		ofDrawRectangle(0, y, w, lineWidth);
-		for (x = -halfLine; x < w; x += tileW) {
-			ofDrawRectangle(x, y, lineWidth, h);
-		}
-	}
-
-	ofPopStyle();
-	*/
-
 	if (saveVector) {
 		ofEndSaveScreenAsPDF();
 		saveVector = false;
@@ -225,30 +210,14 @@ void ofApp::draw(){
 
 	fbo.draw(glm::vec2(0, 0), img.getWidth(), img.getHeight());
 
-	if (showImage) {
-		img.draw(0,0);
+	if (showZoom) {
+		float zX = max((float)0, min(mouseX - halfZoomWindowW, img.getWidth() - zoomWindowW));
+		float zY = max((float)0, min(mouseY - halfZoomWindowH, img.getHeight() - zoomWindowH));
+		zoomFbo.draw(glm::vec2(zX, zY), zoomWindowW, zoomWindowH);
 	}
 
-	if (showZoom) {
-		// TODO: map values to screen - zoomWH
-
-		float zX = mouseX - (zoomWindowW * 0.5);
-		float zY = mouseY - (zoomWindowH * 0.5);
-
-		ofPushStyle();
-		// White Background
-		ofSetColor(0xffffff);
-		ofDrawRectangle(glm::vec2(zX, zY), zoomWindowW, zoomWindowH);
-		ofPopStyle();
-		
-		zoomFbo.draw(glm::vec2(zX, zY), zoomWindowW, zoomWindowH);
-
-		ofPushStyle();
-		ofSetColor(0x000000);
-		ofNoFill();
-		ofSetLineWidth(2);
-		ofDrawRectangle(glm::vec2(zX, zY), zoomWindowW, zoomWindowH);
-		ofPopStyle();
+	if (showImage) {
+		img.draw(0, 0);
 	}
 
 	gui.draw();

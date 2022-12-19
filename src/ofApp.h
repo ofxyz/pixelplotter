@@ -102,6 +102,8 @@ class ofApp : public ofBaseApp{
 		float ratio = 1;
 		int zoomWindowW = 300;
 		int zoomWindowH = 300;
+		float halfZoomWindowW = zoomWindowW * 0.5;
+		float halfZoomWindowH = zoomWindowH * 0.5;
 		int zoomMultiplier = 4;
 		int exportCounter = 0;
 
