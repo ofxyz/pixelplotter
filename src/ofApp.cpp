@@ -96,7 +96,7 @@ void ofApp::setup() {
 	gui.add(normalise.setup("Normalise Colours", false));
 
 	gui.add(tilesX.setup("Tile Count X", 64, 2, ofGetWidth() / 3));
-	gui.add(tilesY.setup("Tile Count Y", 64, 2, ofGetWidth() / 3));
+	gui.add(tilesY.setup("Tile Count Y", 64, 2, ofGetHeight() / 3));
 
 	gui.add(addonx.setup("X addon", 0, -100, 100));
 	gui.add(addony.setup("Y addon", 0, -100, 100));
@@ -142,11 +142,12 @@ void ofApp::update() {
 	if (ofGetFrameNum() % 500 == 0) updateFbo();
 	if (showZoom) {
 		zoomFbo.begin();
-		ofClear(paperColor);
+		ofClear(ofColor(255, 255, 255));
 
 		float fX = max((float)0, min((mouseX * zoomMultiplier) - halfZoomWindowW, fbo.getWidth() - zoomWindowW));
 		float fY = max((float)0, min((mouseY * zoomMultiplier) - halfZoomWindowH, fbo.getHeight() - zoomWindowH));
-
+		ofSetColor(ofColor(255,255,255,255));
+		ofDrawRectangle(0,0, zoomWindowW, zoomWindowH);
 		fbo.getTexture().drawSubsection(0, 0, zoomWindowW, zoomWindowH, fX, fY);
 		zoomFbo.end();
 	}
@@ -154,7 +155,7 @@ void ofApp::update() {
 
 void ofApp::updateFbo() {
 	fbo.begin();
-	ofClear(paperColor);
+	ofBackground(255, 255);
 
 	if (saveVector) {
 		ofBeginSaveScreenAsPDF(img_name + "_" + ofGetTimestampString() + ".pdf", false);
@@ -171,11 +172,10 @@ void ofApp::updateFbo() {
 
 	int ycount = 0;
 	int xcount = 0;
-	for (float y = 0; y < imgH - halfTileW; y += tileH) {
+	for (float y = 0; y < imgH - halfTileH; y += tileH) {
 		for (float x = 0; x < imgW - halfTileW; x += tileW) {
-			
 			float fx = x + halfTileW;
-			float fy = y + halfTileW;
+			float fy = y + halfTileH;
 			int cx = floor(fx);
 			int cy = floor(fy);
 			ofColor c = img.getPixels().getColor(cx, cy);
@@ -315,6 +315,12 @@ void ofApp::setBlendmode() {
 
 //--------------------------------------------------------------
 void ofApp::Style_Pixelate(float w, float h, ofColor c) {
+	w = abs(w);
+	h = abs(h);
+
+	if (w < 0.25 || h < 0.25) {
+		return;
+	}
 
 	float offsetX = ofRandom(-randomOffset, randomOffset);
 	float offsetY = ofRandom(-randomOffset, randomOffset);
@@ -323,18 +329,10 @@ void ofApp::Style_Pixelate(float w, float h, ofColor c) {
 	ofFill();
 	ofSetColor(c);
 	if (roundPixels) {
-		if (abs(w) < 2 || abs(h) < 2) {
-			ofPopStyle();
-			return;
-		}
 		ofDrawEllipse(offsetX, offsetY, w, h);
 	}
 	else {
-		if (abs(w) < 0.25 || abs(h) < 0.25) {
-			ofPopStyle();
-			return;
-		}
-		ofDrawRectangle(-(w * 0.5)+ offsetX, -(h * 0.5)+ offsetX, w, h);
+		ofDrawRectangle(-(w * 0.5)+ offsetX, -(h * 0.5)+ offsetY, w, h);
 	}
 	ofPopStyle();
 }
