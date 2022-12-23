@@ -15,9 +15,9 @@
    // RGB needs K
    // Finish zoom function - Draw bigger ... 
 
-   // GUI update on every change. ofxGUI doesn't seem to be able to do that.
-   // Use external functions or change to ImGUI?
-
+   // GUI update on every change.
+   // Add save load presets
+   
    // Save multiple Settings
 
 */
@@ -26,128 +26,49 @@
 void ofApp::setup() {
 	ofLogToConsole();
 	ofSetLogLevel(OF_LOG_VERBOSE);
-	ofSetBackgroundAuto(false);
+	//ofSetBackgroundAuto(false);
 	ofSetCircleResolution(100);
+	ofSetWindowTitle("Pixel Plotter");
+	ofBackground(c_paper);
+	//ofLog() << ofFbo::checkGLSupport();
+	zoomFbo.allocate(zoomWindowW, zoomWindowH, GL_RGBA, 8);
 
-	// Setup Listeners Before adding GUI
-	// ---------------------------------
-	imageDropdown.populateFromDirectory(ofToDataPath("src_img"), { "gif", "png", "jpg", "jpeg"});
-	presetDropdown.populateFromDirectory(ofToDataPath("presets"), { "xml"});
+	gui.setup();
+	c_background = ofColor(114, 144, 154, 255);
+	c_paper = ofColor(255, 255, 255, 255);
+	c_magentaRed = ofColor(236, 0, 140);
+	c_cyanBlue = ofColor(0, 174, 239);
+	c_yellowGreen = ofColor(255, 242, 0);
+	c_black = ofColor(0, 0, 0);
 
-	imageDropdown.addListener(this, &ofApp::onImageChange);
-	imageDropdown.setSelectedValueByIndex(ofRandom(0, imageDropdown.getNumOptions()), true);
-	presetDropdown.addListener(this, &ofApp::onPresetChange);
-	//presetDropdown.setSelectedValueByIndex(ofRandom(0, presetDropdown.getNumOptions()), true);
-
-	styleDropdown = make_unique<ofxDropdown>("Plot Style");
-	styleDropdown->add("Pixelate");
-	styleDropdown->add("Pixelate Brightness Width");
-	styleDropdown->add("Lightness Rotation");
-	styleDropdown->add("RGB Seperation 1"); // Order Control?
-	styleDropdown->add("RGB Seperation 2");
-	styleDropdown->add("RGB Seperation 3");
-	styleDropdown->add("RGB Seperation 4");
-	styleDropdown->add("RGB Seperation 5");
-
-	styleDropdown->add("CMYK Seperation 1");
-	styleDropdown->add("CMYK Seperation 2");
-	styleDropdown->add("CMYK Seperation 3");
-	styleDropdown->add("CMYK Seperation 4");
-	styleDropdown->add("CMYK Seperation 5");
-	styleDropdown->add("CMYK Seperation 6");
-	styleDropdown->add("CMYK Seperation 7");
-	styleDropdown->add("CMYK Seperation 8");
-	styleDropdown->add("CMYK Seperation 9");
-	styleDropdown->add("CMYK Seperation 10");
-	styleDropdown->add("CMYK Seperation 11");
-	styleDropdown->add("CMYK Seperation 12");
-
-	styleDropdown->disableMultipleSelection();
-	styleDropdown->enableCollapseOnSelection();
-	styleDropdown->setSelectedValueByIndex(ofRandom(0,5), false);
-
-	blendDropdown = make_unique<ofxDropdown>("Blend Mode");
-	blendDropdown->add("OF_BLENDMODE_DISABLED");
-	blendDropdown->add("OF_BLENDMODE_ALPHA");
-	blendDropdown->add("OF_BLENDMODE_ADD");
-	blendDropdown->add("OF_BLENDMODE_SUBTRACT");
-	blendDropdown->add("OF_BLENDMODE_MULTIPLY");
-	blendDropdown->add("OF_BLENDMODE_SCREEN");
-	blendDropdown->disableMultipleSelection();
-	blendDropdown->enableCollapseOnSelection();
-	blendDropdown->setSelectedValueByIndex(0, false);
-
-	setRGB.addListener(this, &ofApp::gui_setRGB_pressed);
-	setCMYK.addListener(this, &ofApp::gui_setCMYK_pressed);
-	setPosterize.addListener(this, &ofApp::gui_setPosterize_pressed);
-	exportSVG.addListener(this, &ofApp::gui_exportSVG_pressed);
-
-	// ---------------------------------
-
-	gui.setup("Pixel Plotter", "guiSettings.xml");
-	gui.setPosition(10, 10);
-	//gui.disableHeader();
+	currentPlotStyleIndex = ofRandom(0, v_PlotStyles.size() - 1);
+	ofDirectory imgDirectory(ofToDataPath("src_img", true));
+	imgFiles = imgDirectory.getFiles();
+	for (int i = 0; i < imgFiles.size(); i++)
+	{
+		imgFileNames.push_back(imgFiles[i].getFileName());
+	}
+	currentImgFileIndex = ofRandom(0, imgFileNames.size()-1);
+	loadImage(imgFiles[currentImgFileIndex].getAbsolutePath());
 	
-	gui.add(&presetDropdown);
-	gui.add(&imageDropdown);
-	gui.add(styleDropdown.get());
-	gui.add(blendDropdown.get());
-
-	gui.add(normalise.setup("Normalise Colours", false));
-
-	gui.add(tilesX.setup("Tile Count X", 64, 2, ofGetWidth() / 3));
-	gui.add(tilesY.setup("Tile Count Y", 64, 2, ofGetHeight() / 3));
-
-	gui.add(addonx.setup("X addon", 0, -100, 100));
-	gui.add(addony.setup("Y addon", 0, -100, 100));
-
-	gui.add(paperColor.setup("Paper Color", ofColor(255, 255, 255, 255), ofColor(0, 0, 0, 255), ofColor(255, 255, 255, 255)));
-	gui.add(magentaRed.setup("Magenta / Red", ofColor(236, 0, 140, 255), ofColor(0, 0, 0, 0), ofColor(255, 255, 255, 255)));
-	gui.add(cyanBlue.setup("Cyan / Blue", ofColor(0, 174, 239, 255), ofColor(0, 0, 0, 0), ofColor(255, 255, 255, 255)));
-	gui.add(yellowGreen.setup("Yellow / Green", ofColor(255, 242, 0, 255), ofColor(0, 0, 0, 0), ofColor(255, 255, 255, 255)));
-	gui.add(black.setup("Black", ofColor(0, 0, 0, 255), ofColor(0, 0, 0, 0), ofColor(255, 255, 255, 255)));
-
-	gui.add(setRGB.setup("Set RGB"));
-	gui.add(setCMYK.setup("Set CMYK"));
-	gui.add(setPosterize.setup("Set Posterize"));
-
-	gui.add(roundPixels.setup("Round Pixels", false));
-
-	gui.add(randomOffset.setup("Random Offset", 0, 0, 10));
-	gui.add(everynx.setup("Every N X", 4, 1, 15));
-	gui.add(everyny.setup("Every N Y", 3, 1, 15));
-	gui.add(noisepercentX.setup("Noise % X", 0, 0, 100));
-	gui.add(noisepercentY.setup("Noise % Y", 0, 0, 100));
-
-	gui.add(showImage.setup("Show Image", false));
-	gui.add(showZoom.setup("Show Zoom", false));
-	gui.add(exportSVG.setup("Export SVG"));
-	
-	zoomFbo.allocate(zoomWindowW, zoomWindowH, GL_RGBA,8);
-	ofBackground(paperColor);
-	ofLog() << ofFbo::checkGLSupport();
 }
 
 //--------------------------------------------------------------
 void ofApp::exit() {
 	//clean
-	exportSVG.removeListener(this, &ofApp::gui_exportSVG_pressed);
-	imageDropdown.removeListener(this, &ofApp::onImageChange);
-	presetDropdown.removeListener(this, &ofApp::onPresetChange);
-	return;
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
-	if (ofGetFrameNum() % 500 == 0) updateFbo();
+	//if (ofGetFrameNum() % 500 == 0) updateFbo();
+	if (!pauseRender) {
+		updateFbo();
+	}
+	
 	if (showZoom) {
 		zoomFbo.begin();
-		ofClear(ofColor(255, 255, 255));
-
 		float fX = max((float)0, min((mouseX * zoomMultiplier) - halfZoomWindowW, fbo.getWidth() - zoomWindowW));
 		float fY = max((float)0, min((mouseY * zoomMultiplier) - halfZoomWindowH, fbo.getHeight() - zoomWindowH));
-		ofSetColor(ofColor(255,255,255,255));
-		ofDrawRectangle(0,0, zoomWindowW, zoomWindowH);
 		fbo.getTexture().drawSubsection(0, 0, zoomWindowW, zoomWindowH, fX, fY);
 		zoomFbo.end();
 	}
@@ -155,7 +76,7 @@ void ofApp::update() {
 
 void ofApp::updateFbo() {
 	fbo.begin();
-	ofBackground(255, 255);
+	ofBackground(c_paper);
 
 	if (saveVector) {
 		ofBeginSaveScreenAsPDF(img_name + "_" + ofGetTimestampString() + ".pdf", false);
@@ -186,7 +107,7 @@ void ofApp::updateFbo() {
 
 			ofPushMatrix();
 			ofTranslate(fx * zoomMultiplier, fy * zoomMultiplier, 0);
-			callStyle(styleDropdown->selectedValue, ofVec2f((tileW + addonx)*zoomMultiplier, (tileH + addony) * zoomMultiplier), ofVec2f(fx * zoomMultiplier, fy * zoomMultiplier), ofVec2f(xcount, ycount), c);
+			callStyle(v_PlotStyles[currentPlotStyleIndex], ofVec2f((tileW + addonx) * zoomMultiplier, (tileH + addony) * zoomMultiplier), ofVec2f(fx * zoomMultiplier, fy * zoomMultiplier), ofVec2f(xcount, ycount), c);
 			ofPopMatrix();
 			xcount++;
 		}
@@ -206,7 +127,7 @@ void ofApp::updateFbo() {
 //--------------------------------------------------------------
 void ofApp::draw(){
 
-	ofBackground(paperColor);
+	ofSetBackgroundColor(c_background);
 
 	fbo.draw(glm::vec2(0, 0), img.getWidth(), img.getHeight());
 
@@ -220,7 +141,165 @@ void ofApp::draw(){
 		img.draw(0, 0);
 	}
 
-	gui.draw();
+	gui.begin();
+	{
+		if (show_main_window)
+		{
+			ImGui::SetNextWindowSize(ofVec2f(300, 600));
+			ImGui::SetNextWindowPos(ofVec2f(0,0));
+			ImGui::Begin("Pixel Plotter", &show_main_window, ImGuiWindowFlags_NoDecoration);
+
+			if (ImGui::CollapsingHeader("Source"))
+			{
+				if (!imgFileNames.empty())
+				{
+					if (ofxImGui::VectorCombo("##Source Image", &currentImgFileIndex, imgFileNames))
+					{
+						loadImage(imgFiles[currentImgFileIndex].getAbsolutePath());
+					}
+				}
+
+				ImGui::SameLine();
+				if (showImage) {
+					if (ImGui::Button("Hide Source"))
+					{
+						showImage = false;
+					}
+				}
+				else {
+					if (ImGui::Button("Show Source"))
+					{
+						showImage = true;
+					}
+				}
+			}
+
+			if (ImGui::CollapsingHeader("Style"))
+			{
+				if (ofxImGui::VectorCombo("Plot Style", &currentPlotStyleIndex, v_PlotStyles))
+				{
+					loadImage(imgFiles[currentImgFileIndex].getAbsolutePath());
+				}
+
+				ImGui::AlignTextToFramePadding();
+				ImGui::PushItemWidth(100);
+
+				ImGui::Text("Tiles"); ImGui::SameLine();
+				ImGui::DragInt("X ##Tiles", &tilesX, 1, 1, 1200);
+				ImGui::SameLine();
+				ImGui::DragInt("Y ##Tiles", &tilesY, 1, 1, 1200);
+
+				ImGui::Text("Addon"); ImGui::SameLine();
+				ImGui::SliderFloat("X ##Addon", &addonx, -100.0f, 100.0f, "%.3f");
+				ImGui::SameLine();
+				ImGui::SliderFloat("Y ##Addon", &addony, -100.0f, 100.0f, "%.3f");
+
+				ImGui::SliderFloat("Random Offset", &randomOffset, -100.0f, 100.0f, "%.3f");
+
+				ImGui::Text("Noise"); ImGui::SameLine();
+				ImGui::SliderFloat("X ##Noise", &noisepercentX, 0.0f, 100.0f, "%.2f%%");
+				ImGui::SameLine();
+				ImGui::SliderFloat("Y ##Noise", &noisepercentY, 0.0f, 100.0f, "%.2f%%");
+				
+				ImGui::Text("Every N"); ImGui::SameLine();
+				ImGui::DragInt("X ##Every N", &everynx, 1, 1, 128);
+				ImGui::SameLine();
+				ImGui::DragInt("Y ##Every N", &everyny, 1, 1, 128);
+
+				ImGui::PopItemWidth();
+
+				// Pixel Type: line, square, rect, round, oval
+				// Use Radio or dropdown
+				if (roundPixels) {
+					if (ImGui::Button("Square Pixels"))
+					{
+						roundPixels = false;
+					}
+				}
+				else {
+					if (ImGui::Button("Round Pixels"))
+					{
+						roundPixels = true;
+					}
+				}
+			}
+
+			if (ImGui::CollapsingHeader("Colours"))
+			{
+				ImGui::ColorEdit4("Magenta / Red", (float*)&c_magentaRed, ImGuiColorEditFlags_NoInputs);
+				ImGui::ColorEdit4("Cyan / Blue", (float*)&c_cyanBlue, ImGuiColorEditFlags_NoInputs);
+				ImGui::ColorEdit4("Yellow / Green", (float*)&c_yellowGreen, ImGuiColorEditFlags_NoInputs);
+				ImGui::ColorEdit4("Black", (float*)&c_black, ImGuiColorEditFlags_NoInputs);
+				ImGui::ColorEdit4("Paper / White", (float*)&c_paper, ImGuiColorEditFlags_NoInputs);
+				ImGui::ColorEdit4("Background", (float*)&c_background, ImGuiColorEditFlags_NoInputs);
+
+				if (ImGui::Button("Set RGB"))
+				{
+					ofApp::gui_setRGB_pressed();
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Set CMYK"))
+				{
+					ofApp::gui_setCMYK_pressed();
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Set Avarage"))
+				{
+					ofApp::gui_setAvarage_pressed();
+				}
+
+				ImGui::Checkbox("Normalise Colours", &normalise);
+
+				if (ofxImGui::VectorCombo("Blend Mode", &currentBlendModeIndex, v_BlendModes))
+				{
+					currentBlendmode = v_BlendModes[currentBlendModeIndex];
+				}
+
+			} // End Colours
+
+			if (ImGui::Button("Export Vector")) { saveVector = true; }
+			ImGui::SameLine();
+
+			if (pauseRender) {
+				if (ImGui::Button("Continue"))
+				{
+					pauseRender = false;
+				}
+			}
+			else {
+				if (ImGui::Button("Pause"))
+				{
+					pauseRender = true;
+				}
+			}
+
+			ImGui::SameLine();
+
+			if (showZoom) {
+				if (ImGui::Button("Hide Zoom"))
+				{
+					showZoom = false;
+				}
+			}
+			else {
+				if (ImGui::Button("Show Zoom"))
+				{
+					showZoom = true;
+				}
+			}
+
+			if (pauseRender) {
+				ImGui::Text("Paused at %.1f FPS", ImGui::GetIO().Framerate);
+			}
+			else {
+				ImGui::Text("Rendering at %.1f FPS", ImGui::GetIO().Framerate);
+			}
+			
+			ImGui::End();
+		}
+	}
+	gui.end();
+
 
 }
 
@@ -291,8 +370,6 @@ void ofApp::callStyle(string stylename, ofVec2f size, ofVec2f loc, ofDefaultVec2
 }
 
 void ofApp::setBlendmode() {
-	string currentBlendmode = blendDropdown->selectedValue;
-
 	if (currentBlendmode == "OF_BLENDMODE_ALPHA") {
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 	}
@@ -315,10 +392,10 @@ void ofApp::setBlendmode() {
 
 //--------------------------------------------------------------
 void ofApp::Style_Pixelate(float w, float h, ofColor c) {
-	w = abs(w);
-	h = abs(h);
+	//w = abs(w);
+	//h = abs(h);
 
-	if (w < 0.25 || h < 0.25) {
+	if ( (w > -0.25 && w < 0.25) || (h > -0.25 && h < 0.25)) {
 		return;
 	}
 
@@ -351,13 +428,13 @@ void ofApp::Style_RGB_Seperation_1(float w, float h, ofColor c) {
 	float cHeight;
 
 	cHeight = ofMap(c.r, 0, 255, 0, h);
-	Style_Pixelate(w, cHeight, magentaRed);
+	Style_Pixelate(w, cHeight, c_magentaRed);
 
 	cHeight = ofMap(c.g, 0, 255, 0, h);
-	Style_Pixelate(w, cHeight, yellowGreen);
+	Style_Pixelate(w, cHeight, c_yellowGreen);
 
 	cHeight = ofMap(c.b, 0, 255, 0, h);
-	Style_Pixelate(w, cHeight, cyanBlue);
+	Style_Pixelate(w, cHeight, c_cyanBlue);
 
 }
 
@@ -367,15 +444,15 @@ void ofApp::Style_RGB_Seperation_2(float w, float h, ofColor c) {
 
 	cWidth  = ofMap(c.r, 0, 255, 0, w);
 	cHeight = ofMap(c.r, 0, 255, 0, h);
-	Style_Pixelate(cWidth, cHeight, magentaRed);
+	Style_Pixelate(cWidth, cHeight, c_magentaRed);
 
 	cWidth  = ofMap(c.g, 0, 255, 0, w);
 	cHeight = ofMap(c.g, 0, 255, 0, h);
-	Style_Pixelate(cWidth, cHeight, yellowGreen);
+	Style_Pixelate(cWidth, cHeight, c_yellowGreen);
 
 	cWidth  = ofMap(c.b, 0, 255, 0, w);
 	cHeight = ofMap(c.b, 0, 255, 0, h);
-	Style_Pixelate(cWidth, cHeight, cyanBlue);
+	Style_Pixelate(cWidth, cHeight, c_cyanBlue);
 }
 
 void ofApp::Style_RGB_Seperation_3(float w, float h, ofColor c) {
@@ -384,17 +461,17 @@ void ofApp::Style_RGB_Seperation_3(float w, float h, ofColor c) {
 	float cWidth;
 
 	cWidth = ofMap(c.r, 0, 255, 0, maxWidth);
-	Style_Pixelate(cWidth, h, magentaRed); // Red
+	Style_Pixelate(cWidth, h, c_magentaRed); // Red
 
 	ofPushMatrix(); // offset
 
 	ofTranslate(maxWidth, 0, 0);
 	cWidth = ofMap(c.g, 0, 255, 0, maxWidth);
-	Style_Pixelate(cWidth, h, yellowGreen); // Green
+	Style_Pixelate(cWidth, h, c_yellowGreen); // Green
 
 	ofTranslate(maxWidth, 0, 0);
 	cWidth = ofMap(c.b, 0, 255, 0, maxWidth);
-	Style_Pixelate(cWidth, h, cyanBlue); // Blue
+	Style_Pixelate(cWidth, h, c_cyanBlue); // Blue
 
 	ofPopMatrix();
 }
@@ -412,12 +489,12 @@ void ofApp::Style_RGB_Seperation_4(float w, float h, ofColor c) {
 
 	cWidth = ofMap(c.r + addon, 0, maxC, 0, w);
 	ofTranslate(-(w*0.5)+(cWidth*0.5), 0, 0);
-	Style_Pixelate(cWidth, h, magentaRed);
+	Style_Pixelate(cWidth, h, c_magentaRed);
 
 	ofTranslate(cWidth*0.5, 0, 0);
 	cWidth = ofMap(c.g + addon, 0, maxC, 0, w);
 	ofTranslate(cWidth * 0.5, 0, 0);
-	Style_Pixelate(cWidth, h, yellowGreen);
+	Style_Pixelate(cWidth, h, c_yellowGreen);
 
 	ofTranslate(cWidth * 0.5, 0, 0);
 	cWidth = ofMap(c.b + addon, 0, maxC, 0, w);
@@ -434,7 +511,7 @@ void ofApp::Style_RGB_Seperation_5(float w, float h, ofColor c) {
 	Style_Pixelate(w, h, c);
 
 	cHeight = ofMap(cmyk[3], 0, 1, 0, h);
-	Style_Pixelate(w, cHeight, black); // Black
+	Style_Pixelate(w, cHeight, c_black); // Black
 
 	cHeight = ofMap(c.r, 0, 255, 0, h / 4);
 	ofPushMatrix();
@@ -473,25 +550,25 @@ void ofApp::Style_CMYK_Seperation_2(float w, float h, ofColor c) {
 	ofPushMatrix();
 	ofTranslate(ofRandom(minOffset, maxOffset), ofRandom(minOffset, maxOffset), 0);
 	cHeight = ofMap(cmyk[0], 0, 1, 0, h);
-	Style_Pixelate(cHeight, cHeight, cyanBlue); // Cyan
+	Style_Pixelate(cHeight, cHeight, c_cyanBlue); // Cyan
 	ofPopMatrix();
 
 	ofPushMatrix();
 	ofTranslate(ofRandom(minOffset, maxOffset), ofRandom(minOffset, maxOffset), 0);
 	cHeight = ofMap(cmyk[1], 0, 1, 0, h);
-	Style_Pixelate(cHeight, cHeight, magentaRed); // Magenta
+	Style_Pixelate(cHeight, cHeight, c_magentaRed); // Magenta
 	ofPopMatrix();
 
 	ofPushMatrix();
 	ofTranslate(ofRandom(minOffset, maxOffset), ofRandom(minOffset, maxOffset), 0);
 	cHeight = ofMap(cmyk[2], 0, 1, 0, h);
-	Style_Pixelate(cHeight, cHeight, yellowGreen); // Yellow
+	Style_Pixelate(cHeight, cHeight, c_yellowGreen); // Yellow
 	ofPopMatrix();
 
 	ofPushMatrix();
 	ofTranslate(ofRandom(minOffset, maxOffset), ofRandom(minOffset, maxOffset), 0);
 	cHeight = ofMap(cmyk[3], 0, 1, 0, h);
-	Style_Pixelate(cHeight, cHeight, black); // Black
+	Style_Pixelate(cHeight, cHeight, c_black); // Black
 	ofPopMatrix();
 }
 
@@ -503,19 +580,19 @@ void ofApp::Style_CMYK_Seperation_1(float w, float h, ofColor c) {
 	cWidth = ofMap(cmyk[2], 0, 1, 0, w);
 	cHeight = ofMap(cmyk[2], 0, 1, 0, h);
 
-	Style_Pixelate(cWidth, cHeight, yellowGreen); // Yellow
+	Style_Pixelate(cWidth, cHeight, c_yellowGreen); // Yellow
 
 	cWidth  = ofMap(cmyk[0], 0, 1, 0, w);
 	cHeight = ofMap(cmyk[0], 0, 1, 0, h);
-	Style_Pixelate(cWidth, cHeight,cyanBlue); // Cyan
+	Style_Pixelate(cWidth, cHeight,c_cyanBlue); // Cyan
 
 	cWidth  = ofMap(cmyk[1], 0, 1, 0, w);
 	cHeight = ofMap(cmyk[1], 0, 1, 0, h);
-	Style_Pixelate(cWidth, cHeight, magentaRed); // Magenta
+	Style_Pixelate(cWidth, cHeight, c_magentaRed); // Magenta
 
 	cWidth  = ofMap(cmyk[3], 0, 1, 0, w);
 	cHeight = ofMap(cmyk[3], 0, 1, 0, h);
-	Style_Pixelate(cWidth, cHeight, black); // Black
+	Style_Pixelate(cWidth, cHeight, c_black); // Black
 
 }
 
@@ -525,16 +602,16 @@ void ofApp::Style_CMYK_Seperation_3(float w, float h, ofColor c) {
 	ofVec4f cmyk = getCMYK(c);
 
 	cWidth = ofMap(cmyk[0], 0, 1, 0, w);
-	Style_Pixelate(cWidth, cWidth, cyanBlue); // Cyan
+	Style_Pixelate(cWidth, cWidth, c_cyanBlue); // Cyan
 
 	cWidth = ofMap(cmyk[1], 0, 1, 0, w);
-	Style_Pixelate(cWidth, cWidth, magentaRed); // Magenta
+	Style_Pixelate(cWidth, cWidth, c_magentaRed); // Magenta
 
 	cWidth = ofMap(cmyk[2], 0, 1, 0, w);
-	Style_Pixelate(cWidth, cWidth, yellowGreen); // Yellow
+	Style_Pixelate(cWidth, cWidth, c_yellowGreen); // Yellow
 
 	cWidth = ofMap(cmyk[3], 0, 1, 0, w);
-	Style_Pixelate(cWidth, cWidth, black); // Black
+	Style_Pixelate(cWidth, cWidth, c_black); // Black
 
 }
 
@@ -546,7 +623,7 @@ void ofApp::Style_CMYK_Seperation_4(float w, float h, ofColor c) {
 	cWidth = ofMap(cmyk[3], 0, 1, 0, w/2);
 
 	if (cWidth > w * 0.1) {
-		Style_Pixelate(cWidth, h, black); // Black
+		Style_Pixelate(cWidth, h, c_black); // Black
 	}
 	
 
@@ -554,19 +631,19 @@ void ofApp::Style_CMYK_Seperation_4(float w, float h, ofColor c) {
 
 	cWidth = ofMap(cmyk[0], 0, 1, 0, w/2);
 	ofTranslate(-(w * 0.5) + (cWidth * 0.5), 0, 0);
-	Style_Pixelate(cWidth, h, cyanBlue); // Cyan
+	Style_Pixelate(cWidth, h, c_cyanBlue); // Cyan
 	
 	ofTranslate(cWidth * 0.5, 0, 0);
 
 	cWidth = ofMap(cmyk[1], 0, 1, 0, w/2);
 	ofTranslate(cWidth * 0.5, 0, 0);
-	Style_Pixelate(cWidth, h, magentaRed); // Magenta
+	Style_Pixelate(cWidth, h, c_magentaRed); // Magenta
 	
 	ofTranslate(cWidth * 0.5, 0, 0);
 
 	cWidth = ofMap(cmyk[2], 0, 1, 0, w/2);
 	ofTranslate(cWidth * 0.5, 0, 0);
-	Style_Pixelate(cWidth, h, yellowGreen); // Yellow
+	Style_Pixelate(cWidth, h, c_yellowGreen); // Yellow
 
 	ofPopMatrix();
 }
@@ -578,22 +655,22 @@ void ofApp::Style_CMYK_Seperation_5(float w, float h, ofColor c) {
 
 	cHeight = ofMap(cmyk[3], 0, 1, 0, h);
 	if (cHeight > h * 0.1) {
-		Style_Pixelate(w, cHeight, black); // Black
+		Style_Pixelate(w, cHeight, c_black); // Black
 	}
 	
 	cHeight = ofMap(cmyk[2], 0, 1, 0, h);
-	Style_Pixelate(w, cHeight, yellowGreen); // Yellow
+	Style_Pixelate(w, cHeight, c_yellowGreen); // Yellow
 
 	cHeight = ofMap(cmyk[0], 0, 1, 0, h);
 	ofPushMatrix();
 	ofTranslate(0, (h * 0.5)-(cHeight*0.5), 0);
-	Style_Pixelate(w, cHeight, cyanBlue); // Cyan
+	Style_Pixelate(w, cHeight, c_cyanBlue); // Cyan
 	ofPopMatrix();
 
 	cHeight = ofMap(cmyk[1], 0, 1, 0, h);
 	ofPushMatrix();
 	ofTranslate(0, (-h * 0.5) + (cHeight * 0.5), 0);
-	Style_Pixelate(w, cHeight, magentaRed); // Magenta
+	Style_Pixelate(w, cHeight, c_magentaRed); // Magenta
 	ofPopMatrix();
 
 }
@@ -605,13 +682,13 @@ void ofApp::Style_CMYK_Seperation_6(float w, float h, ofColor c) {
 
 	cHeight = ofMap(cmyk[3], 0, 1, 2, h-2);
 	if (cHeight > h * 0.5) {
-		Style_Pixelate(w, cHeight, black); // Black
+		Style_Pixelate(w, cHeight, c_black); // Black
 	}
 
 	cHeight = ofMap(cmyk[0], 0, 1, 2, h-2);
 	ofPushMatrix();
 	ofTranslate(0, ((-h - 2) * 0.5) - (cHeight * 0.5), 0);
-	ofColor cc = cyanBlue;
+	ofColor cc = c_cyanBlue;
 	cc.setBrightness(130);
 	Style_Pixelate(w, cHeight, cc); // Cyan
 	ofPopMatrix();
@@ -619,13 +696,13 @@ void ofApp::Style_CMYK_Seperation_6(float w, float h, ofColor c) {
 	cHeight = ofMap(cmyk[1], 0, 1, 2, h-2);
 	ofPushMatrix();
 	ofTranslate(0, ((-h-2) * 0.5) + (cHeight * 0.5), 0);
-	cc = magentaRed;
+	cc = c_magentaRed;
 	cc.setBrightness(130);
 	Style_Pixelate(w, cHeight, cc); // Magenta
 	ofPopMatrix();
 
 	cHeight = ofMap(cmyk[2], 0, 1, 2, h / 2);
-	cc = yellowGreen;
+	cc = c_yellowGreen;
 	cc.setBrightness(130);
 	Style_Pixelate(w, cHeight, cc);
 }
@@ -647,24 +724,24 @@ void ofApp::Style_CMYK_Seperation_7(float w, float h, ofColor c) {
 	cHeight = percentage(pc, h);
 	ofPushMatrix();
 	ofTranslate(0, (-h * 0.5) + (cHeight * 0.5), 0);
-	Style_Pixelate(w, cHeight, cyanBlue); // Cyan
+	Style_Pixelate(w, cHeight, c_cyanBlue); // Cyan
 	
 	ofTranslate(0, cHeight * 0.5, 0);
 
 	cHeight = percentage(pm, h);
 	ofTranslate(0, cHeight * 0.5, 0);
-	Style_Pixelate(w, cHeight, magentaRed); // Magenta
+	Style_Pixelate(w, cHeight, c_magentaRed); // Magenta
 
 	ofTranslate(0, cHeight * 0.5, 0);
 
 	cHeight = percentage(py, h);
 	ofTranslate(0, cHeight * 0.5, 0);
-	Style_Pixelate(w, cHeight, yellowGreen); // Yellow
+	Style_Pixelate(w, cHeight, c_yellowGreen); // Yellow
 
 	ofPopMatrix();
 
 	cHeight = ofMap(cmyk[3], 0, 1, 0, h);
-	Style_Pixelate(w, cHeight, black); // Black
+	Style_Pixelate(w, cHeight, c_black); // c_black
 }
 
 void ofApp::Style_CMYK_Seperation_8(float w, float h, ofColor c) {
@@ -677,24 +754,24 @@ void ofApp::Style_CMYK_Seperation_8(float w, float h, ofColor c) {
 	float py = (100 * cmyk[2]) / total;
 
 	cHeight = ofMap(cmyk[3], 0, 1, 0, h);
-	Style_Pixelate(w, cHeight, black); // Black
+	Style_Pixelate(w, cHeight, c_black); // c_black
 
 	cHeight = ofMap(cmyk[0], 0, 1, 0, h/3);
 	ofPushMatrix();
 	ofTranslate(0, (-h * 0.5) + (cHeight * 0.5), 0);
-	Style_Pixelate(w, cHeight, cyanBlue); // Cyan
+	Style_Pixelate(w, cHeight, c_cyanBlue); // Cyan
 
 	ofTranslate(0, cHeight * 0.5, 0);
 
 	cHeight = ofMap(cmyk[1], 0, 1, 0, h/3);
 	ofTranslate(0, cHeight * 0.5, 0);
-	Style_Pixelate(w, cHeight, magentaRed); // Magenta
+	Style_Pixelate(w, cHeight, c_magentaRed); // Magenta
 
 	ofTranslate(0, cHeight * 0.5, 0);
 
 	cHeight = ofMap(cmyk[2], 0, 1, 0, h/3);
 	ofTranslate(0, cHeight * 0.5, 0);
-	Style_Pixelate(w, cHeight, yellowGreen); // Yellow
+	Style_Pixelate(w, cHeight, c_yellowGreen); // Yellow
 
 	ofPopMatrix();
 
@@ -717,28 +794,28 @@ void ofApp::Style_CMYK_Seperation_9(float w, float h, ofColor c) {
 	ofTranslate(0, (-h * 0.5) + (cHeight * 0.5), 0);
 	float brightness = ofMap(cmyk[0], 0, 1, 0, 255);
 	if (brightness > brightnessThreshhold) {
-		ofColor cc = cyanBlue;
+		ofColor cc = c_cyanBlue;
 		Style_Pixelate(w, cHeight, ofColor(cc.r, cc.g, cc.b, brightness)); // Cyan 
 	}
 	
 	ofTranslate(0, cHeight, 0);
 	brightness = ofMap(cmyk[1], 0, 1, 0, 255);
 	if (brightness > brightnessThreshhold) {
-		ofColor cc = magentaRed;
+		ofColor cc = c_magentaRed;
 		Style_Pixelate(w, cHeight, ofColor(cc.r, cc.g, cc.b, brightness)); // Magenta
 	}
 	
 	ofTranslate(0, cHeight, 0);
 	brightness = ofMap(cmyk[2], 0, 1, 0, 255);
 	if (brightness > brightnessThreshhold) {
-		ofColor cc = yellowGreen;
+		ofColor cc = c_yellowGreen;
 		Style_Pixelate(w, cHeight, ofColor(cc.r, cc.g, cc.b, brightness)); // Yellow
 	}
 
 	ofPopMatrix();
 
 	cHeight = ofMap(cmyk[3], 0, 1, 0, h);
-	Style_Pixelate(w, cHeight, black); // Black
+	Style_Pixelate(w, cHeight, c_black); // c_black
 
 }
 
@@ -766,7 +843,7 @@ void ofApp::Style_CMYK_Seperation_10(float w, float h, ofColor c, ofVec2f loc) {
 	ofTranslate(0, (-h * 0.5) + (cHeight * 0.5), 0);
 	float brightness = ofMap(cmyk[0], 0, 1, 0, 255);
 	if (brightness > brightnessThreshhold) {
-		ofColor cc = cyanBlue;
+		ofColor cc = c_cyanBlue;
 		Style_Pixelate(w, cHeight, ofColor(cc.r, cc.g, cc.b, brightness)); // Cyan
 	}
 
@@ -774,21 +851,21 @@ void ofApp::Style_CMYK_Seperation_10(float w, float h, ofColor c, ofVec2f loc) {
 	ofTranslate(0, cHeight, 0);
 	brightness = ofMap(cmyk[1], 0, 1, 0, 255);
 	if (brightness > brightnessThreshhold) {
-		ofColor cc = magentaRed;
+		ofColor cc = c_magentaRed;
 		Style_Pixelate(w, cHeight, ofColor(cc.r, cc.g, cc.b, brightness)); // Magenta
 	}
 
 	ofTranslate(0, cHeight, 0);
 	brightness = ofMap(cmyk[2], 0, 1, 0, 255);
 	if (brightness > brightnessThreshhold) {
-		ofColor cc = yellowGreen;
+		ofColor cc = c_yellowGreen;
 		Style_Pixelate(w, cHeight, ofColor(cc.r, cc.g, cc.b, brightness)); // Yellow
 	}
 
 	ofPopMatrix();
 
 	cHeight = ofMap(cmyk[3], 0, 1, 0, h);
-	Style_Pixelate(w, cHeight, black); // Black
+	Style_Pixelate(w, cHeight, c_black); // c_black
 
 	ofPopMatrix();
 
@@ -818,37 +895,37 @@ void ofApp::Style_CMYK_Seperation_11(float w, float h, ofColor c, ofDefaultVec2 
 	ofTranslate(0, (-h * 0.5) + (cHeight * 0.5), 0);
 	float brightness = ofMap(cmyk[0], 0, 1, 0, 255);
 	if (brightness > brightnessThreshhold) {
-		ofColor cc = cyanBlue;
+		ofColor cc = c_cyanBlue;
 		Style_Pixelate(w, cHeight, ofColor(cc.r, cc.g, cc.b, brightness)); // Cyan 
 	}
 
 	ofTranslate(0, cHeight, 0);
 	brightness = ofMap(cmyk[1], 0, 1, 0, 255);
 	if (brightness > brightnessThreshhold) {
-		ofColor cc = magentaRed;
+		ofColor cc = c_magentaRed;
 		Style_Pixelate(w, cHeight, ofColor(cc.r, cc.g, cc.b, brightness)); // Magenta
 	}
 
 	ofTranslate(0, cHeight, 0);
 	brightness = ofMap(cmyk[2], 0, 1, 0, 255);
 	if (brightness > brightnessThreshhold) {
-		ofColor cc = yellowGreen;
+		ofColor cc = c_yellowGreen;
 		Style_Pixelate(w, cHeight, ofColor(cc.r, cc.g, cc.b, brightness)); // Yellow
 	}
 
 	ofPopMatrix();
 
 	cHeight = ofMap(cmyk[3], 0, 1, 0, h);
-	Style_Pixelate(w, cHeight, black); // Black
+	Style_Pixelate(w, cHeight, c_black); // c_black
 
 }
 
 void ofApp::Style_CMYK_Seperation_12(float w, float h, ofColor c, ofDefaultVec2 xycount) {
 
 	vector<ofColor> cCMY;
-	cCMY.push_back(cyanBlue);
-	cCMY.push_back(magentaRed);
-	cCMY.push_back(yellowGreen);
+	cCMY.push_back(c_cyanBlue);
+	cCMY.push_back(c_magentaRed);
+	cCMY.push_back(c_yellowGreen);
 
 	vector<int> cIndex;
 	int xcount = xycount[0];
@@ -910,7 +987,7 @@ void ofApp::Style_CMYK_Seperation_12(float w, float h, ofColor c, ofDefaultVec2 
 	ofPopMatrix();
 
 	cHeight = ofMap(cmyk[3], 0, 1, 0, h);
-	Style_Pixelate(w, cHeight, black); // Black
+	Style_Pixelate(w, cHeight, c_black); // Black
 
 }
 
@@ -943,7 +1020,7 @@ void ofApp::onImageChange(string& filepath) {
 }
 
 void ofApp::onPresetChange(string& filepath) {
-	gui.loadFromFile(filepath);
+	// loadFromFile(filepath);
 }
 
 ofVec4f ofApp::getCMYK(ofColor rgb) {
@@ -960,34 +1037,38 @@ ofVec4f ofApp::getCMYK(ofColor rgb) {
 
 //--------------------------------------------------------------
 void ofApp::gui_setRGB_pressed() {
-	magentaRed = ofColor(255, 0, 0);
-	cyanBlue = ofColor(0, 0, 255);
-	yellowGreen = ofColor(0,255,0);
-	black = ofColor(0,0,0);
+	c_magentaRed = ofColor(255, 0, 0);
+	c_cyanBlue = ofColor(0, 0, 255);
+	c_yellowGreen = ofColor(0,255,0);
+	c_black = ofColor(0,0,0);
 }
 
 //--------------------------------------------------------------
 void ofApp::gui_setCMYK_pressed() {
-	magentaRed = ofColor(236, 0, 140);
-	cyanBlue = ofColor(0, 174, 239);
-	yellowGreen = ofColor(255, 242, 0);
-	black = ofColor(0, 0, 0);
+	c_magentaRed = ofColor(236, 0, 140);
+	c_cyanBlue = ofColor(0, 174, 239);
+	c_yellowGreen = ofColor(255, 242, 0);
+	c_black = ofColor(0, 0, 0);
 }
 
 //--------------------------------------------------------------
-void ofApp::gui_setPosterize_pressed() {
+void ofApp::gui_setAvarage_pressed() {
 	swatches = ofxPosterize::getClusterColors(img, 4);
 	if (swatches.size() > 3) {
-		magentaRed = swatches[0];
-		cyanBlue = swatches[1];
-		yellowGreen = swatches[2];
-		black = swatches[3];
+		c_magentaRed = swatches[0];
+		c_cyanBlue = swatches[1];
+		c_yellowGreen = swatches[2];
+		c_black = swatches[3];
+	} else if(swatches.size() > 2) {
+		c_magentaRed = swatches[0];
+		c_cyanBlue = swatches[1];
+		c_yellowGreen = swatches[2];
+	} else if (swatches.size() > 1) {
+		c_magentaRed = swatches[0];
+		c_cyanBlue = swatches[1];
+	} else if (swatches.size() > 0) {
+		c_magentaRed = swatches[0];
 	}
-}
-
-//--------------------------------------------------------------
-void ofApp::gui_exportSVG_pressed() {
-	saveVector = true;
 }
 
 //-------------------------------------------------------------
@@ -995,6 +1076,9 @@ void ofApp::keyPressed(int key){
 	updateFbo();
 	if (key == 'p') {
 		saveVector = true;
+	}
+	if (key == 'x') {
+		pauseRender = !pauseRender;
 	}
 }
 

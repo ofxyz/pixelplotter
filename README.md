@@ -6,7 +6,6 @@
 ## dependencies
 
 - ofxCv
-- ofxDropdown
-- ofxGui
 - ofxOpenCv
+- ofxImGui
 - ofxPosterize

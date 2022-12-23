@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxImGui.h"
 #include "ofxGui.h"
 #include "ofxDropdown.h"
 #include "ofxPosterize.h"
@@ -17,32 +18,32 @@ class ofApp : public ofBaseApp{
 		void onPresetChange(string& file);
 		void loadImage(string& filepath);
 
-		ofxDropdown_<string> imageDropdown{ "Source Image" };
-		ofxDropdown_<string> presetDropdown{ "Preset" };
-
 		string img_name = "PixelPlotted";
 
-		ofxPanel gui;
-		ofxIntSlider tilesX, tilesY, everynx, everyny, noisepercentX, noisepercentY;
-		ofxFloatSlider addonx, addony, randomOffset;
-		
-		ofxColorSlider paperColor;
-		ofxColorSlider magentaRed;
-		ofxColorSlider cyanBlue;
-		ofxColorSlider yellowGreen;
-		ofxColorSlider black;
+		int tilesX = 64;
+		int tilesY = 64;
+		int everynx = 4;
+		int everyny = 4;
+		float addonx = 0;
+		float addony = 0;
+		float randomOffset = 0;
+		float noisepercentX = 0;
+		float noisepercentY = 0;
 
-		ofxToggle showImage, normalise, roundPixels, showZoom;
-		ofxButton exportSVG, setRGB, setCMYK, setPosterize;
-
-		unique_ptr<ofxDropdown> styleDropdown;
-		unique_ptr<ofxDropdown> blendDropdown;
+		bool isLandscape;
+		bool show_main_window = true;
+		bool saveVector = false;
+		bool pauseRender = false;
+		bool normalise = false;
+		bool showImage = false;
+		bool roundPixels = false;
+		bool showZoom = false;
 
 		float percentage(float percent, float total);
-		void gui_exportSVG_pressed();
+
 		void gui_setRGB_pressed();
 		void gui_setCMYK_pressed();
-		void gui_setPosterize_pressed();
+		void gui_setAvarage_pressed();
 
 		void setBlendmode();
 		void updateFbo();
@@ -89,10 +90,12 @@ class ofApp : public ofBaseApp{
 		std::vector<ofColor> swatches;
 
 		int gui_width = 320;
+		int currentImgFileIndex = 0;
+		int currentBlendModeIndex = 0;
+		int currentPlotStyleIndex = 0;
 		float imgRatio;
 
 		float rotation = 0;
-		bool saveVector, isLandscape;
 
 		ofVec4f getCMYK(ofColor rgb);
 
@@ -107,4 +110,39 @@ class ofApp : public ofBaseApp{
 		int zoomMultiplier = 4;
 		int exportCounter = 0;
 
+		ofxImGui::Gui gui;
+		ImVec4 c_background;
+		ImVec4 c_paper;
+		ImVec4 c_magentaRed;
+		ImVec4 c_cyanBlue;
+		ImVec4 c_yellowGreen;
+		ImVec4 c_black;
+
+		std::vector<std::string> imgFileNames;
+		std::vector<ofFile> imgFiles;
+
+		std::string currentBlendmode = "OF_BLENDMODE_DISABLED";
+		std::vector<std::string> v_BlendModes{ "OF_BLENDMODE_DISABLED", "OF_BLENDMODE_ALPHA", "OF_BLENDMODE_ADD", "OF_BLENDMODE_SUBTRACT", "OF_BLENDMODE_MULTIPLY", "OF_BLENDMODE_SCREEN"};
+		std::vector<std::string> v_PlotStyles{ 
+			"Pixelate",
+			"Pixelate Brightness Width",
+			"Lightness Rotation",
+			"RGB Seperation 1",
+			"RGB Seperation 2",
+			"RGB Seperation 3",
+			"RGB Seperation 4",
+			"RGB Seperation 5",
+			"CMYK Seperation 1",
+			"CMYK Seperation 2",
+			"CMYK Seperation 3",
+			"CMYK Seperation 4",
+			"CMYK Seperation 5",
+			"CMYK Seperation 6",
+			"CMYK Seperation 7",
+			"CMYK Seperation 8",
+			"CMYK Seperation 9",
+			"CMYK Seperation 10",
+			"CMYK Seperation 11",
+			"CMYK Seperation 12"
+		};
 };
