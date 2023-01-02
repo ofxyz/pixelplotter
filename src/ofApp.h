@@ -2,9 +2,8 @@
 
 #include "ofMain.h"
 #include "ofxImGui.h"
-#include "ofxGui.h"
-#include "ofxDropdown.h"
 #include "ofxPosterize.h"
+#include "ofxXmlSettings.h"
 
 class ofApp : public ofBaseApp{
 
@@ -14,32 +13,30 @@ class ofApp : public ofBaseApp{
 		void draw();
 		void exit();
 
+		void saveSettings(string& filepath);
+		void loadSettings(string& filepath);
 		void onImageChange(string& file);
-		void onPresetChange(string& file);
 		void loadImage(string& filepath);
 
 		string img_name = "PixelPlotted";
 
-		int tilesX = 64;
-		int tilesY = 64;
-		int everynx = 4;
-		int everyny = 4;
-		float addonx = 0;
-		float addony = 0;
-		float randomOffset = 0;
-		float noisepercentX = 0;
-		float noisepercentY = 0;
+		char presetSaveName[128] = "";
+
+		int exportCount = 0;
+		int gui_width = 320;
+		int img_area_WH = 1200;
 
 		bool isLandscape;
+		bool bSavePreset = false;
 		bool show_main_window = true;
 		bool saveVector = false;
 		bool pauseRender = false;
-		bool normalise = false;
 		bool showImage = false;
-		bool roundPixels = false;
 		bool showZoom = false;
 
 		float percentage(float percent, float total);
+
+		void gui_loadPresets();
 
 		void gui_setRGB_pressed();
 		void gui_setCMYK_pressed();
@@ -82,20 +79,20 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
+		int getIndex(vector<std::string> v, std::string s, int notFound = -1);
+
 		ofImage original, img;
 		ofPixels pixels;
 		ofMesh mesh;
-		ofColor penColor;
 
 		std::vector<ofColor> swatches;
 
-		int gui_width = 320;
 		int currentImgFileIndex = 0;
 		int currentBlendModeIndex = 0;
 		int currentPlotStyleIndex = 0;
-		float imgRatio;
+		int currentPresetIndex = 0;
 
-		float rotation = 0;
+		float imgRatio;
 
 		ofVec4f getCMYK(ofColor rgb);
 
@@ -120,8 +117,12 @@ class ofApp : public ofBaseApp{
 
 		std::vector<std::string> imgFileNames;
 		std::vector<ofFile> imgFiles;
+		std::vector<std::string> presetFileNames;
+		std::vector<ofFile> presetFiles;
 
-		std::string currentBlendmode = "OF_BLENDMODE_DISABLED";
+		ofVec2f offset;
+
+		// Start Saved in Settings
 		std::vector<std::string> v_BlendModes{ "OF_BLENDMODE_DISABLED", "OF_BLENDMODE_ALPHA", "OF_BLENDMODE_ADD", "OF_BLENDMODE_SUBTRACT", "OF_BLENDMODE_MULTIPLY", "OF_BLENDMODE_SCREEN"};
 		std::vector<std::string> v_PlotStyles{ 
 			"Pixelate",
@@ -145,4 +146,18 @@ class ofApp : public ofBaseApp{
 			"CMYK Seperation 11",
 			"CMYK Seperation 12"
 		};
+
+		int tilesX = 64;
+		int tilesY = 64;
+		float addonx = 0;
+		float addony = 0;
+		int everynx = 4;
+		int everyny = 4;
+		float randomOffset = 0;
+		float noisepercentX = 0;
+		float noisepercentY = 0;
+		bool normalise = false;
+		bool roundPixels = false;
+		std::string currentBlendmode = "OF_BLENDMODE_DISABLED";
+		// End Saved in Settings
 };

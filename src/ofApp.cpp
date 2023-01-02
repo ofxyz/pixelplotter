@@ -1,24 +1,13 @@
 #include "ofApp.h"
 
 /*
-   
-   Export image size dimensions not screen dimensions.
-   Reload FBO on every image change
-
-   Make some dots
-   
-   Posterise to a pallette. Set high mid low to start?
-   Or dumb down the colours then ability to remap?
-
-   // Add Polkadots
-
-   // RGB needs K
-   // Finish zoom function - Draw bigger ... 
-
-   // GUI update on every change.
-   // Add save load presets
-   
-   // Save multiple Settings
+   - Add clear screen button
+   - Make some polka dots
+   - Posterise Source
+   - RGB needs K check and clean options
+   - GUI update on every change
+   - Add save load presets
+   - Add modulators (EG X Y tiles between min-max, time)
 
 */
 
@@ -34,7 +23,12 @@ void ofApp::setup() {
 	zoomFbo.allocate(zoomWindowW, zoomWindowH, GL_RGBA, 8);
 
 	gui.setup();
-	c_background = ofColor(114, 144, 154, 255);
+	ImGuiStyle* style = &ImGui::GetStyle();
+	style->ItemSpacing = ImVec2(5, 5);
+
+	ImGui::StyleColorsClassic();
+
+	c_background = ofColor(50, 50, 50, 255);
 	c_paper = ofColor(255, 255, 255, 255);
 	c_magentaRed = ofColor(236, 0, 140);
 	c_cyanBlue = ofColor(0, 174, 239);
@@ -50,7 +44,21 @@ void ofApp::setup() {
 	}
 	currentImgFileIndex = ofRandom(0, imgFileNames.size()-1);
 	loadImage(imgFiles[currentImgFileIndex].getAbsolutePath());
-	
+
+	gui_loadPresets();
+
+}
+
+void ofApp::gui_loadPresets() {
+	ofDirectory presetDirectory(ofToDataPath("presets", true));
+	presetFileNames.clear();
+	presetFiles = presetDirectory.getFiles();
+	for (int i = 0; i < presetFiles.size(); i++)
+	{
+		string base_filename = presetFiles[i].getFileName();
+		string pname = base_filename.substr(0, base_filename.find_last_of('.'));
+		presetFileNames.push_back(pname);
+	}
 }
 
 //--------------------------------------------------------------
@@ -66,9 +74,9 @@ void ofApp::update() {
 	}
 	
 	if (showZoom) {
-		zoomFbo.begin();
-		float fX = max((float)0, min((mouseX * zoomMultiplier) - halfZoomWindowW, fbo.getWidth() - zoomWindowW));
-		float fY = max((float)0, min((mouseY * zoomMultiplier) - halfZoomWindowH, fbo.getHeight() - zoomWindowH));
+		zoomFbo.begin(); 
+		float fX = max((float)0, min(((mouseX - offset.x) * zoomMultiplier) - halfZoomWindowW, fbo.getWidth() - zoomWindowW));
+		float fY = max((float)0, min(((mouseY - offset.y) * zoomMultiplier) - halfZoomWindowH, fbo.getHeight() - zoomWindowH));
 		fbo.getTexture().drawSubsection(0, 0, zoomWindowW, zoomWindowH, fX, fY);
 		zoomFbo.end();
 	}
@@ -76,10 +84,10 @@ void ofApp::update() {
 
 void ofApp::updateFbo() {
 	fbo.begin();
-	ofBackground(c_paper);
+	ofSetBackgroundColor(c_paper);
 
 	if (saveVector) {
-		ofBeginSaveScreenAsPDF(img_name + "_" + ofGetTimestampString() + ".pdf", false);
+		ofBeginSaveScreenAsPDF( "export//" + img_name + "_" + v_PlotStyles[currentPlotStyleIndex] + "_" + to_string(++exportCount) + ".pdf", false);
 	}
 
 	setBlendmode();
@@ -129,25 +137,52 @@ void ofApp::draw(){
 
 	ofSetBackgroundColor(c_background);
 
-	fbo.draw(glm::vec2(0, 0), img.getWidth(), img.getHeight());
+	fbo.draw(glm::vec2(offset.x, offset.y), img.getWidth(), img.getHeight());
 
 	if (showZoom) {
-		float zX = max((float)0, min(mouseX - halfZoomWindowW, img.getWidth() - zoomWindowW));
-		float zY = max((float)0, min(mouseY - halfZoomWindowH, img.getHeight() - zoomWindowH));
+		float zX = max(offset.x, min(mouseX - halfZoomWindowW, (img.getWidth()  + offset.x) - zoomWindowW));
+		float zY = max(offset.y, min(mouseY - halfZoomWindowH, (img.getHeight() + offset.y) - zoomWindowH));
+
+		ofPushStyle();
+		ofFill();
+		ofSetColor(ofColor(255,255,255,255));
+		ofDrawRectangle(zX, zY, zoomWindowW, zoomWindowH);
+		ofSetColor(c_background);
+		ofNoFill();
+		ofSetLineWidth(1);
+		ofDrawRectangle(zX-1, zY-1, zoomWindowW+2, zoomWindowH+2);
+		ofPopStyle();
+
 		zoomFbo.draw(glm::vec2(zX, zY), zoomWindowW, zoomWindowH);
 	}
 
 	if (showImage) {
-		img.draw(0, 0);
+		img.draw(offset.x, offset.y);
 	}
 
 	gui.begin();
 	{
 		if (show_main_window)
 		{
-			ImGui::SetNextWindowSize(ofVec2f(300, 600));
-			ImGui::SetNextWindowPos(ofVec2f(0,0));
+			ImGui::SetNextWindowSize(ofVec2f(gui_width, ofGetHeight()));
+			ImGui::SetNextWindowPos(ofVec2f(ofGetWidth()-gui_width, 0));
 			ImGui::Begin("Pixel Plotter", &show_main_window, ImGuiWindowFlags_NoDecoration);
+
+			if (showZoom) {
+				if (ImGui::Button("Hide Zoom"))
+				{
+					showZoom = false;
+				}
+			}
+			else {
+				if (ImGui::Button("Show Zoom"))
+				{
+					showZoom = true;
+				}
+			}
+
+			ImGui::SameLine();
+			if (ImGui::Button("Export Vector")) { saveVector = true; }
 
 			if (ImGui::CollapsingHeader("Source"))
 			{
@@ -174,14 +209,61 @@ void ofApp::draw(){
 				}
 			}
 
-			if (ImGui::CollapsingHeader("Style"))
+			if (ImGui::CollapsingHeader("Style Options"))
 			{
-				if (ofxImGui::VectorCombo("Plot Style", &currentPlotStyleIndex, v_PlotStyles))
+				/*
+				if (ImGui::Button("Quick Save"))
 				{
-					loadImage(imgFiles[currentImgFileIndex].getAbsolutePath());
+					string savePath = "presets\/quicksave.xml";
+					saveSettings(savePath);
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Quick Load"))
+				{
+					string savePath = "presets\/quicksave.xml";
+					loadSettings(savePath);
+				}
+				*/
+
+				if (ofxImGui::VectorCombo("##Presets", &currentPresetIndex, presetFileNames))
+				{
+					loadSettings(presetFiles[currentPresetIndex].getAbsolutePath());
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Delete Preset"))
+				{
+					presetFiles[currentPresetIndex].remove();
+					gui_loadPresets();
+				}
+
+				if (bSavePreset) {
+					ImGui::InputText("##presetname", presetSaveName, IM_ARRAYSIZE(presetSaveName));
+					ImGui::SameLine();
+				}
+				if (ImGui::Button("Save Preset"))
+				{
+					if (bSavePreset) {
+						string savePath = "presets\/" + string(presetSaveName) + ".xml";
+						saveSettings(savePath);
+						gui_loadPresets();
+						currentPresetIndex = getIndex(presetFileNames, string(presetSaveName), 0);
+						bSavePreset = false;
+					}
+					else {
+						if (presetFileNames.size() > 0) {
+							strcpy(presetSaveName, presetFileNames[currentPresetIndex].c_str());
+						}
+						bSavePreset = true;
+					}
 				}
 
 				ImGui::AlignTextToFramePadding();
+				
+				if (ofxImGui::VectorCombo("Plot Style", &currentPlotStyleIndex, v_PlotStyles))
+				{
+					// Done
+				}
+
 				ImGui::PushItemWidth(100);
 
 				ImGui::Text("Tiles"); ImGui::SameLine();
@@ -194,7 +276,7 @@ void ofApp::draw(){
 				ImGui::SameLine();
 				ImGui::SliderFloat("Y ##Addon", &addony, -100.0f, 100.0f, "%.3f");
 
-				ImGui::SliderFloat("Random Offset", &randomOffset, -100.0f, 100.0f, "%.3f");
+				ImGui::SliderFloat("Random Offset", &randomOffset, 0.0f, 250.0f, "%.3f");
 
 				ImGui::Text("Noise"); ImGui::SameLine();
 				ImGui::SliderFloat("X ##Noise", &noisepercentX, 0.0f, 100.0f, "%.2f%%");
@@ -222,7 +304,7 @@ void ofApp::draw(){
 						roundPixels = true;
 					}
 				}
-			}
+			}// End Style
 
 			if (ImGui::CollapsingHeader("Colours"))
 			{
@@ -257,9 +339,6 @@ void ofApp::draw(){
 
 			} // End Colours
 
-			if (ImGui::Button("Export Vector")) { saveVector = true; }
-			ImGui::SameLine();
-
 			if (pauseRender) {
 				if (ImGui::Button("Continue"))
 				{
@@ -275,19 +354,6 @@ void ofApp::draw(){
 
 			ImGui::SameLine();
 
-			if (showZoom) {
-				if (ImGui::Button("Hide Zoom"))
-				{
-					showZoom = false;
-				}
-			}
-			else {
-				if (ImGui::Button("Show Zoom"))
-				{
-					showZoom = true;
-				}
-			}
-
 			if (pauseRender) {
 				ImGui::Text("Paused at %.1f FPS", ImGui::GetIO().Framerate);
 			}
@@ -299,8 +365,6 @@ void ofApp::draw(){
 		}
 	}
 	gui.end();
-
-
 }
 
 void ofApp::callStyle(string stylename, ofVec2f size, ofVec2f loc, ofDefaultVec2 xycount, ofColor c) {
@@ -827,8 +891,6 @@ void ofApp::Style_CMYK_Seperation_10(float w, float h, ofColor c, ofVec2f loc) {
 	ofVec4f cmyk = getCMYK(c);
 
 	ofPushMatrix();
-	//rotation = rotation + 0.25;
-	//if (rotation > 360) rotation = rotation - 360;
 
 	ofRotateZDeg(rot);
 	
@@ -997,15 +1059,13 @@ void ofApp::loadImage(string& filepath) {
 	img.load(filepath);
 
 	std::string base_filename = filepath.substr(filepath.find_last_of("/\\") + 1);
-	std::string::size_type const p(base_filename.find_last_of('.'));
-	std::string file_without_extension = base_filename.substr(0, p);
-	img_name = file_without_extension;
+	img_name = base_filename.substr(0, base_filename.find_last_of('.'));
 
 	// Resize image fit screen
 	(img.getWidth() > img.getHeight()) ? isLandscape = true : isLandscape = false;
 	if (isLandscape) {
 		ratio = img.getHeight() / img.getWidth();
-		img.resize(ofGetWidth(), ofGetWidth() * ratio);	
+		img.resize(ofGetWidth() - gui_width, (ofGetWidth() - gui_width) * ratio);
 	}
 	else {
 		ratio = img.getWidth() / img.getHeight();
@@ -1013,14 +1073,62 @@ void ofApp::loadImage(string& filepath) {
 	}
 
 	fbo.allocate(img.getWidth()*zoomMultiplier, img.getHeight() * zoomMultiplier, GL_RGBA, 8);
+
+	offset.x = ((ofGetWidth() - gui_width) - img.getWidth())*0.5;
+	offset.y = (ofGetHeight() - img.getHeight()) * 0.5;
 }
 
 void ofApp::onImageChange(string& filepath) {
 	loadImage(filepath);
 }
 
-void ofApp::onPresetChange(string& filepath) {
-	// loadFromFile(filepath);
+int ofApp::getIndex(vector<std::string> v, std::string s, int notFound) {
+	auto it = find(v.begin(), v.end(), s);
+
+	if (it != v.end())
+	{
+		return it - v.begin();
+	}
+	else {
+		return notFound;
+	}
+}
+
+void ofApp::saveSettings(string& filepath) {
+	ofxXmlSettings settings;
+	settings.setValue("pixel_plotter:plotStyle", v_PlotStyles[currentPlotStyleIndex]);
+	settings.setValue("pixel_plotter:blendmode", v_BlendModes[currentBlendModeIndex]);
+	settings.setValue("pixel_plotter:tilesX", tilesX);
+	settings.setValue("pixel_plotter:tilesY", tilesY);
+	settings.setValue("pixel_plotter:addonx", addonx);
+	settings.setValue("pixel_plotter:addony", addony);
+	settings.setValue("pixel_plotter:everynx", everynx);
+	settings.setValue("pixel_plotter:everyny", everyny);
+	settings.setValue("pixel_plotter:randomOffset", randomOffset);
+	settings.setValue("pixel_plotter:noisepercentX", noisepercentX);
+	settings.setValue("pixel_plotter:noisepercentY", noisepercentY);
+	settings.setValue("pixel_plotter:roundPixels", roundPixels);
+	settings.saveFile(filepath);
+}
+
+void ofApp::loadSettings(string& filepath) {
+	ofxXmlSettings settings;
+	settings.loadFile(filepath);
+
+	// Below needs proper getter ...b 
+	currentPlotStyleIndex = getIndex(v_PlotStyles, settings.getValue("pixel_plotter:plotStyle", "0"), 0);
+	currentBlendModeIndex = getIndex(v_BlendModes, settings.getValue("pixel_plotter:blendmode", "0"), 0);
+	tilesX = settings.getValue("pixel_plotter:tilesX", 64);
+	tilesY = settings.getValue("pixel_plotter:tilesY", 64);
+	addonx = settings.getValue("pixel_plotter:addonx", 0);
+	addony = settings.getValue("pixel_plotter:addony", 0);
+
+	everynx = settings.getValue("pixel_plotter:everynx", 4);
+	everyny = settings.getValue("pixel_plotter:everyny", 4);
+	randomOffset = settings.getValue("pixel_plotter:randomOffset", 0);
+	noisepercentX = settings.getValue("pixel_plotter:noisepercentX", 0);
+	noisepercentY = settings.getValue("pixel_plotter:noisepercentY", 0);
+	roundPixels = settings.getValue("pixel_plotter:roundPixels", false);
 }
 
 ofVec4f ofApp::getCMYK(ofColor rgb) {

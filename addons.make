@@ -2,3 +2,4 @@ ofxOpenCv
 ofxCv
 ofxImGui
 ofxPosterize
+ofxXmlSettings
