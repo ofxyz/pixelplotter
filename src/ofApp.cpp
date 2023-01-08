@@ -74,7 +74,8 @@ void ofApp::update() {
 	}
 	
 	if (showZoom) {
-		zoomFbo.begin(); 
+		zoomFbo.begin();
+		ofClear(c_paper);
 		float fX = max((float)0, min(((mouseX - offset.x) * zoomMultiplier) - halfZoomWindowW, fbo.getWidth() - zoomWindowW));
 		float fY = max((float)0, min(((mouseY - offset.y) * zoomMultiplier) - halfZoomWindowH, fbo.getHeight() - zoomWindowH));
 		fbo.getTexture().drawSubsection(0, 0, zoomWindowW, zoomWindowH, fX, fY);
@@ -84,7 +85,7 @@ void ofApp::update() {
 
 void ofApp::updateFbo() {
 	fbo.begin();
-	ofSetBackgroundColor(c_paper);
+	ofClear(c_paper);
 
 	if (saveVector) {
 		ofBeginSaveScreenAsPDF( "export//" + img_name + "_" + v_PlotStyles[currentPlotStyleIndex] + "_" + to_string(++exportCount) + ".pdf", false);
