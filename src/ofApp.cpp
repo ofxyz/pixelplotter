@@ -84,6 +84,7 @@ void ofApp::update() {
 			videoGrabber.update();
 			if (videoGrabber.isFrameNew()) {
 				img.setFromPixels(videoGrabber.getPixels());
+				img.mirror(false, true); // Webcam ...
 				prep_img();
 			}
 		}
