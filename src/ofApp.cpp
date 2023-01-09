@@ -12,6 +12,7 @@
 */
 
 //--------------------------------------------------------------
+
 void ofApp::setup() {
 	ofLogToConsole();
 	ofSetLogLevel(OF_LOG_VERBOSE);
@@ -19,6 +20,14 @@ void ofApp::setup() {
 	ofSetCircleResolution(100);
 	ofSetWindowTitle("Pixel Plotter");
 	ofBackground(c_paper);
+
+	videoDevices = videoGrabber.listDevices();
+	for (vector<ofVideoDevice>::iterator it = videoDevices.begin(); it != videoDevices.end(); ++it) {
+		imgFileNames.push_back(it->deviceName);
+	}
+
+	videoGrabber.initGrabber(camWidth, camHeight);
+
 	//ofLog() << ofFbo::checkGLSupport();
 	zoomFbo.allocate(zoomWindowW, zoomWindowH, GL_RGBA, 8);
 
@@ -42,7 +51,7 @@ void ofApp::setup() {
 	{
 		imgFileNames.push_back(imgFiles[i].getFileName());
 	}
-	currentImgFileIndex = ofRandom(0, imgFileNames.size()-1);
+	currentImgFileIndex = ofRandom(videoDevices.size(), imgFileNames.size() - 1);
 	loadImage(imgFiles[currentImgFileIndex].getAbsolutePath());
 
 	gui_loadPresets();
@@ -70,6 +79,15 @@ void ofApp::exit() {
 void ofApp::update() {
 	//if (ofGetFrameNum() % 500 == 0) updateFbo();
 	if (!pauseRender) {
+		
+		if (bUseVideoDevice) {
+			videoGrabber.update();
+			if (videoGrabber.isFrameNew()) {
+				img.setFromPixels(videoGrabber.getPixels());
+				prep_img();
+			}
+		}
+
 		updateFbo();
 	}
 	
@@ -191,7 +209,21 @@ void ofApp::draw(){
 				{
 					if (ofxImGui::VectorCombo("##Source Image", &currentImgFileIndex, imgFileNames))
 					{
-						loadImage(imgFiles[currentImgFileIndex].getAbsolutePath());
+						if (currentImgFileIndex > videoDevices.size()-1) {
+							bUseVideoDevice = false;
+							loadImage(imgFiles[currentImgFileIndex - videoDevices.size()].getAbsolutePath());
+						}
+						else {
+							bUseVideoDevice = true;
+							for (vector<ofVideoDevice>::iterator it = videoDevices.begin(); it != videoDevices.end(); ++it) {
+								if (it->deviceName == imgFileNames[currentImgFileIndex]) {
+									videoGrabber.setDeviceID(it->id);
+									break;
+								}
+							}
+
+						}
+						
 					}
 				}
 
@@ -230,11 +262,14 @@ void ofApp::draw(){
 				{
 					loadSettings(presetFiles[currentPresetIndex].getAbsolutePath());
 				}
-				ImGui::SameLine();
-				if (ImGui::Button("Delete Preset"))
-				{
-					presetFiles[currentPresetIndex].remove();
-					gui_loadPresets();
+
+				if (presetFileNames.size() > 0) {
+					ImGui::SameLine();
+					if (ImGui::Button("Delete Preset"))
+					{
+						presetFiles[currentPresetIndex].remove();
+						gui_loadPresets();
+					}
 				}
 
 				if (bSavePreset) {
@@ -267,24 +302,25 @@ void ofApp::draw(){
 
 				ImGui::PushItemWidth(100);
 
-				ImGui::Text("Tiles"); ImGui::SameLine();
+				ImGui::Text("Tiles"); ImGui::SameLine(75);
 				ImGui::DragInt("X ##Tiles", &tilesX, 1, 1, 1200);
 				ImGui::SameLine();
 				ImGui::DragInt("Y ##Tiles", &tilesY, 1, 1, 1200);
 
-				ImGui::Text("Addon"); ImGui::SameLine();
+				ImGui::Text("Addon"); ImGui::SameLine(75);
 				ImGui::SliderFloat("X ##Addon", &addonx, -100.0f, 100.0f, "%.3f");
 				ImGui::SameLine();
 				ImGui::SliderFloat("Y ##Addon", &addony, -100.0f, 100.0f, "%.3f");
 
-				ImGui::SliderFloat("Random Offset", &randomOffset, 0.0f, 250.0f, "%.3f");
+				ImGui::Text("Offset"); ImGui::SameLine(75);
+				ImGui::SliderFloat("Random", &randomOffset, 0.0f, 250.0f, "%.3f%%");
 
-				ImGui::Text("Noise"); ImGui::SameLine();
+				ImGui::Text("Noise"); ImGui::SameLine(75);
 				ImGui::SliderFloat("X ##Noise", &noisepercentX, 0.0f, 100.0f, "%.2f%%");
 				ImGui::SameLine();
 				ImGui::SliderFloat("Y ##Noise", &noisepercentY, 0.0f, 100.0f, "%.2f%%");
 				
-				ImGui::Text("Every N"); ImGui::SameLine();
+				ImGui::Text("Every N"); ImGui::SameLine(75);
 				ImGui::DragInt("X ##Every N", &everynx, 1, 1, 128);
 				ImGui::SameLine();
 				ImGui::DragInt("Y ##Every N", &everyny, 1, 1, 128);
@@ -1055,13 +1091,18 @@ void ofApp::Style_CMYK_Seperation_12(float w, float h, ofColor c, ofDefaultVec2 
 }
 
 void ofApp::loadImage(string& filepath) {
-	
+
 	original.load(filepath);
 	img.load(filepath);
 
 	std::string base_filename = filepath.substr(filepath.find_last_of("/\\") + 1);
 	img_name = base_filename.substr(0, base_filename.find_last_of('.'));
 
+	prep_img();
+
+}
+
+void ofApp::prep_img() {
 	// Resize image fit screen
 	(img.getWidth() > img.getHeight()) ? isLandscape = true : isLandscape = false;
 	if (isLandscape) {
@@ -1073,9 +1114,9 @@ void ofApp::loadImage(string& filepath) {
 		img.resize(ofGetHeight() * ratio, ofGetHeight());
 	}
 
-	fbo.allocate(img.getWidth()*zoomMultiplier, img.getHeight() * zoomMultiplier, GL_RGBA, 8);
+	fbo.allocate(img.getWidth() * zoomMultiplier, img.getHeight() * zoomMultiplier, GL_RGBA, 8);
 
-	offset.x = ((ofGetWidth() - gui_width) - img.getWidth())*0.5;
+	offset.x = ((ofGetWidth() - gui_width) - img.getWidth()) * 0.5;
 	offset.y = (ofGetHeight() - img.getHeight()) * 0.5;
 }
 

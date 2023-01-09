@@ -5,6 +5,9 @@
 #include "ofxPosterize.h"
 #include "ofxXmlSettings.h"
 
+const int gui_width = 350;
+const int img_area_WH = 1200;
+
 class ofApp : public ofBaseApp{
 
 	public:
@@ -13,19 +16,24 @@ class ofApp : public ofBaseApp{
 		void draw();
 		void exit();
 
+		ofVideoGrabber videoGrabber;
+		vector<ofVideoDevice> videoDevices;
+
+		int camWidth = 320;
+		int camHeight= 240;
+
 		void saveSettings(string& filepath);
 		void loadSettings(string& filepath);
 		void onImageChange(string& file);
 		void loadImage(string& filepath);
 
 		string img_name = "PixelPlotted";
+		void prep_img();
 
 		char presetSaveName[128] = "";
 
 		int exportCount = 0;
-		int gui_width = 320;
-		int img_area_WH = 1200;
-
+		
 		bool isLandscape;
 		bool bSavePreset = false;
 		bool show_main_window = true;
@@ -33,6 +41,7 @@ class ofApp : public ofBaseApp{
 		bool pauseRender = false;
 		bool showImage = false;
 		bool showZoom = false;
+		bool bUseVideoDevice = false;
 
 		float percentage(float percent, float total);
 
