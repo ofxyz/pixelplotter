@@ -211,7 +211,6 @@ void ofApp::draw(){
 					if (ofxImGui::VectorCombo("##Source Image", &currentImgFileIndex, imgFileNames))
 					{
 						if (currentImgFileIndex > videoDevices.size()-1) {
-							bUseVideoDevice = false;
 							loadImage(imgFiles[currentImgFileIndex - videoDevices.size()].getAbsolutePath());
 						}
 						else {
@@ -1100,6 +1099,7 @@ void ofApp::loadImage(string& filepath) {
 	img_name = base_filename.substr(0, base_filename.find_last_of('.'));
 
 	prep_img();
+	bUseVideoDevice = false;
 
 }
 
