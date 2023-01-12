@@ -1,5 +1,4 @@
 #pragma once
-
 #include "ofMain.h"
 #include "ofxImGui.h"
 #include "ofxPosterize.h"
@@ -16,16 +15,19 @@ class ofApp : public ofBaseApp{
 		void draw();
 		void exit();
 
+		ofVideoPlayer videoPlayer;
 		ofVideoGrabber videoGrabber;
-		vector<ofVideoDevice> videoDevices;
 
 		int camWidth = 320;
 		int camHeight= 240;
+		
+		void showUI();
 
 		void saveSettings(string& filepath);
 		void loadSettings(string& filepath);
 		void onImageChange(string& file);
 		void loadImage(string& filepath);
+		void loadVideo(string& filepath);
 
 		string img_name = "PixelPlotted";
 		void prep_img();
@@ -41,11 +43,12 @@ class ofApp : public ofBaseApp{
 		bool pauseRender = false;
 		bool showImage = false;
 		bool showZoom = false;
+		bool bUseVideo = false;
 		bool bUseVideoDevice = false;
 
-		float percentage(float percent, float total);
-
 		void gui_loadPresets();
+		void gui_loadSourceIndex();
+		void buildSourceNames();
 
 		void gui_setRGB_pressed();
 		void gui_setCMYK_pressed();
@@ -89,6 +92,7 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 
 		int getIndex(vector<std::string> v, std::string s, int notFound = -1);
+		float percentage(float percent, float total);
 
 		ofImage original, img;
 		ofPixels pixels;
@@ -96,7 +100,7 @@ class ofApp : public ofBaseApp{
 
 		std::vector<ofColor> swatches;
 
-		int currentImgFileIndex = 0;
+		int currentSourceIndex = 0;
 		int currentBlendModeIndex = 0;
 		int currentPlotStyleIndex = 0;
 		int currentPresetIndex = 0;
@@ -124,8 +128,17 @@ class ofApp : public ofBaseApp{
 		ImVec4 c_yellowGreen;
 		ImVec4 c_black;
 
+		std::vector<std::string> sourceNames;
+		
+		std::vector<std::string> videoDeviceNames;
+		std::vector<ofVideoDevice> videoDevices;
+
+		std::vector<std::string> videoFileNames;
+		std::vector<ofFile> videoFiles;
+
 		std::vector<std::string> imgFileNames;
 		std::vector<ofFile> imgFiles;
+		
 		std::vector<std::string> presetFileNames;
 		std::vector<ofFile> presetFiles;
 

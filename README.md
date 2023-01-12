@@ -9,3 +9,5 @@
 - ofxOpenCv
 - ofxImGui
 - ofxPosterize
+
+- K-Lite Codec Pack
