@@ -64,7 +64,7 @@ void ofApp::setup() {
 	gui_loadPresets();
 
 	currentSourceIndex = ofRandom(0, sourceNames.size() - 1);
-	currentPlotStyleIndex = ofRandom(0, v_PlotStyles.size() - 1);
+	currentPlotStyleIndex = ofRandom(0, ss.v_PlotStyles.size() - 1);
 	gui_loadSourceIndex();
 }
 
@@ -144,15 +144,15 @@ void ofApp::updateFbo() {
 	ofClear(c_paper);
 
 	if (saveVector) {
-		ofBeginSaveScreenAsPDF( "export//" + img_name + "_" + v_PlotStyles[currentPlotStyleIndex] + "_" + to_string(++exportCount) + ".pdf", false);
+		ofBeginSaveScreenAsPDF( "export//" + img_name + "_" + ss.v_PlotStyles[currentPlotStyleIndex] + "_" + to_string(++exportCount) + ".pdf", false);
 	}
 
 	setBlendmode();
 
 	int imgW = img.getWidth();
 	int imgH = img.getHeight();
-	float tileW = (float)imgW / (float)tilesX;
-	float tileH = (float)imgH / (float)tilesY;
+	float tileW = (float)imgW / (float)ss.tilesX;
+	float tileH = (float)imgH / (float)ss.tilesY;
 	float halfTileW = tileW / 2.0;
 	float halfTileH = tileH / 2.0;
 
@@ -166,13 +166,13 @@ void ofApp::updateFbo() {
 			int cy = floor(fy);
 			ofColor c = img.getPixels().getColor(cx, cy);
 
-			if (normalise) {
+			if (ss.normalise) {
 				c.normalize();
 			}
 
 			ofPushMatrix();
 			ofTranslate(fx * zoomMultiplier, fy * zoomMultiplier, 0);
-			callStyle(v_PlotStyles[currentPlotStyleIndex], ofVec2f((tileW + addonx) * zoomMultiplier, (tileH + addony) * zoomMultiplier), ofVec2f(fx * zoomMultiplier, fy * zoomMultiplier), ofVec2f(xcount, ycount), c);
+			callStyle(ss.v_PlotStyles[currentPlotStyleIndex], ofVec2f((tileW + ss.addonx) * zoomMultiplier, (tileH + ss.addony) * zoomMultiplier), ofVec2f(fx * zoomMultiplier, fy * zoomMultiplier), ofVec2f(xcount, ycount), c);
 			ofPopMatrix();
 			xcount++;
 		}
@@ -221,19 +221,19 @@ void ofApp::draw(){
 }
 
 void ofApp::setBlendmode() {
-	if (currentBlendmode == "OF_BLENDMODE_ALPHA") {
+	if (ss.currentBlendmode == "OF_BLENDMODE_ALPHA") {
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 	}
-	else if (currentBlendmode == "OF_BLENDMODE_ADD") {
+	else if (ss.currentBlendmode == "OF_BLENDMODE_ADD") {
 		ofEnableBlendMode(OF_BLENDMODE_ADD);
 	}
-	else if (currentBlendmode == "OF_BLENDMODE_SUBTRACT") {
+	else if (ss.currentBlendmode == "OF_BLENDMODE_SUBTRACT") {
 		ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
 	}
-	else if (currentBlendmode == "OF_BLENDMODE_MULTIPLY") {
+	else if (ss.currentBlendmode == "OF_BLENDMODE_MULTIPLY") {
 		ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
 	}
-	else if (currentBlendmode == "OF_BLENDMODE_SCREEN") {
+	else if (ss.currentBlendmode == "OF_BLENDMODE_SCREEN") {
 		ofEnableBlendMode(OF_BLENDMODE_SCREEN);
 	}
 	else {
@@ -316,18 +316,18 @@ int ofApp::getIndex(vector<std::string> v, std::string s, int notFound) {
 
 void ofApp::saveSettings(string& filepath) {
 	ofxXmlSettings settings;
-	settings.setValue("pixel_plotter:plotStyle", v_PlotStyles[currentPlotStyleIndex]);
-	settings.setValue("pixel_plotter:blendmode", v_BlendModes[currentBlendModeIndex]);
-	settings.setValue("pixel_plotter:tilesX", tilesX);
-	settings.setValue("pixel_plotter:tilesY", tilesY);
-	settings.setValue("pixel_plotter:addonx", addonx);
-	settings.setValue("pixel_plotter:addony", addony);
-	settings.setValue("pixel_plotter:everynx", everynx);
-	settings.setValue("pixel_plotter:everyny", everyny);
-	settings.setValue("pixel_plotter:randomOffset", randomOffset);
-	settings.setValue("pixel_plotter:noisepercentX", noisepercentX);
-	settings.setValue("pixel_plotter:noisepercentY", noisepercentY);
-	settings.setValue("pixel_plotter:roundPixels", roundPixels);
+	settings.setValue("pixel_plotter:plotStyle", ss.v_PlotStyles[currentPlotStyleIndex]);
+	settings.setValue("pixel_plotter:blendmode", ss.v_BlendModes[currentBlendModeIndex]);
+	settings.setValue("pixel_plotter:tilesX", ss.tilesX);
+	settings.setValue("pixel_plotter:tilesY", ss.tilesY);
+	settings.setValue("pixel_plotter:addonx", ss.addonx);
+	settings.setValue("pixel_plotter:addony", ss.addony);
+	settings.setValue("pixel_plotter:everynx", ss.everynx);
+	settings.setValue("pixel_plotter:everyny", ss.everyny);
+	settings.setValue("pixel_plotter:randomOffset", ss.randomOffset);
+	settings.setValue("pixel_plotter:noisepercentX", ss.noisepercentX);
+	settings.setValue("pixel_plotter:noisepercentY", ss.noisepercentY);
+	settings.setValue("pixel_plotter:roundPixels", ss.roundPixels);
 	settings.saveFile(filepath);
 }
 
@@ -335,20 +335,19 @@ void ofApp::loadSettings(string& filepath) {
 	ofxXmlSettings settings;
 	settings.loadFile(filepath);
 
-	// Below needs proper getter ...b 
-	currentPlotStyleIndex = getIndex(v_PlotStyles, settings.getValue("pixel_plotter:plotStyle", "0"), 0);
-	currentBlendModeIndex = getIndex(v_BlendModes, settings.getValue("pixel_plotter:blendmode", "0"), 0);
-	tilesX = settings.getValue("pixel_plotter:tilesX", 64);
-	tilesY = settings.getValue("pixel_plotter:tilesY", 64);
-	addonx = settings.getValue("pixel_plotter:addonx", 0);
-	addony = settings.getValue("pixel_plotter:addony", 0);
+	currentPlotStyleIndex = getIndex(ss.v_PlotStyles, settings.getValue("pixel_plotter:plotStyle", "0"), 0);
+	currentBlendModeIndex = getIndex(ss.v_BlendModes, settings.getValue("pixel_plotter:blendmode", "0"), 0);
+	ss.tilesX = settings.getValue("pixel_plotter:tilesX", 64);
+	ss.tilesY = settings.getValue("pixel_plotter:tilesY", 64);
+	ss.addonx = settings.getValue("pixel_plotter:addonx", 0);
+	ss.addony = settings.getValue("pixel_plotter:addony", 0);
 
-	everynx = settings.getValue("pixel_plotter:everynx", 4);
-	everyny = settings.getValue("pixel_plotter:everyny", 4);
-	randomOffset = settings.getValue("pixel_plotter:randomOffset", 0);
-	noisepercentX = settings.getValue("pixel_plotter:noisepercentX", 0);
-	noisepercentY = settings.getValue("pixel_plotter:noisepercentY", 0);
-	roundPixels = settings.getValue("pixel_plotter:roundPixels", false);
+	ss.everynx = settings.getValue("pixel_plotter:everynx", 4);
+	ss.everyny = settings.getValue("pixel_plotter:everyny", 4);
+	ss.randomOffset = settings.getValue("pixel_plotter:randomOffset", 0);
+	ss.noisepercentX = settings.getValue("pixel_plotter:noisepercentX", 0);
+	ss.noisepercentY = settings.getValue("pixel_plotter:noisepercentY", 0);
+	ss.roundPixels = settings.getValue("pixel_plotter:roundPixels", false);
 }
 
 ofVec4f ofApp::getCMYK(ofColor rgb) {

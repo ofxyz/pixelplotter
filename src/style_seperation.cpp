@@ -75,13 +75,13 @@ void ofApp::Style_Pixelate(float w, float h, ofColor c) {
 		return;
 	}
 
-	float offsetX = ofRandom(-randomOffset, randomOffset);
-	float offsetY = ofRandom(-randomOffset, randomOffset);
+	float offsetX = ofRandom(-ss.randomOffset, ss.randomOffset);
+	float offsetY = ofRandom(-ss.randomOffset, ss.randomOffset);
 
 	ofPushStyle();
 	ofFill();
 	ofSetColor(c);
-	if (roundPixels) {
+	if (ss.roundPixels) {
 		ofDrawEllipse(offsetX, offsetY, w, h);
 	}
 	else {
@@ -607,7 +607,7 @@ void ofApp::Style_CMYK_Seperation_12(float w, float h, ofColor c, ofDefaultVec2 
 	int xcount = xycount[0];
 	int ycount = xycount[1];
 
-	if (ofRandom(0, 100) < noisepercentY) {
+	if (ofRandom(0, 100) < ss.noisepercentY) {
 		//if (ycount % everyny == 0) {
 		c.setHueAngle(c.getHueAngle() + (ofRandomf() * 35));
 		if (ofRandom(0, 100) > 50) {
@@ -617,7 +617,7 @@ void ofApp::Style_CMYK_Seperation_12(float w, float h, ofColor c, ofDefaultVec2 
 	}
 
 	//if (ofRandom(0, 100) < noisepercentX) {
-	if (xcount % everynx == 0) {
+	if (xcount % ss.everynx == 0) {
 		//c.normalize();
 		cIndex.push_back(1);
 		cIndex.push_back(2);

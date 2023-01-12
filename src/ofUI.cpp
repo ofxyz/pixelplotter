@@ -103,7 +103,7 @@ void ofApp::showUI() {
 
 				ImGui::AlignTextToFramePadding();
 
-				if (ofxImGui::VectorCombo("Plot Style", &currentPlotStyleIndex, v_PlotStyles))
+				if (ofxImGui::VectorCombo("Plot Style", &currentPlotStyleIndex, ss.v_PlotStyles))
 				{
 					// Done
 				}
@@ -111,42 +111,42 @@ void ofApp::showUI() {
 				ImGui::PushItemWidth(100);
 
 				ImGui::Text("Tiles"); ImGui::SameLine(75);
-				ImGui::DragInt("X ##Tiles", &tilesX, 1, 1, 1200);
+				ImGui::DragInt("X ##Tiles", &ss.tilesX, 1, 1, 1200);
 				ImGui::SameLine();
-				ImGui::DragInt("Y ##Tiles", &tilesY, 1, 1, 1200);
+				ImGui::DragInt("Y ##Tiles", &ss.tilesY, 1, 1, 1200);
 
 				ImGui::Text("Addon"); ImGui::SameLine(75);
-				ImGui::SliderFloat("X ##Addon", &addonx, -100.0f, 100.0f, "%.3f");
+				ImGui::SliderFloat("X ##Addon", &ss.addonx, -100.0f, 100.0f, "%.3f");
 				ImGui::SameLine();
-				ImGui::SliderFloat("Y ##Addon", &addony, -100.0f, 100.0f, "%.3f");
+				ImGui::SliderFloat("Y ##Addon", &ss.addony, -100.0f, 100.0f, "%.3f");
 
 				ImGui::Text("Offset"); ImGui::SameLine(75);
-				ImGui::SliderFloat("Random", &randomOffset, 0.0f, 250.0f, "%.3f%%");
+				ImGui::SliderFloat("Random", &ss.randomOffset, 0.0f, 250.0f, "%.3f%%");
 
 				ImGui::Text("Noise"); ImGui::SameLine(75);
-				ImGui::SliderFloat("X ##Noise", &noisepercentX, 0.0f, 100.0f, "%.2f%%");
+				ImGui::SliderFloat("X ##Noise", &ss.noisepercentX, 0.0f, 100.0f, "%.2f%%");
 				ImGui::SameLine();
-				ImGui::SliderFloat("Y ##Noise", &noisepercentY, 0.0f, 100.0f, "%.2f%%");
+				ImGui::SliderFloat("Y ##Noise", &ss.noisepercentY, 0.0f, 100.0f, "%.2f%%");
 
 				ImGui::Text("Every N"); ImGui::SameLine(75);
-				ImGui::DragInt("X ##Every N", &everynx, 1, 1, 128);
+				ImGui::DragInt("X ##Every N", &ss.everynx, 1, 1, 128);
 				ImGui::SameLine();
-				ImGui::DragInt("Y ##Every N", &everyny, 1, 1, 128);
+				ImGui::DragInt("Y ##Every N", &ss.everyny, 1, 1, 128);
 
 				ImGui::PopItemWidth();
 
 				// Pixel Type: line, square, rect, round, oval
 				// Use Radio or dropdown
-				if (roundPixels) {
+				if (ss.roundPixels) {
 					if (ImGui::Button("Square Pixels"))
 					{
-						roundPixels = false;
+						ss.roundPixels = false;
 					}
 				}
 				else {
 					if (ImGui::Button("Round Pixels"))
 					{
-						roundPixels = true;
+						ss.roundPixels = true;
 					}
 				}
 			}// End Style
@@ -175,11 +175,11 @@ void ofApp::showUI() {
 					ofApp::gui_setAvarage_pressed();
 				}
 
-				ImGui::Checkbox("Normalise Colours", &normalise);
+				ImGui::Checkbox("Normalise Colours", &ss.normalise);
 
-				if (ofxImGui::VectorCombo("Blend Mode", &currentBlendModeIndex, v_BlendModes))
+				if (ofxImGui::VectorCombo("Blend Mode", &currentBlendModeIndex, ss.v_BlendModes))
 				{
-					currentBlendmode = v_BlendModes[currentBlendModeIndex];
+					ss.currentBlendmode = ss.v_BlendModes[currentBlendModeIndex];
 				}
 
 			} // End Colours
