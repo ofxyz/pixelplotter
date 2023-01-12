@@ -60,43 +60,12 @@ void ofApp::setup() {
 		imgFileNames.push_back(imgFiles[i].getFileName());
 	}
 	
-	buildSourceNames();
+	gui_buildSourceNames();
 	gui_loadPresets();
 
 	currentSourceIndex = ofRandom(0, sourceNames.size() - 1);
 	currentPlotStyleIndex = ofRandom(0, ss.v_PlotStyles.size() - 1);
 	gui_loadSourceIndex();
-}
-
-void ofApp::gui_loadPresets() {
-	ofDirectory presetDirectory(ofToDataPath("presets", true));
-	presetFileNames.clear();
-	presetFiles = presetDirectory.getFiles();
-	for (int i = 0; i < presetFiles.size(); i++)
-	{
-		string base_filename = presetFiles[i].getFileName();
-		string pname = base_filename.substr(0, base_filename.find_last_of('.'));
-		presetFileNames.push_back(pname);
-	}
-}
-
-//--------------------------------------------------------------
-void ofApp::gui_loadSourceIndex() {
-	if (currentSourceIndex > (videoDevices.size() + videoFiles.size()) - 1) {
-		loadImage(imgFiles[currentSourceIndex - videoDevices.size() - videoFiles.size()].getAbsolutePath());
-	}
-	else if (currentSourceIndex > videoDevices.size() - 1) {
-		loadVideo(videoFiles[currentSourceIndex - videoDevices.size()].getAbsolutePath());
-	}
-	else {
-		bUseVideoDevice = true;
-		for (vector<ofVideoDevice>::iterator it = videoDevices.begin(); it != videoDevices.end(); ++it) {
-			if (it->deviceName == sourceNames[currentSourceIndex]) {
-				videoGrabber.setDeviceID(it->id);
-				break;
-			}
-		}
-	}
 }
 
 //--------------------------------------------------------------
@@ -147,7 +116,7 @@ void ofApp::updateFbo() {
 		ofBeginSaveScreenAsPDF( "export//" + img_name + "_" + ss.v_PlotStyles[currentPlotStyleIndex] + "_" + to_string(++exportCount) + ".pdf", false);
 	}
 
-	setBlendmode();
+	gui_setBlendmode();
 
 	int imgW = img.getWidth();
 	int imgH = img.getHeight();
@@ -217,40 +186,11 @@ void ofApp::draw(){
 		img.draw(offset.x, offset.y);
 	}
 
-	showUI();
-}
-
-void ofApp::setBlendmode() {
-	if (ss.currentBlendmode == "OF_BLENDMODE_ALPHA") {
-		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-	}
-	else if (ss.currentBlendmode == "OF_BLENDMODE_ADD") {
-		ofEnableBlendMode(OF_BLENDMODE_ADD);
-	}
-	else if (ss.currentBlendmode == "OF_BLENDMODE_SUBTRACT") {
-		ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
-	}
-	else if (ss.currentBlendmode == "OF_BLENDMODE_MULTIPLY") {
-		ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
-	}
-	else if (ss.currentBlendmode == "OF_BLENDMODE_SCREEN") {
-		ofEnableBlendMode(OF_BLENDMODE_SCREEN);
-	}
-	else {
-		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-	}
+	gui_showMain();
 }
 
 float ofApp::percentage(float percent, float total) {
 	return (percent / 100) * total;
-}
-
-
-void ofApp::buildSourceNames() {
-	sourceNames.clear();
-	sourceNames.insert(sourceNames.end(), videoDeviceNames.begin(), videoDeviceNames.end());
-	sourceNames.insert(sourceNames.end(), videoFileNames.begin(),   videoFileNames.end());
-	sourceNames.insert(sourceNames.end(), imgFileNames.begin(),     imgFileNames.end());
 }
 
 void ofApp::loadImage(string& filepath) {
@@ -360,42 +300,6 @@ ofVec4f ofApp::getCMYK(ofColor rgb) {
 	double y = (1 - db - k) / (1 - k);
 
 	return ofVec4f(c, m, y, k);
-}
-
-//--------------------------------------------------------------
-void ofApp::gui_setRGB_pressed() {
-	c_magentaRed = ofColor(255, 0, 0);
-	c_cyanBlue = ofColor(0, 0, 255);
-	c_yellowGreen = ofColor(0,255,0);
-	c_black = ofColor(0,0,0);
-}
-
-//--------------------------------------------------------------
-void ofApp::gui_setCMYK_pressed() {
-	c_magentaRed = ofColor(236, 0, 140);
-	c_cyanBlue = ofColor(0, 174, 239);
-	c_yellowGreen = ofColor(255, 242, 0);
-	c_black = ofColor(0, 0, 0);
-}
-
-//--------------------------------------------------------------
-void ofApp::gui_setAvarage_pressed() {
-	swatches = ofxPosterize::getClusterColors(img, 4);
-	if (swatches.size() > 3) {
-		c_magentaRed = swatches[0];
-		c_cyanBlue = swatches[1];
-		c_yellowGreen = swatches[2];
-		c_black = swatches[3];
-	} else if(swatches.size() > 2) {
-		c_magentaRed = swatches[0];
-		c_cyanBlue = swatches[1];
-		c_yellowGreen = swatches[2];
-	} else if (swatches.size() > 1) {
-		c_magentaRed = swatches[0];
-		c_cyanBlue = swatches[1];
-	} else if (swatches.size() > 0) {
-		c_magentaRed = swatches[0];
-	}
 }
 
 //-------------------------------------------------------------

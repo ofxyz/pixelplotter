@@ -56,15 +56,6 @@ class ofApp : public ofBaseApp{
 		bool bUseVideo = false;
 		bool bUseVideoDevice = false;
 
-		void gui_loadPresets();
-		void gui_loadSourceIndex();
-		void buildSourceNames();
-
-		void gui_setRGB_pressed();
-		void gui_setCMYK_pressed();
-		void gui_setAvarage_pressed();
-
-		void setBlendmode();
 		void updateFbo();
 
 		int getIndex(vector<std::string> v, std::string s, int notFound = -1);
@@ -145,7 +136,14 @@ class ofApp : public ofBaseApp{
 		// -------------------------------------------------  End style_seperation.cpp
 
 		// -------------------------------------------------  Start ofUI.cpp
-		void showUI();
+		void gui_showMain();
+		void gui_loadPresets();
+		void gui_loadSourceIndex();
+		void gui_buildSourceNames();
+		void gui_setRGB_pressed();
+		void gui_setCMYK_pressed();
+		void gui_setAvarage_pressed();
+		void gui_setBlendmode();
 		// -------------------------------------------------  Start ofUI.cpp
 
 		struct {

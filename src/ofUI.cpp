@@ -1,6 +1,6 @@
 #include "ofApp.h"
 
-void ofApp::showUI() {
+void ofApp::gui_showMain() {
 	gui.begin();
 	{
 		if (show_main_window)
@@ -210,4 +210,105 @@ void ofApp::showUI() {
 		}
 	}
 	gui.end();
+}
+
+//--------------------------------------------------------------
+void ofApp::gui_loadPresets() {
+	ofDirectory presetDirectory(ofToDataPath("presets", true));
+	presetFileNames.clear();
+	presetFiles = presetDirectory.getFiles();
+	for (int i = 0; i < presetFiles.size(); i++)
+	{
+		string base_filename = presetFiles[i].getFileName();
+		string pname = base_filename.substr(0, base_filename.find_last_of('.'));
+		presetFileNames.push_back(pname);
+	}
+}
+
+//--------------------------------------------------------------
+void ofApp::gui_loadSourceIndex() {
+	if (currentSourceIndex > (videoDevices.size() + videoFiles.size()) - 1) {
+		loadImage(imgFiles[currentSourceIndex - videoDevices.size() - videoFiles.size()].getAbsolutePath());
+	}
+	else if (currentSourceIndex > videoDevices.size() - 1) {
+		loadVideo(videoFiles[currentSourceIndex - videoDevices.size()].getAbsolutePath());
+	}
+	else {
+		bUseVideoDevice = true;
+		for (vector<ofVideoDevice>::iterator it = videoDevices.begin(); it != videoDevices.end(); ++it) {
+			if (it->deviceName == sourceNames[currentSourceIndex]) {
+				videoGrabber.setDeviceID(it->id);
+				break;
+			}
+		}
+	}
+}
+
+//--------------------------------------------------------------
+void ofApp::gui_buildSourceNames() {
+	sourceNames.clear();
+	sourceNames.insert(sourceNames.end(), videoDeviceNames.begin(), videoDeviceNames.end());
+	sourceNames.insert(sourceNames.end(), videoFileNames.begin(), videoFileNames.end());
+	sourceNames.insert(sourceNames.end(), imgFileNames.begin(), imgFileNames.end());
+}
+
+//--------------------------------------------------------------
+void ofApp::gui_setRGB_pressed() {
+	c_magentaRed = ofColor(255, 0, 0);
+	c_cyanBlue = ofColor(0, 0, 255);
+	c_yellowGreen = ofColor(0, 255, 0);
+	c_black = ofColor(0, 0, 0);
+}
+
+//--------------------------------------------------------------
+void ofApp::gui_setCMYK_pressed() {
+	c_magentaRed = ofColor(236, 0, 140);
+	c_cyanBlue = ofColor(0, 174, 239);
+	c_yellowGreen = ofColor(255, 242, 0);
+	c_black = ofColor(0, 0, 0);
+}
+
+//--------------------------------------------------------------
+void ofApp::gui_setAvarage_pressed() {
+	swatches = ofxPosterize::getClusterColors(img, 4);
+	if (swatches.size() > 3) {
+		c_magentaRed = swatches[0];
+		c_cyanBlue = swatches[1];
+		c_yellowGreen = swatches[2];
+		c_black = swatches[3];
+	}
+	else if (swatches.size() > 2) {
+		c_magentaRed = swatches[0];
+		c_cyanBlue = swatches[1];
+		c_yellowGreen = swatches[2];
+	}
+	else if (swatches.size() > 1) {
+		c_magentaRed = swatches[0];
+		c_cyanBlue = swatches[1];
+	}
+	else if (swatches.size() > 0) {
+		c_magentaRed = swatches[0];
+	}
+}
+
+//--------------------------------------------------------------
+void ofApp::gui_setBlendmode() {
+	if (ss.currentBlendmode == "OF_BLENDMODE_ALPHA") {
+		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+	}
+	else if (ss.currentBlendmode == "OF_BLENDMODE_ADD") {
+		ofEnableBlendMode(OF_BLENDMODE_ADD);
+	}
+	else if (ss.currentBlendmode == "OF_BLENDMODE_SUBTRACT") {
+		ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
+	}
+	else if (ss.currentBlendmode == "OF_BLENDMODE_MULTIPLY") {
+		ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
+	}
+	else if (ss.currentBlendmode == "OF_BLENDMODE_SCREEN") {
+		ofEnableBlendMode(OF_BLENDMODE_SCREEN);
+	}
+	else {
+		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+	}
 }
