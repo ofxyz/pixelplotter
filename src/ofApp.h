@@ -184,4 +184,31 @@ class ofApp : public ofBaseApp{
 			bool roundPixels = false;
 			std::string currentBlendmode = "OF_BLENDMODE_DISABLED";
 		} ss; // Save Settings
+
+		string to_lower(string s) {
+			for (char& c : s)
+				c = tolower(c);
+			return s;
+		}
+
+		std::vector<std::string> img_ext{
+				"jpg",
+				"jpeg",
+				"png",
+				"bmp",
+				"gif"
+		};
+
+		std::vector<std::string> vid_ext{
+				"mpeg",
+				"mpeg-2",
+				"mpeg2",
+				"mpg",
+				"mp4",
+				"mkv",
+				"m4v",
+				"mov",
+				"wmv",
+				"avi"
+		};
 };

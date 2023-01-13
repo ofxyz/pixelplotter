@@ -1,6 +1,7 @@
 #include "ofApp.h"
 
 /*
+   - Make video drop work
    - Add clear screen button or tickbox
    - Make some polka dots
    - Posterise Source
@@ -17,7 +18,7 @@
 
 void ofApp::setup() {
 	ofLogToConsole();
-	ofSetLogLevel(OF_LOG_WARNING);
+	//ofSetLogLevel(OF_LOG_WARNING);
 	//ofSetBackgroundAuto(false);
 	ofSetCircleResolution(100);
 	ofSetWindowTitle("Pixel Plotter");
@@ -361,6 +362,18 @@ void ofApp::gotMessage(ofMessage msg){
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo){ 
 	if (dragInfo.files.size() > 0) {
-		loadImage(dragInfo.files[0]);	
+		for (int i = 0; i < dragInfo.files.size(); i++) {
+			if (std::find(img_ext.begin(), img_ext.end(), to_lower(dragInfo.files[i].substr(dragInfo.files[i].find_last_of(".") + 1))) != img_ext.end())
+			{
+				loadImage(dragInfo.files[i]);
+			} 
+			else if (std::find(vid_ext.begin(), vid_ext.end(), to_lower(dragInfo.files[i].substr(dragInfo.files[i].find_last_of(".") + 1))) != vid_ext.end())
+			{
+				loadVideo(dragInfo.files[i]);
+			}
+			else {
+				ofLog(OF_LOG_ERROR) << "No support for file format " << to_lower(dragInfo.files[i].substr(dragInfo.files[i].find_last_of(".") + 1));
+			}
+		}
 	}
 }
