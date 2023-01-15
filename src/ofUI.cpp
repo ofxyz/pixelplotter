@@ -149,6 +149,8 @@ void ofApp::gui_showMain() {
 						ss.roundPixels = true;
 					}
 				}
+				ImGui::SameLine();
+				ImGui::Checkbox("Polka", &ss.polka);
 			}// End Style
 
 			if (ImGui::CollapsingHeader("Colours"))

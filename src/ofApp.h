@@ -182,6 +182,7 @@ class ofApp : public ofBaseApp{
 			float noisepercentY = 0;
 			bool normalise = false;
 			bool roundPixels = false;
+			bool polka = false;
 			std::string currentBlendmode = "OF_BLENDMODE_DISABLED";
 		} ss; // Save Settings
 

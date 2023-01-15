@@ -1,17 +1,14 @@
 #include "ofApp.h"
 
 /*
-   - Make video drop work
    - Add clear screen button or tickbox
-   - Make some polka dots
    - Posterise Source
    - RGB needs K check and clean options
-   - CMYK needs white control option
+   - CMYK needs white control option (Nim: Black and white. CMYK RGB)
    - Add modulators (EG X Y tiles between min-max, time)
    - I want to set a value to the colour pallette of four colours
      To control how much each colour is used. Main Mid Accent? Weight.
-
-   - Nim: Black and white. CMYK RGB 
+   - Push X / Y / C to vector for sorting and drawing order.
 */
 
 //--------------------------------------------------------------
@@ -128,25 +125,31 @@ void ofApp::updateFbo() {
 
 	int ycount = 0;
 	int xcount = 0;
+	int ydiv = 0;
 	for (float y = 0; y < imgH - halfTileH; y += tileH) {
+		(ycount % 2 == 0) ? ydiv = 0 : ydiv = 1;
 		for (float x = 0; x < imgW - halfTileW; x += tileW) {
-			float fx = x + halfTileW;
-			float fy = y + halfTileH;
-			int cx = floor(fx);
-			int cy = floor(fy);
-			ofColor c = img.getPixels().getColor(cx, cy);
+			if (!ss.polka || ((xcount+ydiv) % 2 == 0)) {
+				float fx = x + halfTileW;
+				float fy = y + halfTileH;
+				int cx = floor(fx);
+				int cy = floor(fy);
+				ofColor c = img.getPixels().getColor(cx, cy);
 
-			if (ss.normalise) {
-				c.normalize();
+				if (ss.normalise) {
+					c.normalize();
+				}
+
+				ofPushMatrix();
+				ofTranslate(fx * zoomMultiplier, fy * zoomMultiplier, 0);
+				callStyle(ss.v_PlotStyles[currentPlotStyleIndex], ofVec2f((tileW + ss.addonx) * zoomMultiplier, (tileH + ss.addony) * zoomMultiplier), ofVec2f(fx * zoomMultiplier, fy * zoomMultiplier), ofVec2f(xcount, ycount), c);
+				ofPopMatrix();
 			}
-
-			ofPushMatrix();
-			ofTranslate(fx * zoomMultiplier, fy * zoomMultiplier, 0);
-			callStyle(ss.v_PlotStyles[currentPlotStyleIndex], ofVec2f((tileW + ss.addonx) * zoomMultiplier, (tileH + ss.addony) * zoomMultiplier), ofVec2f(fx * zoomMultiplier, fy * zoomMultiplier), ofVec2f(xcount, ycount), c);
-			ofPopMatrix();
+			
 			xcount++;
 		}
 		ycount++;
+		xcount = 0;
 	}
 
 	ofDisableBlendMode();
