@@ -116,17 +116,17 @@ void ofApp::gui_showMain() {
 				ImGui::DragInt("Y ##Tiles", &ss.tilesY, 1, 1, 1200);
 
 				ImGui::Text("Addon"); ImGui::SameLine(75);
-				ImGui::SliderFloat("X ##Addon", &ss.addonx, -100.0f, 100.0f, "%.3f");
+				ImGui::DragFloat("X ##Addon", &ss.addonx, 0.1f, -100.0f, 100.0f, "%.3f");
 				ImGui::SameLine();
-				ImGui::SliderFloat("Y ##Addon", &ss.addony, -100.0f, 100.0f, "%.3f");
+				ImGui::DragFloat("Y ##Addon", &ss.addony, 0.1f, -100.0f, 100.0f, "%.3f");
 
 				ImGui::Text("Offset"); ImGui::SameLine(75);
-				ImGui::SliderFloat("Random", &ss.randomOffset, 0.0f, 250.0f, "%.3f%%");
+				ImGui::DragFloat("Random", &ss.randomOffset, 0.1f, 0.0f, 250.0f, "%.3f%%");
 
 				ImGui::Text("Noise"); ImGui::SameLine(75);
-				ImGui::SliderFloat("X ##Noise", &ss.noisepercentX, 0.0f, 100.0f, "%.2f%%");
+				ImGui::DragFloat("X ##Noise", &ss.noisepercentX, 0.1f, 0.0f, 100.0f, "%.2f%%");
 				ImGui::SameLine();
-				ImGui::SliderFloat("Y ##Noise", &ss.noisepercentY, 0.0f, 100.0f, "%.2f%%");
+				ImGui::DragFloat("Y ##Noise", &ss.noisepercentY, 0.1f, 0.0f, 100.0f, "%.2f%%");
 
 				ImGui::Text("Every N"); ImGui::SameLine(75);
 				ImGui::DragInt("X ##Every N", &ss.everynx, 1, 1, 128);

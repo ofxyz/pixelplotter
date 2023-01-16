@@ -9,6 +9,7 @@
    - I want to set a value to the colour pallette of four colours
      To control how much each colour is used. Main Mid Accent? Weight.
    - Push X / Y / C to vector for sorting and drawing order.
+   - Souce effects on GPU with shaders. Output vector. 
 */
 
 //--------------------------------------------------------------
