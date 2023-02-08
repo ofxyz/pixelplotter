@@ -18,14 +18,10 @@
 void ofApp::setup() {
 	ofLogToConsole();
 	//ofSetLogLevel(OF_LOG_WARNING);
-	ofSetBackgroundAuto(false);
+	//ofSetBackgroundAuto(false);
 	ofSetCircleResolution(100);
 	ofSetWindowTitle("Pixel Plotter");
 	ofBackground(c_paper);
-
-	for (int i = 0; i < v_DrawFilters.size(); i++) {
-		v_DrawFilterNames.push_back(v_DrawFilters[i].getFilterName());
-	}
 
 	videoDevices = videoGrabber.listDevices();
 	for (vector<ofVideoDevice>::iterator it = videoDevices.begin(); it != videoDevices.end(); ++it) {
@@ -78,7 +74,16 @@ void ofApp::exit() {
 
 //--------------------------------------------------------------
 void ofApp::update() {
-	//if (ofGetFrameNum() % 500 == 0) updateFbo();
+
+	// Clear deleted filters, only do this on change?
+	for (int i = 0; i < v_DrawFilters.size(); i++) {
+		if (!v_DrawFilters[i]->closable) {
+			delete v_DrawFilters[i];
+			v_DrawFilters[i] = nullptr;
+		}
+	}
+	v_DrawFilters.erase(std::remove(v_DrawFilters.begin(), v_DrawFilters.end(), nullptr), v_DrawFilters.end());
+
 	if (!pauseRender) {
 
 		if (bUseVideoDevice) {
@@ -94,6 +99,7 @@ void ofApp::update() {
 			img.setFromPixels(videoPlayer.getPixels());
 			prep_img();
 		}
+		ofSetBackgroundColor(c_background);
 		updateFbo();
 	}
 
@@ -116,7 +122,9 @@ void ofApp::updateFbo() {
 		ofBeginSaveScreenAsPDF( "export//" + img_name + "_" + ss.v_PlotStyles[currentPlotStyleIndex] + "_" + to_string(++exportCount) + ".pdf", false);
 	}
 
-	v_DrawFilters[currentDrawFilterIndex].draw(&img);
+	for (const auto& filter : v_DrawFilters) {
+		filter->draw(&img);
+	}
 
 	if (saveVector) {
 		ofEndSaveScreenAsPDF();
@@ -167,15 +175,6 @@ void ofApp::treeFilter() {
 
 void ofApp::plotIt() {
 
-	if (ss.v_PlotStyles[currentPlotStyleIndex] == "Tree Contours") {
-		treeFilter();
-		return;
-	}
-	else if (ss.v_PlotStyles[currentPlotStyleIndex] == "Pixelate") {
-		filter_pixelate.draw(&img);
-		return;
-	}
-
 	gui_setBlendmode();
 
 	int imgW = img.getWidth();
@@ -218,7 +217,6 @@ void ofApp::plotIt() {
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	if(ss.clearCanvas) ofSetBackgroundColor(c_background);
 
 	fbo.draw(glm::vec2(offset.x, offset.y), img.getWidth(), img.getHeight());
 

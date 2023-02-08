@@ -169,6 +169,7 @@ class ofApp : public ofBaseApp{
 				virtual void draw(ofImage* input) = 0;
 				virtual void renderImGuiSettings() = 0;
 				virtual std::string getFilterName() = 0;
+				bool closable = true;
 			private:
 				std::string name;
 				ofxXmlSettings settings;
@@ -181,9 +182,9 @@ class ofApp : public ofBaseApp{
 				std::string getFilterName() {
 					return name;
 				}
+			private:
 				void drawPixel(float w, float h, ofColor c);
 				float getRotation(ofColor c, float w, float h);
-			private:
 				std::string name = "Pixelate";
 				
 				std::vector<std::string> v_pixelDataMapOptions {
@@ -197,6 +198,7 @@ class ofApp : public ofBaseApp{
 					"Location Y" */
 				};
 
+				
 				int ui_currentRotationMap = 0;
 				bool normalize = false;
 				bool polka = false;
@@ -211,13 +213,17 @@ class ofApp : public ofBaseApp{
 				float drawScale = 4; // zoomMultiplier
 		};
 
-		Df_pixelate filter_pixelate;
+		//Df_pixelate filter_pixelate;
+		//std::vector<Df_pixelate> v_DrawFilters{
+		//	filter_pixelate
+		//};
 
-		std::vector<Df_pixelate> v_DrawFilters{
-			filter_pixelate
+		std::vector<DrawFilter*> v_DrawFilters;
+		
+		std::vector<std::string> v_DrawFilterNames{
+			"Pixelate",
+			"Rings"
 		};
-
-		std::vector<std::string> v_DrawFilterNames;
 
 		// ------------------------------------------------- End Interfaces
 

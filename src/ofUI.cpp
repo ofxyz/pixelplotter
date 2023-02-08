@@ -23,7 +23,28 @@ void ofApp::gui_showMain() {
 			}
 
 			ImGui::SameLine();
-			if (ImGui::Button("Export Vector")) { saveVector = true; }
+
+			if (pauseRender) {
+				if (ImGui::Button("Continue"))
+				{
+					pauseRender = false;
+				}
+			}
+			else {
+				if (ImGui::Button("Pause"))
+				{
+					pauseRender = true;
+				}
+			}
+
+			ImGui::SameLine();
+
+			if (pauseRender) {
+				ImGui::Text("Paused at %.1f FPS", ImGui::GetIO().Framerate);
+			}
+			else {
+				ImGui::Text("Rendering at %.1f FPS", ImGui::GetIO().Framerate);
+			}
 
 			if (ImGui::CollapsingHeader("Source"))
 			{
@@ -53,7 +74,8 @@ void ofApp::gui_showMain() {
 				ImGui::DragInt("Ring Count", &cvSteps, 1, 1, 255);
 			}
 
-			if (ImGui::CollapsingHeader("Style Options"))
+			string sFilterCount = "Draw Filters (" + ofToString(v_DrawFilters.size()) + ")###DrawFiltersHolder";
+			if (ImGui::CollapsingHeader(sFilterCount.c_str()))
 			{
 				/*
 				if (ImGui::Button("Quick Save"))
@@ -68,7 +90,8 @@ void ofApp::gui_showMain() {
 					loadSettings(savePath);
 				}
 				*/
-
+				
+				/*
 				if (ofxImGui::VectorCombo("##Presets", &currentPresetIndex, presetFileNames))
 				{
 					loadSettings(presetFiles[currentPresetIndex].getAbsolutePath());
@@ -103,13 +126,26 @@ void ofApp::gui_showMain() {
 						bSavePreset = true;
 					}
 				}
+				*/
 
-				if (ofxImGui::VectorCombo("Draw Filters", &currentDrawFilterIndex, v_DrawFilterNames))
+				if (ofxImGui::VectorCombo("##Draw Filter Selector", &currentDrawFilterIndex, v_DrawFilterNames))
 				{
 					// Done
 				}
 
-				v_DrawFilters[currentDrawFilterIndex].renderImGuiSettings();
+				ImGui::SameLine();
+				if (ImGui::Button("Add"))
+				{
+					if (v_DrawFilterNames[currentDrawFilterIndex] == "Pixelate") {
+						v_DrawFilters.push_back(new Df_pixelate);
+					}
+				}
+
+				for (int i = 0; i < v_DrawFilters.size(); i++) {
+					ImGui::PushID(i);
+					v_DrawFilters[i]->renderImGuiSettings();
+					ImGui::PopID();
+				}
 
 				/*
 				if (ofxImGui::VectorCombo("Plot Style", &currentPlotStyleIndex, ss.v_PlotStyles))
@@ -199,32 +235,13 @@ void ofApp::gui_showMain() {
 
 			} // End Colours
 
-			if (pauseRender) {
-				if (ImGui::Button("Continue"))
-				{
-					pauseRender = false;
-				}
-			}
-			else {
-				if (ImGui::Button("Pause"))
-				{
-					pauseRender = true;
-				}
-			}
-
-			ImGui::SameLine();
-
-			if (pauseRender) {
-				ImGui::Text("Paused at %.1f FPS", ImGui::GetIO().Framerate);
-			}
-			else {
-				ImGui::Text("Rendering at %.1f FPS", ImGui::GetIO().Framerate);
-			}
+			if (ImGui::Button("Export Vector")) { saveVector = true; }
 
 			ImGui::End();
 		}
 	}
 	gui.end();
+
 }
 
 //--------------------------------------------------------------
