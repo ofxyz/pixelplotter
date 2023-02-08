@@ -1,8 +1,8 @@
 #include "ofApp.h"
 
 /*
+   - Finish Style Interfaces
    - Add clear screen button or tickbox
-   - Posterise Source
    - RGB needs K check and clean options
    - CMYK needs white control option (Nim: Black and white. CMYK RGB)
    - Add modulators (EG X Y tiles between min-max, time)
@@ -10,6 +10,7 @@
      To control how much each colour is used. Main Mid Accent? Weight.
    - Push X / Y / C to vector for sorting and drawing order.
    - Souce effects on GPU with shaders. Output vector. 
+   - Posterise Source (shader)
 */
 
 //--------------------------------------------------------------
@@ -17,20 +18,22 @@
 void ofApp::setup() {
 	ofLogToConsole();
 	//ofSetLogLevel(OF_LOG_WARNING);
-	//ofSetBackgroundAuto(false);
+	ofSetBackgroundAuto(false);
 	ofSetCircleResolution(100);
 	ofSetWindowTitle("Pixel Plotter");
 	ofBackground(c_paper);
+
+	for (int i = 0; i < v_DrawFilters.size(); i++) {
+		v_DrawFilterNames.push_back(v_DrawFilters[i].getFilterName());
+	}
 
 	videoDevices = videoGrabber.listDevices();
 	for (vector<ofVideoDevice>::iterator it = videoDevices.begin(); it != videoDevices.end(); ++it) {
 		videoDeviceNames.push_back(it->deviceName);
 	}
 
-	videoGrabber.initGrabber(camWidth, camHeight);
-
 	//ofLog() << ofFbo::checkGLSupport();
-	zoomFbo.allocate(zoomWindowW, zoomWindowH, GL_RGBA, 8);
+	zoomFbo.allocate(zoomWindowW, zoomWindowH, GL_RGB, 8);
 
 	gui.setup();
 	ImGuiStyle* style = &ImGui::GetStyle();
@@ -64,6 +67,7 @@ void ofApp::setup() {
 
 	currentSourceIndex = ofRandom(0, sourceNames.size() - 1);
 	currentPlotStyleIndex = ofRandom(0, ss.v_PlotStyles.size() - 1);
+	
 	gui_loadSourceIndex();
 }
 
@@ -76,7 +80,7 @@ void ofApp::exit() {
 void ofApp::update() {
 	//if (ofGetFrameNum() % 500 == 0) updateFbo();
 	if (!pauseRender) {
-		
+
 		if (bUseVideoDevice) {
 			videoGrabber.update();
 			if (videoGrabber.isFrameNew()) {
@@ -87,15 +91,12 @@ void ofApp::update() {
 		}
 		else if (bUseVideo) {
 			videoPlayer.update();
-			if (videoPlayer.isFrameNew()) {
-				img.setFromPixels(videoPlayer.getPixels());
-				prep_img();
-			}
+			img.setFromPixels(videoPlayer.getPixels());
+			prep_img();
 		}
-
 		updateFbo();
 	}
-	
+
 	if (showZoom) {
 		zoomFbo.begin();
 		ofClear(c_paper);
@@ -106,13 +107,73 @@ void ofApp::update() {
 	}
 }
 
+
 void ofApp::updateFbo() {
 	fbo.begin();
-	// This should be optional
 	ofClear(c_paper);
 
 	if (saveVector) {
 		ofBeginSaveScreenAsPDF( "export//" + img_name + "_" + ss.v_PlotStyles[currentPlotStyleIndex] + "_" + to_string(++exportCount) + ".pdf", false);
+	}
+
+	v_DrawFilters[currentDrawFilterIndex].draw(&img);
+
+	if (saveVector) {
+		ofEndSaveScreenAsPDF();
+		saveVector = false;
+	}
+
+	fbo.end();
+}
+
+// -------------------------------------------------------------------------------- START TEMP
+void ofApp::treeFilter() {
+	ofPushStyle();
+	ofSetColor(ofColor(255, 0, 0));
+	ofNoFill();
+	ofSetLineWidth(4);
+
+	int i = 0;
+	ofColor c(255, 255, 255);
+	ofPolyline blobShape;
+	//ofPolyline smoothShape;
+
+	temp_grayCvImage = colorCvImage; // Convert to Grey
+	temp_grayCvImage.blur(cvBlur);
+
+	while (i < (250 - cvSteps)) {
+		if (i > cvThresh)
+			break;
+		i += cvSteps;
+		grayCvImage = temp_grayCvImage;
+		grayCvImage.threshold(i);
+		contourFinder.findContours(grayCvImage, 5, (img.getWidth() * img.getHeight()) / 2, 25, true, true);
+		//contourFinder.draw();
+		for (int i = 0; i < contourFinder.blobs.size(); i++) {
+			blobShape.clear();
+			c.setHsb(c.getHue() + 10, 255, 255);
+			ofSetColor(c);
+			blobShape.addVertices(contourFinder.blobs.at(i).pts);
+			blobShape.close();
+			blobShape.scale(zoomMultiplier, zoomMultiplier);
+			//smoothShape = blobShape.getSmoothed(10, 0.5);
+			//smoothShape.draw();
+			blobShape.draw();
+		}
+	}
+
+	ofPopStyle();
+}
+
+void ofApp::plotIt() {
+
+	if (ss.v_PlotStyles[currentPlotStyleIndex] == "Tree Contours") {
+		treeFilter();
+		return;
+	}
+	else if (ss.v_PlotStyles[currentPlotStyleIndex] == "Pixelate") {
+		filter_pixelate.draw(&img);
+		return;
 	}
 
 	gui_setBlendmode();
@@ -130,14 +191,12 @@ void ofApp::updateFbo() {
 	for (float y = 0; y < imgH - halfTileH; y += tileH) {
 		(ycount % 2 == 0) ? ydiv = 0 : ydiv = 1;
 		for (float x = 0; x < imgW - halfTileW; x += tileW) {
-			if (!ss.polka || ((xcount+ydiv) % 2 == 0)) {
+			if (!ss.polka || ((xcount + ydiv) % 2 == 0)) {
 				float fx = x + halfTileW;
 				float fy = y + halfTileH;
-				int cx = floor(fx);
-				int cy = floor(fy);
-				ofColor c = img.getPixels().getColor(cx, cy);
+				ofColor c = img.getPixels().getColor(floor(fx), floor(fy));
 
-				if (ss.normalise) {
+				if (ss.normalize) {
 					c.normalize();
 				}
 
@@ -146,7 +205,6 @@ void ofApp::updateFbo() {
 				callStyle(ss.v_PlotStyles[currentPlotStyleIndex], ofVec2f((tileW + ss.addonx) * zoomMultiplier, (tileH + ss.addony) * zoomMultiplier), ofVec2f(fx * zoomMultiplier, fy * zoomMultiplier), ofVec2f(xcount, ycount), c);
 				ofPopMatrix();
 			}
-			
 			xcount++;
 		}
 		ycount++;
@@ -154,19 +212,13 @@ void ofApp::updateFbo() {
 	}
 
 	ofDisableBlendMode();
-
-	if (saveVector) {
-		ofEndSaveScreenAsPDF();
-		saveVector = false;
-	}
-
-	fbo.end();
 }
+// -------------------------------------------------------------------------------- END TEMP
+
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
-	ofSetBackgroundColor(c_background);
+	if(ss.clearCanvas) ofSetBackgroundColor(c_background);
 
 	fbo.draw(glm::vec2(offset.x, offset.y), img.getWidth(), img.getHeight());
 
@@ -189,6 +241,9 @@ void ofApp::draw(){
 
 	if (showImage) {
 		img.draw(offset.x, offset.y);
+		//colorCvImage.draw(offset.x, offset.y);
+		//grayCvImage.draw(offset.x, offset.y);
+		cvFbo.draw(offset.x, offset.y, img.getWidth(), img.getHeight());
 	}
 
 	gui_showMain();
@@ -202,6 +257,7 @@ void ofApp::loadImage(string& filepath) {
 
 	original.load(filepath);
 	img.load(filepath);
+	img.setImageType(OF_IMAGE_COLOR);
 
 	std::string base_filename = filepath.substr(filepath.find_last_of("/\\") + 1);
 	img_name = base_filename.substr(0, base_filename.find_last_of('.'));
@@ -209,6 +265,8 @@ void ofApp::loadImage(string& filepath) {
 	prep_img();
 	bUseVideo = false;
 	bUseVideoDevice = false;
+	videoPlayer.stop();
+	videoPlayer.close();
 
 }
 
@@ -218,6 +276,7 @@ void ofApp::loadVideo(string& filepath) {
 	bUseVideoDevice = false;
 
 	videoPlayer.load(filepath);
+	videoPlayer.setLoopState(OF_LOOP_NORMAL);
 	videoPlayer.play();
 
 	std::string base_filename = filepath.substr(filepath.find_last_of("/\\") + 1);
@@ -237,7 +296,15 @@ void ofApp::prep_img() {
 		img.resize(ofGetHeight() * ratio, ofGetHeight());
 	}
 
-	fbo.allocate(img.getWidth() * zoomMultiplier, img.getHeight() * zoomMultiplier, GL_RGBA, 8);
+	fbo.allocate(img.getWidth() * zoomMultiplier, img.getHeight() * zoomMultiplier, GL_RGB, 8);
+
+	cvFbo.allocate(img.getWidth(), img.getHeight(), GL_RGB, 8);
+	
+	colorCvImage.allocate(img.getWidth(), img.getHeight());
+	grayCvImage.allocate(img.getWidth(), img.getHeight());
+	temp_grayCvImage.allocate(img.getWidth(), img.getHeight());
+	colorCvImage.setFromPixels(img.getPixelsRef());
+	grayCvImage = colorCvImage; // Convert to Grey
 
 	offset.x = ((ofGetWidth() - gui_width) - img.getWidth()) * 0.5;
 	offset.y = (ofGetHeight() - img.getHeight()) * 0.5;

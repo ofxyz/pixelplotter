@@ -48,6 +48,9 @@ void ofApp::gui_showMain() {
 						showImage = true;
 					}
 				}
+				ImGui::DragInt("Blur", &cvBlur, 1, 0, 500);
+				ImGui::DragInt("Threshold", &cvThresh, 1, 0, 255);
+				ImGui::DragInt("Ring Count", &cvSteps, 1, 1, 255);
 			}
 
 			if (ImGui::CollapsingHeader("Style Options"))
@@ -101,12 +104,20 @@ void ofApp::gui_showMain() {
 					}
 				}
 
-				ImGui::AlignTextToFramePadding();
+				if (ofxImGui::VectorCombo("Draw Filters", &currentDrawFilterIndex, v_DrawFilterNames))
+				{
+					// Done
+				}
 
+				v_DrawFilters[currentDrawFilterIndex].renderImGuiSettings();
+
+				/*
 				if (ofxImGui::VectorCombo("Plot Style", &currentPlotStyleIndex, ss.v_PlotStyles))
 				{
 					// Done
 				}
+
+				ImGui::AlignTextToFramePadding();
 
 				ImGui::PushItemWidth(100);
 
@@ -151,6 +162,8 @@ void ofApp::gui_showMain() {
 				}
 				ImGui::SameLine();
 				ImGui::Checkbox("Polka", &ss.polka);
+				ImGui::Checkbox("Clear Canvas", &ss.clearCanvas);
+				*/
 			}// End Style
 
 			if (ImGui::CollapsingHeader("Colours"))
@@ -177,7 +190,7 @@ void ofApp::gui_showMain() {
 					ofApp::gui_setAvarage_pressed();
 				}
 
-				ImGui::Checkbox("Normalise Colours", &ss.normalise);
+				ImGui::Checkbox("normalize Colours", &ss.normalize);
 
 				if (ofxImGui::VectorCombo("Blend Mode", &currentBlendModeIndex, ss.v_BlendModes))
 				{
@@ -229,20 +242,22 @@ void ofApp::gui_loadPresets() {
 
 //--------------------------------------------------------------
 void ofApp::gui_loadSourceIndex() {
-	if (currentSourceIndex > (videoDevices.size() + videoFiles.size()) - 1) {
+	if (currentSourceIndex == 0) {
+		bUseVideoDevice = true;
+		for (vector<ofVideoDevice>::iterator it = videoDevices.begin(); it != videoDevices.end(); ++it) {
+			if (it->deviceName == sourceNames[currentSourceIndex]) {
+				videoGrabber.close();
+				videoGrabber.setDeviceID(it->id);
+				videoGrabber.initGrabber(camWidth, camHeight);
+				return;
+			}
+		}
+	}
+	else if (currentSourceIndex > (videoDevices.size() + videoFiles.size()) - 1) {
 		loadImage(imgFiles[currentSourceIndex - videoDevices.size() - videoFiles.size()].getAbsolutePath());
 	}
 	else if (currentSourceIndex > videoDevices.size() - 1) {
 		loadVideo(videoFiles[currentSourceIndex - videoDevices.size()].getAbsolutePath());
-	}
-	else {
-		bUseVideoDevice = true;
-		for (vector<ofVideoDevice>::iterator it = videoDevices.begin(); it != videoDevices.end(); ++it) {
-			if (it->deviceName == sourceNames[currentSourceIndex]) {
-				videoGrabber.setDeviceID(it->id);
-				break;
-			}
-		}
 	}
 }
 

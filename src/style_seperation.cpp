@@ -68,9 +68,7 @@ void ofApp::callStyle(string stylename, ofVec2f size, ofVec2f loc, ofDefaultVec2
 
 //--------------------------------------------------------------
 void ofApp::Style_Pixelate(float w, float h, ofColor c) {
-	//w = abs(w);
-	//h = abs(h);
-
+	
 	if ((w > -0.25 && w < 0.25) || (h > -0.25 && h < 0.25)) {
 		return;
 	}

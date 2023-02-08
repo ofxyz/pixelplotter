@@ -3,6 +3,7 @@
 #include "ofxImGui.h"
 #include "ofxPosterize.h"
 #include "ofxXmlSettings.h"
+#include "ofxOpenCv.h"
 
 const int gui_width = 350;
 const int img_area_WH = 1200;
@@ -30,8 +31,8 @@ class ofApp : public ofBaseApp{
 		ofVideoPlayer videoPlayer;
 		ofVideoGrabber videoGrabber;
 
-		int camWidth = 800;
-		int camHeight= 600;
+		int camWidth = 640;
+		int camHeight= 480;
 
 		void saveSettings(string& filepath);
 		void loadSettings(string& filepath);
@@ -62,6 +63,12 @@ class ofApp : public ofBaseApp{
 		float percentage(float percent, float total);
 
 		ofImage original, img;
+
+		ofxCvColorImage colorCvImage;
+		ofxCvGrayscaleImage grayCvImage;
+		ofxCvGrayscaleImage temp_grayCvImage;
+		ofxCvContourFinder contourFinder;
+
 		ofPixels pixels;
 		ofMesh mesh;
 
@@ -71,13 +78,19 @@ class ofApp : public ofBaseApp{
 		int currentBlendModeIndex = 0;
 		int currentPlotStyleIndex = 0;
 		int currentPresetIndex = 0;
+		int currentDrawFilterIndex = 0;
 
 		float imgRatio;
+		int cvThresh = 128;
+		int cvBlur = 150;
+		int cvSteps = 10;
 
 		ofVec4f getCMYK(ofColor rgb);
 
 		ofFbo fbo;
 		ofFbo zoomFbo;
+		ofFbo cvFbo;
+		int currentVideoFrame = 1;
 
 		float ratio = 1;
 		int zoomWindowW = 300;
@@ -110,6 +123,9 @@ class ofApp : public ofBaseApp{
 		std::vector<ofFile> presetFiles;
 
 		ofVec2f offset;
+
+		void plotIt();
+		void treeFilter();
 
 		// -------------------------------------------------  Start style_seperation.cpp
 		void callStyle(string stylename, ofVec2f size, ofVec2f loc, ofDefaultVec2 xycount, ofColor c);
@@ -146,6 +162,65 @@ class ofApp : public ofBaseApp{
 		void gui_setBlendmode();
 		// -------------------------------------------------  Start ofUI.cpp
 
+		// ------------------------------------------------- Start Interfaces
+		class DrawFilter {
+			public:	
+				//virtual void draw(ofFbo* input) = 0;
+				virtual void draw(ofImage* input) = 0;
+				virtual void renderImGuiSettings() = 0;
+				virtual std::string getFilterName() = 0;
+			private:
+				std::string name;
+				ofxXmlSettings settings;
+		};
+
+		class Df_pixelate : public DrawFilter {
+			public:
+				void draw(ofImage* input);
+				void renderImGuiSettings();
+				std::string getFilterName() {
+					return name;
+				}
+				void drawPixel(float w, float h, ofColor c);
+				float getRotation(ofColor c, float w, float h);
+			private:
+				std::string name = "Pixelate";
+				
+				std::vector<std::string> v_pixelDataMapOptions {
+					"None",
+					"Between",
+					"Color Lightness"/*,
+					"Color Red",
+					"Color Green",
+					"Color Blue",
+					"Location X",
+					"Location Y" */
+				};
+
+				int ui_currentRotationMap = 0;
+				bool normalize = false;
+				bool polka = false;
+				bool roundPixels = false;
+				int tilesX = 64;
+				int tilesY = 64;
+				float addonx = 0;
+				float addony = 0;
+				float randomOffset = 0;
+				int rotationMapTo = 0;
+				ofVec2f rotationMinMax = ofVec2f(0, 0);
+				float drawScale = 4; // zoomMultiplier
+		};
+
+		Df_pixelate filter_pixelate;
+
+		std::vector<Df_pixelate> v_DrawFilters{
+			filter_pixelate
+		};
+
+		std::vector<std::string> v_DrawFilterNames;
+
+		// ------------------------------------------------- End Interfaces
+
 		struct {
 			std::vector<std::string> v_BlendModes{ "OF_BLENDMODE_DISABLED", "OF_BLENDMODE_ALPHA", "OF_BLENDMODE_ADD", "OF_BLENDMODE_SUBTRACT", "OF_BLENDMODE_MULTIPLY", "OF_BLENDMODE_SCREEN" };
 			std::vector<std::string> v_PlotStyles{
@@ -168,7 +243,8 @@ class ofApp : public ofBaseApp{
 				"CMYK Seperation 9",
 				"CMYK Seperation 10",
 				"CMYK Seperation 11",
-				"CMYK Seperation 12"
+				"CMYK Seperation 12",
+				"Tree Contours"
 			};
 
 			int tilesX = 64;
@@ -180,9 +256,10 @@ class ofApp : public ofBaseApp{
 			float randomOffset = 0;
 			float noisepercentX = 0;
 			float noisepercentY = 0;
-			bool normalise = false;
+			bool normalize = false;
 			bool roundPixels = false;
 			bool polka = false;
+			bool clearCanvas = true;
 			std::string currentBlendmode = "OF_BLENDMODE_DISABLED";
 		} ss; // Save Settings
 
