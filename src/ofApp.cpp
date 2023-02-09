@@ -77,7 +77,7 @@ void ofApp::update() {
 
 	// Clear deleted filters, only do this on change?
 	for (int i = 0; i < v_DrawFilters.size(); i++) {
-		if (!v_DrawFilters[i]->closable) {
+		if (!v_DrawFilters[i]->active) {
 			delete v_DrawFilters[i];
 			v_DrawFilters[i] = nullptr;
 		}
@@ -241,7 +241,7 @@ void ofApp::draw(){
 		img.draw(offset.x, offset.y);
 		//colorCvImage.draw(offset.x, offset.y);
 		//grayCvImage.draw(offset.x, offset.y);
-		cvFbo.draw(offset.x, offset.y, img.getWidth(), img.getHeight());
+		//cvFbo.draw(offset.x, offset.y, img.getWidth(), img.getHeight());
 	}
 
 	gui_showMain();

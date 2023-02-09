@@ -1,7 +1,7 @@
-#include "ofApp.h"
+#include "drawFilters.h"
 
-void ofApp::Df_pixelate::renderImGuiSettings() {
-	if (ImGui::CollapsingHeader(name.c_str(), &closable)) {
+void Df_pixelate::renderImGuiSettings() {
+	if (ImGui::CollapsingHeader(name.c_str(), &active)) {
 
 		ImGui::AlignTextToFramePadding();
 
@@ -44,8 +44,8 @@ void ofApp::Df_pixelate::renderImGuiSettings() {
 	}
 }
 
-void ofApp::Df_pixelate::drawPixel(float w, float h, ofColor c) {
-	
+void Df_pixelate::drawPixel(float w, float h, ofColor c) {
+
 	//if ((w > -0.25 && w < 0.25) || (h > -0.25 && h < 0.25)) {
 	//	return;
 	//}
@@ -66,7 +66,7 @@ void ofApp::Df_pixelate::drawPixel(float w, float h, ofColor c) {
 	ofPopStyle();
 };
 
-float ofApp::Df_pixelate::getRotation(ofColor c, float x, float y) {
+float Df_pixelate::getRotation(ofColor c, float x, float y) {
 	if (v_pixelDataMapOptions[ui_currentRotationMap] == "Between") {
 		return ofRandom(rotationMinMax[0], rotationMinMax[1]);
 	}
@@ -76,7 +76,7 @@ float ofApp::Df_pixelate::getRotation(ofColor c, float x, float y) {
 	return 0;
 }
 
-void ofApp::Df_pixelate::draw(ofImage* input) {
+void Df_pixelate::draw(ofImage* input) {
 	int imgW = input->getWidth();
 	int imgH = input->getHeight();
 	float tileW = (float)imgW / (float)tilesX;

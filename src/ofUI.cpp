@@ -139,6 +139,9 @@ void ofApp::gui_showMain() {
 					if (v_DrawFilterNames[currentDrawFilterIndex] == "Pixelate") {
 						v_DrawFilters.push_back(new Df_pixelate);
 					}
+					if (v_DrawFilterNames[currentDrawFilterIndex] == "Rings") {
+						v_DrawFilters.push_back(new Df_rings);
+					}
 				}
 
 				for (int i = 0; i < v_DrawFilters.size(); i++) {
