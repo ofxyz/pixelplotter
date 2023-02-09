@@ -2,16 +2,33 @@
 
 void Df_rings::renderImGuiSettings() {
 	if (ImGui::CollapsingHeader(name.c_str(), &active)) {
-		// UI
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::PushItemWidth(100);
+
+		ImGui::DragInt("Blur ##rings", &cvBlur, 1, 0, 500);
+		ImGui::DragInt("Threshold ##rings", &cvThresh, 1, 0, 255);
+		ImGui::DragInt("Ring Count ##rings", &cvSteps, 1, 1, 255);
+
+		ImGui::PopItemWidth();
 	}
 }
 
 void Df_rings::draw(ofImage* input) {
+	
+	// -------------------------------- Update
+	colorCvImage.allocate(input->getWidth(), input->getHeight());
+	greyCvImage.allocate(input->getWidth(), input->getHeight());
+	greyCvBlur.allocate(input->getWidth(), input->getHeight());
+	greyCvThresh.allocate(input->getWidth(), input->getHeight());
+
 	colorCvImage.setFromPixels(input->getPixelsRef());
 	greyCvImage = colorCvImage; // Convert to Grey
 	greyCvBlur = greyCvImage;
 	greyCvBlur.blur(cvBlur);
-
+	
+	//---------------------------------
+	
 	ofPushStyle();
 	ofSetColor(ofColor(255, 0, 0));
 	ofNoFill();

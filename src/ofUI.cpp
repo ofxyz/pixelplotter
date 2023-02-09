@@ -69,9 +69,6 @@ void ofApp::gui_showMain() {
 						showImage = true;
 					}
 				}
-				ImGui::DragInt("Blur", &cvBlur, 1, 0, 500);
-				ImGui::DragInt("Threshold", &cvThresh, 1, 0, 255);
-				ImGui::DragInt("Ring Count", &cvSteps, 1, 1, 255);
 			}
 
 			string sFilterCount = "Draw Filters (" + ofToString(v_DrawFilters.size()) + ")###DrawFiltersHolder";
