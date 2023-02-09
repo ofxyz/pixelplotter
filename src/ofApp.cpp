@@ -17,11 +17,11 @@
 
 void ofApp::setup() {
 	ofLogToConsole();
+	ofSetLogLevel(OF_LOG_FATAL_ERROR);
 	//ofSetLogLevel(OF_LOG_WARNING);
+	//ofSetLogLevel(OF_LOG_VERBOSE);
 	//ofSetBackgroundAuto(false);
-	ofSetCircleResolution(100);
 	ofSetWindowTitle("Pixel Plotter");
-	ofBackground(c_paper);
 
 	videoDevices = videoGrabber.listDevices();
 	for (vector<ofVideoDevice>::iterator it = videoDevices.begin(); it != videoDevices.end(); ++it) {
@@ -32,10 +32,9 @@ void ofApp::setup() {
 	zoomFbo.allocate(zoomWindowW, zoomWindowH, GL_RGB, 8);
 
 	gui.setup();
+	ImGui::StyleColorsDark();
 	ImGuiStyle* style = &ImGui::GetStyle();
 	style->ItemSpacing = ImVec2(5, 5);
-
-	ImGui::StyleColorsClassic();
 
 	c_background = ofColor(50, 50, 50, 255);
 	c_paper = ofColor(255, 255, 255, 255);
@@ -59,11 +58,10 @@ void ofApp::setup() {
 	}
 	
 	gui_buildSourceNames();
-	gui_loadPresets();
+	//gui_loadPresets();
 
 	currentSourceIndex = ofRandom(0, sourceNames.size() - 1);
-	currentPlotStyleIndex = ofRandom(0, ss.v_PlotStyles.size() - 1);
-	
+	//currentPlotStyleIndex = ofRandom(0, ss.v_PlotStyles.size() - 1);
 	gui_loadSourceIndex();
 }
 
@@ -75,14 +73,15 @@ void ofApp::exit() {
 //--------------------------------------------------------------
 void ofApp::update() {
 
-	// Clear deleted filters, only do this on change?
-	for (int i = 0; i < v_DrawFilters.size(); i++) {
-		if (!v_DrawFilters[i]->active) {
-			delete v_DrawFilters[i];
-			v_DrawFilters[i] = nullptr;
+	if (cleanFilters) {
+		for (int i = 0; i < v_DrawFilters.size(); i++) {
+			if (!v_DrawFilters[i]->active) {
+				delete v_DrawFilters[i];
+				v_DrawFilters[i] = nullptr;
+			}
 		}
+		v_DrawFilters.erase(std::remove(v_DrawFilters.begin(), v_DrawFilters.end(), nullptr), v_DrawFilters.end());
 	}
-	v_DrawFilters.erase(std::remove(v_DrawFilters.begin(), v_DrawFilters.end(), nullptr), v_DrawFilters.end());
 
 	if (!pauseRender) {
 
@@ -106,16 +105,16 @@ void ofApp::update() {
 	if (showZoom) {
 		zoomFbo.begin();
 		ofClear(c_paper);
-		float fX = max((float)0, min(((mouseX - offset.x) * zoomMultiplier) - halfZoomWindowW, fbo.getWidth() - zoomWindowW));
-		float fY = max((float)0, min(((mouseY - offset.y) * zoomMultiplier) - halfZoomWindowH, fbo.getHeight() - zoomWindowH));
-		fbo.getTexture().drawSubsection(0, 0, zoomWindowW, zoomWindowH, fX, fY);
+		float fX = max((float)0, min(((mouseX - offset.x) * zoomMultiplier) - halfZoomWindowW, canvasFbo.getWidth() - zoomWindowW));
+		float fY = max((float)0, min(((mouseY - offset.y) * zoomMultiplier) - halfZoomWindowH, canvasFbo.getHeight() - zoomWindowH));
+		canvasFbo.getTexture().drawSubsection(0, 0, zoomWindowW, zoomWindowH, fX, fY);
 		zoomFbo.end();
 	}
 }
 
 
 void ofApp::updateFbo() {
-	fbo.begin();
+	canvasFbo.begin();
 	ofClear(c_paper);
 
 	if (saveVector) {
@@ -131,94 +130,14 @@ void ofApp::updateFbo() {
 		saveVector = false;
 	}
 
-	fbo.end();
+	canvasFbo.end();
 }
-
-// -------------------------------------------------------------------------------- START TEMP
-void ofApp::treeFilter() {
-	ofPushStyle();
-	ofSetColor(ofColor(255, 0, 0));
-	ofNoFill();
-	ofSetLineWidth(4);
-
-	int i = 0;
-	ofColor c(255, 255, 255);
-	ofPolyline blobShape;
-	//ofPolyline smoothShape;
-
-	temp_grayCvImage = colorCvImage; // Convert to Grey
-	temp_grayCvImage.blur(cvBlur);
-
-	while (i < (250 - cvSteps)) {
-		if (i > cvThresh)
-			break;
-		i += cvSteps;
-		grayCvImage = temp_grayCvImage;
-		grayCvImage.threshold(i);
-		contourFinder.findContours(grayCvImage, 5, (img.getWidth() * img.getHeight()) / 2, 25, true, true);
-		//contourFinder.draw();
-		for (int i = 0; i < contourFinder.blobs.size(); i++) {
-			blobShape.clear();
-			c.setHsb(c.getHue() + 10, 255, 255);
-			ofSetColor(c);
-			blobShape.addVertices(contourFinder.blobs.at(i).pts);
-			blobShape.close();
-			blobShape.scale(zoomMultiplier, zoomMultiplier);
-			//smoothShape = blobShape.getSmoothed(10, 0.5);
-			//smoothShape.draw();
-			blobShape.draw();
-		}
-	}
-
-	ofPopStyle();
-}
-
-void ofApp::plotIt() {
-
-	gui_setBlendmode();
-
-	int imgW = img.getWidth();
-	int imgH = img.getHeight();
-	float tileW = (float)imgW / (float)ss.tilesX;
-	float tileH = (float)imgH / (float)ss.tilesY;
-	float halfTileW = tileW / 2.0;
-	float halfTileH = tileH / 2.0;
-
-	int ycount = 0;
-	int xcount = 0;
-	int ydiv = 0;
-	for (float y = 0; y < imgH - halfTileH; y += tileH) {
-		(ycount % 2 == 0) ? ydiv = 0 : ydiv = 1;
-		for (float x = 0; x < imgW - halfTileW; x += tileW) {
-			if (!ss.polka || ((xcount + ydiv) % 2 == 0)) {
-				float fx = x + halfTileW;
-				float fy = y + halfTileH;
-				ofColor c = img.getPixels().getColor(floor(fx), floor(fy));
-
-				if (ss.normalize) {
-					c.normalize();
-				}
-
-				ofPushMatrix();
-				ofTranslate(fx * zoomMultiplier, fy * zoomMultiplier, 0);
-				callStyle(ss.v_PlotStyles[currentPlotStyleIndex], ofVec2f((tileW + ss.addonx) * zoomMultiplier, (tileH + ss.addony) * zoomMultiplier), ofVec2f(fx * zoomMultiplier, fy * zoomMultiplier), ofVec2f(xcount, ycount), c);
-				ofPopMatrix();
-			}
-			xcount++;
-		}
-		ycount++;
-		xcount = 0;
-	}
-
-	ofDisableBlendMode();
-}
-// -------------------------------------------------------------------------------- END TEMP
 
 
 //--------------------------------------------------------------
 void ofApp::draw(){
 
-	fbo.draw(glm::vec2(offset.x, offset.y), img.getWidth(), img.getHeight());
+	canvasFbo.draw(glm::vec2(offset.x, offset.y), img.getWidth(), img.getHeight());
 
 	if (showZoom) {
 		float zX = max(offset.x, min(mouseX - halfZoomWindowW, (img.getWidth()  + offset.x) - zoomWindowW));
@@ -239,12 +158,18 @@ void ofApp::draw(){
 
 	if (showImage) {
 		img.draw(offset.x, offset.y);
-		//colorCvImage.draw(offset.x, offset.y);
-		//grayCvImage.draw(offset.x, offset.y);
-		//cvFbo.draw(offset.x, offset.y, img.getWidth(), img.getHeight());
 	}
 
 	gui_showMain();
+}
+
+void ofApp::addFilter() {
+	if (v_DrawFilterNames[currentDrawFilterIndex] == "Pixelate") {
+		v_DrawFilters.push_back(new Df_pixelate);
+	}
+	if (v_DrawFilterNames[currentDrawFilterIndex] == "Rings") {
+		v_DrawFilters.push_back(new Df_rings);
+	}
 }
 
 float ofApp::percentage(float percent, float total) {
@@ -294,15 +219,7 @@ void ofApp::prep_img() {
 		img.resize(ofGetHeight() * ratio, ofGetHeight());
 	}
 
-	fbo.allocate(img.getWidth() * zoomMultiplier, img.getHeight() * zoomMultiplier, GL_RGB, 8);
-
-	cvFbo.allocate(img.getWidth(), img.getHeight(), GL_RGB, 8);
-	
-	colorCvImage.allocate(img.getWidth(), img.getHeight());
-	grayCvImage.allocate(img.getWidth(), img.getHeight());
-	temp_grayCvImage.allocate(img.getWidth(), img.getHeight());
-	colorCvImage.setFromPixels(img.getPixelsRef());
-	grayCvImage = colorCvImage; // Convert to Grey
+	canvasFbo.allocate(img.getWidth() * zoomMultiplier, img.getHeight() * zoomMultiplier, GL_RGB, 8);
 
 	offset.x = ((ofGetWidth() - gui_width) - img.getWidth()) * 0.5;
 	offset.y = (ofGetHeight() - img.getHeight()) * 0.5;
@@ -325,10 +242,11 @@ int ofApp::getIndex(vector<std::string> v, std::string s, int notFound) {
 }
 
 void ofApp::saveSettings(string& filepath) {
+	/*
 	ofxXmlSettings settings;
 	settings.setValue("pixel_plotter:plotStyle", ss.v_PlotStyles[currentPlotStyleIndex]);
 	settings.setValue("pixel_plotter:blendmode", ss.v_BlendModes[currentBlendModeIndex]);
-	settings.setValue("pixel_plotter:tilesX", ss.tilesX);
+	s1ettings.setValue("pixel_plotter:tilesX", ss.tilesX);
 	settings.setValue("pixel_plotter:tilesY", ss.tilesY);
 	settings.setValue("pixel_plotter:addonx", ss.addonx);
 	settings.setValue("pixel_plotter:addony", ss.addony);
@@ -339,9 +257,11 @@ void ofApp::saveSettings(string& filepath) {
 	settings.setValue("pixel_plotter:noisepercentY", ss.noisepercentY);
 	settings.setValue("pixel_plotter:roundPixels", ss.roundPixels);
 	settings.saveFile(filepath);
+	*/
 }
 
 void ofApp::loadSettings(string& filepath) {
+	/*
 	ofxXmlSettings settings;
 	settings.loadFile(filepath);
 
@@ -358,6 +278,7 @@ void ofApp::loadSettings(string& filepath) {
 	ss.noisepercentX = settings.getValue("pixel_plotter:noisepercentX", 0);
 	ss.noisepercentY = settings.getValue("pixel_plotter:noisepercentY", 0);
 	ss.roundPixels = settings.getValue("pixel_plotter:roundPixels", false);
+	*/
 }
 
 ofVec4f ofApp::getCMYK(ofColor rgb) {

@@ -32,9 +32,11 @@ class ofApp : public ofBaseApp{
 		ofVideoPlayer videoPlayer;
 		ofVideoGrabber videoGrabber;
 
+		// Add to cam source settings ...
 		int camWidth = 640;
 		int camHeight= 480;
 
+		void addFilter();
 		void saveSettings(string& filepath);
 		void loadSettings(string& filepath);
 		void onImageChange(string& file);
@@ -48,6 +50,7 @@ class ofApp : public ofBaseApp{
 
 		int exportCount = 0;
 		
+		bool cleanFilters = false;
 		bool isLandscape;
 		bool bSavePreset = false;
 		bool show_main_window = true;
@@ -65,11 +68,6 @@ class ofApp : public ofBaseApp{
 
 		ofImage original, img;
 
-		ofxCvColorImage colorCvImage;
-		ofxCvGrayscaleImage grayCvImage;
-		ofxCvGrayscaleImage temp_grayCvImage;
-		ofxCvContourFinder contourFinder;
-
 		ofPixels pixels;
 		ofMesh mesh;
 
@@ -82,15 +80,11 @@ class ofApp : public ofBaseApp{
 		int currentDrawFilterIndex = 0;
 
 		float imgRatio;
-		int cvThresh = 128;
-		int cvBlur = 150;
-		int cvSteps = 10;
 
 		ofVec4f getCMYK(ofColor rgb);
 
-		ofFbo fbo;
+		ofFbo canvasFbo;
 		ofFbo zoomFbo;
-		ofFbo cvFbo;
 		int currentVideoFrame = 1;
 
 		float ratio = 1;
@@ -126,7 +120,6 @@ class ofApp : public ofBaseApp{
 		ofVec2f offset;
 
 		void plotIt();
-		void treeFilter();
 
 		// -------------------------------------------------  Start style_seperation.cpp
 		void callStyle(string stylename, ofVec2f size, ofVec2f loc, ofDefaultVec2 xycount, ofColor c);
@@ -175,7 +168,6 @@ class ofApp : public ofBaseApp{
 		// ------------------------------------------------- End Interfaces
 
 		struct {
-			std::vector<std::string> v_BlendModes{ "OF_BLENDMODE_DISABLED", "OF_BLENDMODE_ALPHA", "OF_BLENDMODE_ADD", "OF_BLENDMODE_SUBTRACT", "OF_BLENDMODE_MULTIPLY", "OF_BLENDMODE_SCREEN" };
 			std::vector<std::string> v_PlotStyles{
 				"Pixelate",
 				"Pixelate Brightness Width",

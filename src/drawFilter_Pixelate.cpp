@@ -23,10 +23,7 @@ void Df_pixelate::renderImGuiSettings() {
 		ImGui::PopItemWidth();
 
 		ImGui::Text("Rotation"); ImGui::SameLine(75);
-		if (ofxImGui::VectorCombo("##pixelate_rotation", &ui_currentRotationMap, v_pixelDataMapOptions))
-		{
-			// Done
-		}
+		ofxImGui::VectorCombo("##pixelate_rotation", &ui_currentRotationMap, v_pixelDataMapOptions);
 
 		ImGui::PushItemWidth(100);
 
@@ -41,6 +38,8 @@ void Df_pixelate::renderImGuiSettings() {
 		ImGui::Checkbox("Round Pixels", &roundPixels); // TODO: Add force proportion?
 
 		ImGui::PopItemWidth();
+
+		ofxImGui::VectorCombo("##Blend Mode", &currentBlendModeIndex, v_BlendModes);
 	}
 }
 
@@ -87,6 +86,8 @@ void Df_pixelate::draw(ofImage* input) {
 	int ycount = 0;
 	int xcount = 0;
 	int ydiv   = 0;
+
+	setBlendMode();
 
 	// This needs some control...
 	//int rSeed = 0;

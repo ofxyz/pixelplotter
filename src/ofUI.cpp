@@ -127,23 +127,24 @@ void ofApp::gui_showMain() {
 
 				if (ofxImGui::VectorCombo("##Draw Filter Selector", &currentDrawFilterIndex, v_DrawFilterNames))
 				{
-					// Done
+					addFilter();
 				}
 
 				ImGui::SameLine();
 				if (ImGui::Button("Add"))
 				{
-					if (v_DrawFilterNames[currentDrawFilterIndex] == "Pixelate") {
-						v_DrawFilters.push_back(new Df_pixelate);
-					}
-					if (v_DrawFilterNames[currentDrawFilterIndex] == "Rings") {
-						v_DrawFilters.push_back(new Df_rings);
-					}
+					addFilter();
 				}
 
+				cleanFilters = false;
 				for (int i = 0; i < v_DrawFilters.size(); i++) {
 					ImGui::PushID(i);
-					v_DrawFilters[i]->renderImGuiSettings();
+					if (v_DrawFilters[i]->active) {
+						v_DrawFilters[i]->renderImGuiSettings();
+					}
+					else {
+						cleanFilters = true;
+					}
 					ImGui::PopID();
 				}
 
@@ -225,14 +226,6 @@ void ofApp::gui_showMain() {
 				{
 					ofApp::gui_setAvarage_pressed();
 				}
-
-				ImGui::Checkbox("normalize Colours", &ss.normalize);
-
-				if (ofxImGui::VectorCombo("Blend Mode", &currentBlendModeIndex, ss.v_BlendModes))
-				{
-					ss.currentBlendmode = ss.v_BlendModes[currentBlendModeIndex];
-				}
-
 			} // End Colours
 
 			if (ImGui::Button("Export Vector")) { saveVector = true; }
@@ -240,6 +233,7 @@ void ofApp::gui_showMain() {
 			ImGui::End();
 		}
 	}
+
 	gui.end();
 
 }
@@ -345,4 +339,5 @@ void ofApp::gui_setBlendmode() {
 	else {
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 	}
+	ofDisableBlendMode();
 }

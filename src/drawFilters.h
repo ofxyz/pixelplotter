@@ -5,28 +5,49 @@
 
 class DrawFilter {
 public:
+	bool active = true;
+	std::string name;
+
 	//virtual void draw(ofFbo* input) = 0;
 	virtual void draw(ofImage* input) = 0;
 	virtual void renderImGuiSettings() = 0;
-	virtual std::string getFilterName() = 0;
-	bool active = true;
-private:
-	std::string name;
-	ofxXmlSettings settings;
+
+	int currentBlendModeIndex = 0;
+	std::vector<std::string> v_BlendModes{ "OF_BLENDMODE_DISABLED", "OF_BLENDMODE_ALPHA", "OF_BLENDMODE_ADD", "OF_BLENDMODE_SUBTRACT", "OF_BLENDMODE_MULTIPLY", "OF_BLENDMODE_SCREEN" };
+	void setBlendMode() {
+		if (v_BlendModes[currentBlendModeIndex] == "OF_BLENDMODE_ALPHA") {
+			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+		}
+		else if (v_BlendModes[currentBlendModeIndex] == "OF_BLENDMODE_ADD") {
+			ofEnableBlendMode(OF_BLENDMODE_ADD);
+		}
+		else if (v_BlendModes[currentBlendModeIndex] == "OF_BLENDMODE_SUBTRACT") {
+			ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
+		}
+		else if (v_BlendModes[currentBlendModeIndex] == "OF_BLENDMODE_MULTIPLY") {
+			ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
+		}
+		else if (v_BlendModes[currentBlendModeIndex] == "OF_BLENDMODE_SCREEN") {
+			ofEnableBlendMode(OF_BLENDMODE_SCREEN);
+		}
+		else {
+			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+		}
+	}
+
+	float drawScale = 4; // zoomMultiplier
 };
 
 class Df_pixelate : public DrawFilter {
 public:
+	std::string name = "Pixelate";
 	void draw(ofImage* input);
 	void renderImGuiSettings();
-	std::string getFilterName() {
-		return name;
-	}
+
 private:
 	void drawPixel(float w, float h, ofColor c);
 	float getRotation(ofColor c, float w, float h);
-	std::string name = "Pixelate";
-
+	
 	std::vector<std::string> v_pixelDataMapOptions{
 		"None",
 		"Between",
@@ -38,7 +59,8 @@ private:
 		"Location Y" */
 	};
 
-
+	// ADD PIXEL OFFSET so next filter can be misaligned ...
+	// ADD Transparency Slider
 	int ui_currentRotationMap = 0;
 	bool normalize = false;
 	bool polka = false;
@@ -50,21 +72,15 @@ private:
 	float randomOffset = 0;
 	int rotationMapTo = 0;
 	ofVec2f rotationMinMax = ofVec2f(0, 0);
-	float drawScale = 4; // zoomMultiplier
 };
 
 class Df_rings : public DrawFilter {
 public:
-	void update(ofImage* input);
+	std::string name = "Rings";
 	void draw(ofImage* input);
 	void renderImGuiSettings();
-	std::string getFilterName() {
-		return name;
-	}
-private:
-	std::string name = "Rings";
-	float drawScale = 4; // zoomMultiplier
 
+private:
 	int cvThresh = 128;
 	int cvBlur = 150;
 	int cvSteps = 10;
