@@ -47,7 +47,9 @@ public:
 private:
 	void drawPixel(float w, float h, ofColor c);
 	float getRotation(ofColor c, float w, float h);
-	
+	float getWidth(ofColor c, float w, float h, float r);
+	float getHeight(ofColor c, float w, float h, float r);
+
 	std::vector<std::string> v_pixelDataMapOptions{
 		"None",
 		"Between",
@@ -62,6 +64,8 @@ private:
 	// ADD PIXEL OFFSET so next filter can be misaligned ...
 	// ADD Transparency Slider
 	int ui_currentRotationMap = 0;
+	int ui_currentWidthMap = 0;
+	int ui_currentHeightMap = 0;
 	bool normalize = false;
 	bool polka = false;
 	bool roundPixels = false;
@@ -69,9 +73,16 @@ private:
 	int tilesY = 64;
 	float addonx = 0;
 	float addony = 0;
-	float randomOffset = 0;
-	int rotationMapTo = 0;
+	float addonx_rand = 0;
+	float addony_rand = 0;
+	float offsetx = 0;
+	float offsety = 0;
+	float offsetx_rand = 0;
+	float offsety_rand = 0;
+
 	ofVec2f rotationMinMax = ofVec2f(0, 0);
+	ofVec2f widthMinMax = ofVec2f(5, 50);
+	ofVec2f heightMinMax = ofVec2f(5, 50);
 };
 
 class Df_rings : public DrawFilter {

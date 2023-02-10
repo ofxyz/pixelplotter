@@ -4,13 +4,13 @@ void ofApp::callStyle(string stylename, ofVec2f size, ofVec2f loc, ofDefaultVec2
 	float w = size[0];
 	float h = size[1];
 
-	if (stylename == "Pixelate") {
+	if (stylename == "Pixelate") { //DONE
 		Style_Pixelate(w, h, c);
 	}
-	else if (stylename == "Pixelate Brightness Width") {
+	else if (stylename == "Pixelate Brightness Width") { //DONE
 		Style_Pixelate_Brightness_Width(w, h, c);
 	}
-	else if (stylename == "Lightness Rotation") {
+	else if (stylename == "Lightness Rotation") { //DONE
 		Style_Lightness_Rotation(w, h, c);
 	}
 	else if (stylename == "RGB Seperation 1") {

@@ -5,33 +5,58 @@ void Df_pixelate::renderImGuiSettings() {
 
 		ImGui::AlignTextToFramePadding();
 
-		ImGui::PushItemWidth(100);
+		ImGui::PushItemWidth(60);
 
 		ImGui::Text("Tiles"); ImGui::SameLine(75);
 		ImGui::DragInt("X ##pixelate_tiles", &tilesX, 1, 1, 1200);
 		ImGui::SameLine();
 		ImGui::DragInt("Y ##pixelate_tiles", &tilesY, 1, 1, 1200);
 
-		ImGui::Text("Addon"); ImGui::SameLine(75);
+		ImGui::Text("+ Addon"); ImGui::SameLine(75);
 		ImGui::DragFloat("X ##pixelate_addon", &addonx, 0.1f, -100.0f, 100.0f, "%.3f");
 		ImGui::SameLine();
 		ImGui::DragFloat("Y ##pixelate_addon", &addony, 0.1f, -100.0f, 100.0f, "%.3f");
 
-		ImGui::Text("Offset"); ImGui::SameLine(75);
-		ImGui::DragFloat("Random ##pixelate_random", &randomOffset, 0.1f, 0.0f, 500.0f, "%.3f");
+		ImGui::Text("+ Random"); ImGui::SameLine(75);
+		ImGui::DragFloat("X ##pixelate_addon_rand", &addonx_rand, 0.1f, -100.0f, 100.0f, "%.3f");
+		ImGui::SameLine();
+		ImGui::DragFloat("Y ##pixelate_addon_rand", &addony_rand, 0.1f, -100.0f, 100.0f, "%.3f");
 
-		ImGui::PopItemWidth();
+		ImGui::Text("Offset"); ImGui::SameLine(75);
+		ImGui::DragFloat("X ##pixelate_offsetx", &offsetx, 0.1f, -250.0f, 250.0f, "%.3f");
+		ImGui::SameLine();
+		ImGui::DragFloat("Y ##pixelate_offsety", &offsety, 0.1f, -250.0f, 250.0f, "%.3f");
+
+		ImGui::Text("+ Random"); ImGui::SameLine(75);
+		ImGui::DragFloat("X ##pixelate_offsetX_random", &offsetx_rand, 0.1f, 0.0f, 500.0f, "%.3f");
+		ImGui::SameLine();
+		ImGui::DragFloat("Y ##pixelate_offsetY_random", &offsety_rand, 0.1f, -100.0f, 100.0f, "%.3f");
 
 		ImGui::Text("Rotation"); ImGui::SameLine(75);
 		ofxImGui::VectorCombo("##pixelate_rotation", &ui_currentRotationMap, v_pixelDataMapOptions);
-
-		ImGui::PushItemWidth(100);
-
 		if (ui_currentRotationMap > 0) {
 			ImGui::Text(" "); ImGui::SameLine(75);
 			ImGui::DragFloat("Min ##pixelate_rotation", &rotationMinMax[0], 0.1f, -360.0f, 360.0f, "%.3f");
 			ImGui::SameLine();
 			ImGui::DragFloat("Max ##pixelate_rotation", &rotationMinMax[1], 0.1f, -360.0f, 360.0f, "%.3f");
+		}
+
+		ImGui::Text("Width"); ImGui::SameLine(75);
+		ofxImGui::VectorCombo("##pixelate_width", &ui_currentWidthMap, v_pixelDataMapOptions);
+		if (ui_currentWidthMap > 0) {
+			ImGui::Text(" "); ImGui::SameLine(75);
+			ImGui::DragFloat("Min ##pixelate_width", &widthMinMax[0], 0.1f, -250.0f, 250.0f, "%.3f");
+			ImGui::SameLine();
+			ImGui::DragFloat("Max ##pixelate_height", &widthMinMax[1], 0.1f, -250.0f, 250.0f, "%.3f");
+		}
+
+		ImGui::Text("Height"); ImGui::SameLine(75);
+		ofxImGui::VectorCombo("##pixelate_height", &ui_currentHeightMap, v_pixelDataMapOptions);
+		if (ui_currentHeightMap > 0) {
+			ImGui::Text(" "); ImGui::SameLine(75);
+			ImGui::DragFloat("Min ##pixelate_rotation", &heightMinMax[0], 0.1f, -250.0f, 250.0f, "%.3f");
+			ImGui::SameLine();
+			ImGui::DragFloat("Max ##pixelate_rotation", &heightMinMax[1], 0.1f, -250.0f, 250.0f, "%.3f");
 		}
 
 		ImGui::Checkbox("Polka", &polka);
@@ -48,9 +73,11 @@ void Df_pixelate::drawPixel(float w, float h, ofColor c) {
 	//if ((w > -0.25 && w < 0.25) || (h > -0.25 && h < 0.25)) {
 	//	return;
 	//}
+	w = w + ofRandom(0, addonx_rand);
+	h = h + ofRandom(0, addony_rand);
 
-	float offsetX = ofRandom(-randomOffset, randomOffset);
-	float offsetY = ofRandom(-randomOffset, randomOffset);
+	float offsetX = offsetx + ofRandom(0, offsetx_rand);
+	float offsetY = offsety + ofRandom(0, offsetx_rand);
 
 	ofPushStyle();
 	ofFill();
@@ -75,6 +102,26 @@ float Df_pixelate::getRotation(ofColor c, float x, float y) {
 	return 0;
 }
 
+float Df_pixelate::getWidth(ofColor c, float x, float y, float r) {
+	if (v_pixelDataMapOptions[ui_currentWidthMap] == "Between") {
+		return ofRandom(widthMinMax[0], widthMinMax[1]);
+	}
+	if (v_pixelDataMapOptions[ui_currentWidthMap] == "Color Lightness") {
+		return ofMap(c.getLightness(), 0, 255, widthMinMax[0], widthMinMax[1]);
+	}
+	return r;
+}
+
+float Df_pixelate::getHeight(ofColor c, float x, float y, float r) {
+	if (v_pixelDataMapOptions[ui_currentHeightMap] == "Between") {
+		return ofRandom(heightMinMax[0], heightMinMax[1]);
+	}
+	if (v_pixelDataMapOptions[ui_currentHeightMap] == "Color Lightness") {
+		return ofMap(c.getLightness(), 0, 255, heightMinMax[0], heightMinMax[1]);
+	}
+	return r;
+}
+
 void Df_pixelate::draw(ofImage* input) {
 	int imgW = input->getWidth();
 	int imgH = input->getHeight();
@@ -97,19 +144,31 @@ void Df_pixelate::draw(ofImage* input) {
 		//ofSeedRandom(rSeed++);
 		(ycount % 2 == 0) ? ydiv = 0 : ydiv = 1;
 		for (float x = 0; x < imgW - halfTileW; x += tileW) {
-			//rSeed += 200;
-			//ofSeedRandom(rSeed++);
 			if (!polka || ((xcount + ydiv) % 2 == 0)) {
+				//rSeed += 200;
+				//ofSeedRandom(rSeed++);
 				float fx = x + halfTileW;
 				float fy = y + halfTileH;
 				ofColor c = input->getPixels().getColor(floor(fx), floor(fy));
+				
+				float tileWidth = tileW;
+				float tileHeight = tileH;
+				if (ui_currentWidthMap > 0) {
+					tileWidth = getWidth(c, x, y, tileW);
+				}
+
+				if (ui_currentHeightMap > 0) {
+					tileHeight = getHeight(c, x, y, tileH);
+				}
 
 				ofPushMatrix();
 				ofTranslate(fx * drawScale, fy * drawScale, 0);
-				if(rotationMapTo >= 0) {
+
+				if(ui_currentRotationMap > 0) {
 					ofRotateZDeg(getRotation(c,x,y));
 				}
-				drawPixel( (tileW + addonx) * drawScale, (tileH + addony) * drawScale, c);
+
+				drawPixel( (tileWidth + addonx) * drawScale, (tileHeight + addony) * drawScale, c);
 				ofPopMatrix();
 			}
 			xcount++;
