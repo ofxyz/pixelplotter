@@ -74,73 +74,27 @@ void ofApp::gui_showMain() {
 			string sFilterCount = "Draw Filters (" + ofToString(v_DrawFilters.size()) + ")###DrawFiltersHolder";
 			if (ImGui::CollapsingHeader(sFilterCount.c_str()))
 			{
-				/*
-				if (ImGui::Button("Quick Save"))
-				{
-					string savePath = "presets\/quicksave.xml";
-					saveSettings(savePath);
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("Quick Load"))
-				{
-					string savePath = "presets\/quicksave.xml";
-					loadSettings(savePath);
-				}
-				*/
-				
-				/*
-				if (ofxImGui::VectorCombo("##Presets", &currentPresetIndex, presetFileNames))
-				{
-					loadSettings(presetFiles[currentPresetIndex].getAbsolutePath());
-				}
+				ImGui::PushStyleColor(ImGuiCol_Header, (ImVec4)ImColor::HSV(0, 0, 0.2));
+				ImGui::PushStyleColor(ImGuiCol_HeaderActive, (ImVec4)ImColor::HSV(0, 0, 0.4));
+				ImGui::PushStyleColor(ImGuiCol_HeaderHovered, (ImVec4)ImColor::HSV(0, 0, 0.7));
 
-				if (presetFileNames.size() > 0) {
-					ImGui::SameLine();
-					if (ImGui::Button("Delete Preset"))
-					{
-						presetFiles[currentPresetIndex].remove();
-						gui_loadPresets();
-					}
-				}
+				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0, 0, 0.2));
+				ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0, 0, 0.2));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0, 0, 0.7));
 
-				if (bSavePreset) {
-					ImGui::InputText("##presetname", presetSaveName, IM_ARRAYSIZE(presetSaveName));
-					ImGui::SameLine();
-				}
-				if (ImGui::Button("Save Preset"))
-				{
-					if (bSavePreset) {
-						string savePath = "presets\/" + string(presetSaveName) + ".xml";
-						saveSettings(savePath);
-						gui_loadPresets();
-						currentPresetIndex = getIndex(presetFileNames, string(presetSaveName), 0);
-						bSavePreset = false;
-					}
-					else {
-						if (presetFileNames.size() > 0) {
-							strcpy(presetSaveName, presetFileNames[currentPresetIndex].c_str());
-						}
-						bSavePreset = true;
-					}
-				}
-				*/
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)ImColor::HSV(0, 0, 0.2));
+				ImGui::PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4)ImColor::HSV(0, 0, 0.4));
+				ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0, 0, 0.5));
 
-				if (ofxImGui::VectorCombo("##Draw Filter Selector", &currentDrawFilterIndex, v_DrawFilterNames))
-				{
-					addDrawFilter();
-				}
-
-				ImGui::SameLine();
-				if (ImGui::Button("Add"))
-				{
-					addDrawFilter();
-				}
+				ImGui::PushStyleColor(ImGuiCol_CheckMark, (ImVec4)ImColor::HSV(0, 0, 0.8));
 
 				cleanFilters = false;
 				for (int i = 0; i < v_DrawFilters.size(); i++) {
 					ImGui::PushID(i);
 					if (v_DrawFilters[i]->active) {
+						ImGui::Indent();
 						v_DrawFilters[i]->renderImGuiSettings();
+						ImGui::Unindent();
 					}
 					else {
 						cleanFilters = true;
@@ -148,60 +102,14 @@ void ofApp::gui_showMain() {
 					ImGui::PopID();
 				}
 
-				/*
-				if (ofxImGui::VectorCombo("Plot Style", &currentPlotStyleIndex, ss.v_PlotStyles))
+				ImGui::PopStyleColor(10);
+
+				if (ofxImGui::VectorCombo("##Draw Filter Selector", &currentDrawFilterIndex, v_DrawFilterNames))
 				{
-					// Done
+					addDrawFilter(currentDrawFilterIndex);
+					currentDrawFilterIndex = 0;
 				}
-
-				ImGui::AlignTextToFramePadding();
-
-				ImGui::PushItemWidth(100);
-
-				ImGui::Text("Tiles"); ImGui::SameLine(75);
-				ImGui::DragInt("X ##Tiles", &ss.tilesX, 1, 1, 1200);
-				ImGui::SameLine();
-				ImGui::DragInt("Y ##Tiles", &ss.tilesY, 1, 1, 1200);
-
-				ImGui::Text("Addon"); ImGui::SameLine(75);
-				ImGui::DragFloat("X ##Addon", &ss.addonx, 0.1f, -100.0f, 100.0f, "%.3f");
-				ImGui::SameLine();
-				ImGui::DragFloat("Y ##Addon", &ss.addony, 0.1f, -100.0f, 100.0f, "%.3f");
-
-				ImGui::Text("Offset"); ImGui::SameLine(75);
-				ImGui::DragFloat("Random", &ss.randomOffset, 0.1f, 0.0f, 250.0f, "%.3f%%");
-
-				ImGui::Text("Noise"); ImGui::SameLine(75);
-				ImGui::DragFloat("X ##Noise", &ss.noisepercentX, 0.1f, 0.0f, 100.0f, "%.2f%%");
-				ImGui::SameLine();
-				ImGui::DragFloat("Y ##Noise", &ss.noisepercentY, 0.1f, 0.0f, 100.0f, "%.2f%%");
-
-				ImGui::Text("Every N"); ImGui::SameLine(75);
-				ImGui::DragInt("X ##Every N", &ss.everynx, 1, 1, 128);
-				ImGui::SameLine();
-				ImGui::DragInt("Y ##Every N", &ss.everyny, 1, 1, 128);
-
-				ImGui::PopItemWidth();
-
-				// Pixel Type: line, square, rect, round, oval
-				// Use Radio or dropdown
-				if (ss.roundPixels) {
-					if (ImGui::Button("Square Pixels"))
-					{
-						ss.roundPixels = false;
-					}
-				}
-				else {
-					if (ImGui::Button("Round Pixels"))
-					{
-						ss.roundPixels = true;
-					}
-				}
-				ImGui::SameLine();
-				ImGui::Checkbox("Polka", &ss.polka);
-				ImGui::Checkbox("Clear Canvas", &ss.clearCanvas);
-				*/
-			}// End Style
+			}// End Draw Filters
 
 			if (ImGui::CollapsingHeader("Colours"))
 			{

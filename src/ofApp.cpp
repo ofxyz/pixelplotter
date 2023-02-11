@@ -63,9 +63,8 @@ void ofApp::setup() {
 	
 	gui_buildSourceNames();
 	//gui_loadPresets();
-	
-	currentDrawFilterIndex = ofRandom(0, v_DrawFilterNames.size() - 1);
-	addDrawFilter();
+
+	addDrawFilter(ofRandom(1, v_DrawFilterNames.size() - 1));
 
 	currentSourceIndex = ofRandom(0, sourceNames.size() - 1);
 	gui_loadSourceIndex();
@@ -170,11 +169,11 @@ void ofApp::draw(){
 	gui_showMain();
 }
 
-void ofApp::addDrawFilter() {
-	if (v_DrawFilterNames[currentDrawFilterIndex] == "Pixelate") {
+void ofApp::addDrawFilter(int index) {
+	if (v_DrawFilterNames[index] == "Pixelate") {
 		v_DrawFilters.push_back(new Df_pixelate);
 	}
-	if (v_DrawFilterNames[currentDrawFilterIndex] == "Rings") {
+	if (v_DrawFilterNames[index] == "Rings") {
 		v_DrawFilters.push_back(new Df_rings);
 	}
 }
