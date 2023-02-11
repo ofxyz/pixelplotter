@@ -36,7 +36,7 @@ class ofApp : public ofBaseApp{
 		int camWidth = 640;
 		int camHeight= 480;
 
-		void addFilter();
+		void addDrawFilter();
 		void saveSettings(string& filepath);
 		void loadSettings(string& filepath);
 		void onImageChange(string& file);
@@ -160,7 +160,7 @@ class ofApp : public ofBaseApp{
 
 		std::vector<DrawFilter*> v_DrawFilters;
 		
-		std::vector<std::string> v_DrawFilterNames{
+		std::vector<std::string> v_DrawFilterNames {
 			"Pixelate",
 			"Rings"
 		};

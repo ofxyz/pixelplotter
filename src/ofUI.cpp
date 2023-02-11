@@ -127,13 +127,13 @@ void ofApp::gui_showMain() {
 
 				if (ofxImGui::VectorCombo("##Draw Filter Selector", &currentDrawFilterIndex, v_DrawFilterNames))
 				{
-					addFilter();
+					addDrawFilter();
 				}
 
 				ImGui::SameLine();
 				if (ImGui::Button("Add"))
 				{
-					addFilter();
+					addDrawFilter();
 				}
 
 				cleanFilters = false;

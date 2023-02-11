@@ -11,6 +11,10 @@
    - Push X / Y / C to vector for sorting and drawing order.
    - Souce effects on GPU with shaders. Output vector. 
    - Posterise Source (shader)
+
+   ## Filters
+   - Add hatch filter
+   - Add asym hex pixel to Pixelate filter.
 */
 
 //--------------------------------------------------------------
@@ -59,10 +63,13 @@ void ofApp::setup() {
 	
 	gui_buildSourceNames();
 	//gui_loadPresets();
+	
+	currentDrawFilterIndex = ofRandom(0, v_DrawFilterNames.size() - 1);
+	addDrawFilter();
 
 	currentSourceIndex = ofRandom(0, sourceNames.size() - 1);
-	//currentPlotStyleIndex = ofRandom(0, ss.v_PlotStyles.size() - 1);
 	gui_loadSourceIndex();
+	
 }
 
 //--------------------------------------------------------------
@@ -163,7 +170,7 @@ void ofApp::draw(){
 	gui_showMain();
 }
 
-void ofApp::addFilter() {
+void ofApp::addDrawFilter() {
 	if (v_DrawFilterNames[currentDrawFilterIndex] == "Pixelate") {
 		v_DrawFilters.push_back(new Df_pixelate);
 	}
