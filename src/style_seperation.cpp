@@ -13,13 +13,14 @@ void ofApp::callStyle(string stylename, ofVec2f size, ofVec2f loc, ofDefaultVec2
 	else if (stylename == "Lightness Rotation") { //DONE
 		Style_Lightness_Rotation(w, h, c);
 	}
-	else if (stylename == "RGB Seperation 1") {
+
+	else if (stylename == "RGB Seperation 1") { // Not Needed
 		Style_RGB_Seperation_1(w, h, c);
 	}
 	else if (stylename == "RGB Seperation 2") {
 		Style_RGB_Seperation_2(w, h, c);
 	}
-	else if (stylename == "RGB Seperation 3") {
+	else if (stylename == "RGB Seperation 3") { // Standard RGB Seperation
 		Style_RGB_Seperation_3(w, h, c);
 	}
 	else if (stylename == "RGB Seperation 4") {
@@ -28,6 +29,7 @@ void ofApp::callStyle(string stylename, ofVec2f size, ofVec2f loc, ofDefaultVec2
 	else if (stylename == "RGB Seperation 5") {
 		Style_RGB_Seperation_5(w, h, c);
 	}
+
 	else if (stylename == "CMYK Seperation 1") {
 		Style_CMYK_Seperation_1(w, h, c);
 	}

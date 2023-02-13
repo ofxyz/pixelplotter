@@ -55,6 +55,9 @@ void Df_pixelate::renderImGuiSettings() {
 			}
 		}
 		*/
+
+		ofxImGui::VectorCombo("Pixel Type ##pixelate", &ui_currentPixelType, v_pixelType);
+
 		ImGui::PushItemWidth(60);
 
 		ImGui::Text("Tiles"); ImGui::SameLine(75);
@@ -118,7 +121,6 @@ void Df_pixelate::renderImGuiSettings() {
 		ImGui::Separator();
 
 		ImGui::Checkbox("Polka", &polka);
-		ImGui::Checkbox("Round Pixels", &roundPixels); // TODO: Add force proportion?
 
 		ImGui::PopItemWidth();
 
@@ -127,13 +129,23 @@ void Df_pixelate::renderImGuiSettings() {
 	}
 }
 
-void Df_pixelate::drawPixel(float w, float h, ofColor c) {
+void Df_pixelate::drawRectangle(float offsetX, float offsetY, float w, float h, ofColor c) {
+	ofPushStyle();
+	ofFill();
+	ofSetColor(c);
+	ofDrawRectangle(-(w * 0.5) + offsetX, -(h * 0.5) + offsetY, w, h);
+	ofPopStyle();
+};
 
-	//if ((w > -0.25 && w < 0.25) || (h > -0.25 && h < 0.25)) {
-	//	return;
-	//}
-	w = w + ofRandom(0, addonx_rand);
-	h = h + ofRandom(0, addony_rand);
+void Df_pixelate::drawEllipse(float offsetX, float offsetY, float w, float h, ofColor c) {
+	ofPushStyle();
+	ofFill();
+	ofSetColor(c);
+	ofDrawEllipse(offsetX, offsetY, w, h);
+	ofPopStyle();
+};
+
+void Df_pixelate::drawPixel(float w, float h, ofColor c) {
 
 	float offsetX = offsetx + ofRandom(0, offsetx_rand);
 	float offsetY = offsety + ofRandom(0, offsetx_rand);
@@ -141,12 +153,15 @@ void Df_pixelate::drawPixel(float w, float h, ofColor c) {
 	ofPushStyle();
 	ofFill();
 	ofSetColor(c);
-	// Draw PixelTypes // RGB Seperation 01, 02, etc
-	if (roundPixels) {
-		ofDrawEllipse(offsetX, offsetY, w, h);
-	}
-	else { // Square Pixels
-		ofDrawRectangle(-(w * 0.5) + offsetX, -(h * 0.5) + offsetY, w, h);
+
+	switch (ui_currentPixelType) {
+	case 0:
+		drawRectangle(offsetX, offsetY, w, h, c);
+	case 1:
+		drawEllipse(offsetX, offsetY, w, h, c);
+		break;
+	default:
+		ofLog() << "Not a valid Draw Filter: " << ui_currentPixelType << endl;
 	}
 	ofPopStyle();
 };
@@ -212,6 +227,9 @@ void Df_pixelate::draw(ofImage* input) {
 				
 				float tileWidth = tileW;
 				float tileHeight = tileH;
+				float offsetX = offsetx;
+				float offsetY = offsety;
+
 				if (ui_currentWidthMap > 0) {
 					tileWidth = getWidth(c, x, y, tileW);
 				}
@@ -226,6 +244,12 @@ void Df_pixelate::draw(ofImage* input) {
 				if(ui_currentRotationMap > 0) {
 					ofRotateZDeg(getRotation(c,x,y));
 				}
+
+				// Add or not ...
+				tileWidth += ofRandom(0, addonx_rand);
+				tileWidth += ofRandom(0, addony_rand);
+				offsetX += ofRandom(0, offsetx_rand);
+				offsetY += ofRandom(0, offsetx_rand);
 
 				drawPixel( (tileWidth + addonx) * drawScale, (tileHeight + addony) * drawScale, c);
 				ofPopMatrix();

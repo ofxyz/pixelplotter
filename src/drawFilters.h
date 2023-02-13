@@ -45,10 +45,18 @@ public:
 	void renderImGuiSettings();
 
 private:
+	void drawRectangle(float offsetX, float offsetY, float w, float h, ofColor c);
+	void drawEllipse(float offsetX, float offsetY, float w, float h, ofColor c);
+
 	void drawPixel(float w, float h, ofColor c);
 	float getRotation(ofColor c, float w, float h);
 	float getWidth(ofColor c, float w, float h, float r);
 	float getHeight(ofColor c, float w, float h, float r);
+
+	std::vector<std::string> v_pixelType{
+			"Rectangle",
+			"Ellipse"
+	};
 
 	std::vector<std::string> v_pixelDataMapOptions{
 		"None",
@@ -66,9 +74,9 @@ private:
 	int ui_currentRotationMap = 0;
 	int ui_currentWidthMap = 0;
 	int ui_currentHeightMap = 0;
+	int ui_currentPixelType = 0;
 	bool normalize = false;
 	bool polka = false;
-	bool roundPixels = false;
 	int tilesX = 64;
 	int tilesY = 64;
 	float addonx = 0;
