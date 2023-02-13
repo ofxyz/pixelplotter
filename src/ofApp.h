@@ -98,10 +98,12 @@ class ofApp : public ofBaseApp{
 		ofxImGui::Gui gui;
 		ImVec4 c_background;
 		ImVec4 c_paper;
+		
 		ImVec4 c_magentaRed;
 		ImVec4 c_cyanBlue;
 		ImVec4 c_yellowGreen;
 		ImVec4 c_black;
+		ImVec4 c_white;
 
 		std::vector<std::string> sourceNames;
 		

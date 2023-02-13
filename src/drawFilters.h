@@ -36,6 +36,13 @@ public:
 	}
 
 	float drawScale = 4; // zoomMultiplier
+	
+	ImVec4 c_cyanBlue = ofColor(0, 174, 239, 255);
+	ImVec4 c_magentaRed = ofColor(236, 0, 140, 255);
+	ImVec4 c_yellowGreen = ofColor(255, 242, 0, 255);
+	ImVec4 c_blackKey = ofColor(0, 0, 0, 255);
+	ImVec4 c_white = ofColor(255, 255, 255, 255);
+
 };
 
 class Df_pixelate : public DrawFilter {
@@ -47,6 +54,7 @@ public:
 private:
 	void drawRectangle(float offsetX, float offsetY, float w, float h, ofColor c);
 	void drawEllipse(float offsetX, float offsetY, float w, float h, ofColor c);
+	void drawRgbSeperation(float offsetX, float offsetY, float w, float h, ofColor c);
 
 	void drawPixel(float w, float h, ofColor c);
 	float getRotation(ofColor c, float w, float h);
@@ -55,7 +63,8 @@ private:
 
 	std::vector<std::string> v_pixelType{
 			"Rectangle",
-			"Ellipse"
+			"Ellipse",
+			"RGB Seperation"
 	};
 
 	std::vector<std::string> v_pixelDataMapOptions{

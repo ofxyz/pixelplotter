@@ -145,14 +145,30 @@ void Df_pixelate::drawEllipse(float offsetX, float offsetY, float w, float h, of
 	ofPopStyle();
 };
 
+void Df_pixelate::drawRgbSeperation(float offsetX, float offsetY, float w, float h, ofColor c) {
+	float maxWidth = w / 3;
+	float cWidth;
+
+	cWidth = ofMap(c.r, 0, 255, 0, maxWidth);
+	drawRectangle(offsetX, offsetY, cWidth, h, c_magentaRed); // Red
+
+	ofPushMatrix(); // offset
+
+	ofTranslate(maxWidth, 0, 0);
+	cWidth = ofMap(c.g, 0, 255, 0, maxWidth);
+	drawRectangle(offsetX, offsetY, cWidth, h, c_yellowGreen); // Green
+
+	ofTranslate(maxWidth, 0, 0);
+	cWidth = ofMap(c.b, 0, 255, 0, maxWidth);
+	drawRectangle(offsetX, offsetY, cWidth, h, c_cyanBlue); // Blue
+
+	ofPopMatrix();
+};
+
 void Df_pixelate::drawPixel(float w, float h, ofColor c) {
 
 	float offsetX = offsetx + ofRandom(0, offsetx_rand);
 	float offsetY = offsety + ofRandom(0, offsetx_rand);
-
-	ofPushStyle();
-	ofFill();
-	ofSetColor(c);
 
 	switch (ui_currentPixelType) {
 	case 0:
@@ -160,10 +176,11 @@ void Df_pixelate::drawPixel(float w, float h, ofColor c) {
 	case 1:
 		drawEllipse(offsetX, offsetY, w, h, c);
 		break;
+	case 2:
+		drawRgbSeperation(offsetX, offsetY, w, h, c);
 	default:
 		ofLog() << "Not a valid Draw Filter: " << ui_currentPixelType << endl;
 	}
-	ofPopStyle();
 };
 
 float Df_pixelate::getRotation(ofColor c, float x, float y) {

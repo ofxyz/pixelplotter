@@ -75,19 +75,7 @@ void ofApp::Style_Pixelate(float w, float h, ofColor c) {
 		return;
 	}
 
-	float offsetX = ofRandom(-ss.randomOffset, ss.randomOffset);
-	float offsetY = ofRandom(-ss.randomOffset, ss.randomOffset);
-
-	ofPushStyle();
-	ofFill();
-	ofSetColor(c);
-	if (ss.roundPixels) {
-		ofDrawEllipse(offsetX, offsetY, w, h);
-	}
-	else {
-		ofDrawRectangle(-(w * 0.5) + offsetX, -(h * 0.5) + offsetY, w, h);
-	}
-	ofPopStyle();
+	return;
 }
 
 //--------------------------------------------------------------
