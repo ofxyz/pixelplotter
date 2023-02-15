@@ -56,7 +56,14 @@ void Df_pixelate::renderImGuiSettings() {
 		}
 		*/
 
-		ofxImGui::VectorCombo("Pixel Type ##pixelate", &ui_currentPixelType, v_pixelType);
+		if (ofxImGui::VectorCombo("Pixel Type ##pixelate", &ui_currentPixelType, v_pixelType)) {
+			if (ui_currentPixelType > 1) {
+				gui_setRGB();
+			}
+			if (ui_currentPixelType > 5) {
+				gui_setCMYK();
+			}
+		};
 
 		ImGui::PushItemWidth(60);
 
@@ -64,6 +71,8 @@ void Df_pixelate::renderImGuiSettings() {
 		ImGui::DragInt("X ##pixelate_tiles", &tilesX, 1, 1, 1200);
 		ImGui::SameLine();
 		ImGui::DragInt("Y ##pixelate_tiles", &tilesY, 1, 1, 1200);
+		ImGui::SameLine();
+		ImGui::Checkbox("Polka", &polka);
 
 		ImGui::Text("+ Addon"); ImGui::SameLine(75);
 		ImGui::DragFloat("X ##pixelate_addon", &addonx, 0.1f, -100.0f, 100.0f, "%.3f");
@@ -118,13 +127,15 @@ void Df_pixelate::renderImGuiSettings() {
 			ImGui::DragFloat("Max ##pixelate_rotation", &heightMinMax[1], 0.1f, -250.0f, 250.0f, "%.3f");
 		}
 
-		ImGui::Separator();
-
-		ImGui::Checkbox("Polka", &polka);
-
 		ImGui::PopItemWidth();
 
+		if (ui_currentPixelType > 1) {
+			renderImGuiColourSettings(true);
+		}
+
+		ImGui::PushItemWidth(200);
 		ofxImGui::VectorCombo("##Blend Mode", &currentBlendModeIndex, v_BlendModes);
+		ImGui::PopItemWidth();
 
 	}
 }
@@ -145,7 +156,33 @@ void Df_pixelate::drawEllipse(float offsetX, float offsetY, float w, float h, of
 	ofPopStyle();
 };
 
-void Df_pixelate::drawRgbSeperation(float offsetX, float offsetY, float w, float h, ofColor c) {
+void Df_pixelate::drawRgbSeperation_Fill(float offsetX, float offsetY, float w, float h, ofColor c) {
+	float cWidth;
+	float maxC = 765; // 255 * 3;
+
+	float left = maxC - (c.r + c.g + c.b);
+	float addon = ceil(left / 3);
+
+	ofPushMatrix(); // offset
+
+	cWidth = ofMap(c.r + addon, 0, maxC, 0, w);
+	ofTranslate(-(w * 0.5) + (cWidth * 0.5), 0, 0);
+	drawRectangle(offsetX, offsetY, cWidth, h, c_magentaRed);
+
+	ofTranslate(cWidth * 0.5, 0, 0);
+	cWidth = ofMap(c.g + addon, 0, maxC, 0, w);
+	ofTranslate(cWidth * 0.5, 0, 0);
+	drawRectangle(offsetX, offsetY, cWidth, h, c_yellowGreen);
+
+	ofTranslate(cWidth * 0.5, 0, 0);
+	cWidth = ofMap(c.b + addon, 0, maxC, 0, w);
+	ofTranslate(cWidth * 0.5, 0, 0);
+	drawRectangle(offsetX, offsetY, cWidth, h, ofColor(0, 0, 255));
+
+	ofPopMatrix();
+};
+
+void Df_pixelate::drawRgbSeperation_Center(float offsetX, float offsetY, float w, float h, ofColor c) {
 	float maxWidth = w / 3;
 	float cWidth;
 
@@ -165,6 +202,104 @@ void Df_pixelate::drawRgbSeperation(float offsetX, float offsetY, float w, float
 	ofPopMatrix();
 };
 
+void Df_pixelate::drawRgbSeperation_Square(float offsetX, float offsetY, float w, float h, ofColor c) {
+	float cWidth, cHeight;
+
+	cWidth = ofMap(c.r, 0, 255, 0, w);
+	cHeight = ofMap(c.r, 0, 255, 0, h);
+	drawRectangle(offsetX, offsetY, cWidth, cHeight, c_magentaRed);
+
+	cWidth = ofMap(c.g, 0, 255, 0, w);
+	cHeight = ofMap(c.g, 0, 255, 0, h);
+	drawRectangle(offsetX, offsetY, cWidth, cHeight, c_yellowGreen);
+
+	cWidth = ofMap(c.b, 0, 255, 0, w);
+	cHeight = ofMap(c.b, 0, 255, 0, h);
+	drawRectangle(offsetX, offsetY, cWidth, cHeight, c_cyanBlue);
+};
+
+void Df_pixelate::drawCMYKSeperation_Square(float offsetX, float offsetY, float w, float h, ofColor c) {
+	float cWidth, cHeight;
+	ofVec4f cmyk = getCMYK(c);
+
+	cWidth = ofMap(cmyk[2], 0, 1, 0, w);
+	cHeight = ofMap(cmyk[2], 0, 1, 0, h);
+	drawRectangle(offsetX, offsetY, cWidth, cHeight, c_yellowGreen); // Yellow
+
+	cWidth = ofMap(cmyk[1], 0, 1, 0, w);
+	cHeight = ofMap(cmyk[1], 0, 1, 0, h);
+	drawRectangle(offsetX, offsetY, cWidth, cHeight, c_magentaRed); // Magenta
+
+	cWidth = ofMap(cmyk[0], 0, 1, 0, w);
+	cHeight = ofMap(cmyk[0], 0, 1, 0, h);
+	drawRectangle(offsetX, offsetY, cWidth, cHeight, c_cyanBlue); // Cyan
+
+	cWidth = ofMap(cmyk[3], 0, 1, 0, w);
+	cHeight = ofMap(cmyk[3], 0, 1, 0, h);
+	drawRectangle(offsetX, offsetY, cWidth, cHeight, c_black); // Black
+
+};
+
+void Df_pixelate::drawCMYKSeperation_Left(float offsetX, float offsetY, float w, float h, ofColor c) {
+	float cWidth;
+	ofVec4f cmyk = getCMYK(c);
+
+	ofPushMatrix(); // offset
+
+	cWidth = ofMap(cmyk[3], 0, 1, 0, w / 2);
+	ofTranslate(-(w * 0.5) + (cWidth * 0.5), 0, 0);
+	drawRectangle(offsetX, offsetY, cWidth, h, c_black); // Black
+	ofTranslate(cWidth * 0.5, 0, 0);
+
+	cWidth = ofMap(cmyk[0], 0, 1, 0, w / 2);
+	ofTranslate(cWidth * 0.5, 0, 0);
+	drawRectangle(offsetX, offsetY, cWidth, h, c_cyanBlue); // Cyan
+	ofTranslate(cWidth * 0.5, 0, 0);
+
+	cWidth = ofMap(cmyk[1], 0, 1, 0, w / 2);
+	ofTranslate(cWidth * 0.5, 0, 0);
+	drawRectangle(offsetX, offsetY, cWidth, h, c_magentaRed); // Magenta
+	ofTranslate(cWidth * 0.5, 0, 0);
+
+	cWidth = ofMap(cmyk[2], 0, 1, 0, w / 2);
+	ofTranslate(cWidth * 0.5, 0, 0);
+	drawRectangle(offsetX, offsetY, cWidth, h, c_yellowGreen); // Yellow
+
+	ofPopMatrix();
+};
+
+void Df_pixelate::drawCMYKSeperation_Hills(float offsetX, float offsetY, float w, float h, ofColor c) {
+	float cHeight;
+	ofVec4f cmyk = getCMYK(c);
+
+	float total = cmyk[0] + cmyk[1] + cmyk[2];
+	float pc = (100 * cmyk[0]) / total;
+	float pm = (100 * cmyk[1]) / total;
+	float py = (100 * cmyk[2]) / total;
+
+	cHeight = (pc / 100) * h;
+	ofPushMatrix();
+	ofTranslate(0, (-h * 0.5) + (cHeight * 0.5), 0);
+	drawRectangle(offsetX, offsetY, w, cHeight, c_cyanBlue); // Cyan
+
+	ofTranslate(0, cHeight * 0.5, 0);
+
+	cHeight = (pm / 100) * h;
+	ofTranslate(0, cHeight * 0.5, 0);
+	drawRectangle(offsetX, offsetY, w, cHeight, c_magentaRed); // Magenta
+
+	ofTranslate(0, cHeight * 0.5, 0);
+
+	cHeight = (py / 100) * h;
+	ofTranslate(0, cHeight * 0.5, 0);
+	drawRectangle(offsetX, offsetY, w, cHeight, c_yellowGreen); // Yellow
+
+	ofPopMatrix();
+
+	cHeight = ofMap(cmyk[3], 0, 1, 0, h);
+	drawRectangle(offsetX, offsetY, w, cHeight, c_black); // c_black
+};
+
 void Df_pixelate::drawPixel(float w, float h, ofColor c) {
 
 	float offsetX = offsetx + ofRandom(0, offsetx_rand);
@@ -173,11 +308,28 @@ void Df_pixelate::drawPixel(float w, float h, ofColor c) {
 	switch (ui_currentPixelType) {
 	case 0:
 		drawRectangle(offsetX, offsetY, w, h, c);
+		break;
 	case 1:
 		drawEllipse(offsetX, offsetY, w, h, c);
 		break;
 	case 2:
-		drawRgbSeperation(offsetX, offsetY, w, h, c);
+		drawRgbSeperation_Fill(offsetX, offsetY, w, h, c);
+		break;
+	case 3:
+		drawRgbSeperation_Center(offsetX, offsetY, w, h, c);
+		break;
+	case 4:
+		drawRgbSeperation_Square(offsetX, offsetY, w, h, c);
+		break;
+	case 5:
+		drawCMYKSeperation_Square(offsetX, offsetY, w, h, c);
+		break;
+	case 6:
+		drawCMYKSeperation_Left(offsetX, offsetY, w, h, c);
+		break;
+	case 7:
+		drawCMYKSeperation_Hills(offsetX, offsetY, w, h, c);
+		break;
 	default:
 		ofLog() << "Not a valid Draw Filter: " << ui_currentPixelType << endl;
 	}

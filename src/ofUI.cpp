@@ -111,30 +111,11 @@ void ofApp::gui_showMain() {
 				}
 			}// End Draw Filters
 
-			if (ImGui::CollapsingHeader("Colours"))
+			if (ImGui::CollapsingHeader("Application Settings"))
 			{
-				ImGui::ColorEdit4("Magenta / Red", (float*)&c_magentaRed, ImGuiColorEditFlags_NoInputs);
-				ImGui::ColorEdit4("Cyan / Blue", (float*)&c_cyanBlue, ImGuiColorEditFlags_NoInputs);
-				ImGui::ColorEdit4("Yellow / Green", (float*)&c_yellowGreen, ImGuiColorEditFlags_NoInputs);
-				ImGui::ColorEdit4("Black", (float*)&c_black, ImGuiColorEditFlags_NoInputs);
-				ImGui::ColorEdit4("Paper / White", (float*)&c_paper, ImGuiColorEditFlags_NoInputs);
-				ImGui::ColorEdit4("Background", (float*)&c_background, ImGuiColorEditFlags_NoInputs);
+				ImGui::ColorEdit4("Canvas Colour", (float*)&c_paper, ImGuiColorEditFlags_NoInputs);
 
-				if (ImGui::Button("Set RGB"))
-				{
-					ofApp::gui_setRGB_pressed();
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("Set CMYK"))
-				{
-					ofApp::gui_setCMYK_pressed();
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("Set Avarage"))
-				{
-					ofApp::gui_setAvarage_pressed();
-				}
-			} // End Colours
+			} // End Application Settings
 
 			if (ImGui::Button("Export Vector")) { saveVector = true; }
 
@@ -186,66 +167,4 @@ void ofApp::gui_buildSourceNames() {
 	sourceNames.insert(sourceNames.end(), videoDeviceNames.begin(), videoDeviceNames.end());
 	sourceNames.insert(sourceNames.end(), videoFileNames.begin(), videoFileNames.end());
 	sourceNames.insert(sourceNames.end(), imgFileNames.begin(), imgFileNames.end());
-}
-
-//--------------------------------------------------------------
-void ofApp::gui_setRGB_pressed() {
-	c_magentaRed = ofColor(255, 0, 0);
-	c_cyanBlue = ofColor(0, 0, 255);
-	c_yellowGreen = ofColor(0, 255, 0);
-	c_black = ofColor(0, 0, 0);
-}
-
-//--------------------------------------------------------------
-void ofApp::gui_setCMYK_pressed() {
-	c_magentaRed = ofColor(236, 0, 140);
-	c_cyanBlue = ofColor(0, 174, 239);
-	c_yellowGreen = ofColor(255, 242, 0);
-	c_black = ofColor(0, 0, 0);
-}
-
-//--------------------------------------------------------------
-void ofApp::gui_setAvarage_pressed() {
-	swatches = ofxPosterize::getClusterColors(img, 4);
-	if (swatches.size() > 3) {
-		c_magentaRed = swatches[0];
-		c_cyanBlue = swatches[1];
-		c_yellowGreen = swatches[2];
-		c_black = swatches[3];
-	}
-	else if (swatches.size() > 2) {
-		c_magentaRed = swatches[0];
-		c_cyanBlue = swatches[1];
-		c_yellowGreen = swatches[2];
-	}
-	else if (swatches.size() > 1) {
-		c_magentaRed = swatches[0];
-		c_cyanBlue = swatches[1];
-	}
-	else if (swatches.size() > 0) {
-		c_magentaRed = swatches[0];
-	}
-}
-
-//--------------------------------------------------------------
-void ofApp::gui_setBlendmode() {
-	if (ss.currentBlendmode == "OF_BLENDMODE_ALPHA") {
-		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-	}
-	else if (ss.currentBlendmode == "OF_BLENDMODE_ADD") {
-		ofEnableBlendMode(OF_BLENDMODE_ADD);
-	}
-	else if (ss.currentBlendmode == "OF_BLENDMODE_SUBTRACT") {
-		ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
-	}
-	else if (ss.currentBlendmode == "OF_BLENDMODE_MULTIPLY") {
-		ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
-	}
-	else if (ss.currentBlendmode == "OF_BLENDMODE_SCREEN") {
-		ofEnableBlendMode(OF_BLENDMODE_SCREEN);
-	}
-	else {
-		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-	}
-	ofDisableBlendMode();
 }

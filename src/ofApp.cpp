@@ -1,7 +1,14 @@
 #include "ofApp.h"
 
 /*
-   - Finish Style Interfaces
+   - Add mesh filter
+   - Use gradients
+   - Add Canvas Size
+   - Add rotation -> Map to X, Y location
+   - Reorder colour layer (based on N x, y)
+   - Optional adjust colour hue  (based on N x, y, etc)
+   - Finish Save Presets
+   - Add Filter Visibility. Show / Hide layer
    - Add clear screen button or tickbox
    - RGB needs K check and clean options
    - CMYK needs white control option (Nim: Black and white. CMYK RGB)
@@ -39,13 +46,6 @@ void ofApp::setup() {
 	ImGui::StyleColorsDark();
 	ImGuiStyle* style = &ImGui::GetStyle();
 	style->ItemSpacing = ImVec2(5, 5);
-
-	c_background = ofColor(50, 50, 50, 255);
-	c_paper = ofColor(255, 255, 255, 255);
-	c_magentaRed = ofColor(236, 0, 140);
-	c_cyanBlue = ofColor(0, 174, 239);
-	c_yellowGreen = ofColor(255, 242, 0);
-	c_black = ofColor(0, 0, 0);
 
 	ofDirectory vidDirectory(ofToDataPath("src_vid", true));
 	videoFiles = vidDirectory.getFiles();
@@ -101,10 +101,12 @@ void ofApp::update() {
 		}
 		else if (bUseVideo) {
 			videoPlayer.update();
-			img.setFromPixels(videoPlayer.getPixels());
-			prep_img();
+			if (videoPlayer.isFrameNew()) {
+				img.setFromPixels(videoPlayer.getPixels());
+				prep_img();
+			}
 		}
-		ofSetBackgroundColor(c_background);
+
 		updateFbo();
 	}
 
@@ -176,10 +178,6 @@ void ofApp::addDrawFilter(int index) {
 	if (v_DrawFilterNames[index] == "Rings") {
 		v_DrawFilters.push_back(new Df_rings);
 	}
-}
-
-float ofApp::percentage(float percent, float total) {
-	return (percent / 100) * total;
 }
 
 void ofApp::loadImage(string& filepath) {
@@ -285,18 +283,6 @@ void ofApp::loadSettings(string& filepath) {
 	ss.noisepercentY = settings.getValue("pixel_plotter:noisepercentY", 0);
 	ss.roundPixels = settings.getValue("pixel_plotter:roundPixels", false);
 	*/
-}
-
-ofVec4f ofApp::getCMYK(ofColor rgb) {
-	double dr = (double)rgb.r / 255;
-	double dg = (double)rgb.g / 255;
-	double db = (double)rgb.b / 255;
-	double k = 1 - max(max(dr, dg), db);
-	double c = (1 - dr - k) / (1 - k);
-	double m = (1 - dg - k) / (1 - k);
-	double y = (1 - db - k) / (1 - k);
-
-	return ofVec4f(c, m, y, k);
 }
 
 //-------------------------------------------------------------

@@ -96,14 +96,8 @@ class ofApp : public ofBaseApp{
 		int exportCounter = 0;
 
 		ofxImGui::Gui gui;
-		ImVec4 c_background;
-		ImVec4 c_paper;
-		
-		ImVec4 c_magentaRed;
-		ImVec4 c_cyanBlue;
-		ImVec4 c_yellowGreen;
-		ImVec4 c_black;
-		ImVec4 c_white;
+		ImVec4 c_background = ofColor(50, 50, 50, 255);
+		ImVec4 c_paper = ofColor(255, 255, 255, 255);
 
 		std::vector<std::string> sourceNames;
 		
@@ -122,30 +116,6 @@ class ofApp : public ofBaseApp{
 		ofVec2f offset;
 
 		void plotIt();
-
-		// -------------------------------------------------  Start style_seperation.cpp
-		void callStyle(string stylename, ofVec2f size, ofVec2f loc, ofDefaultVec2 xycount, ofColor c);
-		void Style_Pixelate(float w, float h, ofColor c);
-		void Style_Lightness_Rotation(float w, float h, ofColor c);
-		void Style_RGB_Seperation_1(float w, float h, ofColor c);
-		void Style_RGB_Seperation_2(float w, float h, ofColor c);
-		void Style_RGB_Seperation_3(float w, float h, ofColor c);
-		void Style_RGB_Seperation_4(float w, float h, ofColor c);
-		void Style_RGB_Seperation_5(float w, float h, ofColor c);
-		void Style_Pixelate_Brightness_Width(float w, float h, ofColor c);
-		void Style_CMYK_Seperation_1(float w, float h, ofColor c);
-		void Style_CMYK_Seperation_2(float w, float h, ofColor c);
-		void Style_CMYK_Seperation_3(float w, float h, ofColor c);
-		void Style_CMYK_Seperation_4(float w, float h, ofColor c);
-		void Style_CMYK_Seperation_5(float w, float h, ofColor c);
-		void Style_CMYK_Seperation_6(float w, float h, ofColor c);
-		void Style_CMYK_Seperation_7(float w, float h, ofColor c);
-		void Style_CMYK_Seperation_8(float w, float h, ofColor c);
-		void Style_CMYK_Seperation_9(float w, float h, ofColor c);
-		void Style_CMYK_Seperation_10(float w, float h, ofColor c, ofVec2f loc);
-		void Style_CMYK_Seperation_11(float w, float h, ofColor c, ofDefaultVec2 xycount);
-		void Style_CMYK_Seperation_12(float w, float h, ofColor c, ofDefaultVec2 xycount);
-		// -------------------------------------------------  End style_seperation.cpp
 
 		// -------------------------------------------------  Start ofUI.cpp
 		void gui_showMain();
