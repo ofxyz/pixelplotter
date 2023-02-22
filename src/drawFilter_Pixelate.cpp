@@ -1,60 +1,117 @@
 #include "drawFilters.h"
+#include "ofx2d.h"
+
+extern ofx2d x2d;
+
+void Df_pixelate::loadSettings(ofxXmlSettings settings) {
+	name = settings.getValue("name", "pixelate");
+	ui_currentPixelType = x2d.getIndex(v_pixelType, settings.getValue("pixelType", "Undefined"), 1);
+	tilesX = settings.getValue("tilesX", 64);
+	tilesY = settings.getValue("tilesY", 64);
+	polka  = settings.getValue("polka", false);
+	addonx = settings.getValue("addonx", 0);
+	addony = settings.getValue("addony", 0);
+	addonx_rand = settings.getValue("addonx_rand", 0);
+	addony_rand = settings.getValue("addony_rand", 0);
+	offsetx = settings.getValue("offsetx", 0);
+	offsety = settings.getValue("offsety", 0);
+	offsetx_rand = settings.getValue("offsetx_rand", 0);
+	offsety_rand = settings.getValue("offsety_rand", 0);
+
+	ui_currentRotationMap = x2d.getIndex(v_pixelDataMapOptions, settings.getValue("rotationMap", "None"), 0);
+	rotationMinMax[0] = settings.getValue("rotationMin", 0);
+	rotationMinMax[1] = settings.getValue("rotationMax", 0);
+
+	ui_currentWidthMap = x2d.getIndex(v_pixelDataMapOptions, settings.getValue("widthMap", "None"), 0);
+	widthMinMax[0] = settings.getValue("widthMin", 0);
+	widthMinMax[1] = settings.getValue("widthMax", 0);
+
+	ui_currentHeightMap = x2d.getIndex(v_pixelDataMapOptions, settings.getValue("heightMap", "None"), 0);
+	heightMinMax[0] = settings.getValue("heightMin", 0);
+	heightMinMax[1] = settings.getValue("heightMax", 0);
+
+	currentBlendModeIndex = settings.getValue("blendMode", 0);
+
+	// Colours
+	c_black.x = settings.getValue("colors:black:r", c_black.x);
+	c_black.y = settings.getValue("colors:black:g", c_black.y);
+	c_black.z = settings.getValue("colors:black:b", c_black.z);
+	c_black.w = settings.getValue("colors:black:a", c_black.w);
+
+	c_yellowGreen.x = settings.getValue("colors:yellowGreen:r", c_yellowGreen.x);
+	c_yellowGreen.y = settings.getValue("colors:yellowGreen:g", c_yellowGreen.y);
+	c_yellowGreen.z = settings.getValue("colors:yellowGreen:b", c_yellowGreen.z);
+	c_yellowGreen.w = settings.getValue("colors:yellowGreen:a", c_yellowGreen.w);
+
+	c_magentaRed.x = settings.getValue("colors:magentaRed:r", c_magentaRed.x);
+	c_magentaRed.y = settings.getValue("colors:magentaRed:g", c_magentaRed.y);
+	c_magentaRed.z = settings.getValue("colors:magentaRed:b", c_magentaRed.z);
+	c_magentaRed.w = settings.getValue("colors:magentaRed:a", c_magentaRed.w);
+
+	c_cyanBlue.x = settings.getValue("colors:cyanBlue:r", c_cyanBlue.x);
+	c_cyanBlue.y = settings.getValue("colors:cyanBlue:g", c_cyanBlue.y);
+	c_cyanBlue.z = settings.getValue("colors:cyanBlue:b", c_cyanBlue.z);
+	c_cyanBlue.w = settings.getValue("colors:cyanBlue:a", c_cyanBlue.w);
+
+}
+
+ofxXmlSettings Df_pixelate::getSettings() {
+	ofxXmlSettings settings;
+	settings.setValue("name", name);
+	settings.setValue("pixelType", v_pixelType[ui_currentPixelType]);
+	settings.setValue("tilesX", tilesX);
+	settings.setValue("tilesY", tilesY);
+	settings.setValue("polka", polka);
+	settings.setValue("addonx", addonx);
+	settings.setValue("addony", addony);
+	settings.setValue("addonx_rand", addonx_rand);
+	settings.setValue("addony_rand", addony_rand);
+	settings.setValue("offsetx", offsetx);
+	settings.setValue("offsety", offsety);
+	settings.setValue("offsetx_rand", offsetx_rand);
+	settings.setValue("offsety_rand", offsety_rand);
+
+	settings.setValue("rotationMap", v_pixelDataMapOptions[ui_currentRotationMap]);
+	settings.setValue("rotationMin", rotationMinMax[0]);
+	settings.setValue("rotationMax", rotationMinMax[1]);
+
+	settings.setValue("widthMap", v_pixelDataMapOptions[ui_currentWidthMap]);
+	settings.setValue("widthMin", widthMinMax[0]);
+	settings.setValue("widthMax", widthMinMax[1]);
+
+	settings.setValue("heightMap", v_pixelDataMapOptions[ui_currentHeightMap]);
+	settings.setValue("heightMin", heightMinMax[0]);
+	settings.setValue("heightMax", heightMinMax[1]);
+
+	settings.setValue("blendMode", currentBlendModeIndex);
+
+	// Colours
+	settings.setValue("colors:black:r", c_black.x);
+	settings.setValue("colors:black:g", c_black.y);
+	settings.setValue("colors:black:b", c_black.z);
+	settings.setValue("colors:black:a", c_black.w);
+
+	settings.setValue("colors:yellowGreen:r", c_yellowGreen.x);
+	settings.setValue("colors:yellowGreen:g", c_yellowGreen.y);
+	settings.setValue("colors:yellowGreen:b", c_yellowGreen.z);
+	settings.setValue("colors:yellowGreen:a", c_yellowGreen.w);
+
+	settings.setValue("colors:magentaRed:r", c_magentaRed.x);
+	settings.setValue("colors:magentaRed:g", c_magentaRed.y);
+	settings.setValue("colors:magentaRed:b", c_magentaRed.z);
+	settings.setValue("colors:magentaRed:a", c_magentaRed.w);
+
+	settings.setValue("colors:cyanBlue:r", c_cyanBlue.x);
+	settings.setValue("colors:cyanBlue:g", c_cyanBlue.y);
+	settings.setValue("colors:cyanBlue:b", c_cyanBlue.z);
+	settings.setValue("colors:cyanBlue:a", c_cyanBlue.w);
+
+	return settings;
+}
 
 void Df_pixelate::renderImGuiSettings() {
 	if (ImGui::CollapsingHeader(name.c_str(), &active)) {
 		ImGui::AlignTextToFramePadding();
-
-		/* Save and load presets, probably needs to move to parent class ...
-/
-		if (ImGui::Button("Quick Save"))
-		{
-			string savePath = "presets\/quicksave.xml";
-			saveSettings(savePath);
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Quick Load"))
-		{
-			string savePath = "presets\/quicksave.xml";
-			loadSettings(savePath);
-		}
-		*/
-
-		/*
-		if (ofxImGui::VectorCombo("##Presets", &currentPresetIndex, presetFileNames))
-		{
-			loadSettings(presetFiles[currentPresetIndex].getAbsolutePath());
-		}
-
-		if (presetFileNames.size() > 0) {
-			ImGui::SameLine();
-			if (ImGui::Button("Delete Preset"))
-			{
-				presetFiles[currentPresetIndex].remove();
-				gui_loadPresets();
-			}
-		}
-
-		if (bSavePreset) {
-			ImGui::InputText("##presetname", presetSaveName, IM_ARRAYSIZE(presetSaveName));
-			ImGui::SameLine();
-		}
-		if (ImGui::Button("Save Preset"))
-		{
-			if (bSavePreset) {
-				string savePath = "presets\/" + string(presetSaveName) + ".xml";
-				saveSettings(savePath);
-				gui_loadPresets();
-				currentPresetIndex = getIndex(presetFileNames, string(presetSaveName), 0);
-				bSavePreset = false;
-			}
-			else {
-				if (presetFileNames.size() > 0) {
-					strcpy(presetSaveName, presetFileNames[currentPresetIndex].c_str());
-				}
-				bSavePreset = true;
-			}
-		}
-		*/
 
 		if (ofxImGui::VectorCombo("Pixel Type ##pixelate", &ui_currentPixelType, v_pixelType)) {
 			if (ui_currentPixelType > 1) {

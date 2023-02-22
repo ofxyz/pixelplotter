@@ -11,6 +11,8 @@ public:
 	//virtual void draw(ofFbo* input) = 0;
 	virtual void draw(ofImage* input) = 0;
 	virtual void renderImGuiSettings() = 0;
+	virtual void loadSettings(ofxXmlSettings settings) = 0;
+	virtual ofxXmlSettings getSettings() = 0;
 
 	ofVec4f getCMYK(ofColor rgb) {
 		double dr = (double)rgb.r / 255;
@@ -100,9 +102,13 @@ public:
 
 class Df_pixelate : public DrawFilter {
 public:
-	std::string name = "Pixelate";
+	Df_pixelate() {
+		name = "Pixelate";
+	};
 	void draw(ofImage* input);
 	void renderImGuiSettings();
+	void loadSettings(ofxXmlSettings settings);
+	ofxXmlSettings getSettings();
 
 private:
 	void drawRectangle(float offsetX, float offsetY, float w, float h, ofColor c);
@@ -142,8 +148,8 @@ private:
 		"Location Y" */
 	};
 
-	// ADD PIXEL OFFSET so next filter can be misaligned ...
-	// ADD Transparency Slider
+	// Add Layer Visebility 
+	// Add Stroke Width
 	int ui_currentRotationMap = 0;
 	int ui_currentWidthMap = 0;
 	int ui_currentHeightMap = 0;
@@ -168,9 +174,13 @@ private:
 
 class Df_rings : public DrawFilter {
 public:
-	std::string name = "Rings";
+	Df_rings() {
+		name = "Rings";
+	};
 	void draw(ofImage* input);
 	void renderImGuiSettings();
+	void loadSettings(ofxXmlSettings settings);
+	ofxXmlSettings getSettings();
 
 private:
 	int cvThresh = 128;

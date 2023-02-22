@@ -1,13 +1,16 @@
 #pragma once
-#include "drawFilters.h"
 #include "ofMain.h"
+#include "ofx2d.h"
 #include "ofxImGui.h"
+#include "drawFilters.h"
 #include "ofxPosterize.h"
 #include "ofxXmlSettings.h"
 #include "ofxOpenCv.h"
 
 const int gui_width = 350;
 const int img_area_WH = 1200;
+
+extern ofx2d x2d;
 
 class ofApp : public ofBaseApp{
 
@@ -63,7 +66,6 @@ class ofApp : public ofBaseApp{
 
 		void updateFbo();
 
-		int getIndex(vector<std::string> v, std::string s, int notFound = -1);
 		float percentage(float percent, float total);
 
 		ofImage original, img;
@@ -75,13 +77,9 @@ class ofApp : public ofBaseApp{
 
 		int currentSourceIndex = 0;
 		int currentBlendModeIndex = 0;
-		int currentPlotStyleIndex = 0;
 		int currentPresetIndex = 0;
 		int currentDrawFilterIndex = 0;
-
 		float imgRatio;
-
-		ofVec4f getCMYK(ofColor rgb);
 
 		ofFbo canvasFbo;
 		ofFbo zoomFbo;
@@ -139,46 +137,6 @@ class ofApp : public ofBaseApp{
 		};
 
 		// ------------------------------------------------- End Interfaces
-
-		struct {
-			std::vector<std::string> v_PlotStyles{
-				"Pixelate",
-				"Pixelate Brightness Width",
-				"Lightness Rotation",
-				"RGB Seperation 1",
-				"RGB Seperation 2",
-				"RGB Seperation 3",
-				"RGB Seperation 4",
-				"RGB Seperation 5",
-				"CMYK Seperation 1",
-				"CMYK Seperation 2",
-				"CMYK Seperation 3",
-				"CMYK Seperation 4",
-				"CMYK Seperation 5",
-				"CMYK Seperation 6",
-				"CMYK Seperation 7",
-				"CMYK Seperation 8",
-				"CMYK Seperation 9",
-				"CMYK Seperation 10",
-				"CMYK Seperation 11",
-				"CMYK Seperation 12",
-				"Tree Contours"
-			};
-
-			int tilesX = 64;
-			int tilesY = 64;
-			float addonx = 0;
-			float addony = 0;
-			int everynx = 4;
-			int everyny = 4;
-			float randomOffset = 0;
-			float noisepercentX = 0;
-			float noisepercentY = 0;
-			bool normalize = false;
-			bool polka = false;
-			bool clearCanvas = true;
-			std::string currentBlendmode = "OF_BLENDMODE_DISABLED";
-		} ss; // Save Settings
 
 		string to_lower(string s) {
 			for (char& c : s)

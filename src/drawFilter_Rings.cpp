@@ -1,5 +1,14 @@
 #include "drawFilters.h"
 
+ofxXmlSettings Df_rings::getSettings() {
+	ofxXmlSettings settings;
+	return settings;
+}
+
+void Df_rings::loadSettings(ofxXmlSettings settings) {
+	return;
+}
+
 void Df_rings::renderImGuiSettings() {
 	if (ImGui::CollapsingHeader(name.c_str(), &active)) {
 

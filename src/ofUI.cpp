@@ -46,6 +46,43 @@ void ofApp::gui_showMain() {
 				ImGui::Text("Rendering at %.1f FPS", ImGui::GetIO().Framerate);
 			}
 
+			/* Save and load presets ... */
+
+			if (ofxImGui::VectorCombo("##Presets", &currentPresetIndex, presetFileNames))
+			{
+				loadSettings(presetFiles[currentPresetIndex].getAbsolutePath());
+			}
+
+			if (presetFileNames.size() > 0) {
+				ImGui::SameLine();
+				if (ImGui::Button("Delete Preset"))
+				{
+					presetFiles[currentPresetIndex].remove();
+					gui_loadPresets();
+				}
+			}
+
+			if (bSavePreset) {
+				ImGui::InputText("##presetname", presetSaveName, IM_ARRAYSIZE(presetSaveName));
+				ImGui::SameLine();
+			}
+			if (ImGui::Button("Save Preset"))
+			{
+				if (bSavePreset) {
+					string savePath = "presets\/" + string(presetSaveName) + ".xml";
+					saveSettings(savePath);
+					gui_loadPresets();
+					currentPresetIndex = x2d.getIndex(presetFileNames, string(presetSaveName), 0);
+					bSavePreset = false;
+				}
+				else {
+					if (presetFileNames.size() > 0) {
+						strcpy(presetSaveName, presetFileNames[currentPresetIndex].c_str());
+					}
+					bSavePreset = true;
+				}
+			}
+
 			if (ImGui::CollapsingHeader("Source"))
 			{
 				if (!sourceNames.empty())

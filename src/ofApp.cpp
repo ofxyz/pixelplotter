@@ -1,14 +1,10 @@
 #include "ofApp.h"
 
 /*
-   - Add mesh filter
-   - Use gradients
    - Add Canvas Size
    - Add rotation -> Map to X, Y location
    - Reorder colour layer (based on N x, y)
    - Optional adjust colour hue  (based on N x, y, etc)
-   - Finish Save Presets
-   - Add Filter Visibility. Show / Hide layer
    - Add clear screen button or tickbox
    - RGB needs K check and clean options
    - CMYK needs white control option (Nim: Black and white. CMYK RGB)
@@ -20,15 +16,22 @@
    - Posterise Source (shader)
 
    ## Filters
+   - Add Filter Visibility. Show / Hide layer
+   - Add mesh filter
+   - Use gradients
    - Add hatch filter
    - Add asym hex pixel to Pixelate filter.
 */
 
 //--------------------------------------------------------------
 
+ofx2d x2d;
+
 void ofApp::setup() {
 	ofLogToConsole();
 	ofSetLogLevel(OF_LOG_FATAL_ERROR);
+	//ofEnableAlphaBlending();
+	
 	//ofSetLogLevel(OF_LOG_WARNING);
 	//ofSetLogLevel(OF_LOG_VERBOSE);
 	//ofSetBackgroundAuto(false);
@@ -62,13 +65,13 @@ void ofApp::setup() {
 	}
 	
 	gui_buildSourceNames();
-	//gui_loadPresets();
-
 	addDrawFilter(ofRandom(1, v_DrawFilterNames.size() - 1));
+
+	gui_loadPresets();
 
 	currentSourceIndex = ofRandom(0, sourceNames.size() - 1);
 	gui_loadSourceIndex();
-	
+
 }
 
 //--------------------------------------------------------------
@@ -126,7 +129,7 @@ void ofApp::updateFbo() {
 	ofClear(c_paper);
 
 	if (saveVector) {
-		ofBeginSaveScreenAsPDF( "export//" + img_name + "_" + ss.v_PlotStyles[currentPlotStyleIndex] + "_" + to_string(++exportCount) + ".pdf", false);
+		ofBeginSaveScreenAsPDF( "export//" + img_name + "_" + v_DrawFilterNames[currentDrawFilterIndex] + "_" + to_string(++exportCount) + ".pdf", false);
 	}
 
 	for (const auto& filter : v_DrawFilters) {
@@ -233,56 +236,63 @@ void ofApp::onImageChange(string& filepath) {
 	loadImage(filepath);
 }
 
-int ofApp::getIndex(vector<std::string> v, std::string s, int notFound) {
-	auto it = find(v.begin(), v.end(), s);
-
-	if (it != v.end())
-	{
-		return it - v.begin();
-	}
-	else {
-		return notFound;
-	}
-}
-
 void ofApp::saveSettings(string& filepath) {
-	/*
 	ofxXmlSettings settings;
-	settings.setValue("pixel_plotter:plotStyle", ss.v_PlotStyles[currentPlotStyleIndex]);
-	settings.setValue("pixel_plotter:blendmode", ss.v_BlendModes[currentBlendModeIndex]);
-	s1ettings.setValue("pixel_plotter:tilesX", ss.tilesX);
-	settings.setValue("pixel_plotter:tilesY", ss.tilesY);
-	settings.setValue("pixel_plotter:addonx", ss.addonx);
-	settings.setValue("pixel_plotter:addony", ss.addony);
-	settings.setValue("pixel_plotter:everynx", ss.everynx);
-	settings.setValue("pixel_plotter:everyny", ss.everyny);
-	settings.setValue("pixel_plotter:randomOffset", ss.randomOffset);
-	settings.setValue("pixel_plotter:noisepercentX", ss.noisepercentX);
-	settings.setValue("pixel_plotter:noisepercentY", ss.noisepercentY);
-	settings.setValue("pixel_plotter:roundPixels", ss.roundPixels);
+
+	settings.addTag("drawFilters");
+	settings.pushTag("drawFilters");
+	for (int i = 0; i < v_DrawFilters.size(); i++) {
+		ofxXmlSettings filterSettings = v_DrawFilters[i]->getSettings();
+		string drawFilterSettings;
+		filterSettings.copyXmlToString(drawFilterSettings);
+		string filterName = v_DrawFilters[i]->name;
+		settings.addValue("string_settings", drawFilterSettings);
+	}
+	settings.popTag();
+
+	settings.setValue("appSettings:CanvasColour:r", c_paper.x);
+	settings.setValue("appSettings:CanvasColour:g", c_paper.y);
+	settings.setValue("appSettings:CanvasColour:b", c_paper.z);
+	settings.setValue("appSettings:CanvasColour:a", c_paper.w);
+
 	settings.saveFile(filepath);
-	*/
 }
 
 void ofApp::loadSettings(string& filepath) {
-	/*
 	ofxXmlSettings settings;
 	settings.loadFile(filepath);
 
-	currentPlotStyleIndex = getIndex(ss.v_PlotStyles, settings.getValue("pixel_plotter:plotStyle", "0"), 0);
-	currentBlendModeIndex = getIndex(ss.v_BlendModes, settings.getValue("pixel_plotter:blendmode", "0"), 0);
-	ss.tilesX = settings.getValue("pixel_plotter:tilesX", 64);
-	ss.tilesY = settings.getValue("pixel_plotter:tilesY", 64);
-	ss.addonx = settings.getValue("pixel_plotter:addonx", 0);
-	ss.addony = settings.getValue("pixel_plotter:addony", 0);
+	c_paper.x = settings.getValue("appSettings:CanvasColour:r", 255);
+	c_paper.y = settings.getValue("appSettings:CanvasColour:g", 255);
+	c_paper.z = settings.getValue("appSettings:CanvasColour:b", 255);
+	c_paper.w = settings.getValue("appSettings:CanvasColour:a", 255);
 
-	ss.everynx = settings.getValue("pixel_plotter:everynx", 4);
-	ss.everyny = settings.getValue("pixel_plotter:everyny", 4);
-	ss.randomOffset = settings.getValue("pixel_plotter:randomOffset", 0);
-	ss.noisepercentX = settings.getValue("pixel_plotter:noisepercentX", 0);
-	ss.noisepercentY = settings.getValue("pixel_plotter:noisepercentY", 0);
-	ss.roundPixels = settings.getValue("pixel_plotter:roundPixels", false);
-	*/
+	// Clear all Filters
+	for (int i = 0; i < v_DrawFilters.size(); i++) {
+		delete v_DrawFilters[i];
+		v_DrawFilters[i] = nullptr;
+	}
+	v_DrawFilters.erase(std::remove(v_DrawFilters.begin(), v_DrawFilters.end(), nullptr), v_DrawFilters.end());
+
+	// Add as we go through settings file
+	if (settings.tagExists("drawFilters")) {
+		settings.pushTag("drawFilters");
+		int count = settings.getNumTags("string_settings");
+		for (int i = 0; i < count; i++) {
+			ofxXmlSettings filterSettings;
+			string stringSettings = settings.getValue("string_settings", "", i);
+			filterSettings.loadFromBuffer(stringSettings);
+			string filterName = filterSettings.getValue("name", "not_found");
+
+			if (filterName == "Pixelate") {
+				v_DrawFilters.push_back(new Df_pixelate);
+				v_DrawFilters[v_DrawFilters.size() - 1]->loadSettings(filterSettings);
+			} else if (filterName == "Rings") {
+				v_DrawFilters.push_back(new Df_rings);
+			}
+		}
+		settings.popTag();
+	}
 }
 
 //-------------------------------------------------------------
