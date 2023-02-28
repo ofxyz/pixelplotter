@@ -1,7 +1,8 @@
 #include "ofApp.h"
 
 /*
-   - Add Canvas Size
+   - Add Canvas Size, zoom canvas, like normal
+   - Add grid filter
    - Add rotation -> Map to X, Y location
    - Reorder colour layer (based on N x, y)
    - Optional adjust colour hue  (based on N x, y, etc)
@@ -126,11 +127,12 @@ void ofApp::update() {
 
 void ofApp::updateFbo() {
 	canvasFbo.begin();
-	ofClear(c_paper);
 
 	if (saveVector) {
 		ofBeginSaveScreenAsPDF( "export//" + img_name + "_" + v_DrawFilterNames[currentDrawFilterIndex] + "_" + to_string(++exportCount) + ".pdf", false);
 	}
+
+	ofClear(c_paper);
 
 	for (const auto& filter : v_DrawFilters) {
 		filter->draw(&img);

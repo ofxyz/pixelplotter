@@ -179,9 +179,9 @@ void Df_pixelate::renderImGuiSettings() {
 		ofxImGui::VectorCombo("##pixelate_height", &ui_currentHeightMap, v_pixelDataMapOptions);
 		if (ui_currentHeightMap > 0) {
 			ImGui::Text(" "); ImGui::SameLine(75);
-			ImGui::DragFloat("Min ##pixelate_rotation", &heightMinMax[0], 0.1f, -250.0f, 250.0f, "%.3f");
+			ImGui::DragFloat("Min ##pixelate_height", &heightMinMax[0], 0.1f, -250.0f, 250.0f, "%.3f");
 			ImGui::SameLine();
-			ImGui::DragFloat("Max ##pixelate_rotation", &heightMinMax[1], 0.1f, -250.0f, 250.0f, "%.3f");
+			ImGui::DragFloat("Max ##pixelate_height", &heightMinMax[1], 0.1f, -250.0f, 250.0f, "%.3f");
 		}
 
 		ImGui::PopItemWidth();

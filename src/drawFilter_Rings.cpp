@@ -18,6 +18,7 @@ void Df_rings::renderImGuiSettings() {
 		ImGui::DragInt("Blur ##rings", &cvBlur, 1, 0, 500);
 		ImGui::DragInt("Threshold ##rings", &cvThresh, 1, 0, 255);
 		ImGui::DragInt("Ring Count ##rings", &cvSteps, 1, 1, 255);
+		ImGui::DragFloat("Line Width ##rings", &lineWidth, 0.1f, 0, 10, "%.3f");
 
 		ImGui::PopItemWidth();
 	}
@@ -41,7 +42,7 @@ void Df_rings::draw(ofImage* input) {
 	ofPushStyle();
 	ofSetColor(ofColor(255, 0, 0));
 	ofNoFill();
-	ofSetLineWidth(4);
+	ofSetLineWidth(lineWidth);
 
 	int i = 0;
 	ofColor c(255, 255, 255);
