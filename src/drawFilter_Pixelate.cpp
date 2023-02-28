@@ -5,6 +5,7 @@ extern ofx2d x2d;
 
 void Df_pixelate::loadSettings(ofxXmlSettings settings) {
 	name = settings.getValue("name", "pixelate");
+	visible = settings.getValue("visible", true);
 	ui_currentPixelType = x2d.getIndex(v_pixelType, settings.getValue("pixelType", "Undefined"), 1);
 	tilesX = settings.getValue("tilesX", 64);
 	tilesY = settings.getValue("tilesY", 64);
@@ -58,6 +59,7 @@ void Df_pixelate::loadSettings(ofxXmlSettings settings) {
 ofxXmlSettings Df_pixelate::getSettings() {
 	ofxXmlSettings settings;
 	settings.setValue("name", name);
+	settings.setValue("visible", visible);
 	settings.setValue("pixelType", v_pixelType[ui_currentPixelType]);
 	settings.setValue("tilesX", tilesX);
 	settings.setValue("tilesY", tilesY);
@@ -113,6 +115,8 @@ void Df_pixelate::renderImGuiSettings() {
 	if (ImGui::CollapsingHeader(name.c_str(), &active)) {
 		ImGui::AlignTextToFramePadding();
 
+		ImGui::Checkbox("Visible", &visible);
+
 		if (ofxImGui::VectorCombo("Pixel Type ##pixelate", &ui_currentPixelType, v_pixelType)) {
 			if (ui_currentPixelType > 1) {
 				gui_setRGB();
@@ -123,7 +127,6 @@ void Df_pixelate::renderImGuiSettings() {
 		};
 
 		ImGui::PushItemWidth(60);
-
 		ImGui::Text("Tiles"); ImGui::SameLine(75);
 		ImGui::DragInt("X ##pixelate_tiles", &tilesX, 1, 1, 1200);
 		ImGui::SameLine();
@@ -423,6 +426,8 @@ float Df_pixelate::getHeight(ofColor c, float x, float y, float r) {
 }
 
 void Df_pixelate::draw(ofImage* input) {
+	if (!visible) return;
+
 	int imgW = input->getWidth();
 	int imgH = input->getHeight();
 	float tileW = (float)imgW / (float)tilesX;

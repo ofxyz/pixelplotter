@@ -6,6 +6,7 @@
 class DrawFilter {
 public:
 	bool active = true;
+	bool visible = true;
 	std::string name;
 
 	//virtual void draw(ofFbo* input) = 0;
@@ -148,7 +149,6 @@ private:
 		"Location Y" */
 	};
 
-	// Add Layer Visebility 
 	// Add Stroke Width
 	int ui_currentRotationMap = 0;
 	int ui_currentWidthMap = 0;

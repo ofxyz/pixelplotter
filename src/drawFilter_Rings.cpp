@@ -11,10 +11,10 @@ void Df_rings::loadSettings(ofxXmlSettings settings) {
 
 void Df_rings::renderImGuiSettings() {
 	if (ImGui::CollapsingHeader(name.c_str(), &active)) {
-
 		ImGui::AlignTextToFramePadding();
-		ImGui::PushItemWidth(100);
+		ImGui::Checkbox("Visible", &visible);
 
+		ImGui::PushItemWidth(100);
 		ImGui::DragInt("Blur ##rings", &cvBlur, 1, 0, 500);
 		ImGui::DragInt("Threshold ##rings", &cvThresh, 1, 0, 255);
 		ImGui::DragInt("Ring Count ##rings", &cvSteps, 1, 1, 255);
@@ -25,7 +25,8 @@ void Df_rings::renderImGuiSettings() {
 }
 
 void Df_rings::draw(ofImage* input) {
-	
+	if (!visible) return;
+
 	// -------------------------------- Update
 	colorCvImage.allocate(input->getWidth(), input->getHeight());
 	greyCvImage.allocate(input->getWidth(), input->getHeight());

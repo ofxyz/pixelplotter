@@ -64,7 +64,7 @@ void ofApp::setup() {
 	{
 		imgFileNames.push_back(imgFiles[i].getFileName());
 	}
-	
+
 	gui_buildSourceNames();
 	addDrawFilter(ofRandom(1, v_DrawFilterNames.size() - 1));
 
