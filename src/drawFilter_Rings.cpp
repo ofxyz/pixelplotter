@@ -1,5 +1,7 @@
 #include "drawFilters.h"
 
+// Create smooth curves ...
+
 ofxXmlSettings Df_rings::getSettings() {
 	ofxXmlSettings settings;
 	return settings;

@@ -2,22 +2,24 @@
 
 /*
    - Add Canvas Size, zoom canvas, like normal
-   - Add grid filter
+   - Add duplicate button for filters
+   - Reorder filters
    - Add rotation -> Map to X, Y location
    - Reorder colour layer (based on N x, y)
    - Optional adjust colour hue  (based on N x, y, etc)
-   - Add clear screen button or tickbox
-   - RGB needs K check and clean options
+   - RGB needs B/W check
    - CMYK needs white control option (Nim: Black and white. CMYK RGB)
    - Add modulators (EG X Y tiles between min-max, time)
    - I want to set a value to the colour pallette of four colours
      To control how much each colour is used. Main Mid Accent? Weight.
    - Push X / Y / C to vector for sorting and drawing order.
    - Souce effects on GPU with shaders. Output vector. 
-   - Posterise Source (shader)
+   - Posterise Source (shader?) 
+
+   ## Generators (They should be able to be placed in the filter section or source section)
+   - Add grid generator (with noise curve option)
 
    ## Filters
-   - Add Filter Visibility. Show / Hide layer
    - Add mesh filter
    - Use gradients
    - Add hatch filter

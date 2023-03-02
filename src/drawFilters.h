@@ -7,6 +7,9 @@ class DrawFilter {
 public:
 	bool active = true;
 	bool visible = true;
+	bool useMask = false;
+	int maskMargin = 0;
+
 	std::string name;
 
 	//virtual void draw(ofFbo* input) = 0;
@@ -44,23 +47,36 @@ public:
 		c_black = ofColor(0, 0, 0);
 	}
 
-	void renderImGuiColourSettings(bool doRender) {
-		if (doRender) {
-			if (ImGui::CollapsingHeader("Colours"))
+	void renderImGuiColourSettings(bool colors, bool mask) {
+		if (colors || mask) {
+			if (ImGui::CollapsingHeader("Colours ##drawFilter"))
 			{
-				ImGui::ColorEdit4("Cyan / Blue", (float*)&c_cyanBlue, ImGuiColorEditFlags_NoInputs);
-				ImGui::ColorEdit4("Magenta / Red", (float*)&c_magentaRed, ImGuiColorEditFlags_NoInputs);
-				ImGui::ColorEdit4("Yellow / Green", (float*)&c_yellowGreen, ImGuiColorEditFlags_NoInputs);
-				ImGui::ColorEdit4("Key / Black", (float*)&c_black, ImGuiColorEditFlags_NoInputs);
-
-				if (ImGui::Button("Set RGB"))
-				{
-					gui_setRGB();
+				if (colors) {
+					ImGui::ColorEdit4("Cyan / Blue ##drawFilter", (float*)&c_cyanBlue, ImGuiColorEditFlags_NoInputs);
+					ImGui::ColorEdit4("Magenta / Red ##drawFilter", (float*)&c_magentaRed, ImGuiColorEditFlags_NoInputs);
+					ImGui::ColorEdit4("Yellow / Green ##drawFilter", (float*)&c_yellowGreen, ImGuiColorEditFlags_NoInputs);
+					ImGui::ColorEdit4("Key / Black ##drawFilter", (float*)&c_black, ImGuiColorEditFlags_NoInputs);
 				}
-				ImGui::SameLine();
-				if (ImGui::Button("Set CMYK"))
-				{
-					gui_setCMYK();
+				if (mask) {
+					ImGui::ColorEdit4("Mask ##drawFilter", (float*)&c_mask, ImGuiColorEditFlags_NoInputs);
+					ImGui::SameLine();
+					ImGui::Checkbox("Use Mask ##drawFilter", &useMask);
+					ImGui::SameLine();
+					ImGui::PushItemWidth(60);
+					ImGui::DragInt("Margin ##drawFilter", &maskMargin, 1, 0, 255);
+					ImGui::PopItemWidth();
+				}
+
+				if (colors) {
+					if (ImGui::Button("Set RGB ##drawFilter"))
+					{
+						gui_setRGB();
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("Set CMYK ##drawFilter"))
+					{
+						gui_setCMYK();
+					}
 				}
 			} // End Colours
 		}
@@ -98,7 +114,7 @@ public:
 	ImVec4 c_magentaRed = ofColor(236, 0, 140, 255);
 	ImVec4 c_yellowGreen = ofColor(255, 242, 0, 255);
 	ImVec4 c_black = ofColor(0, 0, 0, 255);
-
+	ImVec4 c_mask = ofColor(255, 255, 255, 255);
 };
 
 class Df_pixelate : public DrawFilter {
@@ -149,7 +165,6 @@ private:
 		"Location Y" */
 	};
 
-	// Add Stroke Width
 	int ui_currentRotationMap = 0;
 	int ui_currentWidthMap = 0;
 	int ui_currentHeightMap = 0;
@@ -166,6 +181,7 @@ private:
 	float offsety = 0;
 	float offsetx_rand = 0;
 	float offsety_rand = 0;
+	float ignorePercent = 0;
 
 	ofVec2f rotationMinMax = ofVec2f(0, 0);
 	ofVec2f widthMinMax = ofVec2f(5, 50);

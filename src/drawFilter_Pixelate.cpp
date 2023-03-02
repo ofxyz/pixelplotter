@@ -6,6 +6,8 @@ extern ofx2d x2d;
 void Df_pixelate::loadSettings(ofxXmlSettings settings) {
 	name = settings.getValue("name", "pixelate");
 	visible = settings.getValue("visible", true);
+	useMask = settings.getValue("useMask", false);
+	maskMargin = settings.getValue("maskMargin", maskMargin);
 	ui_currentPixelType = x2d.getIndex(v_pixelType, settings.getValue("pixelType", "Undefined"), 1);
 	tilesX = settings.getValue("tilesX", 64);
 	tilesY = settings.getValue("tilesY", 64);
@@ -54,12 +56,18 @@ void Df_pixelate::loadSettings(ofxXmlSettings settings) {
 	c_cyanBlue.z = settings.getValue("colors:cyanBlue:b", c_cyanBlue.z);
 	c_cyanBlue.w = settings.getValue("colors:cyanBlue:a", c_cyanBlue.w);
 
+	c_mask.x = settings.getValue("colors:mask:r", c_mask.x);
+	c_mask.y = settings.getValue("colors:mask:g", c_mask.y);
+	c_mask.z = settings.getValue("colors:mask:b", c_mask.z);
+	c_mask.w = settings.getValue("colors:mask:a", c_mask.w);
 }
 
 ofxXmlSettings Df_pixelate::getSettings() {
 	ofxXmlSettings settings;
 	settings.setValue("name", name);
 	settings.setValue("visible", visible);
+	settings.setValue("useMask", useMask);
+	settings.setValue("maskMargin", maskMargin);
 	settings.setValue("pixelType", v_pixelType[ui_currentPixelType]);
 	settings.setValue("tilesX", tilesX);
 	settings.setValue("tilesY", tilesY);
@@ -107,6 +115,11 @@ ofxXmlSettings Df_pixelate::getSettings() {
 	settings.setValue("colors:cyanBlue:g", c_cyanBlue.y);
 	settings.setValue("colors:cyanBlue:b", c_cyanBlue.z);
 	settings.setValue("colors:cyanBlue:a", c_cyanBlue.w);
+
+	settings.setValue("colors:mask:r", c_mask.x);
+	settings.setValue("colors:mask:g", c_mask.y);
+	settings.setValue("colors:mask:b", c_mask.z);
+	settings.setValue("colors:mask:a", c_mask.w);
 
 	return settings;
 }
@@ -190,7 +203,10 @@ void Df_pixelate::renderImGuiSettings() {
 		ImGui::PopItemWidth();
 
 		if (ui_currentPixelType > 1) {
-			renderImGuiColourSettings(true);
+			renderImGuiColourSettings(true, true);
+		}
+		else {
+			renderImGuiColourSettings(false, true);
 		}
 
 		ImGui::PushItemWidth(200);
@@ -456,6 +472,15 @@ void Df_pixelate::draw(ofImage* input) {
 				float fy = y + halfTileH;
 				ofColor c = input->getPixels().getColor(floor(fx), floor(fy));
 				
+				if (useMask) {
+					ofColor d = c_mask;
+					if ( (abs(c.r - d.r) < maskMargin) &&
+						 (abs(c.g - d.g) < maskMargin) &&
+						 (abs(c.b - d.b) < maskMargin) ){
+						continue;
+					}
+				}
+
 				float tileWidth = tileW;
 				float tileHeight = tileH;
 				float offsetX = offsetx;
