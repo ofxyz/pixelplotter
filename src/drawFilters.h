@@ -165,10 +165,19 @@ private:
 		"Location Y" */
 	};
 
+	std::vector<std::string> v_ignoreOptions{
+		"None",
+		"Random",
+		"Modulo",
+		"Plaid",
+		"Scan"
+	};
+
 	int ui_currentRotationMap = 0;
 	int ui_currentWidthMap = 0;
 	int ui_currentHeightMap = 0;
 	int ui_currentPixelType = 0;
+	int ui_currentIgnore = 0;
 	bool normalize = false;
 	bool polka = false;
 	int tilesX = 64;
@@ -181,7 +190,12 @@ private:
 	float offsety = 0;
 	float offsetx_rand = 0;
 	float offsety_rand = 0;
-	float ignorePercent = 0;
+	int ignorePercent = 0;
+	int ignoreModulo = 1;
+	int ignorePlaid = 0;
+	int ignoreScan = 0;
+	int ignoreSeedAddon = 1;
+	int ignoreSeed = 0;
 
 	ofVec2f rotationMinMax = ofVec2f(0, 0);
 	ofVec2f widthMinMax = ofVec2f(5, 50);

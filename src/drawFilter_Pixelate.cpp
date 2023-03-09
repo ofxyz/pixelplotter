@@ -33,6 +33,14 @@ void Df_pixelate::loadSettings(ofxXmlSettings settings) {
 	heightMinMax[0] = settings.getValue("heightMin", 0);
 	heightMinMax[1] = settings.getValue("heightMax", 0);
 
+	ui_currentIgnore = x2d.getIndex(v_ignoreOptions, settings.getValue("currentIgnore", "None"), 0);
+	ignorePercent = settings.getValue("ignorePercent", ignorePercent);
+	ignoreModulo  = settings.getValue("ignoreModulo", ignoreModulo);
+	ignorePlaid   = settings.getValue("ignorePlaid", ignorePlaid);
+	ignoreScan    = settings.getValue("ignoreScan", ignoreScan);
+	ignoreSeed    = settings.getValue("ignoreSeed", ignoreSeed);
+	ignoreSeedAddon = settings.getValue("ignoreSeedAddon", ignoreSeedAddon);
+
 	currentBlendModeIndex = settings.getValue("blendMode", 0);
 
 	// Colours
@@ -92,6 +100,14 @@ ofxXmlSettings Df_pixelate::getSettings() {
 	settings.setValue("heightMap", v_pixelDataMapOptions[ui_currentHeightMap]);
 	settings.setValue("heightMin", heightMinMax[0]);
 	settings.setValue("heightMax", heightMinMax[1]);
+
+	settings.setValue("currentIgnore", v_pixelDataMapOptions[ui_currentIgnore]);
+	settings.setValue("ignorePercent", ignorePercent);
+	settings.setValue("ignoreModulo", ignoreModulo);
+	settings.setValue("ignorePlaid", ignorePlaid);
+	settings.setValue("ignoreScan", ignoreScan);
+	settings.setValue("ignoreSeed", ignoreSeed);
+	settings.setValue("ignoreSeedAddon", ignoreSeedAddon);
 
 	settings.setValue("blendMode", currentBlendModeIndex);
 
@@ -157,6 +173,27 @@ void Df_pixelate::renderImGuiSettings() {
 		ImGui::SameLine();
 		ImGui::DragFloat("Y ##pixelate_addon_rand", &addony_rand, 0.1f, -100.0f, 100.0f, "%.3f");
 
+		ImGui::Text("+ Skip"); ImGui::SameLine(75);
+		ofxImGui::VectorCombo("##pixelate_ignore", &ui_currentIgnore, v_ignoreOptions);
+		if (v_ignoreOptions[ui_currentIgnore] == "Random") {
+			ImGui::SameLine();
+			ImGui::DragInt("% ##pixelate_percent", &ignorePercent, 1, 0, 100);
+		}
+		else if (v_ignoreOptions[ui_currentIgnore] == "Modulo") {
+			ImGui::SameLine();
+			ImGui::DragInt("Mod ##pixelate_modolo", &ignoreModulo, 1, 1, 500);
+		} else if (v_ignoreOptions[ui_currentIgnore] == "Plaid") {
+			ImGui::SameLine();
+			ImGui::DragInt("% ##pixelate_plaid", &ignorePlaid, 1, 0, 100);
+		} else if (v_ignoreOptions[ui_currentIgnore] == "Scan") {
+			ImGui::SameLine();
+			ImGui::DragInt("% ##pixelate_scan", &ignoreScan, 1, 0, 100);
+			ImGui::Text("  + Seed"); ImGui::SameLine(75);
+			ImGui::DragInt("Start ##pixelate_seed", &ignoreSeed, 1, 0, 500);
+			ImGui::SameLine();
+			ImGui::DragInt("Step ##pixelate_seedAddon", &ignoreSeedAddon, 1, 1, 250);
+		}
+ 
 		ImGui::Separator();
 
 		ImGui::Text("Offset"); ImGui::SameLine(75);
@@ -457,17 +494,46 @@ void Df_pixelate::draw(ofImage* input) {
 
 	setBlendMode();
 
-	// This needs some control...
-	//int rSeed = 0;
 
+	int rSeed = ignoreSeed;
+	int pixNo = 0;
 	for (float y = 0; y < imgH - halfTileH; y += tileH) {
-		//rSeed += 100;
-		//ofSeedRandom(rSeed++);
 		(ycount % 2 == 0) ? ydiv = 0 : ydiv = 1;
 		for (float x = 0; x < imgW - halfTileW; x += tileW) {
+			pixNo++;
+			if (v_ignoreOptions[ui_currentIgnore] == "Random") {
+				if ((rand() % 100) > ignorePercent) {
+					continue;
+				}
+			}
+			else if (v_ignoreOptions[ui_currentIgnore] == "Modulo") {
+				if (pixNo % ignoreModulo > 0) {
+					continue;
+				}
+			}
+			else if (v_ignoreOptions[ui_currentIgnore] == "Plaid") {
+				bool ignoreX = false;
+				bool ignoreY = false;
+				srand(x);
+				if ((rand() % 100) >= ignorePlaid) {
+					ignoreX = true;
+				}
+				srand(y);
+				if ((rand() % 100) >= ignorePlaid) {
+					ignoreY = true;
+				}
+				if (ignoreX && ignoreY) {
+					continue;
+				}
+			}
+			else if (v_ignoreOptions[ui_currentIgnore] == "Scan") {
+				srand(rSeed += ignoreSeedAddon);
+				if ((rand() % 100) > ignoreScan) {
+					continue;
+				}
+			}
+
 			if (!polka || ((xcount + ydiv) % 2 == 0)) {
-				//rSeed += 200;
-				//ofSeedRandom(rSeed++);
 				float fx = x + halfTileW;
 				float fy = y + halfTileH;
 				ofColor c = input->getPixels().getColor(floor(fx), floor(fy));

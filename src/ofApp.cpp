@@ -1,10 +1,15 @@
 #include "ofApp.h"
 
 /*
+   - Make sure UI is always rendering fast
+   - Pause Render update on variable change
+   - Add video controls pause, play, next frame, previous frame
    - Add Canvas Size, zoom canvas, like normal
+   - Add draw order, left to right top to bottom, center out, center in
    - Add duplicate button for filters
-   - Reorder filters
-   - Add rotation -> Map to X, Y location
+   - Add move up/down for filters (Reorder filters)
+   - Support for multiple sources (Add source select per filter?)
+   - Add rotation -> Map -> X, Y location
    - Reorder colour layer (based on N x, y)
    - Optional adjust colour hue  (based on N x, y, etc)
    - RGB needs B/W check
@@ -72,7 +77,7 @@ void ofApp::setup() {
 
 	gui_loadPresets();
 
-	currentSourceIndex = ofRandom(0, sourceNames.size() - 1);
+	currentSourceIndex = ofRandom(videoDeviceNames.size() + videoFileNames.size(), sourceNames.size() - 1);
 	gui_loadSourceIndex();
 
 }
