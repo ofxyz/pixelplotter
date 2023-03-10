@@ -9,6 +9,9 @@ void ofApp::gui_showMain() {
 			ImGui::SetNextWindowPos(ofVec2f(ofGetWidth() - gui_width, 0));
 			ImGui::Begin("Pixel Plotter", &show_main_window, ImGuiWindowFlags_NoDecoration);
 
+			if (ImGui::Button("Export Vector")) { saveVector = true; }
+			
+			/*
 			if (showZoom) {
 				if (ImGui::Button("Hide Zoom"))
 				{
@@ -21,9 +24,71 @@ void ofApp::gui_showMain() {
 					showZoom = true;
 				}
 			}
+			*/
 
 			ImGui::SameLine();
-			if (ImGui::Button("Export Vector")) { saveVector = true; }
+			if (pauseRender) {
+				if (ImGui::Button("Continue"))
+				{
+					pauseRender = false;
+				}
+			}
+			else {
+				if (ImGui::Button("Pause"))
+				{
+					pauseRender = true;
+				}
+			}
+
+			ImGui::SameLine();
+
+			if (pauseRender) {
+				ImGui::Text("Paused at %.1f FPS", ImGui::GetIO().Framerate);
+			}
+			else {
+				ImGui::Text("Rendering at %.1f FPS", ImGui::GetIO().Framerate);
+			}
+
+			if (ImGui::CollapsingHeader("Application Settings"))
+			{
+				/* Save and load presets ... */
+
+				if (ofxImGui::VectorCombo("##Presets", &currentPresetIndex, presetFileNames))
+				{
+					loadSettings(presetFiles[currentPresetIndex].getAbsolutePath());
+				}
+
+				if (presetFileNames.size() > 0) {
+					ImGui::SameLine();
+					if (ImGui::Button("Delete Preset"))
+					{
+						presetFiles[currentPresetIndex].remove();
+						gui_loadPresets();
+					}
+				}
+
+				if (bSavePreset) {
+					ImGui::InputText("##presetname", presetSaveName, IM_ARRAYSIZE(presetSaveName));
+					ImGui::SameLine();
+				}
+				if (ImGui::Button("Save Preset"))
+				{
+					if (bSavePreset) {
+						string savePath = "presets\/" + string(presetSaveName) + ".xml";
+						saveSettings(savePath);
+						gui_loadPresets();
+						currentPresetIndex = x2d.getIndex(presetFileNames, string(presetSaveName), 0);
+						bSavePreset = false;
+					}
+					else {
+						if (presetFileNames.size() > 0) {
+							strcpy(presetSaveName, presetFileNames[currentPresetIndex].c_str());
+						}
+						bSavePreset = true;
+					}
+				}
+
+			} // End Application Settings
 
 			if (ImGui::CollapsingHeader("Source"))
 			{
@@ -50,168 +115,54 @@ void ofApp::gui_showMain() {
 				}
 			}
 
-			if (ImGui::CollapsingHeader("Style Options"))
+			string sFilterCount = "Output (" + ofToString(v_DrawFilters.size()) + ")###DrawFiltersHolder";
+			if (ImGui::CollapsingHeader(sFilterCount.c_str()))
 			{
-				/*
-				if (ImGui::Button("Quick Save"))
-				{
-					string savePath = "presets\/quicksave.xml";
-					saveSettings(savePath);
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("Quick Load"))
-				{
-					string savePath = "presets\/quicksave.xml";
-					loadSettings(savePath);
-				}
-				*/
+				ImGui::PushStyleColor(ImGuiCol_Header, (ImVec4)ImColor::HSV(0, 0, 0.2));
+				ImGui::PushStyleColor(ImGuiCol_HeaderActive, (ImVec4)ImColor::HSV(0, 0, 0.4));
+				ImGui::PushStyleColor(ImGuiCol_HeaderHovered, (ImVec4)ImColor::HSV(0, 0, 0.7));
 
-				if (ofxImGui::VectorCombo("##Presets", &currentPresetIndex, presetFileNames))
-				{
-					loadSettings(presetFiles[currentPresetIndex].getAbsolutePath());
-				}
+				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0, 0, 0.2));
+				ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0, 0, 0.2));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0, 0, 0.7));
 
-				if (presetFileNames.size() > 0) {
-					ImGui::SameLine();
-					if (ImGui::Button("Delete Preset"))
-					{
-						presetFiles[currentPresetIndex].remove();
-						gui_loadPresets();
-					}
-				}
+				ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)ImColor::HSV(0, 0, 0.2));
+				ImGui::PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4)ImColor::HSV(0, 0, 0.4));
+				ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0, 0, 0.5));
 
-				if (bSavePreset) {
-					ImGui::InputText("##presetname", presetSaveName, IM_ARRAYSIZE(presetSaveName));
-					ImGui::SameLine();
-				}
-				if (ImGui::Button("Save Preset"))
-				{
-					if (bSavePreset) {
-						string savePath = "presets\/" + string(presetSaveName) + ".xml";
-						saveSettings(savePath);
-						gui_loadPresets();
-						currentPresetIndex = getIndex(presetFileNames, string(presetSaveName), 0);
-						bSavePreset = false;
+				ImGui::PushStyleColor(ImGuiCol_CheckMark, (ImVec4)ImColor::HSV(0, 0, 0.8));
+
+				ImGui::ColorEdit4("Canvas Colour", (float*)&c_paper, ImGuiColorEditFlags_NoInputs);
+
+				cleanFilters = false;
+				for (int i = 0; i < v_DrawFilters.size(); i++) {
+					ImGui::PushID(i);
+					if (v_DrawFilters[i]->active) {
+						ImGui::Indent();
+						v_DrawFilters[i]->renderImGuiSettings();
+						ImGui::Unindent();
 					}
 					else {
-						if (presetFileNames.size() > 0) {
-							strcpy(presetSaveName, presetFileNames[currentPresetIndex].c_str());
-						}
-						bSavePreset = true;
+						cleanFilters = true;
 					}
+					ImGui::PopID();
 				}
 
-				ImGui::AlignTextToFramePadding();
+				ImGui::PopStyleColor(10);
 
-				if (ofxImGui::VectorCombo("Plot Style", &currentPlotStyleIndex, ss.v_PlotStyles))
+				if (ofxImGui::VectorCombo("##Draw Filter Selector", &currentDrawFilterIndex, v_DrawFilterNames))
 				{
-					// Done
+					addDrawFilter(currentDrawFilterIndex);
+					currentDrawFilterIndex = 0;
 				}
-
-				ImGui::PushItemWidth(100);
-
-				ImGui::Text("Tiles"); ImGui::SameLine(75);
-				ImGui::DragInt("X ##Tiles", &ss.tilesX, 1, 1, 1200);
-				ImGui::SameLine();
-				ImGui::DragInt("Y ##Tiles", &ss.tilesY, 1, 1, 1200);
-
-				ImGui::Text("Addon"); ImGui::SameLine(75);
-				ImGui::DragFloat("X ##Addon", &ss.addonx, 0.1f, -100.0f, 100.0f, "%.3f");
-				ImGui::SameLine();
-				ImGui::DragFloat("Y ##Addon", &ss.addony, 0.1f, -100.0f, 100.0f, "%.3f");
-
-				ImGui::Text("Offset"); ImGui::SameLine(75);
-				ImGui::DragFloat("Random", &ss.randomOffset, 0.1f, 0.0f, 250.0f, "%.3f%%");
-
-				ImGui::Text("Noise"); ImGui::SameLine(75);
-				ImGui::DragFloat("X ##Noise", &ss.noisepercentX, 0.1f, 0.0f, 100.0f, "%.2f%%");
-				ImGui::SameLine();
-				ImGui::DragFloat("Y ##Noise", &ss.noisepercentY, 0.1f, 0.0f, 100.0f, "%.2f%%");
-
-				ImGui::Text("Every N"); ImGui::SameLine(75);
-				ImGui::DragInt("X ##Every N", &ss.everynx, 1, 1, 128);
-				ImGui::SameLine();
-				ImGui::DragInt("Y ##Every N", &ss.everyny, 1, 1, 128);
-
-				ImGui::PopItemWidth();
-
-				// Pixel Type: line, square, rect, round, oval
-				// Use Radio or dropdown
-				if (ss.roundPixels) {
-					if (ImGui::Button("Square Pixels"))
-					{
-						ss.roundPixels = false;
-					}
-				}
-				else {
-					if (ImGui::Button("Round Pixels"))
-					{
-						ss.roundPixels = true;
-					}
-				}
-				ImGui::SameLine();
-				ImGui::Checkbox("Polka", &ss.polka);
-			}// End Style
-
-			if (ImGui::CollapsingHeader("Colours"))
-			{
-				ImGui::ColorEdit4("Magenta / Red", (float*)&c_magentaRed, ImGuiColorEditFlags_NoInputs);
-				ImGui::ColorEdit4("Cyan / Blue", (float*)&c_cyanBlue, ImGuiColorEditFlags_NoInputs);
-				ImGui::ColorEdit4("Yellow / Green", (float*)&c_yellowGreen, ImGuiColorEditFlags_NoInputs);
-				ImGui::ColorEdit4("Black", (float*)&c_black, ImGuiColorEditFlags_NoInputs);
-				ImGui::ColorEdit4("Paper / White", (float*)&c_paper, ImGuiColorEditFlags_NoInputs);
-				ImGui::ColorEdit4("Background", (float*)&c_background, ImGuiColorEditFlags_NoInputs);
-
-				if (ImGui::Button("Set RGB"))
-				{
-					ofApp::gui_setRGB_pressed();
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("Set CMYK"))
-				{
-					ofApp::gui_setCMYK_pressed();
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("Set Avarage"))
-				{
-					ofApp::gui_setAvarage_pressed();
-				}
-
-				ImGui::Checkbox("Normalise Colours", &ss.normalise);
-
-				if (ofxImGui::VectorCombo("Blend Mode", &currentBlendModeIndex, ss.v_BlendModes))
-				{
-					ss.currentBlendmode = ss.v_BlendModes[currentBlendModeIndex];
-				}
-
-			} // End Colours
-
-			if (pauseRender) {
-				if (ImGui::Button("Continue"))
-				{
-					pauseRender = false;
-				}
-			}
-			else {
-				if (ImGui::Button("Pause"))
-				{
-					pauseRender = true;
-				}
-			}
-
-			ImGui::SameLine();
-
-			if (pauseRender) {
-				ImGui::Text("Paused at %.1f FPS", ImGui::GetIO().Framerate);
-			}
-			else {
-				ImGui::Text("Rendering at %.1f FPS", ImGui::GetIO().Framerate);
-			}
+			}// End Draw Filters
 
 			ImGui::End();
 		}
 	}
+
 	gui.end();
+
 }
 
 //--------------------------------------------------------------
@@ -229,20 +180,22 @@ void ofApp::gui_loadPresets() {
 
 //--------------------------------------------------------------
 void ofApp::gui_loadSourceIndex() {
-	if (currentSourceIndex > (videoDevices.size() + videoFiles.size()) - 1) {
+	if (currentSourceIndex == 0) {
+		bUseVideoDevice = true;
+		for (vector<ofVideoDevice>::iterator it = videoDevices.begin(); it != videoDevices.end(); ++it) {
+			if (it->deviceName == sourceNames[currentSourceIndex]) {
+				videoGrabber.close();
+				videoGrabber.setDeviceID(it->id);
+				videoGrabber.initGrabber(camWidth, camHeight);
+				return;
+			}
+		}
+	}
+	else if (currentSourceIndex > (videoDevices.size() + videoFiles.size()) - 1) {
 		loadImage(imgFiles[currentSourceIndex - videoDevices.size() - videoFiles.size()].getAbsolutePath());
 	}
 	else if (currentSourceIndex > videoDevices.size() - 1) {
 		loadVideo(videoFiles[currentSourceIndex - videoDevices.size()].getAbsolutePath());
-	}
-	else {
-		bUseVideoDevice = true;
-		for (vector<ofVideoDevice>::iterator it = videoDevices.begin(); it != videoDevices.end(); ++it) {
-			if (it->deviceName == sourceNames[currentSourceIndex]) {
-				videoGrabber.setDeviceID(it->id);
-				break;
-			}
-		}
 	}
 }
 
@@ -252,65 +205,4 @@ void ofApp::gui_buildSourceNames() {
 	sourceNames.insert(sourceNames.end(), videoDeviceNames.begin(), videoDeviceNames.end());
 	sourceNames.insert(sourceNames.end(), videoFileNames.begin(), videoFileNames.end());
 	sourceNames.insert(sourceNames.end(), imgFileNames.begin(), imgFileNames.end());
-}
-
-//--------------------------------------------------------------
-void ofApp::gui_setRGB_pressed() {
-	c_magentaRed = ofColor(255, 0, 0);
-	c_cyanBlue = ofColor(0, 0, 255);
-	c_yellowGreen = ofColor(0, 255, 0);
-	c_black = ofColor(0, 0, 0);
-}
-
-//--------------------------------------------------------------
-void ofApp::gui_setCMYK_pressed() {
-	c_magentaRed = ofColor(236, 0, 140);
-	c_cyanBlue = ofColor(0, 174, 239);
-	c_yellowGreen = ofColor(255, 242, 0);
-	c_black = ofColor(0, 0, 0);
-}
-
-//--------------------------------------------------------------
-void ofApp::gui_setAvarage_pressed() {
-	swatches = ofxPosterize::getClusterColors(img, 4);
-	if (swatches.size() > 3) {
-		c_magentaRed = swatches[0];
-		c_cyanBlue = swatches[1];
-		c_yellowGreen = swatches[2];
-		c_black = swatches[3];
-	}
-	else if (swatches.size() > 2) {
-		c_magentaRed = swatches[0];
-		c_cyanBlue = swatches[1];
-		c_yellowGreen = swatches[2];
-	}
-	else if (swatches.size() > 1) {
-		c_magentaRed = swatches[0];
-		c_cyanBlue = swatches[1];
-	}
-	else if (swatches.size() > 0) {
-		c_magentaRed = swatches[0];
-	}
-}
-
-//--------------------------------------------------------------
-void ofApp::gui_setBlendmode() {
-	if (ss.currentBlendmode == "OF_BLENDMODE_ALPHA") {
-		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
-	}
-	else if (ss.currentBlendmode == "OF_BLENDMODE_ADD") {
-		ofEnableBlendMode(OF_BLENDMODE_ADD);
-	}
-	else if (ss.currentBlendmode == "OF_BLENDMODE_SUBTRACT") {
-		ofEnableBlendMode(OF_BLENDMODE_SUBTRACT);
-	}
-	else if (ss.currentBlendmode == "OF_BLENDMODE_MULTIPLY") {
-		ofEnableBlendMode(OF_BLENDMODE_MULTIPLY);
-	}
-	else if (ss.currentBlendmode == "OF_BLENDMODE_SCREEN") {
-		ofEnableBlendMode(OF_BLENDMODE_SCREEN);
-	}
-	else {
-		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
-	}
 }
