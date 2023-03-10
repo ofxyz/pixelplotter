@@ -37,13 +37,19 @@ ofx2d x2d;
 
 void ofApp::setup() {
 	ofLogToConsole();
-	ofSetLogLevel(OF_LOG_FATAL_ERROR);
+	//ofSetLogLevel(OF_LOG_ERROR);
+	ofSetLogLevel(OF_LOG_VERBOSE);
 	//ofEnableAlphaBlending();
-	
+
+	//ofHideCursor();
+
 	//ofSetLogLevel(OF_LOG_WARNING);
 	//ofSetLogLevel(OF_LOG_VERBOSE);
 	//ofSetBackgroundAuto(false);
 	ofSetWindowTitle("Pixel Plotter");
+
+	userOffset.x = 0;
+	userOffset.y = 0;
 
 	videoDevices = videoGrabber.listDevices();
 	for (vector<ofVideoDevice>::iterator it = videoDevices.begin(); it != videoDevices.end(); ++it) {
@@ -89,16 +95,7 @@ void ofApp::exit() {
 
 //--------------------------------------------------------------
 void ofApp::update() {
-
-	if (cleanFilters) {
-		for (int i = 0; i < v_DrawFilters.size(); i++) {
-			if (!v_DrawFilters[i]->active) {
-				delete v_DrawFilters[i];
-				v_DrawFilters[i] = nullptr;
-			}
-		}
-		v_DrawFilters.erase(std::remove(v_DrawFilters.begin(), v_DrawFilters.end(), nullptr), v_DrawFilters.end());
-	}
+	gui_update();
 
 	if (!pauseRender) {
 
@@ -148,14 +145,13 @@ void ofApp::updateFbo() {
 //--------------------------------------------------------------
 void ofApp::draw(){
 
-
-	canvasFbo.draw(glm::vec2(offset.x, offset.y), img.getWidth(), img.getHeight());
+	canvasFbo.draw(glm::vec2(offset.x + userOffset.x, offset.y + userOffset.y), img.getWidth()* zoomLevel, img.getHeight()* zoomLevel);
 
 	if (showImage) {
-		img.draw(offset.x, offset.y);
+		img.draw(offset.x + userOffset.x, offset.y + userOffset.y, img.getWidth() * zoomLevel, img.getHeight() * zoomLevel);
 	}
 
-	gui_showMain();
+	gui_draw();
 }
 
 void ofApp::addDrawFilter(int index) {
@@ -199,18 +195,29 @@ void ofApp::loadVideo(string& filepath) {
 }
 
 void ofApp::prep_img() {
-	// Resize image fit screen
+	// Keep pixelated when drawing ...
+	img.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
+
+	// Resize image fit screen (don't)
+	/*
 	(img.getWidth() > img.getHeight()) ? isLandscape = true : isLandscape = false;
+	
 	if (isLandscape) {
 		ratio = img.getHeight() / img.getWidth();
 		img.resize(ofGetWidth() - gui_width, (ofGetWidth() - gui_width) * ratio);
+		//img.getPixelsRef().resize(ofGetWidth() - gui_width, (ofGetWidth() - gui_width) * ratio, OF_INTERPOLATE_NEAREST_NEIGHBOR);
+		//img.update();
 	}
 	else {
 		ratio = img.getWidth() / img.getHeight();
+		//img.getPixelsRef().resize(ofGetHeight() * ratio, ofGetHeight(), OF_INTERPOLATE_NEAREST_NEIGHBOR);
+		//img.update();
 		img.resize(ofGetHeight() * ratio, ofGetHeight());
 	}
+	*/
 
 	canvasFbo.allocate(img.getWidth() * zoomMultiplier, img.getHeight() * zoomMultiplier, GL_RGB, 8);
+	canvasFbo.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 
 	offset.x = ((ofGetWidth() - gui_width) - img.getWidth()) * 0.5;
 	offset.y = (ofGetHeight() - img.getHeight()) * 0.5;

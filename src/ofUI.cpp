@@ -1,6 +1,18 @@
 #include "ofApp.h"
 
-void ofApp::gui_showMain() {
+void ofApp::gui_update() {
+	if (cleanFilters) {
+		for (int i = 0; i < v_DrawFilters.size(); i++) {
+			if (!v_DrawFilters[i]->active) {
+				delete v_DrawFilters[i];
+				v_DrawFilters[i] = nullptr;
+			}
+		}
+		v_DrawFilters.erase(std::remove(v_DrawFilters.begin(), v_DrawFilters.end(), nullptr), v_DrawFilters.end());
+	}
+}
+
+void ofApp::gui_draw() {
 	gui.begin();
 	{
 		if (show_main_window)
@@ -10,21 +22,6 @@ void ofApp::gui_showMain() {
 			ImGui::Begin("Pixel Plotter", &show_main_window, ImGuiWindowFlags_NoDecoration);
 
 			if (ImGui::Button("Export Vector")) { saveVector = true; }
-			
-			/*
-			if (showZoom) {
-				if (ImGui::Button("Hide Zoom"))
-				{
-					showZoom = false;
-				}
-			}
-			else {
-				if (ImGui::Button("Show Zoom"))
-				{
-					showZoom = true;
-				}
-			}
-			*/
 
 			ImGui::SameLine();
 			if (pauseRender) {
@@ -51,8 +48,14 @@ void ofApp::gui_showMain() {
 
 			if (ImGui::CollapsingHeader("Application Settings"))
 			{
-				/* Save and load presets ... */
+				ImGui::DragFloat("Zoom", &zoomLevel, 0.1f, 0.001f, 200.0f, "%.2f");
 
+				ImGui::Text("+ Offset"); ImGui::SameLine(75);
+				ImGui::DragFloat("X ##app_offsetX", &userOffset.x, 1.0f, -1200.0f, 1200.0f, "%.0f");
+				ImGui::SameLine();
+				ImGui::DragFloat("Y ##app_offsetY", &userOffset.y, 1.0f, -1200.0f, 1200.0f, "%.0f");
+
+				/* Save and load presets ... */
 				if (ofxImGui::VectorCombo("##Presets", &currentPresetIndex, presetFileNames))
 				{
 					loadSettings(presetFiles[currentPresetIndex].getAbsolutePath());

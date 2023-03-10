@@ -94,7 +94,9 @@ class ofApp : public ofBaseApp{
 		float halfZoomWindowH = zoomWindowH * 0.5;
 		int zoomMultiplier = 4;
 		int exportCounter = 0;
-
+		float zoomLevel = 1;
+		ofVec2f userOffset;
+ 
 		ofxImGui::Gui gui;
 		ImVec4 c_background = ofColor(50, 50, 50, 255);
 		ImVec4 c_paper = ofColor(255, 255, 255, 255);
@@ -118,7 +120,8 @@ class ofApp : public ofBaseApp{
 		void plotIt();
 
 		// -------------------------------------------------  Start ofUI.cpp
-		void gui_showMain();
+		void gui_draw();
+		void gui_update();
 		void gui_loadPresets();
 		void gui_loadSourceIndex();
 		void gui_buildSourceNames();
