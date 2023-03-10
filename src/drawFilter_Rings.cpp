@@ -1,6 +1,7 @@
-#include "drawFilters.h"
+#include "drawFilter_Rings.h"
 
-// Create smooth curves ...
+// - Create smooth curves
+// - Remove edge lines
 
 ofxXmlSettings Df_rings::getSettings() {
 	ofxXmlSettings settings;
@@ -43,7 +44,7 @@ void Df_rings::draw(ofImage* input) {
 	//---------------------------------
 	
 	ofPushStyle();
-	ofSetColor(ofColor(255, 0, 0));
+	ofSetColor(c_blob);
 	ofNoFill();
 	ofSetLineWidth(lineWidth);
 
@@ -62,8 +63,8 @@ void Df_rings::draw(ofImage* input) {
 		//contourFinder.draw();
 		for (int i = 0; i < contourFinder.blobs.size(); i++) {
 			blobShape.clear();
-			c.setHsb(c.getHue() + 10, 255, 255);
-			ofSetColor(c);
+			//c_blob.setHsb(c_blob.getHue() + 10, 255, 255);
+			//ofSetColor(c_blob);
 			blobShape.addVertices(contourFinder.blobs.at(i).pts);
 			blobShape.close();
 			blobShape.scale(drawScale, drawScale);

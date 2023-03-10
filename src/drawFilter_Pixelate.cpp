@@ -1,4 +1,4 @@
-#include "drawFilters.h"
+#include "drawFilter_Pixelate.h"
 #include "ofx2d.h"
 
 extern ofx2d x2d;

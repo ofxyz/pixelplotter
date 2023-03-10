@@ -2,10 +2,12 @@
 #include "ofMain.h"
 #include "ofx2d.h"
 #include "ofxImGui.h"
-#include "drawFilters.h"
 #include "ofxPosterize.h"
 #include "ofxXmlSettings.h"
 #include "ofxOpenCv.h"
+
+#include "drawFilter_Pixelate.h"
+#include "drawFilter_Rings.h"
 
 const int gui_width = 350;
 const int img_area_WH = 1200;

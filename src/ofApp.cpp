@@ -84,7 +84,7 @@ void ofApp::setup() {
 
 //--------------------------------------------------------------
 void ofApp::exit() {
-	//clean
+	
 }
 
 //--------------------------------------------------------------
@@ -106,7 +106,7 @@ void ofApp::update() {
 			videoGrabber.update();
 			if (videoGrabber.isFrameNew()) {
 				img.setFromPixels(videoGrabber.getPixels());
-				img.mirror(false, true); // Webcam
+				img.mirror(false, true);
 				prep_img();
 			}
 		}
@@ -119,15 +119,6 @@ void ofApp::update() {
 		}
 
 		updateFbo();
-	}
-
-	if (showZoom) {
-		zoomFbo.begin();
-		ofClear(c_paper);
-		float fX = max((float)0, min(((mouseX - offset.x) * zoomMultiplier) - halfZoomWindowW, canvasFbo.getWidth() - zoomWindowW));
-		float fY = max((float)0, min(((mouseY - offset.y) * zoomMultiplier) - halfZoomWindowH, canvasFbo.getHeight() - zoomWindowH));
-		canvasFbo.getTexture().drawSubsection(0, 0, zoomWindowW, zoomWindowH, fX, fY);
-		zoomFbo.end();
 	}
 }
 
@@ -157,24 +148,8 @@ void ofApp::updateFbo() {
 //--------------------------------------------------------------
 void ofApp::draw(){
 
+
 	canvasFbo.draw(glm::vec2(offset.x, offset.y), img.getWidth(), img.getHeight());
-
-	if (showZoom) {
-		float zX = max(offset.x, min(mouseX - halfZoomWindowW, (img.getWidth()  + offset.x) - zoomWindowW));
-		float zY = max(offset.y, min(mouseY - halfZoomWindowH, (img.getHeight() + offset.y) - zoomWindowH));
-
-		ofPushStyle();
-		ofFill();
-		ofSetColor(ofColor(255,255,255,255));
-		ofDrawRectangle(zX, zY, zoomWindowW, zoomWindowH);
-		ofSetColor(c_background);
-		ofNoFill();
-		ofSetLineWidth(1);
-		ofDrawRectangle(zX-1, zY-1, zoomWindowW+2, zoomWindowH+2);
-		ofPopStyle();
-
-		zoomFbo.draw(glm::vec2(zX, zY), zoomWindowW, zoomWindowH);
-	}
 
 	if (showImage) {
 		img.draw(offset.x, offset.y);
