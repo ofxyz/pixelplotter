@@ -47,6 +47,7 @@ class ofApp : public ofBaseApp{
 		void onImageChange(string& file);
 		void loadImage(string& filepath);
 		void loadVideo(string& filepath);
+		void resetImageOffset();
 
 		string img_name = "PixelPlotted";
 		void prep_img();
@@ -65,6 +66,7 @@ class ofApp : public ofBaseApp{
 		bool showZoom = false;
 		bool bUseVideo = false;
 		bool bUseVideoDevice = false;
+		bool bDragCanvas = false;
 
 		void updateFbo();
 
@@ -96,7 +98,8 @@ class ofApp : public ofBaseApp{
 		int exportCounter = 0;
 		float zoomLevel = 1;
 		ofVec2f userOffset;
- 
+		glm::vec2 lastDraggedPos;
+
 		ofxImGui::Gui gui;
 		ImVec4 c_background = ofColor(50, 50, 50, 255);
 		ImVec4 c_paper = ofColor(255, 255, 255, 255);

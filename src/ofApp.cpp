@@ -117,6 +117,7 @@ void ofApp::update() {
 
 		updateFbo();
 	}
+
 }
 
 
@@ -163,6 +164,11 @@ void ofApp::addDrawFilter(int index) {
 	}
 }
 
+void ofApp::resetImageOffset() {
+	offset.x = (ofGetWidth() - gui_width - (img.getWidth() * zoomLevel)) * 0.5;
+	offset.y = (ofGetHeight() - (img.getHeight() * zoomLevel)) * 0.5;
+}
+
 void ofApp::loadImage(string& filepath) {
 
 	original.load(filepath);
@@ -177,7 +183,9 @@ void ofApp::loadImage(string& filepath) {
 	bUseVideoDevice = false;
 	videoPlayer.stop();
 	videoPlayer.close();
-
+	zoomLevel = 1;
+	userOffset.x = 0;
+	userOffset.y = 0;
 }
 
 void ofApp::loadVideo(string& filepath) {
@@ -191,25 +199,25 @@ void ofApp::loadVideo(string& filepath) {
 
 	std::string base_filename = filepath.substr(filepath.find_last_of("/\\") + 1);
 	img_name = base_filename.substr(0, base_filename.find_last_of('.'));
-
+	zoomLevel = 1;
+	userOffset.x = 0;
+	userOffset.y = 0;
 }
 
 void ofApp::prep_img() {
 	// Keep pixelated when drawing ...
 	img.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
+	(img.getWidth() > img.getHeight()) ? isLandscape = true : isLandscape = false;
+	(isLandscape)? ratio = img.getHeight() / img.getWidth() : ratio = img.getWidth() / img.getHeight();
 
 	// Resize image fit screen (don't)
 	/*
-	(img.getWidth() > img.getHeight()) ? isLandscape = true : isLandscape = false;
-	
 	if (isLandscape) {
-		ratio = img.getHeight() / img.getWidth();
 		img.resize(ofGetWidth() - gui_width, (ofGetWidth() - gui_width) * ratio);
 		//img.getPixelsRef().resize(ofGetWidth() - gui_width, (ofGetWidth() - gui_width) * ratio, OF_INTERPOLATE_NEAREST_NEIGHBOR);
 		//img.update();
 	}
 	else {
-		ratio = img.getWidth() / img.getHeight();
 		//img.getPixelsRef().resize(ofGetHeight() * ratio, ofGetHeight(), OF_INTERPOLATE_NEAREST_NEIGHBOR);
 		//img.update();
 		img.resize(ofGetHeight() * ratio, ofGetHeight());
@@ -218,9 +226,7 @@ void ofApp::prep_img() {
 
 	canvasFbo.allocate(img.getWidth() * zoomMultiplier, img.getHeight() * zoomMultiplier, GL_RGB, 8);
 	canvasFbo.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
-
-	offset.x = ((ofGetWidth() - gui_width) - img.getWidth()) * 0.5;
-	offset.y = (ofGetHeight() - img.getHeight()) * 0.5;
+	resetImageOffset();
 }
 
 void ofApp::onImageChange(string& filepath) {
@@ -289,11 +295,39 @@ void ofApp::loadSettings(string& filepath) {
 //-------------------------------------------------------------
 void ofApp::keyPressed(int key){
 	updateFbo();
-	if (key == 'p') {
-		saveVector = true;
+	if (key == '-') {
+		zoomLevel -= 0.1;
+		resetImageOffset();
 	}
-	if (key == 'x') {
+	else if (key == '+') {
+		zoomLevel += 0.1;
+		resetImageOffset();
+	}
+	else if (key == '_') {
+		// center image
+		userOffset.x = 0;
+		userOffset.y = 0;
+	}
+	else if (key == '=') {
+		// fit to screen
+		userOffset.x = 0;
+		userOffset.y = 0;
+		if (isLandscape) {
+			zoomLevel = (ofGetWidth() - gui_width) / img.getWidth();
+		}
+		else {
+			zoomLevel = ofGetHeight() / img.getHeight();
+		}
+		resetImageOffset();
+	}
+	else if (key == 'p') {
+		saveVector = true;
+	} 
+	else if (key == 'x') {
 		pauseRender = !pauseRender;
+	}
+	else if(key == '?') {
+		cout << offset << endl; 
 	}
 }
 
@@ -309,17 +343,30 @@ void ofApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-
+	if (bDragCanvas) {
+		if (x > img_area_WH || x < 0) return;
+		if (y > img_area_WH || y < 0) return;
+		userOffset.x += x - lastDraggedPos.x;
+		userOffset.y += y - lastDraggedPos.y;
+	}
+	
+	// Update last drag location
+	lastDraggedPos.x = x;
+	lastDraggedPos.y = y;
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-
+	if (x < img_area_WH && x > 0) {
+		bDragCanvas = true;
+		lastDraggedPos.x = x;
+		lastDraggedPos.y = y;
+	}
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
-
+	bDragCanvas = false;
 }
 
 //--------------------------------------------------------------

@@ -48,12 +48,11 @@ void ofApp::gui_draw() {
 
 			if (ImGui::CollapsingHeader("Application Settings"))
 			{
-				ImGui::DragFloat("Zoom", &zoomLevel, 0.1f, 0.001f, 200.0f, "%.2f");
+				ImGui::PushItemWidth(60);
 
-				ImGui::Text("+ Offset"); ImGui::SameLine(75);
-				ImGui::DragFloat("X ##app_offsetX", &userOffset.x, 1.0f, -1200.0f, 1200.0f, "%.0f");
-				ImGui::SameLine();
-				ImGui::DragFloat("Y ##app_offsetY", &userOffset.y, 1.0f, -1200.0f, 1200.0f, "%.0f");
+				ImGui::DragFloat("Zoom", &zoomLevel, 0.01f, 0.01f, 100.f, "%.2f");
+
+				ImGui::PopItemWidth();
 
 				/* Save and load presets ... */
 				if (ofxImGui::VectorCombo("##Presets", &currentPresetIndex, presetFileNames))
