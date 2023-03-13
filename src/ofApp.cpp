@@ -37,16 +37,15 @@ ofx2d x2d;
 
 void ofApp::setup() {
 	ofLogToConsole();
-	//ofSetLogLevel(OF_LOG_ERROR);
 	ofSetLogLevel(OF_LOG_VERBOSE);
-	//ofEnableAlphaBlending();
+
+	ofSetWindowTitle("Pixel Plotter");
+	ofEnableAlphaBlending();
 
 	//ofHideCursor();
+	ofAddListener(ofEvents().mouseScrolled, this, &ofApp::mouseScrolled);
 
-	//ofSetLogLevel(OF_LOG_WARNING);
-	//ofSetLogLevel(OF_LOG_VERBOSE);
 	//ofSetBackgroundAuto(false);
-	ofSetWindowTitle("Pixel Plotter");
 
 	userOffset.x = 0;
 	userOffset.y = 0;
@@ -90,7 +89,7 @@ void ofApp::setup() {
 
 //--------------------------------------------------------------
 void ofApp::exit() {
-	
+	ofRemoveListener(ofEvents().mouseScrolled, this, &ofApp::mouseScrolled);
 }
 
 //--------------------------------------------------------------
@@ -210,20 +209,6 @@ void ofApp::prep_img() {
 	(img.getWidth() > img.getHeight()) ? isLandscape = true : isLandscape = false;
 	(isLandscape)? ratio = img.getHeight() / img.getWidth() : ratio = img.getWidth() / img.getHeight();
 
-	// Resize image fit screen (don't)
-	/*
-	if (isLandscape) {
-		img.resize(ofGetWidth() - gui_width, (ofGetWidth() - gui_width) * ratio);
-		//img.getPixelsRef().resize(ofGetWidth() - gui_width, (ofGetWidth() - gui_width) * ratio, OF_INTERPOLATE_NEAREST_NEIGHBOR);
-		//img.update();
-	}
-	else {
-		//img.getPixelsRef().resize(ofGetHeight() * ratio, ofGetHeight(), OF_INTERPOLATE_NEAREST_NEIGHBOR);
-		//img.update();
-		img.resize(ofGetHeight() * ratio, ofGetHeight());
-	}
-	*/
-
 	canvasFbo.allocate(img.getWidth() * zoomMultiplier, img.getHeight() * zoomMultiplier, GL_RGB, 8);
 	canvasFbo.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 	resetImageOffset();
@@ -284,7 +269,8 @@ void ofApp::loadSettings(string& filepath) {
 			if (filterName == "Pixelate") {
 				v_DrawFilters.push_back(new Df_pixelate);
 				v_DrawFilters[v_DrawFilters.size() - 1]->loadSettings(filterSettings);
-			} else if (filterName == "Rings") {
+			}
+			else if (filterName == "Rings") {
 				v_DrawFilters.push_back(new Df_rings);
 			}
 		}
@@ -293,7 +279,7 @@ void ofApp::loadSettings(string& filepath) {
 }
 
 //-------------------------------------------------------------
-void ofApp::keyPressed(int key){
+void ofApp::keyPressed(int key) {
 	updateFbo();
 	if (key == '-') {
 		zoomLevel -= 0.1;
@@ -322,41 +308,41 @@ void ofApp::keyPressed(int key){
 	}
 	else if (key == 'p') {
 		saveVector = true;
-	} 
+	}
 	else if (key == 'x') {
 		pauseRender = !pauseRender;
 	}
-	else if(key == '?') {
-		cout << offset << endl; 
+	else if (key == '?') {
+		//cout << x << endl;
 	}
 }
 
 //--------------------------------------------------------------
-void ofApp::keyReleased(int key){
+void ofApp::keyReleased(int key) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y ){
+void ofApp::mouseMoved(int x, int y) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button){
+void ofApp::mouseDragged(int x, int y, int button) {
 	if (bDragCanvas) {
 		if (x > img_area_WH || x < 0) return;
 		if (y > img_area_WH || y < 0) return;
 		userOffset.x += x - lastDraggedPos.x;
 		userOffset.y += y - lastDraggedPos.y;
 	}
-	
+
 	// Update last drag location
 	lastDraggedPos.x = x;
 	lastDraggedPos.y = y;
 }
 
 //--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button){
+void ofApp::mousePressed(int x, int y, int button) {
 	if (x < img_area_WH && x > 0) {
 		bDragCanvas = true;
 		lastDraggedPos.x = x;
@@ -365,17 +351,30 @@ void ofApp::mousePressed(int x, int y, int button){
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button){
+void ofApp::mouseReleased(int x, int y, int button) {
 	bDragCanvas = false;
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseEntered(int x, int y){
+void ofApp::mouseEntered(int x, int y) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseExited(int x, int y){
+void ofApp::mouseExited(int x, int y) {
+
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseScrolled(ofMouseEventArgs& mouse) {
+	glm::vec3 position = camCanvas.getPosition();
+	if (zoomLevel > 1){
+		zoomLevel += (mouse.scrollY * 0.1);
+	}
+	else {
+		zoomLevel += (mouse.scrollY * 0.01);
+	}
+	if (zoomLevel < 0.02) zoomLevel = 0.02;
 
 }
 
