@@ -1,15 +1,7 @@
 #include "ofApp.h"
 
 void ofApp::gui_update() {
-	if (cleanFilters) {
-		for (int i = 0; i < v_DrawFilters.size(); i++) {
-			if (!v_DrawFilters[i]->active) {
-				delete v_DrawFilters[i];
-				v_DrawFilters[i] = nullptr;
-			}
-		}
-		v_DrawFilters.erase(std::remove(v_DrawFilters.begin(), v_DrawFilters.end(), nullptr), v_DrawFilters.end());
-	}
+	if (cleanFilters) canvas.dF.cleanFilters();
 }
 
 void ofApp::gui_draw() {
@@ -21,76 +13,43 @@ void ofApp::gui_draw() {
 			ImGui::SetNextWindowPos(ofVec2f(ofGetWidth() - gui_width, 0));
 			ImGui::Begin("Pixel Plotter", &show_main_window, ImGuiWindowFlags_NoDecoration);
 
-			if (ImGui::Button("Export Vector")) { saveVector = true; }
-
-			ImGui::SameLine();
-			if (pauseRender) {
-				if (ImGui::Button("Continue"))
-				{
-					pauseRender = false;
-				}
-			}
-			else {
-				if (ImGui::Button("Pause"))
-				{
-					pauseRender = true;
-				}
-			}
-
-			ImGui::SameLine();
-
-			if (pauseRender) {
-				ImGui::Text("Paused at %.1f FPS", ImGui::GetIO().Framerate);
-			}
-			else {
-				ImGui::Text("Rendering at %.1f FPS", ImGui::GetIO().Framerate);
-			}
-
-			if (ImGui::CollapsingHeader("Application Settings"))
+			/* Save and load presets ... */
+			if (ofxImGui::VectorCombo("##Presets", &currentPresetIndex, presetFileNames))
 			{
-				ImGui::PushItemWidth(60);
+				loadSettings(presetFiles[currentPresetIndex].getAbsolutePath());
+			}
 
-				ImGui::DragFloat("Zoom", &zoomLevel, 0.01f, 0.01f, 100.f, "%.2f");
-
-				ImGui::PopItemWidth();
-
-				/* Save and load presets ... */
-				if (ofxImGui::VectorCombo("##Presets", &currentPresetIndex, presetFileNames))
+			if (presetFileNames.size() > 0) {
+				ImGui::SameLine();
+				if (ImGui::Button("Delete Preset"))
 				{
-					loadSettings(presetFiles[currentPresetIndex].getAbsolutePath());
+					presetFiles[currentPresetIndex].remove();
+					gui_loadPresets();
 				}
+			}
 
-				if (presetFileNames.size() > 0) {
-					ImGui::SameLine();
-					if (ImGui::Button("Delete Preset"))
-					{
-						presetFiles[currentPresetIndex].remove();
-						gui_loadPresets();
-					}
-				}
-
+			if (bSavePreset) {
+				ImGui::InputText("##presetname", presetSaveName, IM_ARRAYSIZE(presetSaveName));
+				ImGui::SameLine();
+			}
+			if (ImGui::Button("Save Preset"))
+			{
 				if (bSavePreset) {
-					ImGui::InputText("##presetname", presetSaveName, IM_ARRAYSIZE(presetSaveName));
-					ImGui::SameLine();
+					string savePath = "presets\/" + string(presetSaveName) + ".xml";
+					saveSettings(savePath);
+					gui_loadPresets();
+					currentPresetIndex = x2d.getIndex(presetFileNames, string(presetSaveName), 0);
+					bSavePreset = false;
 				}
-				if (ImGui::Button("Save Preset"))
-				{
-					if (bSavePreset) {
-						string savePath = "presets\/" + string(presetSaveName) + ".xml";
-						saveSettings(savePath);
-						gui_loadPresets();
-						currentPresetIndex = x2d.getIndex(presetFileNames, string(presetSaveName), 0);
-						bSavePreset = false;
+				else {
+					if (presetFileNames.size() > 0) {
+						strcpy(presetSaveName, presetFileNames[currentPresetIndex].c_str());
 					}
-					else {
-						if (presetFileNames.size() > 0) {
-							strcpy(presetSaveName, presetFileNames[currentPresetIndex].c_str());
-						}
-						bSavePreset = true;
-					}
+					bSavePreset = true;
 				}
+			}
 
-			} // End Application Settings
+			ImGui::Spacing();
 
 			if (ImGui::CollapsingHeader("Source"))
 			{
@@ -117,7 +76,7 @@ void ofApp::gui_draw() {
 				}
 			}
 
-			string sFilterCount = "Output (" + ofToString(v_DrawFilters.size()) + ")###DrawFiltersHolder";
+			string sFilterCount = "Draw (" + ofToString(canvas.dF.v_DrawFilters.size()) + ")###DrawFiltersHolder";
 			if (ImGui::CollapsingHeader(sFilterCount.c_str()))
 			{
 				ImGui::PushStyleColor(ImGuiCol_Header, (ImVec4)ImColor::HSV(0, 0, 0.2));
@@ -134,14 +93,12 @@ void ofApp::gui_draw() {
 
 				ImGui::PushStyleColor(ImGuiCol_CheckMark, (ImVec4)ImColor::HSV(0, 0, 0.8));
 
-				ImGui::ColorEdit4("Canvas Colour", (float*)&c_paper, ImGuiColorEditFlags_NoInputs);
-
 				cleanFilters = false;
-				for (int i = 0; i < v_DrawFilters.size(); i++) {
+				for (int i = 0; i < canvas.dF.v_DrawFilters.size(); i++) {
 					ImGui::PushID(i);
-					if (v_DrawFilters[i]->active) {
+					if (canvas.dF.v_DrawFilters[i]->active) {
 						ImGui::Indent();
-						v_DrawFilters[i]->renderImGuiSettings();
+						canvas.dF.v_DrawFilters[i]->renderImGuiSettings();
 						ImGui::Unindent();
 					}
 					else {
@@ -152,12 +109,45 @@ void ofApp::gui_draw() {
 
 				ImGui::PopStyleColor(10);
 
-				if (ofxImGui::VectorCombo("##Draw Filter Selector", &currentDrawFilterIndex, v_DrawFilterNames))
+				if (ofxImGui::VectorCombo("##Draw Filter Selector", &currentDrawFilterIndex, canvas.dF.v_DrawFilterNames))
 				{
-					addDrawFilter(currentDrawFilterIndex);
+					canvas.dF.addFilter(currentDrawFilterIndex);
 					currentDrawFilterIndex = 0;
 				}
 			}// End Draw Filters
+
+			if (ImGui::CollapsingHeader("Canvas"))
+			{
+				ImGui::ColorEdit4("Canvas Colour", (float*)&canvas.c_canvas, ImGuiColorEditFlags_NoInputs);
+
+				if (ImGui::Button("Export Vector")) { canvas.saveVector = true; }
+
+			} // End Canvas Settings
+
+
+			ImGui::Spacing();
+
+			if (pauseRender) {
+				if (ImGui::Button("Continue"))
+				{
+					pauseRender = false;
+				}
+			}
+			else {
+				if (ImGui::Button("Pause"))
+				{
+					pauseRender = true;
+				}
+			}
+
+			ImGui::SameLine();
+
+			if (pauseRender) {
+				ImGui::Text("Paused at %.1f FPS", ImGui::GetIO().Framerate);
+			}
+			else {
+				ImGui::Text("Rendering at %.1f FPS", ImGui::GetIO().Framerate);
+			}
 
 			ImGui::End();
 		}

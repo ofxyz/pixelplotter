@@ -6,8 +6,7 @@
 #include "ofxXmlSettings.h"
 #include "ofxOpenCv.h"
 
-#include "drawFilter_Pixelate.h"
-#include "drawFilter_Rings.h"
+#include "canvas.h"
 
 const int gui_width = 350;
 const int img_area_WH = 1200;
@@ -36,6 +35,8 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+		
+		Canvas canvas;
 
 		ofCamera camCanvas;
 		ofVideoPlayer videoPlayer;
@@ -45,7 +46,6 @@ class ofApp : public ofBaseApp{
 		int camWidth = 640;
 		int camHeight= 480;
 
-		void addDrawFilter(int index);
 		void saveSettings(string& filepath);
 		void loadSettings(string& filepath);
 		void onImageChange(string& file);
@@ -64,15 +64,12 @@ class ofApp : public ofBaseApp{
 		bool isLandscape;
 		bool bSavePreset = false;
 		bool show_main_window = true;
-		bool saveVector = false;
 		bool pauseRender = false;
 		bool showImage = false;
 		bool showZoom = false;
 		bool bUseVideo = false;
 		bool bUseVideoDevice = false;
 		bool bDragCanvas = false;
-
-		void updateFbo();
 
 		float percentage(float percent, float total);
 
@@ -89,8 +86,6 @@ class ofApp : public ofBaseApp{
 		int currentDrawFilterIndex = 0;
 		float imgRatio;
 
-		ofFbo canvasFbo;
-		ofFbo zoomFbo;
 		int currentVideoFrame = 1;
 
 		float ratio = 1;
@@ -106,7 +101,6 @@ class ofApp : public ofBaseApp{
 
 		ofxImGui::Gui gui;
 		ImVec4 c_background = ofColor(50, 50, 50, 255);
-		ImVec4 c_paper = ofColor(255, 255, 255, 255);
 
 		std::vector<std::string> sourceNames;
 		
@@ -137,18 +131,6 @@ class ofApp : public ofBaseApp{
 		void gui_setAvarage_pressed();
 		void gui_setBlendmode();
 		// -------------------------------------------------  Start ofUI.cpp
-
-		// ------------------------------------------------- Start Interfaces
-
-		std::vector<DrawFilter*> v_DrawFilters;
-		
-		std::vector<std::string> v_DrawFilterNames {
-			"Add Draw Filter ...",
-			"Pixelate",
-			"Rings"
-		};
-
-		// ------------------------------------------------- End Interfaces
 
 		string to_lower(string s) {
 			for (char& c : s)
