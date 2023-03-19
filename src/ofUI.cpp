@@ -53,11 +53,11 @@ void ofApp::gui_draw() {
 
 			if (ImGui::CollapsingHeader("Source"))
 			{
-				if (!sourceNames.empty())
+				if (!sourceController.sourceNames.empty())
 				{
-					if (ofxImGui::VectorCombo("##Source Image", &currentSourceIndex, sourceNames))
+					if (ofxImGui::VectorCombo("##Source Image", &sourceController.currentSourceIndex, sourceController.sourceNames))
 					{
-						gui_loadSourceIndex();
+						sourceController.loadSourceIndex();
 					}
 				}
 
@@ -168,33 +168,4 @@ void ofApp::gui_loadPresets() {
 		string pname = base_filename.substr(0, base_filename.find_last_of('.'));
 		presetFileNames.push_back(pname);
 	}
-}
-
-//--------------------------------------------------------------
-void ofApp::gui_loadSourceIndex() {
-	if (currentSourceIndex == 0) {
-		bUseVideoDevice = true;
-		for (vector<ofVideoDevice>::iterator it = videoDevices.begin(); it != videoDevices.end(); ++it) {
-			if (it->deviceName == sourceNames[currentSourceIndex]) {
-				videoGrabber.close();
-				videoGrabber.setDeviceID(it->id);
-				videoGrabber.initGrabber(camWidth, camHeight);
-				return;
-			}
-		}
-	}
-	else if (currentSourceIndex > (videoDevices.size() + videoFiles.size()) - 1) {
-		loadImage(imgFiles[currentSourceIndex - videoDevices.size() - videoFiles.size()].getAbsolutePath());
-	}
-	else if (currentSourceIndex > videoDevices.size() - 1) {
-		loadVideo(videoFiles[currentSourceIndex - videoDevices.size()].getAbsolutePath());
-	}
-}
-
-//--------------------------------------------------------------
-void ofApp::gui_buildSourceNames() {
-	sourceNames.clear();
-	sourceNames.insert(sourceNames.end(), videoDeviceNames.begin(), videoDeviceNames.end());
-	sourceNames.insert(sourceNames.end(), videoFileNames.begin(), videoFileNames.end());
-	sourceNames.insert(sourceNames.end(), imgFileNames.begin(), imgFileNames.end());
 }

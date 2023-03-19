@@ -1,6 +1,8 @@
 #include "ofApp.h"
 
 /*
+   - Make zoom go faster with holding shift
+   - Implement alpha on all images and resources
    - Make sure canvas settings are saved properly
    - Make sure UI is always rendering fast
    - Pause Render update on variable change
@@ -52,36 +54,19 @@ void ofApp::setup() {
 	userOffset.x = 0;
 	userOffset.y = 0;
 
-	videoDevices = videoGrabber.listDevices();
-	for (vector<ofVideoDevice>::iterator it = videoDevices.begin(); it != videoDevices.end(); ++it) {
-		videoDeviceNames.push_back(it->deviceName);
-	}
-
 	gui.setup();
+
 	ImGui::StyleColorsDark();
 	ImGuiStyle* style = &ImGui::GetStyle();
 	style->ItemSpacing = ImVec2(5, 5);
 
-	ofDirectory vidDirectory(ofToDataPath("src_vid", true));
-	videoFiles = vidDirectory.getFiles();
-	for (int i = 0; i < videoFiles.size(); i++)
-	{
-		videoFileNames.push_back(videoFiles[i].getFileName());
-	}
+	sourceController.setup();
 
-	ofDirectory imgDirectory(ofToDataPath("src_img", true));
-	imgFiles = imgDirectory.getFiles();
-	for (int i = 0; i < imgFiles.size(); i++)
-	{
-		imgFileNames.push_back(imgFiles[i].getFileName());
-	}
-
-	gui_buildSourceNames();
+	
 	gui_loadPresets();
 
 	canvas.dF.addRandomFilter();
-	currentSourceIndex = ofRandom(videoDeviceNames.size() + videoFileNames.size(), sourceNames.size() - 1);
-	gui_loadSourceIndex();
+
 }
 
 //--------------------------------------------------------------
@@ -94,87 +79,48 @@ void ofApp::update() {
 	gui_update();
 
 	if (!pauseRender) {
-
-		if (bUseVideoDevice) {
-			videoGrabber.update();
-			if (videoGrabber.isFrameNew()) {
-				img.setFromPixels(videoGrabber.getPixels());
-				img.mirror(false, true);
-				prep_img();
-			}
-		}
-		else if (bUseVideo) {
-			videoPlayer.update();
-			if (videoPlayer.isFrameNew()) {
-				img.setFromPixels(videoPlayer.getPixels());
-				prep_img();
-			}
-		}
+		sourceController.update();
 		// Check if image is dirty ... 
-		canvas.update(&img);
+		if (sourceController.isFresh) {
+			canvas.setup(&sourceController.img);
+			sourceController.isFresh = false;
+		}
+		canvas.update(&sourceController.img);
 	}
 }
 
-
 //--------------------------------------------------------------
 void ofApp::draw(){
-	canvas.draw(offset.x + userOffset.x, offset.y + userOffset.y, img.getWidth() * zoomLevel, img.getHeight() * zoomLevel);
+	canvas.draw(offset.x + userOffset.x, offset.y + userOffset.y, sourceController.img.getWidth() * zoomLevel, sourceController.img.getHeight() * zoomLevel);
 
 	if (showImage) {
-		img.draw(offset.x + userOffset.x, offset.y + userOffset.y, img.getWidth() * zoomLevel, img.getHeight() * zoomLevel);
+		sourceController.img.draw(offset.x + userOffset.x, offset.y + userOffset.y, sourceController.img.getWidth() * zoomLevel, sourceController.img.getHeight() * zoomLevel);
 	}
 
 	gui_draw();
 }
 
 void ofApp::resetImageOffset() {
-	offset.x = (ofGetWidth() - gui_width - (img.getWidth() * zoomLevel)) * 0.5;
-	offset.y = (ofGetHeight() - (img.getHeight() * zoomLevel)) * 0.5;
+	offset.x = (ofGetWidth() - gui_width - (sourceController.img.getWidth() * zoomLevel)) * 0.5;
+	offset.y = (ofGetHeight() - (sourceController.img.getHeight() * zoomLevel)) * 0.5;
 }
 
 void ofApp::loadImage(string& filepath) {
-
-	original.load(filepath);
-	img.load(filepath);
-	img.setImageType(OF_IMAGE_COLOR);
-
-	std::string base_filename = filepath.substr(filepath.find_last_of("/\\") + 1);
-	img_name = base_filename.substr(0, base_filename.find_last_of('.'));
-
-	prep_img();
-	bUseVideo = false;
-	bUseVideoDevice = false;
-	videoPlayer.stop();
-	videoPlayer.close();
+	sourceController.loadImage(filepath);
+	canvas.setup(&sourceController.img, sourceController.src_name);
+	resetImageOffset();
 	zoomLevel = 1;
 	userOffset.x = 0;
 	userOffset.y = 0;
 }
 
 void ofApp::loadVideo(string& filepath) {
-
-	bUseVideo = true;
-	bUseVideoDevice = false;
-
-	videoPlayer.load(filepath);
-	videoPlayer.setLoopState(OF_LOOP_NORMAL);
-	videoPlayer.play();
-
-	std::string base_filename = filepath.substr(filepath.find_last_of("/\\") + 1);
-	img_name = base_filename.substr(0, base_filename.find_last_of('.'));
+	sourceController.loadVideo(filepath);
+	canvas.setup(&sourceController.img, sourceController.src_name);
+	resetImageOffset();
 	zoomLevel = 1;
 	userOffset.x = 0;
 	userOffset.y = 0;
-}
-
-void ofApp::prep_img() {
-	// Keep pixelated when drawing ...
-	img.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
-	(img.getWidth() > img.getHeight()) ? isLandscape = true : isLandscape = false;
-	(isLandscape)? ratio = img.getHeight() / img.getWidth() : ratio = img.getWidth() / img.getHeight();
-
-	canvas.setup(&img, img_name);
-	resetImageOffset();
 }
 
 void ofApp::onImageChange(string& filepath) {
@@ -248,11 +194,11 @@ void ofApp::keyPressed(int key) {
 		// fit to screen
 		userOffset.x = 0;
 		userOffset.y = 0;
-		if (isLandscape) {
-			zoomLevel = (ofGetWidth() - gui_width) / img.getWidth();
+		if (sourceController.isLandscape) {
+			zoomLevel = (ofGetWidth() - gui_width) / sourceController.img.getWidth();
 		}
 		else {
-			zoomLevel = ofGetHeight() / img.getHeight();
+			zoomLevel = ofGetHeight() / sourceController.img.getHeight();
 		}
 		resetImageOffset();
 	}
@@ -317,7 +263,7 @@ void ofApp::mouseExited(int x, int y) {
 
 //--------------------------------------------------------------
 void ofApp::mouseScrolled(ofMouseEventArgs& mouse) {
-	glm::vec3 position = camCanvas.getPosition();
+	glm::vec3 position = canvas.cam.getPosition();
 	if (zoomLevel > 1){
 		zoomLevel += (mouse.scrollY * 0.1);
 	}
@@ -342,16 +288,16 @@ void ofApp::gotMessage(ofMessage msg){
 void ofApp::dragEvent(ofDragInfo dragInfo){ 
 	if (dragInfo.files.size() > 0) {
 		for (int i = 0; i < dragInfo.files.size(); i++) {
-			if (std::find(img_ext.begin(), img_ext.end(), to_lower(dragInfo.files[i].substr(dragInfo.files[i].find_last_of(".") + 1))) != img_ext.end())
+			if (std::find(sourceController.img_ext.begin(), sourceController.img_ext.end(), x2d.to_lower(dragInfo.files[i].substr(dragInfo.files[i].find_last_of(".") + 1))) != sourceController.img_ext.end())
 			{
 				loadImage(dragInfo.files[i]);
 			} 
-			else if (std::find(vid_ext.begin(), vid_ext.end(), to_lower(dragInfo.files[i].substr(dragInfo.files[i].find_last_of(".") + 1))) != vid_ext.end())
+			else if (std::find(sourceController.vid_ext.begin(), sourceController.vid_ext.end(), x2d.to_lower(dragInfo.files[i].substr(dragInfo.files[i].find_last_of(".") + 1))) != sourceController.vid_ext.end())
 			{
 				loadVideo(dragInfo.files[i]);
 			}
 			else {
-				ofLog(OF_LOG_ERROR) << "No support for file format " << to_lower(dragInfo.files[i].substr(dragInfo.files[i].find_last_of(".") + 1));
+				ofLog(OF_LOG_ERROR) << "No support for file format " << x2d.to_lower(dragInfo.files[i].substr(dragInfo.files[i].find_last_of(".") + 1));
 			}
 		}
 	}

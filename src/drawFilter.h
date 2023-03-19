@@ -103,8 +103,8 @@ public:
 		}
 	}
 
-	float percentage(float percent, float total) {
-		return (percent / 100) * total;
+	float percent(float percentage, float total) {
+		return (percentage / 100) * total;
 	}
 
 	float drawScale = 4; // zoomMultiplier
