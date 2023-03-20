@@ -15,6 +15,7 @@ public:
 
 	ofVideoPlayer videoPlayer;
 	ofVideoGrabber videoGrabber;
+	ofPixels pix;
 	ofImage img;
 	std::string src_name = "PixelPlotted";
 	bool bUseVideo = false;

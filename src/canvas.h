@@ -61,7 +61,11 @@ public:
 		ofClear(c_canvas);
 
 		for (const auto& filter : dF.v_DrawFilters) {
-			filter->draw(img); // update one filter per frame to keep things speeedy? Seperate Export function?
+			// update one filter per frame to keep things speeedy?
+			// Only redraw a filter if settings or img are dirty?
+			// Each filter draws to it's own fbo and are drawn here?
+			// filter->update(img); filter->update(settings)
+			filter->draw(img);
 		}
 
 		if (saveVector) {

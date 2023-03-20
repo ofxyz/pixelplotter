@@ -4,14 +4,14 @@ void SourceController::update() {
 	if (bUseVideoDevice) {
 		videoGrabber.update();
 		if (videoGrabber.isFrameNew()) {
-			img.setFromPixels(videoGrabber.getPixels());
+			pix = videoGrabber.getPixels();
 			prepSource();
 		}
 	}
 	else if (bUseVideo) {
 		videoPlayer.update();
 		if (videoPlayer.isFrameNew()) {
-			img.setFromPixels(videoPlayer.getPixels());
+			pix = videoPlayer.getPixels();
 			prepSource();
 		}
 	}
@@ -75,8 +75,8 @@ int SourceController::getSourceCount() {
 };
 
 void SourceController::loadImage(string& filepath) {
-	img.load(filepath);
-	img.setImageType(OF_IMAGE_COLOR);
+	ofLoadImage(pix, filepath);
+	pix.setImageType(OF_IMAGE_COLOR);
 
 	std::string base_filename = filepath.substr(filepath.find_last_of("/\\") + 1);
 	src_name = base_filename.substr(0, base_filename.find_last_of('.'));
@@ -101,19 +101,23 @@ void SourceController::loadVideo(string& filepath) {
 }
 
 void SourceController::prepSource() {
+	img.getPixelsRef() = pix;
+	img.update();
+
 	// Keep pixelated when drawing ...
 	img.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
+
 	(img.getWidth() > img.getHeight()) ? isLandscape = true : isLandscape = false;
 	(isLandscape) ? imgRatio = img.getHeight() / img.getWidth() : imgRatio = img.getWidth() / img.getHeight();
+
 	prepImg();
-	isFresh = true;
+
 }
 
 void SourceController::prepImg() {
 	img.mirror(mirrorV, mirrorH);
 	isFresh = true;
 }
-
 
 ofxXmlSettings SourceController::getSettings() {
 	ofxXmlSettings settings;
