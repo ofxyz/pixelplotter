@@ -3,6 +3,7 @@
 #include "ofxXmlSettings.h"
 #include "ofxImGui.h"
 #include "frameBuffer.h"
+#include "imageFilter_Controller.h"
 
 class SourceController {
 public:
@@ -16,6 +17,8 @@ public:
 
 	ofVideoPlayer videoPlayer;
 	ofVideoGrabber videoGrabber;
+
+	ImageFilterController iF;
 	
 	ofPixels pix;
 

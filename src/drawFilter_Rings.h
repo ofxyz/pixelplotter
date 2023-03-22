@@ -1,6 +1,7 @@
 #pragma once
 
 #include "drawFilter.h"
+#include "ofxOpenCv.h"
 
 class Df_rings : public DrawFilter {
 public:

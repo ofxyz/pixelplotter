@@ -1,6 +1,5 @@
 #pragma once
 #include "ofxImGui.h"
-#include "ofxOpenCv.h"
 #include "ofxXmlSettings.h"
 
 class DrawFilter {
@@ -12,7 +11,6 @@ public:
 
 	std::string name;
 
-	//virtual void draw(ofFbo* input) = 0;
 	virtual void draw(ofImage* input) = 0;
 	virtual void renderImGuiSettings() = 0;
 	virtual void loadSettings(ofxXmlSettings settings) = 0;

@@ -51,7 +51,8 @@ class ofApp : public ofBaseApp{
 		char presetSaveName[128] = "";
 		int exportCount = 0;
 
-		bool cleanFilters = false;
+		bool cleanDrawFilters = false;
+		bool cleanImageFilters = false;
 		bool bSavePreset = false;
 		bool show_main_window = true;
 		bool pauseRender = false;
@@ -61,6 +62,7 @@ class ofApp : public ofBaseApp{
 		int currentBlendModeIndex = 0;
 		int currentPresetIndex = 0;
 		int currentDrawFilterIndex = 0;
+		int currentImageFilterIndex = 0;
 
 		float zoomLevel = 1;
 		ofVec2f userOffset;

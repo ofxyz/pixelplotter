@@ -105,12 +105,6 @@ void SourceController::loadVideo(string& filepath) {
 }
 
 void SourceController::prepSource() {
-	//img.getPixelsRef() = pix;
-	//img.update();
-
-	// Keep pixelated when drawing ...
-	//img.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
-	
 	(pix.getWidth() > pix.getHeight()) ? isLandscape = true : isLandscape = false;
 	(isLandscape) ? imgRatio = pix.getHeight() / pix.getWidth() : imgRatio = pix.getWidth() / pix.getHeight();
 
@@ -119,7 +113,11 @@ void SourceController::prepSource() {
 }
 
 void SourceController::prepImg() {
-	pix.mirror(mirrorV, mirrorH);
+	
+	for (const auto& filter : iF.v_ImageFilters) {
+		filter->apply(&pix);
+	}
+
 	frameBuffer.addFrame(pix);
 	isFresh = true;
 }
