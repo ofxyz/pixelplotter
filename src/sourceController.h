@@ -2,6 +2,7 @@
 #include "ofMain.h"
 #include "ofxXmlSettings.h"
 #include "ofxImGui.h"
+#include "frameBuffer.h"
 
 class SourceController {
 public:
@@ -15,8 +16,11 @@ public:
 
 	ofVideoPlayer videoPlayer;
 	ofVideoGrabber videoGrabber;
+	
 	ofPixels pix;
-	ofImage img;
+
+	FrameBuffer frameBuffer;
+
 	std::string src_name = "PixelPlotted";
 	bool bUseVideo = false;
 	bool bUseVideoDevice = false;
@@ -47,7 +51,7 @@ public:
 	void loadSourceIndex();
 	void prepSource();
 	void prepImg();
-
+	 
 	ofxXmlSettings getSettings();
 	void loadSettings(ofxXmlSettings settings);
 	void renderImGuiSettings();

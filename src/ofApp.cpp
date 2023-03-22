@@ -82,32 +82,32 @@ void ofApp::update() {
 		sourceController.update();
 		// Check if image is dirty ... 
 		if (sourceController.isFresh) {
-			canvas.setup(&sourceController.img);
+			canvas.setup(&sourceController.frameBuffer.getFrame());
 			sourceController.isFresh = false;
 		}
-		canvas.update(&sourceController.img);
+		canvas.update(&sourceController.frameBuffer.getFrame());
 	}
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	canvas.draw(offset.x + userOffset.x, offset.y + userOffset.y, sourceController.img.getWidth() * zoomLevel, sourceController.img.getHeight() * zoomLevel);
+	canvas.draw(offset.x + userOffset.x, offset.y + userOffset.y, sourceController.frameBuffer.getFrame().getWidth() * zoomLevel, sourceController.frameBuffer.getFrame().getHeight() * zoomLevel);
 
 	if (showImage) {
-		sourceController.img.draw(offset.x + userOffset.x, offset.y + userOffset.y, sourceController.img.getWidth() * zoomLevel, sourceController.img.getHeight() * zoomLevel);
+		sourceController.frameBuffer.getFrame().draw(offset.x + userOffset.x, offset.y + userOffset.y, sourceController.frameBuffer.getFrame().getWidth() * zoomLevel, sourceController.frameBuffer.getFrame().getHeight() * zoomLevel);
 	}
 
 	gui_draw();
 }
 
 void ofApp::resetImageOffset() {
-	offset.x = (ofGetWidth() - gui_width - (sourceController.img.getWidth() * zoomLevel)) * 0.5;
-	offset.y = (ofGetHeight() - (sourceController.img.getHeight() * zoomLevel)) * 0.5;
+	offset.x = (ofGetWidth() - gui_width - (sourceController.frameBuffer.getFrame().getWidth() * zoomLevel)) * 0.5;
+	offset.y = (ofGetHeight() - (sourceController.frameBuffer.getFrame().getHeight() * zoomLevel)) * 0.5;
 }
 
 void ofApp::loadImage(string& filepath) {
 	sourceController.loadImage(filepath);
-	canvas.setup(&sourceController.img, sourceController.src_name);
+	canvas.setup(&sourceController.frameBuffer.getFrame(), sourceController.src_name);
 	resetImageOffset();
 	zoomLevel = 1;
 	userOffset.x = 0;
@@ -116,7 +116,7 @@ void ofApp::loadImage(string& filepath) {
 
 void ofApp::loadVideo(string& filepath) {
 	sourceController.loadVideo(filepath);
-	canvas.setup(&sourceController.img, sourceController.src_name);
+	canvas.setup(&sourceController.frameBuffer.getFrame(), sourceController.src_name);
 	resetImageOffset();
 	zoomLevel = 1;
 	userOffset.x = 0;
@@ -195,10 +195,10 @@ void ofApp::keyPressed(int key) {
 		userOffset.x = 0;
 		userOffset.y = 0;
 		if (sourceController.isLandscape) {
-			zoomLevel = (ofGetWidth() - gui_width) / sourceController.img.getWidth();
+			zoomLevel = (ofGetWidth() - gui_width) / sourceController.frameBuffer.getFrame().getWidth();
 		}
 		else {
-			zoomLevel = ofGetHeight() / sourceController.img.getHeight();
+			zoomLevel = ofGetHeight() / sourceController.frameBuffer.getFrame().getHeight();
 		}
 		resetImageOffset();
 	}
