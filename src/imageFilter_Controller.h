@@ -1,5 +1,6 @@
 #pragma once
 #include "imageFilter_Mirror.h"
+#include "imageFilter_Duplicate.h"
 
 class ImageFilterController {
 public:
@@ -19,6 +20,8 @@ public:
 	void addFilter(int index) {
 		if (v_ImageFilterNames[index] == "Mirror") {
 			v_ImageFilters.push_back(new If_mirror);
+		} else if (v_ImageFilterNames[index] == "Duplicate") {
+			v_ImageFilters.push_back(new If_duplicate);
 		}
 	}
 
@@ -26,6 +29,9 @@ public:
 		string filterName = filterSettings.getValue("name", "not_found");
 		if (filterName == "Mirror") {
 			v_ImageFilters.push_back(new If_mirror);
+			v_ImageFilters[v_ImageFilters.size() - 1]->loadSettings(filterSettings);
+		} else if (filterName == "Duplicate") {
+			v_ImageFilters.push_back(new If_duplicate);
 			v_ImageFilters[v_ImageFilters.size() - 1]->loadSettings(filterSettings);
 		}
 	}

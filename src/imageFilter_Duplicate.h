@@ -2,10 +2,10 @@
 
 #include "imageFilter.h"
 
-class If_mirror : public ImageFilter {
+class If_duplicate : public ImageFilter {
 public:
-	If_mirror() {
-		name = "Mirror";
+	If_duplicate() {
+		name = "Duplicate";
 	};
 
 	void apply(ofImage* img);
@@ -14,6 +14,6 @@ public:
 	ofxXmlSettings getSettings();
 
 private:
-	bool hMirror = false;
-	bool vMirror = false;
+	int hCount = 1;
+	int vCount = 1;
 };

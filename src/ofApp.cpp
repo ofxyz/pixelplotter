@@ -40,7 +40,8 @@ ofx2d x2d;
 
 void ofApp::setup() {
 	ofLogToConsole();
-	ofSetLogLevel(OF_LOG_VERBOSE);
+	ofSetLogLevel(OF_LOG_ERROR);
+	ofSetVerticalSync(true);
 	ofLog() << ofFbo::checkGLSupport();
 
 	ofSetWindowTitle("Pixel Plotter");

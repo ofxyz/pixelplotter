@@ -15,14 +15,13 @@ public:
 
 	void buildSourceNames();
 
+	FrameBuffer frameBuffer;
 	ofVideoPlayer videoPlayer;
 	ofVideoGrabber videoGrabber;
 
 	ImageFilterController iF;
 	
-	ofPixels pix;
-
-	FrameBuffer frameBuffer;
+	ofPixels pix; // Use ofImage and turn textures off // Turn on when needed.
 
 	std::string src_name = "PixelPlotted";
 	bool bUseVideo = false;
@@ -52,7 +51,6 @@ public:
 	std::vector<ofFile> imgFiles;
 
 	void loadSourceIndex();
-	void prepSource();
 	void prepImg();
 	 
 	ofxXmlSettings getSettings();

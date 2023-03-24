@@ -18,7 +18,8 @@ public:
 
 	void update() {
 		if (!bFresh && qFrames.size() > 0) {
-			setup(qFrames[0]);
+			currentFrame.getPixelsRef() = qFrames[0];
+			currentFrame.update();
 			qFrames.pop_front();
 			bFresh = true;
 		}

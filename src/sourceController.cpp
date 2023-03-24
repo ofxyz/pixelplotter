@@ -5,14 +5,14 @@ void SourceController::update() {
 		videoGrabber.update();
 		if (videoGrabber.isFrameNew()) {
 			pix = videoGrabber.getPixels();
-			prepSource();
+			prepImg();
 		}
 	}
 	else if (bUseVideo) {
 		videoPlayer.update();
 		if (videoPlayer.isFrameNew()) {
 			pix = videoPlayer.getPixels();
-			prepSource();
+			prepImg();
 		}
 	}
 	frameBuffer.update();
@@ -85,11 +85,15 @@ void SourceController::loadImage(string& filepath) {
 	std::string base_filename = filepath.substr(filepath.find_last_of("/\\") + 1);
 	src_name = base_filename.substr(0, base_filename.find_last_of('.'));
 
-	prepSource();
+	(pix.getWidth() > pix.getHeight()) ? isLandscape = true : isLandscape = false;
+	(isLandscape) ? imgRatio = pix.getHeight() / pix.getWidth() : imgRatio = pix.getWidth() / pix.getHeight();
+
 	bUseVideo = false;
 	bUseVideoDevice = false;
 	videoPlayer.stop();
 	videoPlayer.close();
+
+	prepImg();
 }
 
 void SourceController::loadVideo(string& filepath) {
@@ -102,23 +106,24 @@ void SourceController::loadVideo(string& filepath) {
 
 	std::string base_filename = filepath.substr(filepath.find_last_of("/\\") + 1);
 	src_name = base_filename.substr(0, base_filename.find_last_of('.'));
-}
 
-void SourceController::prepSource() {
-	(pix.getWidth() > pix.getHeight()) ? isLandscape = true : isLandscape = false;
-	(isLandscape) ? imgRatio = pix.getHeight() / pix.getWidth() : imgRatio = pix.getWidth() / pix.getHeight();
-
-	prepImg();
-
+	(videoPlayer.getWidth() > videoPlayer.getHeight()) ? isLandscape = true : isLandscape = false;
+	(isLandscape) ? imgRatio = videoPlayer.getHeight() / videoPlayer.getWidth() : imgRatio = videoPlayer.getWidth() / videoPlayer.getHeight();
 }
 
 void SourceController::prepImg() {
-	
+	static ofImage updatedFrame;
+	if (updatedFrame.isAllocated() == false)
+		updatedFrame.allocate(pix.getWidth(), pix.getHeight(), OF_IMAGE_COLOR);
+
 	for (const auto& filter : iF.v_ImageFilters) {
-		filter->apply(&pix);
+		updatedFrame.setFromPixels(pix);
+		filter->apply(&updatedFrame);
+		pix = updatedFrame.getPixels();
 	}
 
 	frameBuffer.addFrame(pix);
+
 	isFresh = true;
 }
 

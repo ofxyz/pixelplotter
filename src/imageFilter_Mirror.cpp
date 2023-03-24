@@ -17,6 +17,6 @@ void If_mirror::renderImGuiSettings() {
 	}
 }
 
-void If_mirror::apply(ofPixels* pix) {
-	pix->mirror(vMirror, hMirror);
+void If_mirror::apply(ofImage* img) {
+	img->mirror(vMirror, hMirror);
 }
