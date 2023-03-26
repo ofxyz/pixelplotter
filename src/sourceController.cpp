@@ -1,6 +1,7 @@
 #include "sourceController.h"
 
 void SourceController::update() {
+
 	if (bUseVideoDevice) {
 		videoGrabber.update();
 		if (videoGrabber.isFrameNew()) {
@@ -15,6 +16,16 @@ void SourceController::update() {
 			prepImg();
 		}
 	}
+	else { // Static Image
+		for (const auto& filter : iF.v_ImageFilters) {
+			if (filter->isFresh()) {
+				pix = original.getPixels();
+				prepImg();
+				continue;
+			}
+		}
+	}
+
 	frameBuffer.update();
 }
 
@@ -60,6 +71,7 @@ void SourceController::loadSourceIndex() {
 				videoGrabber.close();
 				videoGrabber.setDeviceID(it->id);
 				videoGrabber.initGrabber(camWidth, camHeight);
+				isFresh = true;
 				return;
 			}
 		}
@@ -77,8 +89,12 @@ int SourceController::getSourceCount() {
 };
 
 void SourceController::loadImage(string& filepath) {
-	ofLoadImage(pix, filepath);
-	pix.setImageType(OF_IMAGE_COLOR);
+	original.loadImage(filepath);
+	original.setImageType(OF_IMAGE_COLOR);
+
+	pix = original.getPixels();
+	//ofLoadImage(pix, filepath);
+	//pix.setImageType(OF_IMAGE_COLOR);
 
 	frameBuffer.setup(pix);
 
@@ -87,6 +103,7 @@ void SourceController::loadImage(string& filepath) {
 
 	(pix.getWidth() > pix.getHeight()) ? isLandscape = true : isLandscape = false;
 	(isLandscape) ? imgRatio = pix.getHeight() / pix.getWidth() : imgRatio = pix.getWidth() / pix.getHeight();
+	isFresh = true;
 
 	bUseVideo = false;
 	bUseVideoDevice = false;
@@ -94,6 +111,7 @@ void SourceController::loadImage(string& filepath) {
 	videoPlayer.close();
 
 	prepImg();
+
 }
 
 void SourceController::loadVideo(string& filepath) {
@@ -109,9 +127,12 @@ void SourceController::loadVideo(string& filepath) {
 
 	(videoPlayer.getWidth() > videoPlayer.getHeight()) ? isLandscape = true : isLandscape = false;
 	(isLandscape) ? imgRatio = videoPlayer.getHeight() / videoPlayer.getWidth() : imgRatio = videoPlayer.getWidth() / videoPlayer.getHeight();
+	isFresh = true;
+
 }
 
 void SourceController::prepImg() {
+
 	static ofImage updatedFrame;
 	if (updatedFrame.isAllocated() == false)
 		updatedFrame.allocate(pix.getWidth(), pix.getHeight(), OF_IMAGE_COLOR);
@@ -121,10 +142,7 @@ void SourceController::prepImg() {
 		filter->apply(&updatedFrame);
 		pix = updatedFrame.getPixels();
 	}
-
 	frameBuffer.addFrame(pix);
-
-	isFresh = true;
 }
 
 ofxXmlSettings SourceController::getSettings() {

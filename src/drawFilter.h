@@ -11,6 +11,11 @@ public:
 
 	std::string name;
 
+	bool bFresh = false;
+	bool isFresh() {
+		return bFresh;
+	}
+
 	virtual void draw(ofImage* input) = 0;
 	virtual void renderImGuiSettings() = 0;
 	virtual void loadSettings(ofxXmlSettings settings) = 0;
@@ -36,6 +41,7 @@ public:
 		c_cyanBlue = ofColor(0, 0, 255);
 		c_yellowGreen = ofColor(0, 255, 0);
 		c_black = ofColor(0, 0, 0);
+		bFresh = true;
 	}
 
 	void gui_setCMYK() {
@@ -43,6 +49,7 @@ public:
 		c_cyanBlue = ofColor(0, 174, 239);
 		c_yellowGreen = ofColor(255, 242, 0);
 		c_black = ofColor(0, 0, 0);
+		bFresh = true;
 	}
 
 	void renderImGuiColourSettings(bool colors, bool mask) {
@@ -50,18 +57,32 @@ public:
 			if (ImGui::CollapsingHeader("Colours ##drawFilter"))
 			{
 				if (colors) {
-					ImGui::ColorEdit4("Cyan / Blue ##drawFilter", (float*)&c_cyanBlue, ImGuiColorEditFlags_NoInputs);
-					ImGui::ColorEdit4("Magenta / Red ##drawFilter", (float*)&c_magentaRed, ImGuiColorEditFlags_NoInputs);
-					ImGui::ColorEdit4("Yellow / Green ##drawFilter", (float*)&c_yellowGreen, ImGuiColorEditFlags_NoInputs);
-					ImGui::ColorEdit4("Key / Black ##drawFilter", (float*)&c_black, ImGuiColorEditFlags_NoInputs);
+					if (ImGui::ColorEdit4("Cyan / Blue ##drawFilter", (float*)&c_cyanBlue, ImGuiColorEditFlags_NoInputs)) {
+						bFresh = true;
+					}
+					if (ImGui::ColorEdit4("Magenta / Red ##drawFilter", (float*)&c_magentaRed, ImGuiColorEditFlags_NoInputs)) {
+						bFresh = true;
+					}
+					if (ImGui::ColorEdit4("Yellow / Green ##drawFilter", (float*)&c_yellowGreen, ImGuiColorEditFlags_NoInputs)) {
+						bFresh = true;
+					}
+					if (ImGui::ColorEdit4("Key / Black ##drawFilter", (float*)&c_black, ImGuiColorEditFlags_NoInputs)) {
+						bFresh = true;
+					}
 				}
 				if (mask) {
-					ImGui::ColorEdit4("Mask ##drawFilter", (float*)&c_mask, ImGuiColorEditFlags_NoInputs);
+					if (ImGui::ColorEdit4("Mask ##drawFilter", (float*)&c_mask, ImGuiColorEditFlags_NoInputs)) {
+						bFresh = true;
+					}
 					ImGui::SameLine();
-					ImGui::Checkbox("Use Mask ##drawFilter", &useMask);
+					if (ImGui::Checkbox("Use Mask ##drawFilter", &useMask)) {
+						bFresh = true;
+					}
 					ImGui::SameLine();
 					ImGui::PushItemWidth(60);
-					ImGui::DragInt("Margin ##drawFilter", &maskMargin, 1, 0, 255);
+					if (ImGui::DragInt("Margin ##drawFilter", &maskMargin, 1, 0, 255)) {
+						bFresh = true;
+					}
 					ImGui::PopItemWidth();
 				}
 

@@ -41,7 +41,7 @@ ofx2d x2d;
 void ofApp::setup() {
 	ofLogToConsole();
 	ofSetLogLevel(OF_LOG_ERROR);
-	ofSetVerticalSync(true);
+	ofSetVerticalSync(false);
 	ofLog() << ofFbo::checkGLSupport();
 
 	ofSetWindowTitle("Pixel Plotter");
@@ -81,12 +81,15 @@ void ofApp::update() {
 
 	if (!pauseRender) {
 		sourceController.update();
-		// Check if image is dirty ... 
+		canvas.update();
+
 		if (sourceController.isFresh) {
 			canvas.setup(&sourceController.frameBuffer.getFrame());
 			sourceController.isFresh = false;
+		} 
+		else if (sourceController.frameBuffer.isFresh() || canvas.isFresh()) {
+			canvas.update(&sourceController.frameBuffer.getFrame());
 		}
-		canvas.update(&sourceController.frameBuffer.getFrame());
 	}
 }
 

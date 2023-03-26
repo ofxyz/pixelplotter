@@ -1,5 +1,7 @@
 #include "imageFilter_Duplicate.h"
 
+// Add resize option?
+
 ofxXmlSettings If_duplicate::getSettings() {
 	ofxXmlSettings settings;
 	return settings;
@@ -14,9 +16,13 @@ void If_duplicate::renderImGuiSettings() {
 		ImGui::AlignTextToFramePadding();
 		ImGui::PushItemWidth(60);
 		ImGui::Text("Copies"); ImGui::SameLine(75);
-		ImGui::DragInt("Horz ##duplicate_hCount", &hCount, 1, 1, 200);
+		if (ImGui::DragInt("Horz ##duplicate_hCount", &hCount, 1, 1, 100)) {
+			bFresh = true;
+		}
 		ImGui::SameLine();
-		ImGui::DragInt("Vert ##duplicate_vCount", &vCount, 1, 1, 200);
+		if (ImGui::DragInt("Vert ##duplicate_vCount", &vCount, 1, 1, 100)) {
+			bFresh = true;
+		}
 		ImGui::PopItemWidth();
 	}
 }
@@ -29,7 +35,7 @@ void If_duplicate::apply(ofImage* img) {
 	float height = img->getHeight() / vCount;
 
 	cfbo.begin();
-
+	cfbo.clearColorBuffer(ofColor(255,255,255));
 	for (float y = 0; y < vCount* height; y+= height) {
 		for (float x = 0; x < hCount*width; x+= width) {
 			img->draw(x,y,width,height);
@@ -40,4 +46,5 @@ void If_duplicate::apply(ofImage* img) {
 
 	cfbo.readToPixels(img->getPixelsRef());
 	img->update();
+	bFresh = false;
 }

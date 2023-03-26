@@ -25,13 +25,16 @@ public:
 		}
 	};
 
-	ofImage getFrame() {
+	bool isFresh() {
+		return bFresh;
+	};
+
+	ofImage& getFrame() {
 		bFresh = false;
 		return currentFrame;
 	};
 
 private:
-
 	bool bFresh = false;
 	std::deque<ofPixels> qFrames;
 	ofImage currentFrame;

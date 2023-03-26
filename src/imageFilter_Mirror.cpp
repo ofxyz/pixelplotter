@@ -12,11 +12,16 @@ void If_mirror::loadSettings(ofxXmlSettings settings) {
 void If_mirror::renderImGuiSettings() {
 	if (ImGui::CollapsingHeader(name.c_str(), &active)) {
 		ImGui::AlignTextToFramePadding();
-		ImGui::Checkbox("Horizontal", &hMirror);
-		ImGui::Checkbox("Vertical", &vMirror);
+		if (ImGui::Checkbox("Horizontal", &hMirror)) {
+			bFresh = true;
+		}
+		if (ImGui::Checkbox("Vertical", &vMirror)) {
+			bFresh = true;
+		}
 	}
 }
 
 void If_mirror::apply(ofImage* img) {
 	img->mirror(vMirror, hMirror);
+	bFresh = false;
 }

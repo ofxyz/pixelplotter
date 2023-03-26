@@ -21,7 +21,8 @@ public:
 
 	ImageFilterController iF;
 	
-	ofPixels pix; // Use ofImage and turn textures off // Turn on when needed.
+	ofImage original;
+	ofPixels pix; // Use ofImage and turn textures off // Turn on when needed?
 
 	std::string src_name = "PixelPlotted";
 	bool bUseVideo = false;

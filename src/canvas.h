@@ -16,6 +16,10 @@ public:
 	bool saveVector = false;
 	bool fresh = false;
 
+	bool isFresh() {
+		return fresh;
+	}
+
 	void loadSettings(ofxXmlSettings settings) {
 		canvasTitle = settings.getValue("canvasTitle", canvasTitle);
 		canvasWidth = settings.getValue("canvasWidth", canvasWidth);
@@ -52,9 +56,19 @@ public:
 		canvasFbo.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 	}
 
+	void update() {
+		for (const auto& filter : dF.v_DrawFilters) {
+			if (filter->isFresh()) {
+				fresh = true;
+				return;
+			}
+		}
+	}
+
 	void update(ofImage* img) {
 		canvasFbo.begin();
 		if (saveVector) {
+			// This swaps out the gl renderer for the ciaro renderer
 			ofBeginSaveScreenAsPDF("export//" + canvasTitle + "_" + to_string(++exportCount) + ".pdf", false);
 		}
 
@@ -62,7 +76,6 @@ public:
 
 		for (const auto& filter : dF.v_DrawFilters) {
 			// update one filter per frame to keep things speeedy?
-			// Only redraw a filter if settings or img are dirty?
 			// Each filter draws to it's own fbo and are drawn here?
 			// filter->update(img); filter->update(settings)
 			filter->draw(img);

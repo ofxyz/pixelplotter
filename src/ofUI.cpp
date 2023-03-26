@@ -95,11 +95,6 @@ void ofApp::gui_draw() {
 
 				ImGui::PushStyleColor(ImGuiCol_CheckMark, (ImVec4)ImColor::HSV(0, 0, 0.8));
 
-				if (ImGui::Button("Reload Source"))
-				{
-					sourceController.loadSourceIndex();
-				}
-
 				cleanImageFilters = false;
 				for (int i = 0; i < sourceController.iF.v_ImageFilters.size(); i++) {
 					ImGui::PushID(i);

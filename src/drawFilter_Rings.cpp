@@ -18,16 +18,24 @@ void Df_rings::renderImGuiSettings() {
 		ImGui::Checkbox("Visible", &visible);
 
 		ImGui::PushItemWidth(100);
-		ImGui::DragInt("Blur ##rings", &cvBlur, 1, 0, 500);
-		ImGui::DragInt("Threshold ##rings", &cvThresh, 1, 0, 255);
-		ImGui::DragInt("Ring Count ##rings", &cvSteps, 1, 1, 255);
-		ImGui::DragFloat("Line Width ##rings", &lineWidth, 0.1f, 0, 50, "%.3f");
-
+		if (ImGui::DragInt("Blur ##rings", &cvBlur, 1, 0, 500)) {
+			bFresh = true;
+		}
+		if (ImGui::DragInt("Threshold ##rings", &cvThresh, 1, 0, 255)) {
+			bFresh = true;
+		}
+		if (ImGui::DragInt("Ring Count ##rings", &cvSteps, 1, 1, 255)) {
+			bFresh = true;
+		}
+		if (ImGui::DragFloat("Line Width ##rings", &lineWidth, 0.1f, 0, 50, "%.3f")) {
+			bFresh = true;
+		}
 		ImGui::PopItemWidth();
 	}
 }
 
 void Df_rings::draw(ofImage* input) {
+	bFresh = false;
 	if (!visible) return;
 
 	// -------------------------------- Update
