@@ -18,7 +18,6 @@ private:
 	void drawRgbSeperation_Fill(float offsetX, float offsetY, float w, float h, ofColor c);
 	void drawRgbSeperation_Center(float offsetX, float offsetY, float w, float h, ofColor c);
 	void drawRgbSeperation_Square(float offsetX, float offsetY, float w, float h, ofColor c);
-	void drawRgbSeperation_Black(float offsetX, float offsetY, float w, float h, ofColor c);
 	void drawCMYKSeperation_Square(float offsetX, float offsetY, float w, float h, ofColor c);
 	void drawCMYKSeperation_Left(float offsetX, float offsetY, float w, float h, ofColor c);
 	void drawCMYKSeperation_Hills(float offsetX, float offsetY, float w, float h, ofColor c);

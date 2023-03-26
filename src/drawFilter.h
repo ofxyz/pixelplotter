@@ -52,6 +52,14 @@ public:
 		bFresh = true;
 	}
 
+	void gui_setRYB() {
+		c_magentaRed = ofColor(248, 11, 17);
+		c_cyanBlue = ofColor(19, 57, 166);
+		c_yellowGreen = ofColor(255, 230, 0);
+		c_black = ofColor(0, 0, 0);
+		bFresh = true;
+	}
+
 	void renderImGuiColourSettings(bool colors, bool mask) {
 		if (colors || mask) {
 			if (ImGui::CollapsingHeader("Colours ##drawFilter"))
@@ -95,6 +103,11 @@ public:
 					if (ImGui::Button("Set CMYK ##drawFilter"))
 					{
 						gui_setCMYK();
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("Set RYB ##drawFilter"))
+					{
+						gui_setRYB();
 					}
 				}
 			} // End Colours

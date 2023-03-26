@@ -15,7 +15,9 @@ void Df_rings::loadSettings(ofxXmlSettings settings) {
 void Df_rings::renderImGuiSettings() {
 	if (ImGui::CollapsingHeader(name.c_str(), &active)) {
 		ImGui::AlignTextToFramePadding();
-		ImGui::Checkbox("Visible", &visible);
+		if (ImGui::Checkbox("Visible", &visible)) {
+			bFresh = true;
+		}
 
 		ImGui::PushItemWidth(100);
 		if (ImGui::DragInt("Blur ##rings", &cvBlur, 1, 0, 500)) {

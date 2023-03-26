@@ -267,15 +267,16 @@ void ofApp::mouseExited(int x, int y) {
 
 //--------------------------------------------------------------
 void ofApp::mouseScrolled(ofMouseEventArgs& mouse) {
-	glm::vec3 position = canvas.cam.getPosition();
-	if (zoomLevel > 1){
-		zoomLevel += (mouse.scrollY * 0.1);
+	if (mouse.x < img_area_WH) {
+		glm::vec3 position = canvas.cam.getPosition();
+		if (zoomLevel > 1) {
+			zoomLevel += (mouse.scrollY * 0.1);
+		}
+		else {
+			zoomLevel += (mouse.scrollY * 0.01);
+		}
+		if (zoomLevel < 0.02) zoomLevel = 0.02;
 	}
-	else {
-		zoomLevel += (mouse.scrollY * 0.01);
-	}
-	if (zoomLevel < 0.02) zoomLevel = 0.02;
-
 }
 
 //--------------------------------------------------------------

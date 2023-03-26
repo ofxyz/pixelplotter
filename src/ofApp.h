@@ -80,10 +80,6 @@ class ofApp : public ofBaseApp{
 		void gui_draw();
 		void gui_update();
 		void gui_loadPresets();
-		void gui_setRGB_pressed();
-		void gui_setCMYK_pressed();
-		void gui_setAvarage_pressed();
-		void gui_setBlendmode();
-		// -------------------------------------------------  Start ofUI.cpp
+		// -------------------------------------------------  End ofUI.cpp
 
 };
