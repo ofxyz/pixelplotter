@@ -16,4 +16,5 @@ public:
 private:
 	int hCount = 1;
 	int vCount = 1;
+	bool bMirror = true;
 };

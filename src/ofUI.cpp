@@ -114,7 +114,7 @@ void ofApp::gui_draw() {
 				if (ofxImGui::VectorCombo("##Image Filter Selector", &currentImageFilterIndex, sourceController.iF.v_ImageFilterNames))
 				{
 					sourceController.iF.addFilter(currentImageFilterIndex);
-					currentDrawFilterIndex = 0;
+					currentImageFilterIndex = 0;
 				}
 			} // End ImageFilters
 
