@@ -2,10 +2,16 @@
 
 ofxXmlSettings If_mirror::getSettings() {
 	ofxXmlSettings settings;
+	settings.setValue("name", name);
+	settings.setValue("vMirror", vMirror);
+	settings.setValue("hMirror", hMirror);
 	return settings;
 }
 
 void If_mirror::loadSettings(ofxXmlSettings settings) {
+	name = settings.getValue("name", "mirror");
+	vMirror = settings.getValue("vMirror", false);
+	hMirror = settings.getValue("hMirror", false);
 	return;
 }
 

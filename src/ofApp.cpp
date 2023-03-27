@@ -134,6 +134,17 @@ void ofApp::onImageChange(string& filepath) {
 void ofApp::saveSettings(string& filepath) {
 	ofxXmlSettings settings;
 
+	settings.addTag("imageFilters");
+	settings.pushTag("imageFilters");
+	for (int i = 0; i < sourceController.iF.v_ImageFilters.size(); i++) {
+		ofxXmlSettings imgFilterSettings = sourceController.iF.v_ImageFilters[i]->getSettings();
+		string imageFilterSettings;
+		imgFilterSettings.copyXmlToString(imageFilterSettings);
+		string filterName = sourceController.iF.v_ImageFilters[i]->name;
+		settings.addValue("string_settings", imageFilterSettings);
+	}
+	settings.popTag();
+
 	settings.addTag("drawFilters");
 	settings.pushTag("drawFilters");
 	for (int i = 0; i < canvas.dF.v_DrawFilters.size(); i++) {
@@ -162,10 +173,21 @@ void ofApp::loadSettings(string& filepath) {
 	canvas.c_canvas.z = settings.getValue("appSettings:CanvasColour:b", 255);
 	canvas.c_canvas.w = settings.getValue("appSettings:CanvasColour:a", 255);
 
-	// Clear all draw Filters
 	canvas.dF.clearFilters();
+	sourceController.iF.clearFilters();
 
-	// Add as we go through settings file
+	if (settings.tagExists("imageFilters")) {
+		settings.pushTag("imageFilters");
+		int count = settings.getNumTags("string_settings");
+		for (int i = 0; i < count; i++) {
+			ofxXmlSettings filterSettings;
+			string stringSettings = settings.getValue("string_settings", "", i);
+			filterSettings.loadFromBuffer(stringSettings);
+			sourceController.iF.addFilter(filterSettings);
+		}
+		settings.popTag();
+	}
+
 	if (settings.tagExists("drawFilters")) {
 		settings.pushTag("drawFilters");
 		int count = settings.getNumTags("string_settings");
@@ -177,6 +199,8 @@ void ofApp::loadSettings(string& filepath) {
 		}
 		settings.popTag();
 	}
+
+	sourceController.loadSourceIndex();
 }
 
 //-------------------------------------------------------------

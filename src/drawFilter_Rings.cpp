@@ -5,10 +5,33 @@
 
 ofxXmlSettings Df_rings::getSettings() {
 	ofxXmlSettings settings;
+	settings.setValue("name", name);
+	settings.setValue("cvThresh", cvThresh);
+	settings.setValue("cvBlur", cvBlur);
+	settings.setValue("cvSteps", cvSteps);
+	settings.setValue("lineWidth", lineWidth);
+
+	settings.setValue("colors:blob:r", c_blob.x);
+	settings.setValue("colors:blob:g", c_blob.y);
+	settings.setValue("colors:blob:b", c_blob.z);
+	settings.setValue("colors:blob:a", c_blob.w);
+
 	return settings;
 }
 
+
 void Df_rings::loadSettings(ofxXmlSettings settings) {
+	name = settings.getValue("name", "rings");
+	cvThresh = settings.getValue("cvThresh", cvThresh);
+	cvBlur = settings.getValue("cvBlur", cvBlur);
+	cvSteps = settings.getValue("cvSteps", cvSteps);
+	lineWidth = settings.getValue("lineWidth", lineWidth);
+
+	c_blob.x = settings.getValue("colors:blob:r", c_blob.x);
+	c_blob.y = settings.getValue("colors:blob:g", c_blob.y);
+	c_blob.z = settings.getValue("colors:blob:b", c_blob.z);
+	c_blob.w = settings.getValue("colors:blob:a", c_blob.w);
+
 	return;
 }
 

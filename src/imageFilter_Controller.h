@@ -52,10 +52,8 @@ public:
 
 	void clearFilters() {
 		for (int i = 0; i < v_ImageFilters.size(); i++) {
-			if (!v_ImageFilters[i]->active) {
-				delete v_ImageFilters[i];
-				v_ImageFilters[i] = nullptr;
-			}
+			delete v_ImageFilters[i];
+			v_ImageFilters[i] = nullptr;
 		}
 		v_ImageFilters.erase(std::remove(v_ImageFilters.begin(), v_ImageFilters.end(), nullptr), v_ImageFilters.end());
 	}

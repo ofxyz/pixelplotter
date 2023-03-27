@@ -4,10 +4,18 @@
 
 ofxXmlSettings If_duplicate::getSettings() {
 	ofxXmlSettings settings;
+	settings.setValue("name", name);
+	settings.setValue("hCount", hCount);
+	settings.setValue("vCount", vCount);
+	settings.setValue("bMirror", bMirror);
 	return settings;
 }
 
 void If_duplicate::loadSettings(ofxXmlSettings settings) {
+	name = settings.getValue("name", "duplicate");
+	hCount = settings.getValue("hCount", hCount);
+	vCount = settings.getValue("vCount", vCount);
+	bMirror = settings.getValue("bMirror", bMirror);
 	return;
 }
 

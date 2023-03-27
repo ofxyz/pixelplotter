@@ -53,12 +53,10 @@ public:
 
 	void clearFilters() {
 		for (int i = 0; i < v_DrawFilters.size(); i++) {
-			if (!v_DrawFilters[i]->active) {
-				delete v_DrawFilters[i];
-				v_DrawFilters[i] = nullptr;
-			}
+			delete v_DrawFilters[i];
+			v_DrawFilters[i] = nullptr;
 		}
-		v_DrawFilters.erase(std::remove(v_DrawFilters.begin(), v_DrawFilters.end(), nullptr), v_DrawFilters.end());
+		v_DrawFilters.clear();
 	}
 
 };
