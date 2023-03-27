@@ -95,10 +95,10 @@ void ofApp::update() {
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	canvas.draw(offset.x + userOffset.x, offset.y + userOffset.y, sourceController.frameBuffer.getFrame().getWidth() * zoomLevel, sourceController.frameBuffer.getFrame().getHeight() * zoomLevel);
+	canvas.draw(offset.x + userOffset.x, offset.y + userOffset.y, sourceController.frameBuffer.getWidth() * zoomLevel, sourceController.frameBuffer.getHeight() * zoomLevel);
 
 	if (showImage) {
-		sourceController.frameBuffer.getFrame().draw(offset.x + userOffset.x, offset.y + userOffset.y, sourceController.frameBuffer.getFrame().getWidth() * zoomLevel, sourceController.frameBuffer.getFrame().getHeight() * zoomLevel);
+		sourceController.frameBuffer.getFrame().draw(offset.x + userOffset.x, offset.y + userOffset.y, sourceController.frameBuffer.getWidth() * zoomLevel, sourceController.frameBuffer.getHeight() * zoomLevel);
 	}
 
 	gui_draw();

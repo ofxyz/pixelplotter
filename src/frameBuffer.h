@@ -25,6 +25,11 @@ public:
 		}
 	};
 
+	void setFresh() {
+		// Trigger a re-render without re-loading
+		bFresh = true;
+	};
+
 	bool isFresh() {
 		return bFresh;
 	};
@@ -32,6 +37,14 @@ public:
 	ofImage& getFrame() {
 		bFresh = false;
 		return currentFrame;
+	};
+
+	float getWidth() {
+		return currentFrame.getWidth();
+	};
+
+	float getHeight() {
+		return currentFrame.getHeight();
 	};
 
 private:

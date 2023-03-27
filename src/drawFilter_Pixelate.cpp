@@ -491,7 +491,7 @@ void Df_pixelate::drawPixel(float w, float h, ofColor c) {
 		drawCMYKSeperation_Hills(offsetX, offsetY, w, h, c);
 		break;
 	default:
-		ofLog() << "Not a valid Draw Filter: " << ui_currentPixelType << endl;
+		ofLog() << "Not a valid draw style: " << ui_currentPixelType << endl;
 	}
 };
 
