@@ -144,7 +144,9 @@ void Df_pixelate::renderImGuiSettings() {
 	if (ImGui::CollapsingHeader(name.c_str(), &active)) {
 		ImGui::AlignTextToFramePadding();
 
-		ImGui::Checkbox("Visible", &visible);
+		if (ImGui::Checkbox("Visible", &visible)) {
+			bFresh = true;
+		}
 
 		if (ofxImGui::VectorCombo("Pixel Type ##pixelate", &ui_currentPixelType, v_pixelType)) {
 			if (ui_currentPixelType > 1) {
@@ -157,54 +159,88 @@ void Df_pixelate::renderImGuiSettings() {
 
 		ImGui::PushItemWidth(60);
 		ImGui::Text("Tiles"); ImGui::SameLine(75);
-		ImGui::DragInt("X ##pixelate_tiles", &tilesX, 1, 1, 1200);
+		if (ImGui::DragInt("X ##pixelate_tiles", &tilesX, 1, 1, 1200)) {
+			bFresh = true;
+		}
 		ImGui::SameLine();
-		ImGui::DragInt("Y ##pixelate_tiles", &tilesY, 1, 1, 1200);
+		if (ImGui::DragInt("Y ##pixelate_tiles", &tilesY, 1, 1, 1200)) {
+			bFresh = true;
+		}
 		ImGui::SameLine();
-		ImGui::Checkbox("Polka", &polka);
+		if (ImGui::Checkbox("Polka", &polka)) {
+			bFresh = true;
+		}
 
 		ImGui::Text("+ Addon"); ImGui::SameLine(75);
-		ImGui::DragFloat("X ##pixelate_addon", &addonx, 0.1f, -100.0f, 100.0f, "%.3f");
+		if (ImGui::DragFloat("X ##pixelate_addon", &addonx, 0.1f, -100.0f, 100.0f, "%.3f")) {
+			bFresh = true;
+		}
 		ImGui::SameLine();
-		ImGui::DragFloat("Y ##pixelate_addon", &addony, 0.1f, -100.0f, 100.0f, "%.3f");
+		if (ImGui::DragFloat("Y ##pixelate_addon", &addony, 0.1f, -100.0f, 100.0f, "%.3f")) {
+			bFresh = true;
+		}
 
 		ImGui::Text("+ Random"); ImGui::SameLine(75);
-		ImGui::DragFloat("X ##pixelate_addon_rand", &addonx_rand, 0.1f, -100.0f, 100.0f, "%.3f");
+		if (ImGui::DragFloat("X ##pixelate_addon_rand", &addonx_rand, 0.1f, -100.0f, 100.0f, "%.3f")) {
+			bFresh = true;
+		}
 		ImGui::SameLine();
-		ImGui::DragFloat("Y ##pixelate_addon_rand", &addony_rand, 0.1f, -100.0f, 100.0f, "%.3f");
+		if (ImGui::DragFloat("Y ##pixelate_addon_rand", &addony_rand, 0.1f, -100.0f, 100.0f, "%.3f")) {
+			bFresh = true;
+		}
 
 		ImGui::Text("+ Skip"); ImGui::SameLine(75);
 		ofxImGui::VectorCombo("##pixelate_ignore", &ui_currentIgnore, v_ignoreOptions);
 		if (v_ignoreOptions[ui_currentIgnore] == "Random") {
 			ImGui::SameLine();
-			ImGui::DragInt("% ##pixelate_percent", &ignorePercent, 1, 0, 100);
+			if (ImGui::DragInt("% ##pixelate_percent", &ignorePercent, 1, 0, 100)) {
+				bFresh = true;
+			}
 		}
 		else if (v_ignoreOptions[ui_currentIgnore] == "Modulo") {
 			ImGui::SameLine();
-			ImGui::DragInt("Mod ##pixelate_modolo", &ignoreModulo, 1, 1, 500);
+			if (ImGui::DragInt("Mod ##pixelate_modolo", &ignoreModulo, 1, 1, 500)) {
+				bFresh = true;
+			}
 		} else if (v_ignoreOptions[ui_currentIgnore] == "Plaid") {
 			ImGui::SameLine();
-			ImGui::DragInt("% ##pixelate_plaid", &ignorePlaid, 1, 0, 100);
+			if (ImGui::DragInt("% ##pixelate_plaid", &ignorePlaid, 1, 0, 100)) {
+				bFresh = true;
+			}
 		} else if (v_ignoreOptions[ui_currentIgnore] == "Scan") {
 			ImGui::SameLine();
-			ImGui::DragInt("% ##pixelate_scan", &ignoreScan, 1, 0, 100);
+			if (ImGui::DragInt("% ##pixelate_scan", &ignoreScan, 1, 0, 100)) {
+				bFresh = true;
+			}
 			ImGui::Text("  + Seed"); ImGui::SameLine(75);
-			ImGui::DragInt("Start ##pixelate_seed", &ignoreSeed, 1, 0, 500);
+			if (ImGui::DragInt("Start ##pixelate_seed", &ignoreSeed, 1, 0, 500)) {
+				bFresh = true;
+			}
 			ImGui::SameLine();
-			ImGui::DragInt("Step ##pixelate_seedAddon", &ignoreSeedAddon, 1, 1, 250);
+			if (ImGui::DragInt("Step ##pixelate_seedAddon", &ignoreSeedAddon, 1, 1, 250)) {
+				bFresh = true;
+			}
 		}
  
 		ImGui::Separator();
 
 		ImGui::Text("Offset"); ImGui::SameLine(75);
-		ImGui::DragFloat("X ##pixelate_offsetx", &offsetx, 0.1f, -250.0f, 250.0f, "%.3f");
+		if (ImGui::DragFloat("X ##pixelate_offsetx", &offsetx, 0.1f, -250.0f, 250.0f, "%.3f")) {
+			bFresh = true;
+		}
 		ImGui::SameLine();
-		ImGui::DragFloat("Y ##pixelate_offsety", &offsety, 0.1f, -250.0f, 250.0f, "%.3f");
+		if (ImGui::DragFloat("Y ##pixelate_offsety", &offsety, 0.1f, -250.0f, 250.0f, "%.3f")) {
+			bFresh = true;
+		}
 
 		ImGui::Text("+ Random"); ImGui::SameLine(75);
-		ImGui::DragFloat("X ##pixelate_offsetX_random", &offsetx_rand, 0.1f, 0.0f, 500.0f, "%.3f");
+		if (ImGui::DragFloat("X ##pixelate_offsetX_random", &offsetx_rand, 0.1f, 0.0f, 500.0f, "%.3f")) {
+			bFresh = true;
+		}
 		ImGui::SameLine();
-		ImGui::DragFloat("Y ##pixelate_offsetY_random", &offsety_rand, 0.1f, -100.0f, 100.0f, "%.3f");
+		if (ImGui::DragFloat("Y ##pixelate_offsetY_random", &offsety_rand, 0.1f, -100.0f, 100.0f, "%.3f")) {
+			bFresh = true;
+		}
 
 		ImGui::Separator();
 
@@ -212,9 +248,13 @@ void Df_pixelate::renderImGuiSettings() {
 		ofxImGui::VectorCombo("##pixelate_rotation", &ui_currentRotationMap, v_pixelDataMapOptions);
 		if (ui_currentRotationMap > 0) {
 			ImGui::Text(" "); ImGui::SameLine(75);
-			ImGui::DragFloat("Min ##pixelate_rotation", &rotationMinMax[0], 0.1f, -360.0f, 360.0f, "%.3f");
+			if (ImGui::DragFloat("Min ##pixelate_rotation", &rotationMinMax[0], 0.1f, -360.0f, 360.0f, "%.3f")) {
+				bFresh = true;
+			}
 			ImGui::SameLine();
-			ImGui::DragFloat("Max ##pixelate_rotation", &rotationMinMax[1], 0.1f, -360.0f, 360.0f, "%.3f");
+			if (ImGui::DragFloat("Max ##pixelate_rotation", &rotationMinMax[1], 0.1f, -360.0f, 360.0f, "%.3f")) {
+				bFresh = true;
+			}
 		}
 
 		ImGui::Separator();
@@ -223,18 +263,26 @@ void Df_pixelate::renderImGuiSettings() {
 		ofxImGui::VectorCombo("##pixelate_width", &ui_currentWidthMap, v_pixelDataMapOptions);
 		if (ui_currentWidthMap > 0) {
 			ImGui::Text(" "); ImGui::SameLine(75);
-			ImGui::DragFloat("Min ##pixelate_width", &widthMinMax[0], 0.1f, -250.0f, 250.0f, "%.3f");
+			if (ImGui::DragFloat("Min ##pixelate_width", &widthMinMax[0], 0.1f, -250.0f, 250.0f, "%.3f")) {
+				bFresh = true;
+			}
 			ImGui::SameLine();
-			ImGui::DragFloat("Max ##pixelate_height", &widthMinMax[1], 0.1f, -250.0f, 250.0f, "%.3f");
+			if (ImGui::DragFloat("Max ##pixelate_height", &widthMinMax[1], 0.1f, -250.0f, 250.0f, "%.3f")) {
+				bFresh = true;
+			}
 		}
 
 		ImGui::Text("Height"); ImGui::SameLine(75);
 		ofxImGui::VectorCombo("##pixelate_height", &ui_currentHeightMap, v_pixelDataMapOptions);
 		if (ui_currentHeightMap > 0) {
 			ImGui::Text(" "); ImGui::SameLine(75);
-			ImGui::DragFloat("Min ##pixelate_height", &heightMinMax[0], 0.1f, -250.0f, 250.0f, "%.3f");
+			if (ImGui::DragFloat("Min ##pixelate_height", &heightMinMax[0], 0.1f, -250.0f, 250.0f, "%.3f")) {
+				bFresh = true;
+			}
 			ImGui::SameLine();
-			ImGui::DragFloat("Max ##pixelate_height", &heightMinMax[1], 0.1f, -250.0f, 250.0f, "%.3f");
+			if (ImGui::DragFloat("Max ##pixelate_height", &heightMinMax[1], 0.1f, -250.0f, 250.0f, "%.3f")) {
+				bFresh = true;
+			}
 		}
 
 		ImGui::PopItemWidth();
@@ -249,7 +297,6 @@ void Df_pixelate::renderImGuiSettings() {
 		ImGui::PushItemWidth(200);
 		ofxImGui::VectorCombo("##Blend Mode", &currentBlendModeIndex, v_BlendModes);
 		ImGui::PopItemWidth();
-
 	}
 }
 
@@ -479,6 +526,7 @@ float Df_pixelate::getHeight(ofColor c, float x, float y, float r) {
 }
 
 void Df_pixelate::draw(ofImage* input) {
+	bFresh = false;
 	if (!visible) return;
 
 	int imgW = input->getWidth();
