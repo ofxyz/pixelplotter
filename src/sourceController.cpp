@@ -71,6 +71,8 @@ void SourceController::loadSourceIndex() {
 				videoGrabber.close();
 				videoGrabber.setDeviceID(it->id);
 				videoGrabber.initGrabber(camWidth, camHeight);
+				pix = videoGrabber.getPixels();
+				prepImg();
 				isFresh = true;
 				return;
 			}
