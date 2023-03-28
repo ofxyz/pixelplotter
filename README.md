@@ -2,6 +2,9 @@
 
 ![Screenshot of emptyExample](emptyExample.png)
 
+Split colours into primary colors, secondary colors and tertiary colors.
+
+
 ## Roadmap
 
 ### Colour

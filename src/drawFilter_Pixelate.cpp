@@ -190,7 +190,9 @@ void Df_pixelate::renderImGuiSettings() {
 		}
 
 		ImGui::Text("+ Skip"); ImGui::SameLine(75);
-		ofxImGui::VectorCombo("##pixelate_ignore", &ui_currentIgnore, v_ignoreOptions);
+		if (ofxImGui::VectorCombo("##pixelate_ignore", &ui_currentIgnore, v_ignoreOptions)) {
+			bFresh = true;
+		}
 		if (v_ignoreOptions[ui_currentIgnore] == "Random") {
 			ImGui::SameLine();
 			if (ImGui::DragInt("% ##pixelate_percent", &ignorePercent, 1, 0, 100)) {
@@ -245,7 +247,9 @@ void Df_pixelate::renderImGuiSettings() {
 		ImGui::Separator();
 
 		ImGui::Text("Rotation"); ImGui::SameLine(75);
-		ofxImGui::VectorCombo("##pixelate_rotation", &ui_currentRotationMap, v_pixelDataMapOptions);
+		if (ofxImGui::VectorCombo("##pixelate_rotation", &ui_currentRotationMap, v_pixelDataMapOptions)) {
+			bFresh = true;
+		}
 		if (ui_currentRotationMap > 0) {
 			ImGui::Text(" "); ImGui::SameLine(75);
 			if (ImGui::DragFloat("Min ##pixelate_rotation", &rotationMinMax[0], 0.1f, -360.0f, 360.0f, "%.3f")) {
@@ -260,7 +264,9 @@ void Df_pixelate::renderImGuiSettings() {
 		ImGui::Separator();
 
 		ImGui::Text("Width"); ImGui::SameLine(75);
-		ofxImGui::VectorCombo("##pixelate_width", &ui_currentWidthMap, v_pixelDataMapOptions);
+		if (ofxImGui::VectorCombo("##pixelate_width", &ui_currentWidthMap, v_pixelDataMapOptions)) {
+			bFresh = true;
+		}
 		if (ui_currentWidthMap > 0) {
 			ImGui::Text(" "); ImGui::SameLine(75);
 			if (ImGui::DragFloat("Min ##pixelate_width", &widthMinMax[0], 0.1f, -250.0f, 250.0f, "%.3f")) {
@@ -273,7 +279,9 @@ void Df_pixelate::renderImGuiSettings() {
 		}
 
 		ImGui::Text("Height"); ImGui::SameLine(75);
-		ofxImGui::VectorCombo("##pixelate_height", &ui_currentHeightMap, v_pixelDataMapOptions);
+		if (ofxImGui::VectorCombo("##pixelate_height", &ui_currentHeightMap, v_pixelDataMapOptions)) {
+			bFresh = true;
+		}
 		if (ui_currentHeightMap > 0) {
 			ImGui::Text(" "); ImGui::SameLine(75);
 			if (ImGui::DragFloat("Min ##pixelate_height", &heightMinMax[0], 0.1f, -250.0f, 250.0f, "%.3f")) {
@@ -295,7 +303,9 @@ void Df_pixelate::renderImGuiSettings() {
 		}
 
 		ImGui::PushItemWidth(200);
-		ofxImGui::VectorCombo("##Blend Mode", &currentBlendModeIndex, v_BlendModes);
+		if(ofxImGui::VectorCombo("##Blend Mode", &currentBlendModeIndex, v_BlendModes)) {
+			bFresh = true;
+		}
 		ImGui::PopItemWidth();
 	}
 }
