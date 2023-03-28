@@ -65,7 +65,8 @@ public:
 				"jpeg",
 				"png",
 				"bmp",
-				"gif"
+				"gif",
+				"webp"
 	};
 
 	std::vector<std::string> vid_ext{

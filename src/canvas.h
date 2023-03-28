@@ -54,6 +54,7 @@ public:
 		canvasHeight = img->getHeight() * zoomMultiplier;
 		canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGB, 8);
 		canvasFbo.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
+		update(img);
 	}
 
 	void update() {

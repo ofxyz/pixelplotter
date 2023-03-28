@@ -112,8 +112,8 @@ void ofApp::resetImageOffset() {
 void ofApp::loadImage(string& filepath) {
 	sourceController.loadImage(filepath);
 	canvas.setup(&sourceController.frameBuffer.getFrame(), sourceController.src_name);
-	resetImageOffset();
 	zoomLevel = 1;
+	resetImageOffset();
 	userOffset.x = 0;
 	userOffset.y = 0;
 }
@@ -121,8 +121,8 @@ void ofApp::loadImage(string& filepath) {
 void ofApp::loadVideo(string& filepath) {
 	sourceController.loadVideo(filepath);
 	canvas.setup(&sourceController.frameBuffer.getFrame(), sourceController.src_name);
-	resetImageOffset();
 	zoomLevel = 1;
+	resetImageOffset();
 	userOffset.x = 0;
 	userOffset.y = 0;
 }

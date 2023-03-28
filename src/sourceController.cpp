@@ -95,8 +95,6 @@ void SourceController::loadImage(string& filepath) {
 	original.setImageType(OF_IMAGE_COLOR);
 
 	pix = original.getPixels();
-	//ofLoadImage(pix, filepath);
-	//pix.setImageType(OF_IMAGE_COLOR);
 
 	frameBuffer.setup(pix);
 
@@ -111,7 +109,6 @@ void SourceController::loadImage(string& filepath) {
 	bUseVideoDevice = false;
 	videoPlayer.stop();
 	videoPlayer.close();
-
 	prepImg();
 
 }
