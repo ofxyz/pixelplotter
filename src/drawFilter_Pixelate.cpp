@@ -12,6 +12,7 @@ void Df_pixelate::loadSettings(ofxXmlSettings settings) {
 	tilesX = settings.getValue("tilesX", 64);
 	tilesY = settings.getValue("tilesY", 64);
 	polka  = settings.getValue("polka", false);
+	usePalette = settings.getValue("usePalette", usePalette);
 	addonx = settings.getValue("addonx", 0);
 	addony = settings.getValue("addony", 0);
 	addonx_rand = settings.getValue("addonx_rand", 0);
@@ -20,6 +21,7 @@ void Df_pixelate::loadSettings(ofxXmlSettings settings) {
 	offsety = settings.getValue("offsety", 0);
 	offsetx_rand = settings.getValue("offsetx_rand", 0);
 	offsety_rand = settings.getValue("offsety_rand", 0);
+	cLerp = settings.getValue("cLerp", cLerp);
 
 	ui_currentRotationMap = x2d.getIndex(v_pixelDataMapOptions, settings.getValue("rotationMap", "None"), 0);
 	rotationMinMax[0] = settings.getValue("rotationMin", 0);
@@ -80,6 +82,7 @@ ofxXmlSettings Df_pixelate::getSettings() {
 	settings.setValue("tilesX", tilesX);
 	settings.setValue("tilesY", tilesY);
 	settings.setValue("polka", polka);
+	settings.setValue("usePalette", usePalette);
 	settings.setValue("addonx", addonx);
 	settings.setValue("addony", addony);
 	settings.setValue("addonx_rand", addonx_rand);
@@ -88,6 +91,7 @@ ofxXmlSettings Df_pixelate::getSettings() {
 	settings.setValue("offsety", offsety);
 	settings.setValue("offsetx_rand", offsetx_rand);
 	settings.setValue("offsety_rand", offsety_rand);
+	settings.setValue("cLerp", cLerp);
 
 	settings.setValue("rotationMap", v_pixelDataMapOptions[ui_currentRotationMap]);
 	settings.setValue("rotationMin", rotationMinMax[0]);
@@ -155,6 +159,7 @@ void Df_pixelate::renderImGuiSettings() {
 			if (ui_currentPixelType > 5) {
 				gui_setCMYK();
 			}
+			bFresh = true;
 		};
 
 		ImGui::PushItemWidth(60);
@@ -273,7 +278,7 @@ void Df_pixelate::renderImGuiSettings() {
 				bFresh = true;
 			}
 			ImGui::SameLine();
-			if (ImGui::DragFloat("Max ##pixelate_height", &widthMinMax[1], 0.1f, -250.0f, 250.0f, "%.3f")) {
+			if (ImGui::DragFloat("Max ##pixelate_width", &widthMinMax[1], 0.1f, -250.0f, 250.0f, "%.3f")) {
 				bFresh = true;
 			}
 		}
@@ -289,6 +294,15 @@ void Df_pixelate::renderImGuiSettings() {
 			}
 			ImGui::SameLine();
 			if (ImGui::DragFloat("Max ##pixelate_height", &heightMinMax[1], 0.1f, -250.0f, 250.0f, "%.3f")) {
+				bFresh = true;
+			}
+		}
+
+		if (ui_currentPixelType == 8) {
+			if (ImGui::DragFloat("Color Lerp ##pixelate_clerp", &cLerp, 0.01f, 0.0, 1.0, "%.3f")) {
+				bFresh = true;
+			}
+			if (ImGui::Checkbox("Use palette", &usePalette)) {
 				bFresh = true;
 			}
 		}
@@ -470,6 +484,26 @@ void Df_pixelate::drawCMYKSeperation_Hills(float offsetX, float offsetY, float w
 	drawRectangle(offsetX, offsetY, w, cHeight, c_black); // c_black
 };
 
+void Df_pixelate::drawColorAdjust(float offsetX, float offsetY, float w, float h, ofColor c) {
+	ofColor c_Rand = ofColor(ofRandom(255), ofRandom(255), ofRandom(255));
+	if (usePalette) {
+		int x = ofRandom(3);
+		switch (x) {
+		case 0:
+			c_Rand = c_cyanBlue;
+			break;
+		case 1:
+			c_Rand = c_magentaRed;
+			break;
+		case 2:
+			c_Rand = c_yellowGreen;
+			break;
+		}
+	}
+	ofColor c_Lerped = c_Rand.getLerped(c, cLerp);
+	drawRectangle(offsetX, offsetY, w, h, c_Lerped);
+}
+
 void Df_pixelate::drawPixel(float w, float h, ofColor c) {
 
 	float offsetX = offsetx + ofRandom(0, offsetx_rand);
@@ -499,6 +533,9 @@ void Df_pixelate::drawPixel(float w, float h, ofColor c) {
 		break;
 	case 7:
 		drawCMYKSeperation_Hills(offsetX, offsetY, w, h, c);
+		break;
+	case 8:
+		drawColorAdjust(offsetX, offsetY, w, h, c);
 		break;
 	default:
 		ofLog() << "Not a valid draw style: " << ui_currentPixelType << endl;

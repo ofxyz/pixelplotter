@@ -200,7 +200,8 @@ void ofApp::loadSettings(string& filepath) {
 		settings.popTag();
 	}
 
-	sourceController.loadSourceIndex();
+	//sourceController.loadSourceIndex();
+	sourceController.isFresh = true;
 }
 
 //-------------------------------------------------------------

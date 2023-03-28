@@ -21,6 +21,7 @@ private:
 	void drawCMYKSeperation_Square(float offsetX, float offsetY, float w, float h, ofColor c);
 	void drawCMYKSeperation_Left(float offsetX, float offsetY, float w, float h, ofColor c);
 	void drawCMYKSeperation_Hills(float offsetX, float offsetY, float w, float h, ofColor c);
+	void drawColorAdjust(float offsetX, float offsetY, float w, float h, ofColor c);
 
 	void drawPixel(float w, float h, ofColor c);
 	float getRotation(ofColor c, float w, float h);
@@ -35,7 +36,8 @@ private:
 			"RGB Seperation Square",
 			"CMYK Seperation Square",
 			"CMYK Seperation Left",
-			"CMYK Seperation Hills"
+			"CMYK Seperation Hills",
+			"Color Adjust"
 	};
 
 	std::vector<std::string> v_pixelDataMapOptions{
@@ -64,6 +66,7 @@ private:
 	int ui_currentIgnore = 0;
 	bool normalize = false;
 	bool polka = false;
+	bool usePalette = true;
 	int tilesX = 64;
 	int tilesY = 64;
 	float addonx = 0;
@@ -80,6 +83,7 @@ private:
 	int ignoreScan = 0;
 	int ignoreSeedAddon = 1;
 	int ignoreSeed = 0;
+	float cLerp = 0;
 
 	ofVec2f rotationMinMax = ofVec2f(0, 0);
 	ofVec2f widthMinMax = ofVec2f(5, 50);
