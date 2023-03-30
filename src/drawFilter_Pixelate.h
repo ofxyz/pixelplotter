@@ -21,7 +21,9 @@ private:
 	void drawCMYKSeperation_Square(float offsetX, float offsetY, float w, float h, ofColor c);
 	void drawCMYKSeperation_Left(float offsetX, float offsetY, float w, float h, ofColor c);
 	void drawCMYKSeperation_Hills(float offsetX, float offsetY, float w, float h, ofColor c);
+	void drawCMYKSeperation_Bars(float offsetX, float offsetY, float w, float h, ofColor c);
 	void drawColorAdjust(float offsetX, float offsetY, float w, float h, ofColor c);
+	void drawUnusualOverprint(float offsetX, float offsetY, float w, float h, ofColor c);
 
 	void drawPixel(float w, float h, ofColor c);
 	float getRotation(ofColor c, float w, float h);
@@ -37,7 +39,9 @@ private:
 			"CMYK Seperation Square",
 			"CMYK Seperation Left",
 			"CMYK Seperation Hills",
-			"Color Adjust"
+			"CMYK Seperation Bars",
+			"Color Adjust",
+			"Unusual Overprint"
 	};
 
 	std::vector<std::string> v_pixelDataMapOptions{

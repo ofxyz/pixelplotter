@@ -298,13 +298,18 @@ void Df_pixelate::renderImGuiSettings() {
 			}
 		}
 
-		if (ui_currentPixelType == 8) {
+		if (ui_currentPixelType == 9) {
+
+			ImGui::Separator();
+			
 			if (ImGui::DragFloat("Color Lerp ##pixelate_clerp", &cLerp, 0.01f, 0.0, 1.0, "%.3f")) {
 				bFresh = true;
 			}
 			if (ImGui::Checkbox("Use palette", &usePalette)) {
 				bFresh = true;
 			}
+
+			ImGui::Separator();
 		}
 
 		ImGui::PopItemWidth();
@@ -484,6 +489,97 @@ void Df_pixelate::drawCMYKSeperation_Hills(float offsetX, float offsetY, float w
 	drawRectangle(offsetX, offsetY, w, cHeight, c_black); // c_black
 };
 
+void Df_pixelate::drawCMYKSeperation_Bars(float offsetX, float offsetY, float w, float h, ofColor c) {
+	ofPushMatrix();
+	if(ofRandom(100) > 50) ofRotate(90);
+
+	ofVec4f cmyk = getCMYK(c);
+
+	float c_w = ofMap(cmyk[0], 0, 1, 0, w * 0.75);
+	float m_w = ofMap(cmyk[1], 0, 1, 0, w * 0.75);
+	float y_w = ofMap(cmyk[2], 0, 1, 0, w * 0.75);
+	float k_w = ofMap(cmyk[3], 0, 1, 0, w * 0.75);
+	float w_w = w - c_w - m_w - y_w - k_w;
+	if (w_w < 0) {
+		w_w = 0;
+	}
+
+	float h_w = w*0.5;
+	offsetX -= (h_w - (w_w*0.5));
+
+	bool run = true;
+	float runX = offsetX;
+
+	float minSize = w / 8;
+	float maxSize = w / 6;
+
+
+	while (run) {
+		float size = ofRandom(minSize, maxSize);
+		if (c_w > size) {
+			drawRectangle(runX, offsetY, size, h, c_cyanBlue);
+			c_w -= size;
+			runX += size;
+		}
+		else if (c_w != 0) {
+			drawRectangle(runX, offsetY, c_w, h, c_cyanBlue);
+			runX += c_w;
+			c_w = 0;
+		}
+
+		size = ofRandom(minSize, maxSize);
+		if (m_w > size) {
+			drawRectangle(runX, offsetY, size, h, c_magentaRed);
+			m_w -= size;
+			runX += size;
+		}
+		else if (m_w != 0) {
+			drawRectangle(runX, offsetY, m_w, h, c_magentaRed);
+			runX += m_w;
+			m_w = 0;
+		}
+
+		size = ofRandom(minSize, maxSize);
+		if (y_w > size) {
+			drawRectangle(runX, offsetY, size, h, c_yellowGreen);
+			y_w -= size;
+			runX += size;
+		}
+		else if(y_w != 0 ) {
+			drawRectangle(runX, offsetY, y_w, h, c_yellowGreen);
+			runX += y_w;
+			y_w = 0;
+		}
+
+		size = ofRandom(minSize, maxSize);
+		if (k_w > size) {
+			drawRectangle(runX, offsetY, size, h, c_black);
+			k_w -= size;
+			runX += size;
+		}
+		else if (k_w != 0) {
+			drawRectangle(runX, offsetY, k_w, h, c_black);
+			runX += k_w;
+			k_w = 0;
+		}
+
+		size = ofRandom(minSize, maxSize);
+		if (w_w > size) {
+			w_w -= size;
+			runX += size;
+		}
+		else if (w_w != 0) {
+			runX += w_w;
+			w_w = 0;
+		}
+
+		if ((c_w + m_w + y_w + k_w) == 0) {
+			run = false;
+		}
+	}
+	ofPopMatrix();
+}
+
 void Df_pixelate::drawColorAdjust(float offsetX, float offsetY, float w, float h, ofColor c) {
 	ofColor c_Rand = ofColor(ofRandom(255), ofRandom(255), ofRandom(255));
 	if (usePalette) {
@@ -500,8 +596,57 @@ void Df_pixelate::drawColorAdjust(float offsetX, float offsetY, float w, float h
 			break;
 		}
 	}
-	ofColor c_Lerped = c_Rand.getLerped(c, cLerp);
+	ofColor c_Lerped = c.getLerped(c_Rand, cLerp);
 	drawRectangle(offsetX, offsetY, w, h, c_Lerped);
+}
+
+void Df_pixelate::drawUnusualOverprint(float offsetX, float offsetY, float w, float h, ofColor c) {
+	float pWidth = w / 3;
+	float pHeight = h / 3;
+
+	offsetX -= pWidth;
+	offsetY -= pHeight;
+
+	float div = ofRandom(100) / 100;
+	float idiv = 1 - div;
+
+	float r1 = c.r * div;
+	float r2 = c.r * idiv;
+
+	div = ofRandom(100) / 100;
+	idiv = 1 - div;
+
+	float g1 = c.g * div;
+	float g2 = c.g * idiv;
+
+	div = ofRandom(100) / 100;
+	idiv = 1 - div;
+	float b1 = c.b * div;
+	float b2 = c.b * idiv;
+
+	ofColor c1(r1,g1,b1);
+	ofColor c2(r2, g2, b2);
+	
+	ofColor c3(r1, g1, b1);
+	c3.lerp(c2, 0.5);
+
+	// Center
+	drawRectangle(offsetX+ pWidth, offsetY+ pHeight, pWidth, pHeight, c);
+
+	// Vertical 1
+	drawRectangle(offsetX + pWidth, offsetY, pWidth, pHeight, c1);
+	drawRectangle(offsetX + pWidth, offsetY + (pHeight*2), pWidth, pHeight, c1);
+
+	// Horizontal 2
+	drawRectangle(offsetX, offsetY + pHeight, pWidth, pHeight, c2);
+	drawRectangle(offsetX + (pWidth*2), offsetY + pHeight, pWidth, pHeight, c2);
+
+	// Corners
+	drawRectangle(offsetX, offsetY, pWidth, pHeight, c3);
+	drawRectangle(offsetX + (pWidth * 2), offsetY, pWidth, pHeight, c3);
+	drawRectangle(offsetX, offsetY + (pHeight * 2), pWidth, pHeight, c3);
+	drawRectangle(offsetX + (pWidth * 2), offsetY + (pHeight * 2), pWidth, pHeight, c3);
+
 }
 
 void Df_pixelate::drawPixel(float w, float h, ofColor c) {
@@ -535,7 +680,13 @@ void Df_pixelate::drawPixel(float w, float h, ofColor c) {
 		drawCMYKSeperation_Hills(offsetX, offsetY, w, h, c);
 		break;
 	case 8:
+		drawCMYKSeperation_Bars(offsetX, offsetY, w, h, c);
+		break;
+	case 9:
 		drawColorAdjust(offsetX, offsetY, w, h, c);
+		break;
+	case 10:
+		drawUnusualOverprint(offsetX, offsetY, w, h, c);
 		break;
 	default:
 		ofLog() << "Not a valid draw style: " << ui_currentPixelType << endl;
