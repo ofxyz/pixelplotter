@@ -10,6 +10,8 @@ public:
 	void setup();
 	void update();
 
+	void addImage(ofFile file);
+	void addVideo(ofFile file);
 	void loadImage(string& filepath);
 	void loadVideo(string& filepath);
 
@@ -66,20 +68,44 @@ public:
 				"png",
 				"bmp",
 				"gif",
-				"webp"
+				"webp",
+				"tif",
+				"tiff",
+				"psd"
 	};
 
 	std::vector<std::string> vid_ext{
 			"mpeg",
+			"mpe",
+			"m1v",
+			"m2v",
+			"mpv2",
+			"mp2v",
+			"vob",
+			"evo",
+			"mod",
 			"mpeg-2",
 			"mpeg2",
 			"mpg",
 			"mp4",
+			"mp4v",
+			"hdmov",
 			"mkv",
 			"m4v",
 			"mov",
 			"wmv",
-			"avi"
+			"avi",
+			"divx",
+			"amv",
+			"ogm",
+			"ogv",
+			"wmv",
+			"asf"
+			"rm",
+			"rmvb",
+			"dv",
+			"mxf",
+			"dav"
 	};
 
 };

@@ -90,6 +90,22 @@ int SourceController::getSourceCount() {
 	return (videoDeviceNames.size() + videoFileNames.size() + imgFileNames.size());
 };
 
+void SourceController::addImage(ofFile file) {
+	imgFiles.push_back(file);
+	imgFileNames.push_back(file.getFileName());
+	buildSourceNames();
+	currentSourceIndex = sourceNames.size()-1;
+	loadSourceIndex();
+}
+
+void SourceController::addVideo(ofFile file) {
+	videoFiles.push_back(file);
+	videoFileNames.push_back(file.getFileName());
+	buildSourceNames();
+	currentSourceIndex = videoDeviceNames.size() + videoFileNames.size() - 1;
+	loadSourceIndex();
+}
+
 void SourceController::loadImage(string& filepath) {
 	original.loadImage(filepath);
 	original.setImageType(OF_IMAGE_COLOR);

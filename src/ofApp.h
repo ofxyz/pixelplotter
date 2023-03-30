@@ -43,10 +43,8 @@ class ofApp : public ofBaseApp{
 		void saveSettings(string& filepath);
 		void loadSettings(string& filepath);
 
-		void onImageChange(string& file);
-		void loadImage(string& filepath);
-		void loadVideo(string& filepath);
 		void resetImageOffset();
+		void resetZoom();
 
 		char presetSaveName[128] = "";
 		int exportCount = 0;

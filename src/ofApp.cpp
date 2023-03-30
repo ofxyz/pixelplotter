@@ -109,26 +109,11 @@ void ofApp::resetImageOffset() {
 	offset.y = (ofGetHeight() - (sourceController.frameBuffer.getFrame().getHeight() * zoomLevel)) * 0.5;
 }
 
-void ofApp::loadImage(string& filepath) {
-	sourceController.loadImage(filepath);
-	canvas.setup(&sourceController.frameBuffer.getFrame(), sourceController.src_name);
+void ofApp::resetZoom() {
 	zoomLevel = 1;
 	resetImageOffset();
 	userOffset.x = 0;
 	userOffset.y = 0;
-}
-
-void ofApp::loadVideo(string& filepath) {
-	sourceController.loadVideo(filepath);
-	canvas.setup(&sourceController.frameBuffer.getFrame(), sourceController.src_name);
-	zoomLevel = 1;
-	resetImageOffset();
-	userOffset.x = 0;
-	userOffset.y = 0;
-}
-
-void ofApp::onImageChange(string& filepath) {
-	loadImage(filepath);
 }
 
 void ofApp::saveSettings(string& filepath) {
@@ -320,11 +305,13 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 		for (int i = 0; i < dragInfo.files.size(); i++) {
 			if (std::find(sourceController.img_ext.begin(), sourceController.img_ext.end(), x2d.to_lower(dragInfo.files[i].substr(dragInfo.files[i].find_last_of(".") + 1))) != sourceController.img_ext.end())
 			{
-				loadImage(dragInfo.files[i]);
+				sourceController.addImage(ofFile(dragInfo.files[i]));
+				resetZoom();
 			} 
 			else if (std::find(sourceController.vid_ext.begin(), sourceController.vid_ext.end(), x2d.to_lower(dragInfo.files[i].substr(dragInfo.files[i].find_last_of(".") + 1))) != sourceController.vid_ext.end())
 			{
-				loadVideo(dragInfo.files[i]);
+				sourceController.addVideo(ofFile(dragInfo.files[i]));
+				resetZoom();
 			}
 			else {
 				ofLog(OF_LOG_ERROR) << "No support for file format " << x2d.to_lower(dragInfo.files[i].substr(dragInfo.files[i].find_last_of(".") + 1));
