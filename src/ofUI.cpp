@@ -54,27 +54,7 @@ void ofApp::gui_draw() {
 
 			if (ImGui::CollapsingHeader("Source"))
 			{
-				if (!sourceController.sourceNames.empty())
-				{
-					if (ofxImGui::VectorCombo("##Source Image", &sourceController.currentSourceIndex, sourceController.sourceNames))
-					{
-						sourceController.loadSourceIndex();
-					}
-				}
-
-				ImGui::SameLine();
-				if (showImage) {
-					if (ImGui::Button("Hide Source"))
-					{
-						showImage = false;
-					}
-				}
-				else {
-					if (ImGui::Button("Show Source"))
-					{
-						showImage = true;
-					}
-				}
+				sourceController.renderImGuiSettings();
 			}
 
 			// Start ImageFilters

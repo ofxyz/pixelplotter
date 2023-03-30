@@ -97,7 +97,7 @@ void ofApp::update() {
 void ofApp::draw(){
 	canvas.draw(offset.x + userOffset.x, offset.y + userOffset.y, sourceController.frameBuffer.getWidth() * zoomLevel, sourceController.frameBuffer.getHeight() * zoomLevel);
 
-	if (showImage) {
+	if (sourceController.showSource) {
 		sourceController.frameBuffer.getFrame().draw(offset.x + userOffset.x, offset.y + userOffset.y, sourceController.frameBuffer.getWidth() * zoomLevel, sourceController.frameBuffer.getHeight() * zoomLevel);
 	}
 

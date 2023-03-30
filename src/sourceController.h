@@ -10,6 +10,10 @@ public:
 	void setup();
 	void update();
 
+	void renderImGuiSettings();
+	void loadSettings(ofxXmlSettings settings);
+	ofxXmlSettings getSettings();
+
 	void addImage(ofFile file);
 	void addVideo(ofFile file);
 	void loadImage(string& filepath);
@@ -27,6 +31,7 @@ public:
 	ofPixels pix; // Use ofImage and turn textures off // Turn on when needed?
 
 	std::string src_name = "PixelPlotted";
+	bool showSource = false;
 	bool bUseVideo = false;
 	bool bUseVideoDevice = false;
 	bool isFresh = false;
@@ -55,10 +60,6 @@ public:
 
 	void loadSourceIndex();
 	void prepImg();
-	 
-	ofxXmlSettings getSettings();
-	void loadSettings(ofxXmlSettings settings);
-	void renderImGuiSettings();
 
 	int getSourceCount();
 

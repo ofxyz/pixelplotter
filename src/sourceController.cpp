@@ -1,5 +1,38 @@
 #include "sourceController.h"
 
+void SourceController::renderImGuiSettings() {
+	if (!sourceNames.empty())
+	{
+		if (ofxImGui::VectorCombo("##Source Image", &currentSourceIndex, sourceNames))
+		{
+			loadSourceIndex();
+		}
+	}
+
+	ImGui::SameLine();
+	if (showSource) {
+		if (ImGui::Button("Hide Source"))
+		{
+			showSource = false;
+		}
+	}
+	else {
+		if (ImGui::Button("Show Source"))
+		{
+			showSource = true;
+		}
+	}
+}
+
+void SourceController::loadSettings(ofxXmlSettings settings) {
+
+}
+
+ofxXmlSettings SourceController::getSettings() {
+	ofxXmlSettings settings;
+	return settings;
+}
+
 void SourceController::update() {
 
 	if (bUseVideoDevice) {
@@ -158,19 +191,4 @@ void SourceController::prepImg() {
 		pix = updatedFrame.getPixels();
 	}
 	frameBuffer.addFrame(pix);
-}
-
-ofxXmlSettings SourceController::getSettings() {
-	ofxXmlSettings settings;
-	return settings;
-}
-
-void SourceController::loadSettings(ofxXmlSettings settings) {
-	return;
-}
-
-void SourceController::renderImGuiSettings() {
-	if (ImGui::CollapsingHeader("Source")) {
-		ImGui::AlignTextToFramePadding();
-	}
 }
