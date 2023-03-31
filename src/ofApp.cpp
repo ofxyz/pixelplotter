@@ -72,7 +72,6 @@ void ofApp::setup() {
 //--------------------------------------------------------------
 void ofApp::exit() {
 	ofRemoveListener(ofEvents().mouseScrolled, this, &ofApp::mouseScrolled);
-	sourceController.imageLoader.stopThread();
 }
 
 //--------------------------------------------------------------
