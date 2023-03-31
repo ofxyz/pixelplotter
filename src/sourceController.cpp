@@ -159,7 +159,6 @@ void SourceController::loadImage(string& filepath) {
 	videoPlayer.stop();
 	videoPlayer.close();
 	prepImg();
-
 }
 
 void SourceController::loadVideo(string& filepath) {
@@ -168,6 +167,7 @@ void SourceController::loadVideo(string& filepath) {
 
 	videoPlayer.load(filepath);
 	videoPlayer.setLoopState(OF_LOOP_NORMAL);
+	videoPlayer.setUseTexture(false);
 	videoPlayer.play();
 
 	std::string base_filename = filepath.substr(filepath.find_last_of("/\\") + 1);
