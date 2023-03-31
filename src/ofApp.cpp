@@ -62,7 +62,6 @@ void ofApp::setup() {
 	style->ItemSpacing = ImVec2(5, 5);
 
 	sourceController.setup();
-
 	
 	gui_loadPresets();
 
@@ -73,6 +72,7 @@ void ofApp::setup() {
 //--------------------------------------------------------------
 void ofApp::exit() {
 	ofRemoveListener(ofEvents().mouseScrolled, this, &ofApp::mouseScrolled);
+	sourceController.imageLoader.stopThread();
 }
 
 //--------------------------------------------------------------

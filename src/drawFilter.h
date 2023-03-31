@@ -139,7 +139,6 @@ public:
 		return (percentage / 100) * total;
 	}
 
-	float drawScale = 4; // zoomMultiplier
 	float lineWidth = 8;
 	// Add UI for standard colours ... 
 	ImVec4 c_cyanBlue = ofColor(0, 174, 239, 255);

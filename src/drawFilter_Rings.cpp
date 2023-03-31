@@ -100,7 +100,6 @@ void Df_rings::draw(ofImage* input) {
 			//ofSetColor(c_blob);
 			blobShape.addVertices(contourFinder.blobs.at(i).pts);
 			blobShape.close();
-			blobShape.scale(drawScale, drawScale);
 			//smoothShape = blobShape.getSmoothed(10, 0.5);
 			//smoothShape.draw();
 			blobShape.draw();

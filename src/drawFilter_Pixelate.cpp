@@ -807,7 +807,7 @@ void Df_pixelate::draw(ofImage* input) {
 				}
 
 				ofPushMatrix();
-				ofTranslate(fx * drawScale, fy * drawScale, 0);
+				ofTranslate(fx, fy, 0);
 
 				if(ui_currentRotationMap > 0) {
 					ofRotateZDeg(getRotation(c,x,y));
@@ -819,7 +819,7 @@ void Df_pixelate::draw(ofImage* input) {
 				offsetX += ofRandom(0, offsetx_rand);
 				offsetY += ofRandom(0, offsetx_rand);
 
-				drawPixel( (tileWidth + addonx) * drawScale, (tileHeight + addony) * drawScale, c);
+				drawPixel( (tileWidth + addonx), (tileHeight + addony), c);
 				ofPopMatrix();
 			}
 			xcount++;

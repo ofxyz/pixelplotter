@@ -9,7 +9,6 @@ public:
 	ofFbo canvasFbo;
 	ImVec4 c_canvas = ofColor(255, 255, 255, 255);
 	string canvasTitle = "Untitled";
-	int zoomMultiplier = 4;
 	int exportCount = 0;
 	int canvasWidth = 640;
 	int canvasHeight = 480;
@@ -25,8 +24,6 @@ public:
 		canvasWidth = settings.getValue("canvasWidth", canvasWidth);
 		canvasHeight = settings.getValue("canvasHeight", canvasHeight);
 
-		zoomMultiplier = settings.getValue("zoomMultiplier", zoomMultiplier);
-
 		c_canvas.x = settings.getValue("colors:canvas:r", c_canvas.x);
 		c_canvas.y = settings.getValue("colors:canvas:g", c_canvas.y);
 		c_canvas.z = settings.getValue("colors:canvas:b", c_canvas.z);
@@ -38,7 +35,6 @@ public:
 		settings.setValue("canvasTitle", canvasTitle);
 		settings.setValue("canvasWidth", canvasWidth);
 		settings.setValue("canvasHeight", canvasHeight);
-		settings.setValue("zoomMultiplier", zoomMultiplier);
 
 		settings.setValue("colors:canvas:r", c_canvas.x);
 		settings.setValue("colors:canvas:g", c_canvas.y);
@@ -50,8 +46,8 @@ public:
 
 	void setup(ofImage* img, string canvas_title = "Untitled") {
 		canvasTitle  = canvas_title;
-		canvasWidth  = img->getWidth() * zoomMultiplier;
-		canvasHeight = img->getHeight() * zoomMultiplier;
+		canvasWidth  = img->getWidth();
+		canvasHeight = img->getHeight();
 		canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGB, 8);
 		canvasFbo.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 		update(img);

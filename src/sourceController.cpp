@@ -107,6 +107,10 @@ void SourceController::loadSourceIndex() {
 				pix = videoGrabber.getPixels();
 				prepImg();
 				isFresh = true;
+				if (bUseVideo) {
+					videoPlayer.stop();
+					videoPlayer.close();
+				}
 				return;
 			}
 		}
@@ -140,6 +144,7 @@ void SourceController::addVideo(ofFile file) {
 }
 
 void SourceController::loadImage(string& filepath) {
+	//imageLoader.loadFromDisk(original, filepath);
 	original.loadImage(filepath);
 	original.setImageType(OF_IMAGE_COLOR);
 
