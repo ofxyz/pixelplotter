@@ -341,6 +341,7 @@ void Df_pixelate::drawEllipse(float offsetX, float offsetY, float w, float h, of
 	ofPushStyle();
 	ofFill();
 	ofSetColor(c);
+	//ofSetCircleResolution(4); Does not work for ciaro renderer
 	ofDrawEllipse(offsetX, offsetY, w, h);
 	ofPopStyle();
 };

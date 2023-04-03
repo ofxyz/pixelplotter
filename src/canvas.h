@@ -1,22 +1,62 @@
 #pragma once
 
 #include "drawFilter_Controller.h"
+#include "ofx2d.h"
 
 class Canvas {
 public:
 	ofCamera cam;
 	DrawFilterController dF;
 	ofFbo canvasFbo;
+	ofPixels canvasPix;
 	ImVec4 c_canvas = ofColor(255, 255, 255, 255);
 	string canvasTitle = "Untitled";
 	int exportCount = 0;
 	int canvasWidth = 640;
 	int canvasHeight = 480;
 	bool saveVector = false;
+	bool savePixels = false;
 	bool fresh = false;
+	bool isRecording = false;
+	int recFrameCount = 0;
+
+	void renderImGuiSettings() {
+		ImGui::ColorEdit4("Canvas Colour", (float*)&c_canvas, ImGuiColorEditFlags_NoInputs);
+
+		if (isRecording) {
+			if (ImGui::Button("Stop Recording"))
+			{
+				isRecording = false;
+			}
+		}
+		else {
+			if (ImGui::Button("Start Recoding"))
+			{
+				fresh = true;
+				isRecording = true;
+			}
+		}
+
+		if (ImGui::Button("Export Vector")) {
+			saveVector = true;
+			fresh = true;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Export PNG")) {
+			savePixels = true;
+			fresh = true;
+		}
+	}
 
 	bool isFresh() {
 		return fresh;
+	}
+
+	std::string with_leading_zero(int value, int width)
+	{
+		std::ostringstream oss;
+		oss << std::setw(width) << std::setfill('0') << value;
+		return oss.str();
 	}
 
 	void loadSettings(ofxXmlSettings settings) {
@@ -54,6 +94,7 @@ public:
 	}
 
 	void update() {
+		if (isRecording) fresh = true;
 		for (const auto& filter : dF.v_DrawFilters) {
 			if (filter->isFresh()) {
 				fresh = true;
@@ -84,6 +125,19 @@ public:
 		}
 
 		canvasFbo.end();
+		
+		if (isRecording || savePixels) {
+			canvasFbo.readToPixels(canvasPix);
+		}
+
+		if (isRecording) {
+			ofSaveImage(canvasPix, "export//frames//" + canvasTitle + "_" + with_leading_zero(++recFrameCount,8) +".png");
+		}
+		if (savePixels) {
+			ofSaveImage(canvasPix, "export//" + canvasTitle + "_" + to_string(++exportCount) + ".png");
+			savePixels = false;
+		}
+
 		fresh = true;
 	}
 

@@ -144,7 +144,6 @@ void SourceController::addVideo(ofFile file) {
 }
 
 void SourceController::loadImage(string& filepath) {
-	//imageLoader.loadFromDisk(original, filepath);
 	original.loadImage(filepath);
 	original.setImageType(OF_IMAGE_COLOR);
 
@@ -171,8 +170,9 @@ void SourceController::loadVideo(string& filepath) {
 	bUseVideoDevice = false;
 
 	videoPlayer.load(filepath);
-	videoPlayer.setLoopState(OF_LOOP_NORMAL);
 	videoPlayer.setUseTexture(false);
+	currentVideoFrame = 0;
+	videoPlayer.setLoopState(OF_LOOP_NORMAL);
 	videoPlayer.play();
 
 	std::string base_filename = filepath.substr(filepath.find_last_of("/\\") + 1);

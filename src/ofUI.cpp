@@ -145,15 +145,8 @@ void ofApp::gui_draw() {
 
 			if (ImGui::CollapsingHeader("Canvas"))
 			{
-				ImGui::ColorEdit4("Canvas Colour", (float*)&canvas.c_canvas, ImGuiColorEditFlags_NoInputs);
-
-				if (ImGui::Button("Export Vector")) { 
-					canvas.saveVector = true; 
-					sourceController.frameBuffer.setFresh();
-				}
-
-			} // End Canvas Settings
-
+				canvas.renderImGuiSettings();
+			}
 
 			ImGui::Spacing();
 
