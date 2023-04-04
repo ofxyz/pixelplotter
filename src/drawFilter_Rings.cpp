@@ -59,7 +59,7 @@ void Df_rings::renderImGuiSettings() {
 	}
 }
 
-void Df_rings::draw(ofImage* input) {
+void Df_rings::draw(ofImage* input, float width, float height, float x, float y) {
 	bFresh = false;
 	if (!visible) return;
 

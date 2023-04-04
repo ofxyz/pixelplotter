@@ -7,7 +7,7 @@ public:
 	Df_pixelate() {
 		name = "Pixelate";
 	};
-	void draw(ofImage* input);
+	void draw(ofImage* input, float width = 0, float height = 0, float x = 0, float y = 0);
 	void renderImGuiSettings();
 	void loadSettings(ofxXmlSettings settings);
 	ofxXmlSettings getSettings();

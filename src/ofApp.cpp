@@ -1,6 +1,7 @@
 #include "ofApp.h"
 
 /*
+   - Fix Zoom
    - Make zoom go faster with holding shift
    - Implement alpha on all images and resources
    - Make sure canvas settings are saved properly
@@ -63,10 +64,12 @@ void ofApp::setup() {
 
 	sourceController.setup();
 	
+
 	gui_loadPresets();
+	canvas.setup(&sourceController.frameBuffer.getFrame());
 
 	canvas.dF.addRandomFilter();
-
+	
 }
 
 //--------------------------------------------------------------
@@ -79,14 +82,16 @@ void ofApp::update() {
 	gui_update();
 
 	if (!pauseRender) {
-		sourceController.update();
+		if (canvas.resizeRequest) {
+			sourceController.isFresh = true;
+		}
 		canvas.update();
+		sourceController.update();
 
 		if (sourceController.isFresh) {
-			canvas.setup(&sourceController.frameBuffer.getFrame());
+			canvas.update(&sourceController.frameBuffer.getFrame());
 			sourceController.isFresh = false;
-		} 
-		else if (sourceController.frameBuffer.isFresh() || canvas.isFresh()) {
+		} else if (sourceController.frameBuffer.isFresh()) {
 			canvas.update(&sourceController.frameBuffer.getFrame());
 		}
 	}
@@ -94,18 +99,18 @@ void ofApp::update() {
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	canvas.draw(offset.x + userOffset.x, offset.y + userOffset.y, sourceController.frameBuffer.getWidth() * zoomLevel, sourceController.frameBuffer.getHeight() * zoomLevel);
+	canvas.draw(offset.x + userOffset.x, offset.y + userOffset.y, canvas.canvasWidth * zoomLevel, canvas.canvasHeight * zoomLevel);
 
 	if (sourceController.showSource) {
-		sourceController.frameBuffer.getFrame().draw(offset.x + userOffset.x, offset.y + userOffset.y, sourceController.frameBuffer.getWidth() * zoomLevel, sourceController.frameBuffer.getHeight() * zoomLevel);
+		sourceController.frameBuffer.getFrame().draw(offset.x + userOffset.x, offset.y + userOffset.y, canvas.canvasWidth * zoomLevel, canvas.canvasHeight * zoomLevel);
 	}
 
 	gui_draw();
 }
 
 void ofApp::resetImageOffset() {
-	offset.x = (ofGetWidth() - gui_width - (sourceController.frameBuffer.getFrame().getWidth() * zoomLevel)) * 0.5;
-	offset.y = (ofGetHeight() - (sourceController.frameBuffer.getFrame().getHeight() * zoomLevel)) * 0.5;
+	offset.x = (ofGetWidth() - gui_width - (canvas.canvasWidth * zoomLevel)) * 0.5;
+	offset.y = (ofGetHeight() - (canvas.canvasHeight * zoomLevel)) * 0.5;
 }
 
 void ofApp::resetZoom() {
@@ -124,7 +129,6 @@ void ofApp::saveSettings(string& filepath) {
 		ofxXmlSettings imgFilterSettings = sourceController.iF.v_ImageFilters[i]->getSettings();
 		string imageFilterSettings;
 		imgFilterSettings.copyXmlToString(imageFilterSettings);
-		string filterName = sourceController.iF.v_ImageFilters[i]->name;
 		settings.addValue("string_settings", imageFilterSettings);
 	}
 	settings.popTag();
@@ -135,15 +139,17 @@ void ofApp::saveSettings(string& filepath) {
 		ofxXmlSettings filterSettings = canvas.dF.v_DrawFilters[i]->getSettings();
 		string drawFilterSettings;
 		filterSettings.copyXmlToString(drawFilterSettings);
-		string filterName = canvas.dF.v_DrawFilters[i]->name;
 		settings.addValue("string_settings", drawFilterSettings);
 	}
 	settings.popTag();
 
-	settings.setValue("appSettings:CanvasColour:r", canvas.c_canvas.x);
-	settings.setValue("appSettings:CanvasColour:g", canvas.c_canvas.y);
-	settings.setValue("appSettings:CanvasColour:b", canvas.c_canvas.z);
-	settings.setValue("appSettings:CanvasColour:a", canvas.c_canvas.w);
+	settings.addTag("canvas");
+	settings.pushTag("canvas");
+	ofxXmlSettings canvasSettings = canvas.getSettings();
+	string sCanvasSettings;
+	canvasSettings.copyXmlToString(sCanvasSettings);
+	settings.addValue("string_settings", sCanvasSettings);
+	settings.popTag();
 
 	settings.saveFile(filepath);
 }
@@ -151,11 +157,6 @@ void ofApp::saveSettings(string& filepath) {
 void ofApp::loadSettings(string& filepath) {
 	ofxXmlSettings settings;
 	settings.loadFile(filepath);
-
-	canvas.c_canvas.x = settings.getValue("appSettings:CanvasColour:r", 255);
-	canvas.c_canvas.y = settings.getValue("appSettings:CanvasColour:g", 255);
-	canvas.c_canvas.z = settings.getValue("appSettings:CanvasColour:b", 255);
-	canvas.c_canvas.w = settings.getValue("appSettings:CanvasColour:a", 255);
 
 	canvas.dF.clearFilters();
 	sourceController.iF.clearFilters();
@@ -170,6 +171,7 @@ void ofApp::loadSettings(string& filepath) {
 			sourceController.iF.addFilter(filterSettings);
 		}
 		settings.popTag();
+		sourceController.isFresh = true;
 	}
 
 	if (settings.tagExists("drawFilters")) {
@@ -181,11 +183,19 @@ void ofApp::loadSettings(string& filepath) {
 			filterSettings.loadFromBuffer(stringSettings);
 			canvas.dF.addFilter(filterSettings);
 		}
+		canvas.fresh = true;
 		settings.popTag();
 	}
 
-	//sourceController.loadSourceIndex();
-	sourceController.isFresh = true;
+	if (settings.tagExists("canvas")) {
+		settings.pushTag("canvas");
+		ofxXmlSettings canvasSettings;
+		string sCanvasSettings = settings.getValue("string_settings", "");
+		canvasSettings.loadFromBuffer(sCanvasSettings);
+		canvas.loadSettings(canvasSettings);
+		settings.popTag();
+		canvas.fresh = true;
+	}
 }
 
 //-------------------------------------------------------------
@@ -208,10 +218,10 @@ void ofApp::keyPressed(int key) {
 		userOffset.x = 0;
 		userOffset.y = 0;
 		if (sourceController.isLandscape) {
-			zoomLevel = (ofGetWidth() - gui_width) / sourceController.frameBuffer.getFrame().getWidth();
+			zoomLevel = (ofGetWidth() - gui_width) / canvas.canvasWidth;
 		}
 		else {
-			zoomLevel = ofGetHeight() / sourceController.frameBuffer.getFrame().getHeight();
+			zoomLevel = ofGetHeight() / canvas.canvasHeight;
 		}
 		resetImageOffset();
 	}
@@ -222,7 +232,7 @@ void ofApp::keyPressed(int key) {
 		pauseRender = !pauseRender;
 	}
 	else if (key == '?') {
-		//cout << x << endl;
+		//cout << x << end=l;
 	}
 }
 

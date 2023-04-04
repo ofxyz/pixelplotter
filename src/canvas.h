@@ -12,16 +12,39 @@ public:
 	ImVec4 c_canvas = ofColor(255, 255, 255, 255);
 	string canvasTitle = "Untitled";
 	int exportCount = 0;
+	int sourceWidth = 640;
+	int sourceHeight = 480;
 	int canvasWidth = 640;
 	int canvasHeight = 480;
 	bool saveVector = false;
 	bool savePixels = false;
 	bool fresh = false;
 	bool isRecording = false;
+	bool resizeRequest = false;
 	int recFrameCount = 0;
 
 	void renderImGuiSettings() {
 		ImGui::ColorEdit4("Canvas Colour", (float*)&c_canvas, ImGuiColorEditFlags_NoInputs);
+
+		ImGui::Separator(); // Start Size
+
+		ImGui::PushItemWidth(60);
+		ImGui::Text("Size"); ImGui::SameLine(75);
+		if (ImGui::DragInt("W ##canvas_W", &canvasWidth, 1, 16, 2400)) {
+			resizeRequest = true;
+		}
+		ImGui::SameLine();
+		if (ImGui::DragInt("H ##canvas_H", &canvasHeight, 1, 16, 2400)) {
+			resizeRequest = true;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Reset")) {
+			canvasWidth = sourceWidth;
+			canvasHeight = sourceHeight;
+			resizeRequest = true;
+		}
+
+		ImGui::Separator(); // End Size // Start Rec
 
 		if (isRecording) {
 			if (ImGui::Button("Stop Recording"))
@@ -68,6 +91,9 @@ public:
 		c_canvas.y = settings.getValue("colors:canvas:g", c_canvas.y);
 		c_canvas.z = settings.getValue("colors:canvas:b", c_canvas.z);
 		c_canvas.w = settings.getValue("colors:canvas:a", c_canvas.w);
+
+		resizeRequest = true;
+		fresh = true;
 	}
 
 	ofxXmlSettings getSettings() {
@@ -86,15 +112,30 @@ public:
 
 	void setup(ofImage* img, string canvas_title = "Untitled") {
 		canvasTitle  = canvas_title;
-		canvasWidth  = img->getWidth();
-		canvasHeight = img->getHeight();
+		sourceWidth = img->getWidth();
+		sourceHeight = img->getHeight();
+		
+		// Save for reset ... 
+		canvasWidth = sourceWidth;
+		canvasHeight = sourceHeight;
+
 		canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGB, 8);
 		canvasFbo.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 		update(img);
 	}
 
 	void update() {
-		if (isRecording) fresh = true;
+		if (resizeRequest) {
+			canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGB, 8);
+			canvasFbo.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
+			resizeRequest = false;
+			fresh = true;
+			return;
+		}
+		if (isRecording) {
+			fresh = true;
+			return;
+		}
 		for (const auto& filter : dF.v_DrawFilters) {
 			if (filter->isFresh()) {
 				fresh = true;
@@ -116,7 +157,7 @@ public:
 			// update one filter per frame to keep things speeedy?
 			// Each filter draws to it's own fbo and are drawn here?
 			// filter->update(img); filter->update(settings)
-			filter->draw(img);
+			filter->draw(img, canvasWidth, canvasHeight);
 		}
 
 		if (saveVector) {

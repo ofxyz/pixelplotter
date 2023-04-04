@@ -18,6 +18,7 @@ void ofApp::gui_draw() {
 			if (ofxImGui::VectorCombo("##Presets", &currentPresetIndex, presetFileNames))
 			{
 				loadSettings(presetFiles[currentPresetIndex].getAbsolutePath());
+				canvas.resizeRequest = true;
 			}
 
 			if (presetFileNames.size() > 0) {
@@ -51,16 +52,15 @@ void ofApp::gui_draw() {
 			}
 
 			ImGui::Spacing();
+			ImGui::Spacing();
 
-			if (ImGui::CollapsingHeader("Source"))
+			string sSourceFilterCount = "Source (" + ofToString(sourceController.iF.v_ImageFilters.size()+1) + ")###Source";
+			if (ImGui::CollapsingHeader(sSourceFilterCount.c_str()))
 			{
 				sourceController.renderImGuiSettings();
-			}
 
-			// Start ImageFilters
-			string sImageFilterCount = "Source Filters (" + ofToString(sourceController.iF.v_ImageFilters.size()) + ")###ImageFiltersHolder";
-			if (ImGui::CollapsingHeader(sImageFilterCount.c_str()))
-			{
+				// Start ImageFilters
+				//-----------------------------------------------------------------------------------------------------
 				ImGui::PushStyleColor(ImGuiCol_Header, (ImVec4)ImColor::HSV(0, 0, 0.2));
 				ImGui::PushStyleColor(ImGuiCol_HeaderActive, (ImVec4)ImColor::HSV(0, 0, 0.4));
 				ImGui::PushStyleColor(ImGuiCol_HeaderHovered, (ImVec4)ImColor::HSV(0, 0, 0.7));
@@ -96,12 +96,18 @@ void ofApp::gui_draw() {
 					sourceController.iF.addFilter(currentImageFilterIndex);
 					currentImageFilterIndex = 0;
 				}
-			} // End ImageFilters
+
+				// End ImageFilters
+				//-----------------------------------------------------------------------------------------------------
+			}
 
 			//======================================================================================================
 
+			ImGui::Spacing();
+			ImGui::Spacing();
+
 			// Start DrawFilters
-			string sDrawFilterCount = "Draw (" + ofToString(canvas.dF.v_DrawFilters.size()) + ")###DrawFiltersHolder";
+			string sDrawFilterCount = "Pixel Plotter (" + ofToString(canvas.dF.v_DrawFilters.size()) + ")###DrawFiltersHolder";
 			if (ImGui::CollapsingHeader(sDrawFilterCount.c_str()))
 			{
 				ImGui::PushStyleColor(ImGuiCol_Header, (ImVec4)ImColor::HSV(0, 0, 0.2));
@@ -143,11 +149,15 @@ void ofApp::gui_draw() {
 
 			//======================================================================================================
 
+			ImGui::Spacing();
+			ImGui::Spacing();
+
 			if (ImGui::CollapsingHeader("Canvas"))
 			{
 				canvas.renderImGuiSettings();
 			}
 
+			ImGui::Spacing();
 			ImGui::Spacing();
 
 			if (pauseRender) {

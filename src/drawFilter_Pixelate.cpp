@@ -724,12 +724,13 @@ float Df_pixelate::getHeight(ofColor c, float x, float y, float r) {
 	return r;
 }
 
-void Df_pixelate::draw(ofImage* input) {
+void Df_pixelate::draw(ofImage* input, float width, float height, float x, float y) {
 	bFresh = false;
 	if (!visible) return;
 
 	int imgW = input->getWidth();
 	int imgH = input->getHeight();
+
 	float tileW = (float)imgW / (float)tilesX;
 	float tileH = (float)imgH / (float)tilesY;
 	float halfTileW = tileW * 0.5;
@@ -796,8 +797,6 @@ void Df_pixelate::draw(ofImage* input) {
 
 				float tileWidth = tileW;
 				float tileHeight = tileH;
-				float offsetX = offsetx;
-				float offsetY = offsety;
 
 				if (ui_currentWidthMap > 0) {
 					tileWidth = getWidth(c, x, y, tileW);
@@ -807,6 +806,10 @@ void Df_pixelate::draw(ofImage* input) {
 					tileHeight = getHeight(c, x, y, tileH);
 				}
 
+				if (width + height != 0) {
+					fx = ofMap(fx, 0, imgW, 0, width);
+					fy = ofMap(fy, 0, imgH, 0, height);
+				}
 				ofPushMatrix();
 				ofTranslate(fx, fy, 0);
 
@@ -817,10 +820,17 @@ void Df_pixelate::draw(ofImage* input) {
 				// Add or not ...
 				tileWidth += ofRandom(0, addonx_rand);
 				tileWidth += ofRandom(0, addony_rand);
-				offsetX += ofRandom(0, offsetx_rand);
-				offsetY += ofRandom(0, offsetx_rand);
 
-				drawPixel( (tileWidth + addonx), (tileHeight + addony), c);
+				// Normal values
+				float tw = tileWidth + addonx;
+				float th = tileHeight + addony;
+
+				if (width + height != 0) {
+					tw = ofMap(tw, 0, imgW, 0, width);
+					th = ofMap(th, 0, imgH, 0, height);
+				}
+
+				drawPixel(tw, th, c);
 				ofPopMatrix();
 			}
 			xcount++;

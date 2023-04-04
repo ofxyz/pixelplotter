@@ -101,16 +101,15 @@ void SourceController::loadSourceIndex() {
 		bUseVideoDevice = true;
 		for (vector<ofVideoDevice>::iterator it = videoDevices.begin(); it != videoDevices.end(); ++it) {
 			if (it->deviceName == sourceNames[currentSourceIndex]) {
+				if (bUseVideo) {
+					videoPlayer.stop();
+					videoPlayer.close();
+				}
 				videoGrabber.close();
 				videoGrabber.setDeviceID(it->id);
 				videoGrabber.initGrabber(camWidth, camHeight);
 				pix = videoGrabber.getPixels();
 				prepImg();
-				isFresh = true;
-				if (bUseVideo) {
-					videoPlayer.stop();
-					videoPlayer.close();
-				}
 				return;
 			}
 		}
@@ -156,7 +155,6 @@ void SourceController::loadImage(string& filepath) {
 
 	(pix.getWidth() > pix.getHeight()) ? isLandscape = true : isLandscape = false;
 	(isLandscape) ? imgRatio = pix.getHeight() / pix.getWidth() : imgRatio = pix.getWidth() / pix.getHeight();
-	isFresh = true;
 
 	bUseVideo = false;
 	bUseVideoDevice = false;
@@ -195,5 +193,7 @@ void SourceController::prepImg() {
 		filter->apply(&updatedFrame);
 		pix = updatedFrame.getPixels();
 	}
+
 	frameBuffer.addFrame(pix);
+	isFresh = true;
 }
