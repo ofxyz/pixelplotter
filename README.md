@@ -1,6 +1,6 @@
 # PixelPlotter
 
-![Screenshot of emptyExample](emptyExample.png)
+![Screenshot of emptyExample](preview.png)
 
 
 ## Roadmap
