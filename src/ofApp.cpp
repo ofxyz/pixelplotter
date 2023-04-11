@@ -1,8 +1,9 @@
 #include "ofApp.h"
 
 /*
-   - Fix Zoom
-   - Make zoom go faster with holding shift
+   - Pixelate filter: Add curve widget https://github.com/ocornut/imgui/issues/786
+   - Pixelate filter: Create spacing adjustment curve
+   - Fix Zoom and make zoom go faster with holding shift
    - Implement alpha on all images and resources
    - Make sure canvas settings are saved properly
    - Make sure UI is always rendering fast
@@ -63,13 +64,11 @@ void ofApp::setup() {
 	style->ItemSpacing = ImVec2(5, 5);
 
 	sourceController.setup();
-	
 
 	gui_loadPresets();
 	canvas.setup(&sourceController.frameBuffer.getFrame());
-
 	canvas.dF.addRandomFilter();
-	
+
 }
 
 //--------------------------------------------------------------
@@ -88,19 +87,25 @@ void ofApp::update() {
 		canvas.update();
 		sourceController.update();
 
+		if (sourceController.isResized) {
+			sourceController.isResized = false;
+			canvas.setSourceDimension(sourceController.frameBuffer.getWidth(), sourceController.frameBuffer.getHeight());
+		}
+
 		if (sourceController.isFresh) {
 			canvas.update(&sourceController.frameBuffer.getFrame());
 			sourceController.isFresh = false;
-		} else if (sourceController.frameBuffer.isFresh()) {
+		} else if (sourceController.frameBuffer.isFresh() || canvas.isFresh()) {
 			canvas.update(&sourceController.frameBuffer.getFrame());
 		}
 	}
 }
 
 //--------------------------------------------------------------
-void ofApp::draw(){
-	canvas.draw(offset.x + userOffset.x, offset.y + userOffset.y, canvas.canvasWidth * zoomLevel, canvas.canvasHeight * zoomLevel);
+void ofApp::draw() {
 
+	canvas.draw(offset.x + userOffset.x, offset.y + userOffset.y, canvas.canvasWidth * zoomLevel, canvas.canvasHeight * zoomLevel);
+	
 	if (sourceController.showSource) {
 		sourceController.frameBuffer.getFrame().draw(offset.x + userOffset.x, offset.y + userOffset.y, canvas.canvasWidth * zoomLevel, canvas.canvasHeight * zoomLevel);
 	}

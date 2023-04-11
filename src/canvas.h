@@ -112,16 +112,28 @@ public:
 
 	void setup(ofImage* img, string canvas_title = "Untitled") {
 		canvasTitle  = canvas_title;
-		sourceWidth = img->getWidth();
-		sourceHeight = img->getHeight();
-		
-		// Save for reset ... 
-		canvasWidth = sourceWidth;
-		canvasHeight = sourceHeight;
-
+		setSourceDimension(img);
 		canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGB, 8);
 		canvasFbo.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 		update(img);
+	}
+
+	void setSourceDimension() {
+		canvasWidth = sourceWidth;
+		canvasHeight = sourceHeight;
+		resizeRequest = true;
+	}
+
+	void setSourceDimension(ofImage* img) {
+		sourceWidth = img->getWidth();
+		sourceHeight = img->getHeight();
+		setSourceDimension();
+	}
+
+	void setSourceDimension(float w, float h) {
+		sourceWidth = w;
+		sourceHeight = h;
+		setSourceDimension();
 	}
 
 	void update() {

@@ -35,6 +35,7 @@ public:
 	bool bUseVideo = false;
 	bool bUseVideoDevice = false;
 	bool isFresh = false;
+	bool isResized = false;
 	bool isLandscape = false;
 	bool mirrorV = false;
 	bool mirrorH = false;

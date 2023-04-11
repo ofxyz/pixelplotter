@@ -120,6 +120,9 @@ void SourceController::loadSourceIndex() {
 	else if (currentSourceIndex > videoDevices.size() - 1) {
 		loadVideo(videoFiles[currentSourceIndex - videoDevices.size()].getAbsolutePath());
 	}
+
+	isFresh = true;
+	isResized = true;
 }
 
 int SourceController::getSourceCount() {
@@ -178,8 +181,6 @@ void SourceController::loadVideo(string& filepath) {
 
 	(videoPlayer.getWidth() > videoPlayer.getHeight()) ? isLandscape = true : isLandscape = false;
 	(isLandscape) ? imgRatio = videoPlayer.getHeight() / videoPlayer.getWidth() : imgRatio = videoPlayer.getWidth() / videoPlayer.getHeight();
-	isFresh = true;
-
 }
 
 void SourceController::prepImg() {
@@ -195,5 +196,5 @@ void SourceController::prepImg() {
 	}
 
 	frameBuffer.addFrame(pix);
-	isFresh = true;
+
 }
