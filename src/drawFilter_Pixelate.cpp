@@ -148,9 +148,7 @@ void Df_pixelate::renderImGuiSettings() {
 	if (ImGui::CollapsingHeader(name.c_str(), &active)) {
 		ImGui::AlignTextToFramePadding();
 
-		if (ImGui::Checkbox("Visible", &visible)) {
-			bFresh = true;
-		}
+		renderUpDownButtons();
 
 		if (ofxImGui::VectorCombo("Pixel Type ##pixelate", &ui_currentPixelType, v_pixelType)) {
 			if (ui_currentPixelType > 1) {

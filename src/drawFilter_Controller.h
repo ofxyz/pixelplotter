@@ -5,6 +5,25 @@
 class DrawFilterController {
 public:
 
+	void reorder() {
+		for (int i = 0; i < v_DrawFilters.size(); i++) {
+			if (v_DrawFilters[i]->moveUp) {
+				v_DrawFilters[i]->moveUp = false;
+				v_DrawFilters[i]->setFresh(true);
+				if (i > 0) {
+					move(v_DrawFilters, i, i - 1);
+				}
+			}
+			else if (v_DrawFilters[i]->moveDown) {
+				v_DrawFilters[i]->moveDown = false;
+				v_DrawFilters[i]->setFresh(true);
+				if (i < v_DrawFilters.size() - 1) {
+					move(v_DrawFilters, i, i + 1);
+				}
+			}
+		}
+	}
+
 	std::vector<DrawFilter*> v_DrawFilters;
 
 	std::vector<std::string> v_DrawFilterNames{

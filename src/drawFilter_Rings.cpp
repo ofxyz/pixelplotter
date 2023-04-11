@@ -38,9 +38,8 @@ void Df_rings::loadSettings(ofxXmlSettings settings) {
 void Df_rings::renderImGuiSettings() {
 	if (ImGui::CollapsingHeader(name.c_str(), &active)) {
 		ImGui::AlignTextToFramePadding();
-		if (ImGui::Checkbox("Visible", &visible)) {
-			bFresh = true;
-		}
+
+		renderUpDownButtons();
 
 		ImGui::PushItemWidth(100);
 		if (ImGui::DragInt("Blur ##rings", &cvBlur, 1, 0, 500)) {
@@ -93,13 +92,15 @@ void Df_rings::draw(ofImage* input, float width, float height, float x, float y)
 		greyCvThresh = greyCvBlur;
 		greyCvThresh.threshold(i);
 		contourFinder.findContours(greyCvThresh, 5, (input->getWidth() * input->getHeight()) / 2, 25, true, true);
-		//contourFinder.draw();
+		//contourFinder.draw(x,y,width,height);
+
 		for (int i = 0; i < contourFinder.blobs.size(); i++) {
 			blobShape.clear();
 			//c_blob.setHsb(c_blob.getHue() + 10, 255, 255);
 			//ofSetColor(c_blob);
 			blobShape.addVertices(contourFinder.blobs.at(i).pts);
 			blobShape.close();
+			blobShape.scale(width / input->getWidth(), height / input->getHeight());
 			//smoothShape = blobShape.getSmoothed(10, 0.5);
 			//smoothShape.draw();
 			blobShape.draw();

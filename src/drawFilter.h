@@ -2,11 +2,21 @@
 #include "ofxImGui.h"
 #include "ofxXmlSettings.h"
 
+template <typename t> void move(std::vector<t>& v, size_t oldIndex, size_t newIndex)
+{
+	if (oldIndex > newIndex)
+		std::rotate(v.rend() - oldIndex - 1, v.rend() - oldIndex, v.rend() - newIndex);
+	else
+		std::rotate(v.begin() + oldIndex, v.begin() + oldIndex + 1, v.begin() + newIndex + 1);
+}
+
 class DrawFilter {
 public:
 	bool active = true;
 	bool visible = true;
 	bool useMask = false;
+	bool moveUp = false;
+	bool moveDown = false;
 	int maskMargin = 0;
 
 	std::string name;
@@ -15,11 +25,32 @@ public:
 	bool isFresh() {
 		return bFresh;
 	}
+	void setFresh(bool fresh) {
+		bFresh = fresh;
+	}
 
 	virtual void draw(ofImage* input, float width = 0, float height = 0, float x = 0, float y = 0) = 0;
 	virtual void renderImGuiSettings() = 0;
 	virtual void loadSettings(ofxXmlSettings settings) = 0;
 	virtual ofxXmlSettings getSettings() = 0;
+
+	void renderUpDownButtons() {
+		if (ImGui::Button("Move Up"))
+		{
+			moveUp = true;
+			moveDown = false;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Move Down"))
+		{
+			moveUp = false;
+			moveDown = true;
+		}
+		ImGui::SameLine();
+		if (ImGui::Checkbox("Visible", &visible)) {
+			bFresh = true;
+		}
+	}
 
 	ofVec4f getCMYK(ofColor rgb) {
 		double dr = (double)rgb.r / 255;
@@ -133,6 +164,7 @@ public:
 		else {
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		}
+		bFresh = true;
 	}
 
 	float percent(float percentage, float total) {

@@ -24,7 +24,9 @@ public:
 	int recFrameCount = 0;
 
 	void renderImGuiSettings() {
-		ImGui::ColorEdit4("Canvas Colour", (float*)&c_canvas, ImGuiColorEditFlags_NoInputs);
+		if (ImGui::ColorEdit4("Canvas Colour", (float*)&c_canvas, ImGuiColorEditFlags_NoInputs)) {
+			fresh = true;
+		}
 
 		ImGui::Separator(); // Start Size
 
@@ -53,7 +55,7 @@ public:
 			}
 		}
 		else {
-			if (ImGui::Button("Start Recoding"))
+			if (ImGui::Button("Start Recording"))
 			{
 				fresh = true;
 				isRecording = true;
@@ -137,6 +139,7 @@ public:
 	}
 
 	void update() {
+
 		if (resizeRequest) {
 			canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGB, 8);
 			canvasFbo.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);

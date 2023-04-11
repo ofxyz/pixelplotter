@@ -51,6 +51,7 @@ class ofApp : public ofBaseApp{
 
 		bool cleanDrawFilters = false;
 		bool cleanImageFilters = false;
+		bool reorderDrawFilters = false;
 		bool bSavePreset = false;
 		bool show_main_window = true;
 		bool pauseRender = false;

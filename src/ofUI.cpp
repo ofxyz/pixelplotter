@@ -1,8 +1,18 @@
 #include "ofApp.h"
 
 void ofApp::gui_update() {
-	if (cleanDrawFilters) canvas.dF.cleanFilters();
-	if (cleanImageFilters) sourceController.iF.cleanFilters();
+	if (cleanDrawFilters) {
+		canvas.dF.cleanFilters();
+		canvas.fresh = true;
+	}
+	if (reorderDrawFilters) {
+		canvas.dF.reorder();
+		canvas.fresh = true;
+	}
+	if (cleanImageFilters) {
+		sourceController.iF.cleanFilters();
+		sourceController.isFresh = true;
+	}
 }
 
 void ofApp::gui_draw() {
@@ -125,6 +135,7 @@ void ofApp::gui_draw() {
 				ImGui::PushStyleColor(ImGuiCol_CheckMark, (ImVec4)ImColor::HSV(0, 0, 0.8));
 
 				cleanDrawFilters = false;
+				reorderDrawFilters = false;
 				for (int i = 0; i < canvas.dF.v_DrawFilters.size(); i++) {
 					ImGui::PushID(i);
 					if (canvas.dF.v_DrawFilters[i]->active) {
@@ -135,6 +146,9 @@ void ofApp::gui_draw() {
 					else {
 						cleanDrawFilters = true;
 					}
+					if (canvas.dF.v_DrawFilters[i]->moveUp || canvas.dF.v_DrawFilters[i]->moveDown) {
+						reorderDrawFilters = true;
+					}
 					ImGui::PopID();
 				}
 
@@ -143,6 +157,7 @@ void ofApp::gui_draw() {
 				if (ofxImGui::VectorCombo("##Draw Filter Selector", &currentDrawFilterIndex, canvas.dF.v_DrawFilterNames))
 				{
 					canvas.dF.addFilter(currentDrawFilterIndex);
+					canvas.fresh = true;
 					currentDrawFilterIndex = 0;
 				}
 			}// End Draw Filters
