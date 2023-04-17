@@ -53,6 +53,7 @@ public:
 		}
 		else if (filterName == "Rings") {
 			v_DrawFilters.push_back(new Df_rings);
+			v_DrawFilters[v_DrawFilters.size() - 1]->loadSettings(filterSettings);
 		}
 	}
 

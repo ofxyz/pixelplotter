@@ -38,10 +38,9 @@ ofx2d x2d;
 
 void ofApp::setup() {
 	ofLogToConsole();
-	ofSetLogLevel(OF_LOG_ERROR);
+	ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetVerticalSync(false);
 	ofLog() << ofFbo::checkGLSupport();
-
 	ofSetWindowTitle("Pixel Plotter");
 	ofEnableAlphaBlending();
 
@@ -59,10 +58,10 @@ void ofApp::setup() {
 	ImGuiStyle* style = &ImGui::GetStyle();
 	style->ItemSpacing = ImVec2(5, 5);
 
-	sourceController.setup();
+	sourceController.setup(this);
 
 	gui_loadPresets();
-	canvas.setup(&sourceController.frameBuffer.getFrame());
+	canvas.setup(this, &sourceController.frameBuffer.getFrame());
 	canvas.dF.addRandomFilter();
 
 }
@@ -124,6 +123,14 @@ void ofApp::resetZoom() {
 void ofApp::saveSettings(string& filepath) {
 	ofxXmlSettings settings;
 
+	settings.addTag("source");
+	settings.pushTag("source");
+	ofxXmlSettings sourceSettings = sourceController.getSettings();
+	string sSourceSettings;
+	sourceSettings.copyXmlToString(sSourceSettings);
+	settings.addValue("string_settings", sSourceSettings);
+	settings.popTag();
+
 	settings.addTag("imageFilters");
 	settings.pushTag("imageFilters");
 	for (int i = 0; i < sourceController.iF.v_ImageFilters.size(); i++) {
@@ -161,6 +168,16 @@ void ofApp::loadSettings(string& filepath) {
 
 	canvas.dF.clearFilters();
 	sourceController.iF.clearFilters();
+
+	if (settings.tagExists("source")) {
+		settings.pushTag("source");
+		ofxXmlSettings sourceSettings;
+		string sSourceSettings = settings.getValue("string_settings", "");
+		sourceSettings.loadFromBuffer(sSourceSettings);
+		sourceController.loadSettings(sourceSettings);
+		settings.popTag();
+		canvas.fresh = true;
+	}
 
 	if (settings.tagExists("imageFilters")) {
 		settings.pushTag("imageFilters");

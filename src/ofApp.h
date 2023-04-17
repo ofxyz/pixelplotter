@@ -36,15 +36,15 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-		
-		SourceController sourceController;
-		Canvas canvas;
 
 		void saveSettings(string& filepath);
 		void loadSettings(string& filepath);
 
 		void resetImageOffset();
 		void resetZoom();
+
+		SourceController sourceController;
+		Canvas canvas;
 
 		char presetSaveName[128] = "";
 		int exportCount = 0;
@@ -80,5 +80,4 @@ class ofApp : public ofBaseApp{
 		void gui_update();
 		void gui_loadPresets();
 		// -------------------------------------------------  End ofUI.cpp
-
 };

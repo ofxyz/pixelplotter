@@ -81,7 +81,8 @@ void Df_rings::draw(ofImage* input, float width, float height, float x, float y)
 	ofSetLineWidth(lineWidth);
 
 	int i = 0;
-	ofColor c(255, 255, 255);
+	ofColor c(255,255,255);
+	c.setHsb(100, 100, 100);
 	ofPolyline blobShape;
 	//ofPolyline smoothShape;
 
@@ -96,8 +97,8 @@ void Df_rings::draw(ofImage* input, float width, float height, float x, float y)
 
 		for (int i = 0; i < contourFinder.blobs.size(); i++) {
 			blobShape.clear();
-			//c_blob.setHsb(c_blob.getHue() + 10, 255, 255);
-			//ofSetColor(c_blob);
+			c.setHsb(c.getHue() + 10, 255, 255);
+			ofSetColor(c);
 			blobShape.addVertices(contourFinder.blobs.at(i).pts);
 			blobShape.close();
 			blobShape.scale(width / input->getWidth(), height / input->getHeight());

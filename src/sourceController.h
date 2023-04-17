@@ -5,9 +5,13 @@
 #include "frameBuffer.h"
 #include "imageFilter_Controller.h"
 
+class ofApp;
+
 class SourceController {
 public:
-	void setup();
+	ofApp* pixelplotter;
+
+	void setup(ofApp* app);
 	void update();
 
 	void renderImGuiSettings();

@@ -1,3 +1,4 @@
+#include "ofApp.h"
 #include "sourceController.h"
 
 void SourceController::renderImGuiSettings() {
@@ -25,11 +26,13 @@ void SourceController::renderImGuiSettings() {
 }
 
 void SourceController::loadSettings(ofxXmlSettings settings) {
-
+	currentSourceIndex = x2d.getIndex(sourceNames, settings.getValue("source", "Undefined"), 0);
+	loadSourceIndex();
 }
 
 ofxXmlSettings SourceController::getSettings() {
 	ofxXmlSettings settings;
+	settings.setValue("source", sourceNames[currentSourceIndex]);
 	return settings;
 }
 
@@ -62,7 +65,9 @@ void SourceController::update() {
 	frameBuffer.update();
 }
 
-void SourceController::setup() {
+void SourceController::setup(ofApp* app) {
+	pixelplotter = app;
+
 	videoDevices = videoGrabber.listDevices();
 	for (vector<ofVideoDevice>::iterator it = videoDevices.begin(); it != videoDevices.end(); ++it) {
 		videoDeviceNames.push_back(it->deviceName);
@@ -108,6 +113,7 @@ void SourceController::loadSourceIndex() {
 				videoGrabber.close();
 				videoGrabber.setDeviceID(it->id);
 				videoGrabber.initGrabber(camWidth, camHeight);
+				pixelplotter->canvas.setSourceDimension(camWidth, camHeight);
 				pix = videoGrabber.getPixels();
 				prepImg();
 				return;
@@ -163,6 +169,7 @@ void SourceController::loadImage(string& filepath) {
 	bUseVideoDevice = false;
 	videoPlayer.stop();
 	videoPlayer.close();
+	pixelplotter->canvas.setSourceDimension(pix.getWidth(), pix.getHeight());
 	prepImg();
 }
 
@@ -181,6 +188,8 @@ void SourceController::loadVideo(string& filepath) {
 
 	(videoPlayer.getWidth() > videoPlayer.getHeight()) ? isLandscape = true : isLandscape = false;
 	(isLandscape) ? imgRatio = videoPlayer.getHeight() / videoPlayer.getWidth() : imgRatio = videoPlayer.getWidth() / videoPlayer.getHeight();
+	
+	pixelplotter->canvas.setSourceDimension(videoPlayer.getWidth(), videoPlayer.getHeight());
 }
 
 void SourceController::prepImg() {
@@ -196,5 +205,4 @@ void SourceController::prepImg() {
 	}
 
 	frameBuffer.addFrame(pix);
-
 }

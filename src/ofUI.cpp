@@ -29,6 +29,7 @@ void ofApp::gui_draw() {
 			{
 				loadSettings(presetFiles[currentPresetIndex].getAbsolutePath());
 				canvas.resizeRequest = true;
+				canvas.fresh = true;
 			}
 
 			if (presetFileNames.size() > 0) {
