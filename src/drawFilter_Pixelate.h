@@ -4,7 +4,9 @@
 
 class Df_pixelate : public DrawFilter {
 public:
-	Df_pixelate() {
+	ofApp* pixelplotter;
+	Df_pixelate(ofApp* app) {
+		pixelplotter = app;
 		name = "Pixelate";
 	};
 	void draw(ofImage* input, float width = 0, float height = 0, float x = 0, float y = 0);

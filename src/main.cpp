@@ -7,11 +7,12 @@ int main( ){
 	if (fullscreen) {
 		ofGLFWWindowSettings settings;
 		settings.decorated = false;
-		settings.setSize(img_area_WH + gui_width, img_area_WH);
+		settings.windowMode = OF_FULLSCREEN;
+		settings.setSize(screenW, screenH);
 		ofCreateWindow(settings);
 	}
 	else {
-		ofSetupOpenGL(img_area_WH + gui_width, img_area_WH, OF_WINDOW);
+		ofSetupOpenGL(screenW, screenH, OF_WINDOW);
 	}
 	ofRunApp(new ofApp());
 }

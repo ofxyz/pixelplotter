@@ -2,11 +2,11 @@
 
 void ofApp::gui_update() {
 	if (cleanDrawFilters) {
-		canvas.dF.cleanFilters();
+		canvas.dF->cleanFilters();
 		canvas.fresh = true;
 	}
 	if (reorderDrawFilters) {
-		canvas.dF.reorder();
+		canvas.dF->reorder();
 		canvas.fresh = true;
 	}
 	if (cleanImageFilters) {
@@ -65,7 +65,7 @@ void ofApp::gui_draw() {
 			ImGui::Spacing();
 			ImGui::Spacing();
 
-			string sSourceFilterCount = "Source (" + ofToString(sourceController.iF.v_ImageFilters.size()+1) + ")###Source";
+			string sSourceFilterCount = "Sources (" + ofToString(sourceController.iF.v_ImageFilters.size()+1) + ")###Source";
 			if (ImGui::CollapsingHeader(sSourceFilterCount.c_str()))
 			{
 				sourceController.renderImGuiSettings();
@@ -118,7 +118,7 @@ void ofApp::gui_draw() {
 			ImGui::Spacing();
 
 			// Start DrawFilters
-			string sDrawFilterCount = "Pixel Plotter (" + ofToString(canvas.dF.v_DrawFilters.size()) + ")###DrawFiltersHolder";
+			string sDrawFilterCount = "Plotters (" + ofToString(canvas.dF->v_DrawFilters.size()) + ")###DrawFiltersHolder";
 			if (ImGui::CollapsingHeader(sDrawFilterCount.c_str()))
 			{
 				ImGui::PushStyleColor(ImGuiCol_Header, (ImVec4)ImColor::HSV(0, 0, 0.2));
@@ -137,17 +137,17 @@ void ofApp::gui_draw() {
 
 				cleanDrawFilters = false;
 				reorderDrawFilters = false;
-				for (int i = 0; i < canvas.dF.v_DrawFilters.size(); i++) {
+				for (int i = 0; i < canvas.dF->v_DrawFilters.size(); i++) {
 					ImGui::PushID(i);
-					if (canvas.dF.v_DrawFilters[i]->active) {
+					if (canvas.dF->v_DrawFilters[i]->active) {
 						ImGui::Indent();
-						canvas.dF.v_DrawFilters[i]->renderImGuiSettings();
+						canvas.dF->v_DrawFilters[i]->renderImGuiSettings();
 						ImGui::Unindent();
 					}
 					else {
 						cleanDrawFilters = true;
 					}
-					if (canvas.dF.v_DrawFilters[i]->moveUp || canvas.dF.v_DrawFilters[i]->moveDown) {
+					if (canvas.dF->v_DrawFilters[i]->moveUp || canvas.dF->v_DrawFilters[i]->moveDown) {
 						reorderDrawFilters = true;
 					}
 					ImGui::PopID();
@@ -155,9 +155,9 @@ void ofApp::gui_draw() {
 
 				ImGui::PopStyleColor(10);
 
-				if (ofxImGui::VectorCombo("##Draw Filter Selector", &currentDrawFilterIndex, canvas.dF.v_DrawFilterNames))
+				if (ofxImGui::VectorCombo("##Draw Filter Selector", &currentDrawFilterIndex, canvas.dF->v_DrawFilterNames))
 				{
-					canvas.dF.addFilter(currentDrawFilterIndex);
+					canvas.dF->addFilter(currentDrawFilterIndex);
 					canvas.fresh = true;
 					currentDrawFilterIndex = 0;
 				}

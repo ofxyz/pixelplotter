@@ -2,6 +2,8 @@
 #include "ofxImGui.h"
 #include "ofxXmlSettings.h"
 
+class ofApp;
+
 template <typename t> void move(std::vector<t>& v, size_t oldIndex, size_t newIndex)
 {
 	if (oldIndex > newIndex)

@@ -1,4 +1,5 @@
 #include "drawFilter_Rings.h"
+#include "ofApp.h"
 
 // - Create smooth curves
 // - Remove edge lines
@@ -55,6 +56,10 @@ void Df_rings::renderImGuiSettings() {
 			bFresh = true;
 		}
 		ImGui::PopItemWidth();
+
+		if (ImGui::ColorEdit4("Blobline ##rings", (float*)&c_blob, ImGuiColorEditFlags_NoInputs)) {
+			bFresh = true;
+		}
 	}
 }
 
@@ -71,7 +76,8 @@ void Df_rings::draw(ofImage* input, float width, float height, float x, float y)
 	colorCvImage.setFromPixels(input->getPixelsRef());
 	greyCvImage = colorCvImage; // Convert to Grey
 	greyCvBlur = greyCvImage;
-	greyCvBlur.blur(cvBlur);
+	//greyCvBlur.blur(cvBlur);
+	greyCvBlur.blur(cvBlur - (pixelplotter->soundManager.scaledVol * cvBlur));
 	
 	//---------------------------------
 	
@@ -81,8 +87,8 @@ void Df_rings::draw(ofImage* input, float width, float height, float x, float y)
 	ofSetLineWidth(lineWidth);
 
 	int i = 0;
-	ofColor c(255,255,255);
-	c.setHsb(100, 100, 100);
+	ofColor c(c_blob);
+	//c.setHsb(100, 100, 100);
 	ofPolyline blobShape;
 	//ofPolyline smoothShape;
 
@@ -97,8 +103,11 @@ void Df_rings::draw(ofImage* input, float width, float height, float x, float y)
 
 		for (int i = 0; i < contourFinder.blobs.size(); i++) {
 			blobShape.clear();
-			c.setHsb(c.getHue() + 10, 255, 255);
-			ofSetColor(c);
+			//c.setHsb(c.getHue() + 10, 255, 255);
+			float b = c.getBrightness() + 20;
+			if (b > 255) b -= 255;
+			c.setHsb(c.getHue(), c.getSaturation(), b );
+			//ofSetColor(c);
 			blobShape.addVertices(contourFinder.blobs.at(i).pts);
 			blobShape.close();
 			blobShape.scale(width / input->getWidth(), height / input->getHeight());

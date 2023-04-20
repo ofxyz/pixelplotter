@@ -38,7 +38,8 @@ ofx2d x2d;
 
 void ofApp::setup() {
 	ofLogToConsole();
-	ofSetLogLevel(OF_LOG_VERBOSE);
+	ofSetLogLevel(OF_LOG_ERROR);
+	//ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetVerticalSync(false);
 	ofLog() << ofFbo::checkGLSupport();
 	ofSetWindowTitle("Pixel Plotter");
@@ -49,6 +50,10 @@ void ofApp::setup() {
 
 	//ofSetBackgroundAuto(false);
 
+	soundManager.setup(this);
+	sourceController.setup(this);
+	canvas.setup(this, &sourceController.frameBuffer.getFrame());
+
 	userOffset.x = 0;
 	userOffset.y = 0;
 
@@ -58,11 +63,9 @@ void ofApp::setup() {
 	ImGuiStyle* style = &ImGui::GetStyle();
 	style->ItemSpacing = ImVec2(5, 5);
 
-	sourceController.setup(this);
-
 	gui_loadPresets();
-	canvas.setup(this, &sourceController.frameBuffer.getFrame());
-	canvas.dF.addRandomFilter();
+	
+	canvas.dF->addRandomFilter();
 
 }
 
@@ -73,6 +76,7 @@ void ofApp::exit() {
 
 //--------------------------------------------------------------
 void ofApp::update() {
+	soundManager.update();
 	gui_update();
 
 	if (!pauseRender) {
@@ -106,6 +110,8 @@ void ofApp::draw() {
 	}
 
 	gui_draw();
+
+	//ofDrawCircle(200, 200, soundManager.scaledVol * 190.0f);
 }
 
 void ofApp::resetImageOffset() {
@@ -143,8 +149,8 @@ void ofApp::saveSettings(string& filepath) {
 
 	settings.addTag("drawFilters");
 	settings.pushTag("drawFilters");
-	for (int i = 0; i < canvas.dF.v_DrawFilters.size(); i++) {
-		ofxXmlSettings filterSettings = canvas.dF.v_DrawFilters[i]->getSettings();
+	for (int i = 0; i < canvas.dF->v_DrawFilters.size(); i++) {
+		ofxXmlSettings filterSettings = canvas.dF->v_DrawFilters[i]->getSettings();
 		string drawFilterSettings;
 		filterSettings.copyXmlToString(drawFilterSettings);
 		settings.addValue("string_settings", drawFilterSettings);
@@ -166,7 +172,7 @@ void ofApp::loadSettings(string& filepath) {
 	ofxXmlSettings settings;
 	settings.loadFile(filepath);
 
-	canvas.dF.clearFilters();
+	canvas.dF->clearFilters();
 	sourceController.iF.clearFilters();
 
 	if (settings.tagExists("source")) {
@@ -199,7 +205,7 @@ void ofApp::loadSettings(string& filepath) {
 			ofxXmlSettings filterSettings;
 			string stringSettings = settings.getValue("string_settings", "", i);
 			filterSettings.loadFromBuffer(stringSettings);
-			canvas.dF.addFilter(filterSettings);
+			canvas.dF->addFilter(filterSettings);
 		}
 		canvas.fresh = true;
 		settings.popTag();
@@ -255,6 +261,11 @@ void ofApp::keyPressed(int key) {
 }
 
 //--------------------------------------------------------------
+void ofApp::audioIn(ofSoundBuffer& input) {
+	soundManager.audioIn(input);
+}
+
+//--------------------------------------------------------------
 void ofApp::keyReleased(int key) {
 
 }
@@ -267,8 +278,8 @@ void ofApp::mouseMoved(int x, int y) {
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button) {
 	if (bDragCanvas) {
-		if (x > img_area_WH || x < 0) return;
-		if (y > img_area_WH || y < 0) return;
+		if (x > ofGetWindowWidth() || x < 0) return;
+		if (y > ofGetWindowHeight() || y < 0) return;
 		userOffset.x += x - lastDraggedPos.x;
 		userOffset.y += y - lastDraggedPos.y;
 	}
@@ -280,7 +291,7 @@ void ofApp::mouseDragged(int x, int y, int button) {
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button) {
-	if (x < img_area_WH && x > 0) {
+	if (x < (ofGetWindowWidth() - gui_width) && x > 0) {
 		bDragCanvas = true;
 		lastDraggedPos.x = x;
 		lastDraggedPos.y = y;
@@ -304,7 +315,7 @@ void ofApp::mouseExited(int x, int y) {
 
 //--------------------------------------------------------------
 void ofApp::mouseScrolled(ofMouseEventArgs& mouse) {
-	if (mouse.x < img_area_WH) {
+	if (mouse.x < (ofGetWindowWidth()-gui_width)) {
 		glm::vec3 position = canvas.cam.getPosition();
 		if (zoomLevel > 1) {
 			zoomLevel += (mouse.scrollY * 0.1);

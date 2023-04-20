@@ -102,7 +102,7 @@ void SourceController::buildSourceNames() {
 }
 
 void SourceController::loadSourceIndex() {
-	if (currentSourceIndex == 0) {
+	if (currentSourceIndex < videoDevices.size()) {
 		bUseVideoDevice = true;
 		for (vector<ofVideoDevice>::iterator it = videoDevices.begin(); it != videoDevices.end(); ++it) {
 			if (it->deviceName == sourceNames[currentSourceIndex]) {

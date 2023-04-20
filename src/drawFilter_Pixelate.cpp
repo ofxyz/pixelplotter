@@ -1,5 +1,6 @@
 #include "drawFilter_Pixelate.h"
 #include "ofx2d.h"
+#include "ofApp.h"
 
 extern ofx2d x2d;
 
@@ -21,6 +22,15 @@ void Df_pixelate::loadSettings(ofxXmlSettings settings) {
 	offsety = settings.getValue("offsety", 0);
 	offsetx_rand = settings.getValue("offsetx_rand", 0);
 	offsety_rand = settings.getValue("offsety_rand", 0);
+	
+	ui_currentIgnore = x2d.getIndex(v_ignoreOptions, settings.getValue("currentIgnore", "None"), 0);
+	ignorePercent = settings.getValue("ignorePercent", ignorePercent);
+	ignoreModulo = settings.getValue("ignoreModulo", ignoreModulo);
+	ignorePlaid = settings.getValue("ignorePlaid", ignorePlaid);
+	ignoreScan = settings.getValue("ignoreScan", ignoreScan);
+	ignoreSeed = settings.getValue("ignoreSeed", ignoreSeed);
+	ignoreSeedAddon = settings.getValue("ignoreSeedAddon", ignoreSeedAddon);
+
 	cLerp = settings.getValue("cLerp", cLerp);
 
 	ui_currentRotationMap = x2d.getIndex(v_pixelDataMapOptions, settings.getValue("rotationMap", "None"), 0);
@@ -34,14 +44,6 @@ void Df_pixelate::loadSettings(ofxXmlSettings settings) {
 	ui_currentHeightMap = x2d.getIndex(v_pixelDataMapOptions, settings.getValue("heightMap", "None"), 0);
 	heightMinMax[0] = settings.getValue("heightMin", 0);
 	heightMinMax[1] = settings.getValue("heightMax", 0);
-
-	ui_currentIgnore = x2d.getIndex(v_ignoreOptions, settings.getValue("currentIgnore", "None"), 0);
-	ignorePercent = settings.getValue("ignorePercent", ignorePercent);
-	ignoreModulo  = settings.getValue("ignoreModulo", ignoreModulo);
-	ignorePlaid   = settings.getValue("ignorePlaid", ignorePlaid);
-	ignoreScan    = settings.getValue("ignoreScan", ignoreScan);
-	ignoreSeed    = settings.getValue("ignoreSeed", ignoreSeed);
-	ignoreSeedAddon = settings.getValue("ignoreSeedAddon", ignoreSeedAddon);
 
 	currentBlendModeIndex = settings.getValue("blendMode", 0);
 
@@ -91,6 +93,15 @@ ofxXmlSettings Df_pixelate::getSettings() {
 	settings.setValue("offsety", offsety);
 	settings.setValue("offsetx_rand", offsetx_rand);
 	settings.setValue("offsety_rand", offsety_rand);
+
+	settings.setValue("currentIgnore", v_ignoreOptions[ui_currentIgnore]);
+	settings.setValue("ignorePercent", ignorePercent);
+	settings.setValue("ignoreModulo", ignoreModulo);
+	settings.setValue("ignorePlaid", ignorePlaid);
+	settings.setValue("ignoreScan", ignoreScan);
+	settings.setValue("ignoreSeed", ignoreSeed);
+	settings.setValue("ignoreSeedAddon", ignoreSeedAddon);
+
 	settings.setValue("cLerp", cLerp);
 
 	settings.setValue("rotationMap", v_pixelDataMapOptions[ui_currentRotationMap]);
@@ -104,14 +115,6 @@ ofxXmlSettings Df_pixelate::getSettings() {
 	settings.setValue("heightMap", v_pixelDataMapOptions[ui_currentHeightMap]);
 	settings.setValue("heightMin", heightMinMax[0]);
 	settings.setValue("heightMax", heightMinMax[1]);
-
-	settings.setValue("currentIgnore", v_pixelDataMapOptions[ui_currentIgnore]);
-	settings.setValue("ignorePercent", ignorePercent);
-	settings.setValue("ignoreModulo", ignoreModulo);
-	settings.setValue("ignorePlaid", ignorePlaid);
-	settings.setValue("ignoreScan", ignoreScan);
-	settings.setValue("ignoreSeed", ignoreSeed);
-	settings.setValue("ignoreSeedAddon", ignoreSeedAddon);
 
 	settings.setValue("blendMode", currentBlendModeIndex);
 

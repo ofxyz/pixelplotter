@@ -6,11 +6,13 @@
 #include "ofxXmlSettings.h"
 #include "ofxOpenCv.h"
 
+#include "soundManager.h"
 #include "sourceController.h"
 #include "canvas.h"
- 
+
 const int gui_width = 350;
-const int img_area_WH = 1200;
+const int screenW = 1920;
+const int screenH = 1080;
 
 extern ofx2d x2d;
 
@@ -32,6 +34,8 @@ class ofApp : public ofBaseApp{
 		void mouseEntered(int x, int y);
 		void mouseExited(int x, int y);
 		void mouseScrolled(ofMouseEventArgs& mouse);
+		
+		void audioIn(ofSoundBuffer& input);
 
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
@@ -43,6 +47,7 @@ class ofApp : public ofBaseApp{
 		void resetImageOffset();
 		void resetZoom();
 
+		SoundManager soundManager;
 		SourceController sourceController;
 		Canvas canvas;
 

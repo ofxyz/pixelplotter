@@ -8,7 +8,7 @@ class Canvas {
 public:
 	ofApp* pixelplotter;
 	ofCamera cam;
-	DrawFilterController dF;
+	DrawFilterController* dF;
 	ofFbo canvasFbo;
 	ofPixels canvasPix;
 	ImVec4 c_canvas = ofColor(255, 255, 255, 255);

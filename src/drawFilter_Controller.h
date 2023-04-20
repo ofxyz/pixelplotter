@@ -4,6 +4,11 @@
 
 class DrawFilterController {
 public:
+	ofApp* pixelplotter;
+	DrawFilterController() {};
+	DrawFilterController(ofApp* app) {
+		pixelplotter = app;
+	};
 
 	void reorder() {
 		for (int i = 0; i < v_DrawFilters.size(); i++) {
@@ -38,21 +43,21 @@ public:
 
 	void addFilter(int index) {
 		if (v_DrawFilterNames[index] == "Pixelate") {
-			v_DrawFilters.push_back(new Df_pixelate);
+			v_DrawFilters.push_back(new Df_pixelate(pixelplotter));
 		}
 		else if (v_DrawFilterNames[index] == "Rings") {
-			v_DrawFilters.push_back(new Df_rings);
+			v_DrawFilters.push_back(new Df_rings(pixelplotter));
 		}
 	}
 
 	void addFilter(ofxXmlSettings filterSettings) {
 		string filterName = filterSettings.getValue("name", "not_found");
 		if (filterName == "Pixelate") {
-			v_DrawFilters.push_back(new Df_pixelate);
+			v_DrawFilters.push_back(new Df_pixelate(pixelplotter));
 			v_DrawFilters[v_DrawFilters.size() - 1]->loadSettings(filterSettings);
 		}
 		else if (filterName == "Rings") {
-			v_DrawFilters.push_back(new Df_rings);
+			v_DrawFilters.push_back(new Df_rings(pixelplotter));
 			v_DrawFilters[v_DrawFilters.size() - 1]->loadSettings(filterSettings);
 		}
 	}

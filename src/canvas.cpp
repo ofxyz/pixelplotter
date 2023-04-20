@@ -84,6 +84,7 @@ ofxXmlSettings Canvas::getSettings() {
 
 void Canvas::setup(ofApp* app, ofImage* img, string canvas_title) {
 	pixelplotter = app;
+	dF = new DrawFilterController(pixelplotter);
 	canvasTitle  = canvas_title;
 	setSourceDimension(img);
 	canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGB, 8);
@@ -116,7 +117,7 @@ void Canvas::update() {
 		fresh = true;
 		return;
 	}
-	for (const auto& filter : dF.v_DrawFilters) {
+	for (const auto& filter : dF->v_DrawFilters) {
 		if (filter->isFresh()) {
 			fresh = true;
 			return;
@@ -133,7 +134,7 @@ void Canvas::update(ofImage* img) {
 
 	ofClear(c_canvas);
 
-	for (const auto& filter : dF.v_DrawFilters) {
+	for (const auto& filter : dF->v_DrawFilters) {
 		// update one filter per frame to keep things speeedy?
 		// Each filter draws to it's own fbo and are drawn here?
 		// filter->update(img); filter->update(settings)
