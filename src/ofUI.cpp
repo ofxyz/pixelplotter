@@ -18,11 +18,11 @@ void ofApp::gui_update() {
 void ofApp::gui_draw() {
 	gui.begin();
 	{
-		if (show_main_window)
+		if (bShowGui)
 		{
 			ImGui::SetNextWindowSize(ofVec2f(gui_width, ofGetHeight()));
 			ImGui::SetNextWindowPos(ofVec2f(ofGetWidth() - gui_width, 0));
-			ImGui::Begin("Pixel Plotter", &show_main_window, ImGuiWindowFlags_NoDecoration);
+			ImGui::Begin("Pixel Plotter", &bShowGui, ImGuiWindowFlags_NoDecoration);
 
 			/* Save and load presets ... */
 			if (ofxImGui::VectorCombo("##Presets", &currentPresetIndex, presetFileNames))
@@ -110,6 +110,11 @@ void ofApp::gui_draw() {
 
 				// End ImageFilters
 				//-----------------------------------------------------------------------------------------------------
+
+				ImGui::Spacing();
+
+				soundManager.renderImGuiSettings();
+
 			}
 
 			//======================================================================================================

@@ -58,12 +58,10 @@ class ofApp : public ofBaseApp{
 		bool cleanImageFilters = false;
 		bool reorderDrawFilters = false;
 		bool bSavePreset = false;
-		bool show_main_window = true;
+		bool bShowGui = true;
 		bool pauseRender = false;
-		bool showImage = false;
 		bool bDragCanvas = false;
 
-		int currentBlendModeIndex = 0;
 		int currentPresetIndex = 0;
 		int currentDrawFilterIndex = 0;
 		int currentImageFilterIndex = 0;

@@ -2,7 +2,13 @@
 #include "ofApp.h";
 
 void SoundManager::renderImGuiSettings() {
-
+	if (!soundDeviceNames.empty())
+	{
+		if (ofxImGui::VectorCombo("##Sound Devices", &currentSoundDeviceIndex, soundDeviceNames))
+		{
+			loadSoundDeviceIndex();
+		}
+	}
 }
 
 void SoundManager::loadSettings(ofxXmlSettings settings) {
@@ -14,6 +20,24 @@ ofxXmlSettings SoundManager::getSettings() {
 	return settings;
 }
 
+void SoundManager::loadSoundDeviceIndex() {
+	ofSoundStreamSettings settings;
+
+	if (!soundDevices.empty()) {
+		settings.setInDevice(soundDevices[currentSoundDeviceIndex]);
+	}
+
+	// Pass the audioIn function from ofApp ...
+	settings.setInListener(pixelplotter);
+
+	settings.sampleRate = 44100;
+	settings.numOutputChannels = 0;
+	settings.numInputChannels = 2;
+	settings.bufferSize = bufferSize;
+	soundStream.setup(settings);
+	soundStream.setOutput(pixelplotter);
+}
+
 void SoundManager::setup(ofApp* app) {
 	pixelplotter = app;
 
@@ -21,10 +45,16 @@ void SoundManager::setup(ofApp* app) {
 	right.assign(bufferSize, 0.0);
 	volHistory.assign(400, 0.0);
 
-	ofSoundStreamSettings settings;
-	// if you want to set the device id to be different than the default
-	// auto devices = soundStream.getDeviceList();
-	// settings.device = devices[4];
+	soundDevices = soundStream.getDeviceList();
+	for (vector<ofSoundDevice>::iterator it = soundDevices.begin(); it != soundDevices.end(); ++it) {
+		soundDeviceNames.push_back(it->name);
+	}
+
+	//loadSoundDeviceIndex();
+
+	//virtual bool setInDevice(const ofSoundDevice & device);
+	//virtual bool setOutDevice(const ofSoundDevice & device);
+	//virtual bool setApi(ofSoundDevice::Api api);
 
 	// you can also get devices for an specific api
 	// auto devices = soundStream.getDevicesByApi(ofSoundDevice::Api::PULSE);
@@ -34,18 +64,11 @@ void SoundManager::setup(ofApp* app) {
 	// settings.api = ofSoundDevice::Api::PULSE;
 
 	// or by name
-	auto devices = soundStream.getMatchingDevices("default");
-	if (!devices.empty()) {
-		settings.setInDevice(devices[0]);
-	}
+	//auto devices = soundStream.getMatchingDevices("default");
 
-	settings.setInListener(pixelplotter);
-	settings.sampleRate = 44100;
-	settings.numOutputChannels = 0;
-	settings.numInputChannels = 2;
-	settings.bufferSize = bufferSize;
-	soundStream.setup(settings);
-	soundStream.setOutput(pixelplotter);
+	
+
+	
 }
 
 void SoundManager::update() {

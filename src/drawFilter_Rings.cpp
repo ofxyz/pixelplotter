@@ -52,7 +52,7 @@ void Df_rings::renderImGuiSettings() {
 		if (ImGui::DragInt("Ring Count ##rings", &cvSteps, 1, 1, 255)) {
 			bFresh = true;
 		}
-		if (ImGui::DragFloat("Line Width ##rings", &lineWidth, 0.1f, 0, 50, "%.3f")) {
+		if (ImGui::DragFloat("Line Width ##rings", &lineWidth, 0.1f, 0.1, 50, "%.3f")) {
 			bFresh = true;
 		}
 		ImGui::PopItemWidth();
