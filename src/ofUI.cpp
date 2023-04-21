@@ -223,3 +223,12 @@ void ofApp::gui_loadPresets() {
 		presetFileNames.push_back(pname);
 	}
 }
+
+void ofApp::gui_setup()
+{
+	gui.setup();
+
+	ImGui::StyleColorsDark();
+	ImGuiStyle* style = &ImGui::GetStyle();
+	style->ItemSpacing = ImVec2(5, 5);
+}

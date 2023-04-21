@@ -43,6 +43,7 @@ public:
 	bool isLandscape = false;
 	bool mirrorV = false;
 	bool mirrorH = false;
+	bool loadImageNextFrame = false;
 	int currentVideoFrame = 1;
 	int currentSourceIndex = 0;
 

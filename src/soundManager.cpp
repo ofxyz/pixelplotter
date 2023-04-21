@@ -45,7 +45,8 @@ void SoundManager::setup(ofApp* app) {
 	right.assign(bufferSize, 0.0);
 	volHistory.assign(400, 0.0);
 
-	soundDevices = soundStream.getDeviceList();
+	soundDevices = soundStream.getDeviceList(ofSoundDevice::MS_DS);
+	//soundDevices = soundStream.getDeviceList();
 	for (vector<ofSoundDevice>::iterator it = soundDevices.begin(); it != soundDevices.end(); ++it) {
 		soundDeviceNames.push_back(it->name);
 	}

@@ -1,5 +1,7 @@
 #pragma once
 #include "ofMain.h"
+#include "ofGui.h"
+
 #include "ofx2d.h"
 #include "ofxImGui.h"
 #include "ofxPosterize.h"
@@ -11,14 +13,16 @@
 #include "canvas.h"
 
 const int gui_width = 350;
-const int screenW = 1920;
-const int screenH = 1080;
+const int screenW = 1024;
+const int screenH = 768;
 
 extern ofx2d x2d;
 
 class ofApp : public ofBaseApp{
 
 	public:
+		shared_ptr<ofGui> mainGui;
+
 		void setup();
 		void update();
 		void draw();
@@ -82,5 +86,6 @@ class ofApp : public ofBaseApp{
 		void gui_draw();
 		void gui_update();
 		void gui_loadPresets();
+		void gui_setup();
 		// -------------------------------------------------  End ofUI.cpp
 };

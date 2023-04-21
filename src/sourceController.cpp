@@ -6,7 +6,8 @@ void SourceController::renderImGuiSettings() {
 	{
 		if (ofxImGui::VectorCombo("##Source Image", &currentSourceIndex, sourceNames))
 		{
-			loadSourceIndex();
+			//loadSourceIndex();
+			loadImageNextFrame = true;
 		}
 	}
 

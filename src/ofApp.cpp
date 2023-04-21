@@ -57,11 +57,7 @@ void ofApp::setup() {
 	userOffset.x = 0;
 	userOffset.y = 0;
 
-	gui.setup();
 
-	ImGui::StyleColorsDark();
-	ImGuiStyle* style = &ImGui::GetStyle();
-	style->ItemSpacing = ImVec2(5, 5);
 
 	gui_loadPresets();
 	
@@ -77,8 +73,12 @@ void ofApp::exit() {
 //--------------------------------------------------------------
 void ofApp::update() {
 	soundManager.update();
-	gui_update();
-
+	//gui_update();
+	if (sourceController.loadImageNextFrame)
+	{
+		sourceController.loadSourceIndex();
+		sourceController.loadImageNextFrame = false;
+	}
 	if (!pauseRender) {
 		if (canvas.resizeRequest) {
 			sourceController.isFresh = true;
@@ -109,7 +109,7 @@ void ofApp::draw() {
 		sourceController.frameBuffer.getFrame().draw(offset.x + userOffset.x, offset.y + userOffset.y, canvas.canvasWidth * zoomLevel, canvas.canvasHeight * zoomLevel);
 	}
 
-	gui_draw();
+	//gui_draw();
 
 	//ofDrawCircle(200, 200, soundManager.scaledVol * 190.0f);
 }

@@ -24,6 +24,12 @@ void Canvas::renderImGuiSettings() {
 		canvasHeight = sourceHeight;
 		resizeRequest = true;
 	}
+	ImGui::SameLine();
+	if (ImGui::Button("Fit")) {
+		canvasWidth = ofGetWindowWidth();
+		canvasHeight = ofGetWindowHeight();
+		resizeRequest = true;
+	}
 
 	ImGui::Separator(); // End Size 
 
