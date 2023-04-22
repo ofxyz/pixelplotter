@@ -46,15 +46,26 @@ void Df_rings::renderImGuiSettings() {
 		if (ImGui::DragInt("Blur ##rings", &cvBlur, 1, 0, 500)) {
 			bFresh = true;
 		}
+		ImGui::SameLine();
+		if (ImGui::DragFloat("SFX ##blurRings", &sBlurMapTo, 0.1f, 1, 600, "%.3f")) {
+			bFresh = true;
+		}
+
 		if (ImGui::DragInt("Threshold ##rings", &cvThresh, 1, 0, 255)) {
 			bFresh = true;
 		}
 		if (ImGui::DragInt("Ring Count ##rings", &cvSteps, 1, 1, 255)) {
 			bFresh = true;
 		}
+		ImGui::SameLine();
+		if (ImGui::DragFloat("SFX ##stepRings", &sStepMapTo, 0.1f, 1, 500, "%.3f")) {
+			bFresh = true;
+		}
+
 		if (ImGui::DragFloat("Line Width ##rings", &lineWidth, 0.1f, 0.1, 50, "%.3f")) {
 			bFresh = true;
 		}
+		
 		ImGui::PopItemWidth();
 
 		if (ImGui::ColorEdit4("Blobline ##rings", (float*)&c_blob, ImGuiColorEditFlags_NoInputs)) {
@@ -67,7 +78,7 @@ void Df_rings::draw(ofImage* input, float width, float height, float x, float y)
 	bFresh = false;
 	if (!visible) return;
 
-	// -------------------------------- Update
+	// -------------------------------- Update -> MOVE TO!
 	colorCvImage.allocate(input->getWidth(), input->getHeight());
 	greyCvImage.allocate(input->getWidth(), input->getHeight());
 	greyCvBlur.allocate(input->getWidth(), input->getHeight());
@@ -77,8 +88,11 @@ void Df_rings::draw(ofImage* input, float width, float height, float x, float y)
 	greyCvImage = colorCvImage; // Convert to Grey
 	greyCvBlur = greyCvImage;
 	//greyCvBlur.blur(cvBlur);
-	greyCvBlur.blur(cvBlur - (pixelplotter->soundManager.scaledVol * cvBlur));
-	
+	int greySoundBlur = cvBlur - (ofMap(pixelplotter->soundManager.scaledVol, 0, 1, 0, sBlurMapTo));
+	if (greySoundBlur > 0) {
+		greyCvBlur.blur(greySoundBlur);
+	}
+
 	//---------------------------------
 	
 	ofPushStyle();
@@ -91,11 +105,18 @@ void Df_rings::draw(ofImage* input, float width, float height, float x, float y)
 	//c.setHsb(100, 100, 100);
 	ofPolyline blobShape;
 	//ofPolyline smoothShape;
+	int sCvSteps = cvSteps;
+	if (sStepMapTo > 1) {
+		sCvSteps = cvSteps - (ofMap(pixelplotter->soundManager.scaledVol, 0, 1, 1, sStepMapTo));
+		if (sCvSteps < 1) sCvSteps = 1;
+		if (sCvSteps > 254) sCvSteps = 254;
+	}
+	
 
-	while (i < (250 - cvSteps)) {
+	while (i < (255 - sCvSteps)) {
 		if (i > cvThresh)
 			break;
-		i += cvSteps;
+		i += sCvSteps;
 		greyCvThresh = greyCvBlur;
 		greyCvThresh.threshold(i);
 		contourFinder.findContours(greyCvThresh, 5, (input->getWidth() * input->getHeight()) / 2, 25, true, true);

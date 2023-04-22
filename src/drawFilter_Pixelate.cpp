@@ -712,6 +712,9 @@ float Df_pixelate::getWidth(ofColor c, float x, float y, float r) {
 	if (v_pixelDataMapOptions[ui_currentWidthMap] == "Color Lightness") {
 		return ofMap(c.getLightness(), 0, 255, widthMinMax[0], widthMinMax[1]);
 	}
+	if (v_pixelDataMapOptions[ui_currentWidthMap] == "Sound") {
+		return ofMap(pixelplotter->soundManager.smoothedVol, 0, 0.85, widthMinMax[0], widthMinMax[1]);
+	}
 	return r;
 }
 
@@ -721,6 +724,9 @@ float Df_pixelate::getHeight(ofColor c, float x, float y, float r) {
 	}
 	if (v_pixelDataMapOptions[ui_currentHeightMap] == "Color Lightness") {
 		return ofMap(c.getLightness(), 0, 255, heightMinMax[0], heightMinMax[1]);
+	}
+	if (v_pixelDataMapOptions[ui_currentWidthMap] == "Sound") {
+		return ofMap(pixelplotter->soundManager.smoothedVol, 0, 0.85, heightMinMax[0], heightMinMax[1]);
 	}
 	return r;
 }

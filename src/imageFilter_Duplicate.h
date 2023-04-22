@@ -17,4 +17,5 @@ private:
 	int hCount = 1;
 	int vCount = 1;
 	bool bMirror = true;
+	ImVec4 c_BG = ofColor(255, 255, 255, 255);
 };

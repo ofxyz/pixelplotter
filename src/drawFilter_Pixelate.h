@@ -49,7 +49,8 @@ private:
 	std::vector<std::string> v_pixelDataMapOptions{
 		"None",
 		"Between",
-		"Color Lightness"/*,
+		"Color Lightness",
+		"Sound"/*,
 		"Color Red",
 		"Color Green",
 		"Color Blue",

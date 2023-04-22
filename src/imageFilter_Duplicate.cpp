@@ -31,9 +31,15 @@ void If_duplicate::renderImGuiSettings() {
 		if (ImGui::DragInt("Vert ##duplicate_vCount", &vCount, 1, 1, 100)) {
 			bFresh = true;
 		}
+		ImGui::SameLine();
 		if (ImGui::Checkbox("Mirror Align", &bMirror)) {
 			bFresh = true;
 		}
+
+		if (ImGui::ColorEdit4("Colorize ##duplicate", (float*)&c_BG, ImGuiColorEditFlags_NoInputs)) {
+			bFresh = true;
+		}
+
 		ImGui::PopItemWidth();
 	}
 }
@@ -46,7 +52,10 @@ void If_duplicate::apply(ofImage* img) {
 	float height = img->getHeight() / vCount;
 
 	cfbo.begin();
-	cfbo.clearColorBuffer(ofColor(255,255,255));
+	cfbo.clearColorBuffer(ofColor(0,0,0));
+	ofEnableAlphaBlending();
+	ofPushStyle();
+	ofSetColor(c_BG);
 	int xcount = 0;
 	int ycount = 0;
 	for (float y = 0; y < vCount* height; y+= height) {
@@ -67,7 +76,8 @@ void If_duplicate::apply(ofImage* img) {
 		}
 		ycount++;
 	}
-
+	ofPopStyle();
+	ofDisableAlphaBlending();
 	cfbo.end();
 
 	cfbo.readToPixels(img->getPixelsRef());

@@ -45,6 +45,8 @@ void SoundManager::setup(ofApp* app) {
 	right.assign(bufferSize, 0.0);
 	volHistory.assign(400, 0.0);
 
+	// you can also get devices for an specific api
+	// auto devices = soundStream.getDevicesByApi(ofSoundDevice::Api::PULSE);
 	soundDevices = soundStream.getDeviceList(ofSoundDevice::MS_DS);
 	//soundDevices = soundStream.getDeviceList();
 	for (vector<ofSoundDevice>::iterator it = soundDevices.begin(); it != soundDevices.end(); ++it) {
@@ -57,8 +59,7 @@ void SoundManager::setup(ofApp* app) {
 	//virtual bool setOutDevice(const ofSoundDevice & device);
 	//virtual bool setApi(ofSoundDevice::Api api);
 
-	// you can also get devices for an specific api
-	// auto devices = soundStream.getDevicesByApi(ofSoundDevice::Api::PULSE);
+	
 	// settings.device = devices[0];
 
 	// or get the default device for an specific api:
@@ -111,6 +112,6 @@ void SoundManager::audioIn(ofSoundBuffer& input) {
 
 	smoothedVol *= 0.93;
 	smoothedVol += 0.07 * curVol;
-	ofLog() << 
+	//ofLog(OF_LOG_ERROR) << curVol << endl;
 	bufferCounter++;
 }
