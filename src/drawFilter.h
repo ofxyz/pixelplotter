@@ -4,14 +4,6 @@
 
 class ofApp;
 
-template <typename t> void move(std::vector<t>& v, size_t oldIndex, size_t newIndex)
-{
-	if (oldIndex > newIndex)
-		std::rotate(v.rend() - oldIndex - 1, v.rend() - oldIndex, v.rend() - newIndex);
-	else
-		std::rotate(v.begin() + oldIndex, v.begin() + oldIndex + 1, v.begin() + newIndex + 1);
-}
-
 class DrawFilter {
 public:
 	bool active = true;
@@ -69,6 +61,14 @@ public:
 	int currentBlendModeIndex = 0;
 	std::vector<std::string> v_BlendModes{ "OF_BLENDMODE_DISABLED", "OF_BLENDMODE_ALPHA", "OF_BLENDMODE_ADD", "OF_BLENDMODE_SUBTRACT", "OF_BLENDMODE_MULTIPLY", "OF_BLENDMODE_SCREEN" };
 	
+	void gui_setGrey() {
+		c_magentaRed = ofColor(108, 108, 108);
+		c_cyanBlue = ofColor(139, 139, 139);
+		c_yellowGreen = ofColor(239, 239, 239);
+		c_black = ofColor(0, 0, 0);
+		bFresh = true;
+	}
+
 	void gui_setRGB() {
 		c_magentaRed = ofColor(255, 0, 0);
 		c_cyanBlue = ofColor(0, 0, 255);
@@ -128,6 +128,11 @@ public:
 				}
 
 				if (colors) {
+					if (ImGui::Button("Set Grey ##drawFilter"))
+					{
+						gui_setGrey();
+					}
+					ImGui::SameLine();
 					if (ImGui::Button("Set RGB ##drawFilter"))
 					{
 						gui_setRGB();

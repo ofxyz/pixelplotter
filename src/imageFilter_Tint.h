@@ -2,10 +2,10 @@
 
 #include "imageFilter.h"
 
-class If_duplicate : public ImageFilter {
+class If_tint : public ImageFilter {
 public:
-	If_duplicate() {
-		name = "Duplicate";
+	If_tint() {
+		name = "Tint";
 	};
 
 	void apply(ofImage* img);
@@ -14,7 +14,6 @@ public:
 	ofxXmlSettings getSettings();
 
 private:
-	int hCount = 1;
-	int vCount = 1;
-	bool bMirror = true;
+	ImVec4 c_Tint = ofColor(255, 255, 255, 255);
+	bool bGrey = false;
 };

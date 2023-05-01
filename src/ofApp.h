@@ -22,6 +22,7 @@ class ofApp : public ofBaseApp{
 
 	public:
 		shared_ptr<ofGui> mainGui;
+		shared_ptr<ofGLRenderer> gl;
 
 		void setup();
 		void update();
@@ -53,21 +54,19 @@ class ofApp : public ofBaseApp{
 
 		SoundManager soundManager;
 		SourceController sourceController;
-		Canvas canvas;
+		Canvas plotCanvas;
 
 		char presetSaveName[128] = "";
 		int exportCount = 0;
 
-		bool cleanDrawFilters = false;
 		bool cleanImageFilters = false;
-		bool reorderDrawFilters = false;
+		
 		bool bSavePreset = false;
 		bool bShowGui = true;
 		bool pauseRender = false;
 		bool bDragCanvas = false;
 
 		int currentPresetIndex = 0;
-		int currentDrawFilterIndex = 0;
 		int currentImageFilterIndex = 0;
 
 		float zoomLevel = 1;

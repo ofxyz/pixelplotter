@@ -99,6 +99,7 @@ void SourceController::buildSourceNames() {
 	sourceNames.clear();
 	sourceNames.insert(sourceNames.end(), videoDeviceNames.begin(), videoDeviceNames.end());
 	sourceNames.insert(sourceNames.end(), videoFileNames.begin(), videoFileNames.end());
+	sourceNames.insert(sourceNames.end(), gC.v_GeneratorNames.begin()+1, gC.v_GeneratorNames.end());
 	sourceNames.insert(sourceNames.end(), imgFileNames.begin(), imgFileNames.end());
 }
 
@@ -114,18 +115,21 @@ void SourceController::loadSourceIndex() {
 				videoGrabber.close();
 				videoGrabber.setDeviceID(it->id);
 				videoGrabber.initGrabber(camWidth, camHeight);
-				pixelplotter->canvas.setSourceDimension(camWidth, camHeight);
+				pixelplotter->plotCanvas.setSourceDimension(camWidth, camHeight);
 				pix = videoGrabber.getPixels();
 				prepImg();
 				return;
 			}
 		}
 	}
-	else if (currentSourceIndex > (videoDevices.size() + videoFiles.size()) - 1) {
-		loadImage(imgFiles[currentSourceIndex - videoDevices.size() - videoFiles.size()].getAbsolutePath());
-	}
-	else if (currentSourceIndex > videoDevices.size() - 1) {
+	else if (currentSourceIndex < videoDevices.size() + videoFiles.size()) {
 		loadVideo(videoFiles[currentSourceIndex - videoDevices.size()].getAbsolutePath());
+	}
+	else if (currentSourceIndex < videoDevices.size() + videoFiles.size() + (gC.v_GeneratorNames.size() - 1)) {
+		//loadGenerator(currentSourceIndex - videoDevices.size() - videoFiles.size());
+	}
+	else {
+		loadImage(imgFiles[currentSourceIndex - videoDevices.size() - videoFiles.size()-1].getAbsolutePath());
 	}
 
 	isFresh = true;
@@ -170,7 +174,7 @@ void SourceController::loadImage(string& filepath) {
 	bUseVideoDevice = false;
 	videoPlayer.stop();
 	videoPlayer.close();
-	pixelplotter->canvas.setSourceDimension(pix.getWidth(), pix.getHeight());
+	pixelplotter->plotCanvas.setSourceDimension(pix.getWidth(), pix.getHeight());
 	prepImg();
 }
 
@@ -190,7 +194,7 @@ void SourceController::loadVideo(string& filepath) {
 	(videoPlayer.getWidth() > videoPlayer.getHeight()) ? isLandscape = true : isLandscape = false;
 	(isLandscape) ? imgRatio = videoPlayer.getHeight() / videoPlayer.getWidth() : imgRatio = videoPlayer.getWidth() / videoPlayer.getHeight();
 	
-	pixelplotter->canvas.setSourceDimension(videoPlayer.getWidth(), videoPlayer.getHeight());
+	pixelplotter->plotCanvas.setSourceDimension(videoPlayer.getWidth(), videoPlayer.getHeight());
 }
 
 void SourceController::prepImg() {

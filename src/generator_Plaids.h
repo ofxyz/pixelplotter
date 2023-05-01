@@ -4,8 +4,10 @@
 
 class G_plaids : public Generator {
 public:
-	G_plaids() {
-		name = "Plaids";
+	ofApp* pixelplotter;
+	G_plaids(ofApp* app) {
+		pixelplotter = app;
+		name = "Rings";
 	};
 
 	void setup(int width, int height);
@@ -15,5 +17,8 @@ public:
 	void loadSettings(ofxXmlSettings settings);
 	ofxXmlSettings getSettings();
 private:
-	int w,h;
+	int width,height;
+	int xcount = 1;
+	int ycount = 1;
+	ImVec4 c_base = ofColor(0, 255, 255, 255);
 };

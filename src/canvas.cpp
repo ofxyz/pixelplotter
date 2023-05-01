@@ -3,6 +3,8 @@
 #include "ofApp.h"
 
 void Canvas::renderImGuiSettings() {
+	ImGui::Indent();
+
 	if (ImGui::ColorEdit4("Canvas Colour", (float*)&c_canvas, ImGuiColorEditFlags_NoInputs)) {
 		fresh = true;
 	}
@@ -26,10 +28,66 @@ void Canvas::renderImGuiSettings() {
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Fit")) {
-		canvasWidth = ofGetWindowWidth();
-		canvasHeight = ofGetWindowHeight();
+		// This still get the window size of current context ...
+		canvasWidth = screenW;
+		canvasHeight = screenH;
+		pixelplotter->resetZoom();
+		pixelplotter->resetImageOffset();
 		resizeRequest = true;
 	}
+	ImGui::PopItemWidth();
+	ImGui::Separator(); // End Size 
+
+	// Start DrawFilters
+	//----------------------------------------------------------------------------------------------------------------------
+	string sDrawFilterCount = "Plotters (" + ofToString(dF->v_DrawFilters.size()) + ")###DrawFiltersHolder";
+	if (ImGui::CollapsingHeader(sDrawFilterCount.c_str()))
+	{
+		ImGui::PushStyleColor(ImGuiCol_Header, (ImVec4)ImColor::HSV(0, 0, 0.2));
+		ImGui::PushStyleColor(ImGuiCol_HeaderActive, (ImVec4)ImColor::HSV(0, 0, 0.4));
+		ImGui::PushStyleColor(ImGuiCol_HeaderHovered, (ImVec4)ImColor::HSV(0, 0, 0.7));
+
+		ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0, 0, 0.2));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0, 0, 0.2));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0, 0, 0.7));
+
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)ImColor::HSV(0, 0, 0.2));
+		ImGui::PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4)ImColor::HSV(0, 0, 0.4));
+		ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0, 0, 0.5));
+
+		ImGui::PushStyleColor(ImGuiCol_CheckMark, (ImVec4)ImColor::HSV(0, 0, 0.8));
+
+		cleanDrawFilters = false;
+		reorderDrawFilters = false;
+		for (int i = 0; i < dF->v_DrawFilters.size(); i++) {
+			ImGui::PushID(i);
+			if (dF->v_DrawFilters[i]->active) {
+				ImGui::Indent();
+				dF->v_DrawFilters[i]->renderImGuiSettings();
+				ImGui::Unindent();
+			}
+			else {
+				cleanDrawFilters = true;
+			}
+			if (dF->v_DrawFilters[i]->moveUp || dF->v_DrawFilters[i]->moveDown) {
+				reorderDrawFilters = true;
+			}
+			ImGui::PopID();
+		}
+
+		ImGui::PopStyleColor(10);
+
+		ImGui::Indent(); // ADD PLOTTERS
+		if (ofxImGui::VectorCombo("##Draw Filter Selector", &currentDrawFilterIndex, dF->v_DrawFilterNames))
+		{
+			dF->addFilter(currentDrawFilterIndex);
+			fresh = true;
+			currentDrawFilterIndex = 0;
+		}
+		ImGui::Unindent();
+
+	}// End Draw Filters
+	//----------------------------------------------------------------------------------------------------------------------
 
 	ImGui::Separator(); // End Size 
 
@@ -58,6 +116,8 @@ void Canvas::renderImGuiSettings() {
 		savePixels = true;
 		fresh = true;
 	}
+	ImGui::Unindent();
+	ImGui::Separator(); // End Size 
 }
 
 void Canvas::loadSettings(ofxXmlSettings settings) {
@@ -65,10 +125,10 @@ void Canvas::loadSettings(ofxXmlSettings settings) {
 	canvasWidth = settings.getValue("canvasWidth", canvasWidth);
 	canvasHeight = settings.getValue("canvasHeight", canvasHeight);
 
-	c_canvas.x = settings.getValue("colors:canvas:r", c_canvas.x);
-	c_canvas.y = settings.getValue("colors:canvas:g", c_canvas.y);
-	c_canvas.z = settings.getValue("colors:canvas:b", c_canvas.z);
-	c_canvas.w = settings.getValue("colors:canvas:a", c_canvas.w);
+	c_canvas.x = settings.getValue("colors:plotCanvas:r", c_canvas.x);
+	c_canvas.y = settings.getValue("colors:plotCanvas:g", c_canvas.y);
+	c_canvas.z = settings.getValue("colors:plotCanvas:b", c_canvas.z);
+	c_canvas.w = settings.getValue("colors:plotCanvas:a", c_canvas.w);
 
 	resizeRequest = true;
 	fresh = true;
@@ -80,10 +140,10 @@ ofxXmlSettings Canvas::getSettings() {
 	settings.setValue("canvasWidth", canvasWidth);
 	settings.setValue("canvasHeight", canvasHeight);
 
-	settings.setValue("colors:canvas:r", c_canvas.x);
-	settings.setValue("colors:canvas:g", c_canvas.y);
-	settings.setValue("colors:canvas:b", c_canvas.z);
-	settings.setValue("colors:canvas:a", c_canvas.w);
+	settings.setValue("colors:plotCanvas:r", c_canvas.x);
+	settings.setValue("colors:plotCanvas:g", c_canvas.y);
+	settings.setValue("colors:plotCanvas:b", c_canvas.z);
+	settings.setValue("colors:plotCanvas:a", c_canvas.w);
 
 	return settings;
 }
@@ -122,6 +182,14 @@ void Canvas::update() {
 	if (isRecording) {
 		fresh = true;
 		return;
+	}
+	if (cleanDrawFilters) {
+		dF->cleanFilters();
+		fresh = true;
+	}
+	if (reorderDrawFilters) {
+		dF->reorder();
+		fresh = true;
 	}
 	for (const auto& filter : dF->v_DrawFilters) {
 		if (filter->isFresh()) {

@@ -2,14 +2,21 @@
 #include "ofxImGui.h"
 #include "ofxXmlSettings.h"
 
+class ofApp;
+
 class Generator {
 public:
 	std::string name;
 	bool active = true;
 	bool visible = true;
+	bool moveUp = false;
+	bool moveDown = false;
 	bool bFresh = false;
 	bool isFresh() {
 		return bFresh;
+	}
+	void setFresh(bool fresh) {
+		bFresh = fresh;
 	}
 
 	virtual void setup(int width, int height) = 0;

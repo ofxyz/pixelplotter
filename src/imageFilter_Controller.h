@@ -1,6 +1,7 @@
 #pragma once
 #include "imageFilter_Mirror.h"
 #include "imageFilter_Duplicate.h"
+#include "imageFilter_Tint.h"
 
 class ImageFilterController {
 public:
@@ -10,7 +11,8 @@ public:
 	std::vector<std::string> v_ImageFilterNames{
 		"Add Image Filter ...",
 		"Mirror",
-		"Duplicate"
+		"Duplicate",
+		"Tint"
 	};
 
 	void addFilter(ImageFilter* filter) {
@@ -22,6 +24,8 @@ public:
 			v_ImageFilters.push_back(new If_mirror);
 		} else if (v_ImageFilterNames[index] == "Duplicate") {
 			v_ImageFilters.push_back(new If_duplicate);
+		} else if (v_ImageFilterNames[index] == "Tint") {
+			v_ImageFilters.push_back(new If_tint);
 		}
 	}
 
@@ -32,6 +36,9 @@ public:
 			v_ImageFilters[v_ImageFilters.size() - 1]->loadSettings(filterSettings);
 		} else if (filterName == "Duplicate") {
 			v_ImageFilters.push_back(new If_duplicate);
+			v_ImageFilters[v_ImageFilters.size() - 1]->loadSettings(filterSettings);
+		} else if (filterName == "Tint") {
+			v_ImageFilters.push_back(new If_tint);
 			v_ImageFilters[v_ImageFilters.size() - 1]->loadSettings(filterSettings);
 		}
 	}

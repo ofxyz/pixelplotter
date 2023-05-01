@@ -23,6 +23,7 @@ void If_duplicate::renderImGuiSettings() {
 	if (ImGui::CollapsingHeader(name.c_str(), &active)) {
 		ImGui::AlignTextToFramePadding();
 		ImGui::PushItemWidth(60);
+
 		ImGui::Text("Copies"); ImGui::SameLine(75);
 		if (ImGui::DragInt("Horz ##duplicate_hCount", &hCount, 1, 1, 100)) {
 			bFresh = true;
@@ -33,10 +34,6 @@ void If_duplicate::renderImGuiSettings() {
 		}
 		ImGui::SameLine();
 		if (ImGui::Checkbox("Mirror Align", &bMirror)) {
-			bFresh = true;
-		}
-
-		if (ImGui::ColorEdit4("Colorize ##duplicate", (float*)&c_BG, ImGuiColorEditFlags_NoInputs)) {
 			bFresh = true;
 		}
 
@@ -53,9 +50,6 @@ void If_duplicate::apply(ofImage* img) {
 
 	cfbo.begin();
 	cfbo.clearColorBuffer(ofColor(0,0,0));
-	ofEnableAlphaBlending();
-	ofPushStyle();
-	ofSetColor(c_BG);
 	int xcount = 0;
 	int ycount = 0;
 	for (float y = 0; y < vCount* height; y+= height) {
@@ -76,8 +70,6 @@ void If_duplicate::apply(ofImage* img) {
 		}
 		ycount++;
 	}
-	ofPopStyle();
-	ofDisableAlphaBlending();
 	cfbo.end();
 
 	cfbo.readToPixels(img->getPixelsRef());

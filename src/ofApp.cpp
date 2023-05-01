@@ -42,7 +42,7 @@ void ofApp::setup() {
 	//ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetVerticalSync(false);
 	ofLog() << ofFbo::checkGLSupport();
-	ofSetWindowTitle("Pixel Plotter");
+	ofSetWindowTitle("Canvas");
 	ofEnableAlphaBlending();
 
 	//ofHideCursor();
@@ -52,26 +52,29 @@ void ofApp::setup() {
 
 	soundManager.setup(this);
 	sourceController.setup(this);
-	canvas.setup(this, &sourceController.frameBuffer.getFrame());
+	plotCanvas.setup(this, &sourceController.frameBuffer.getFrame());
 
 	userOffset.x = 0;
 	userOffset.y = 0;
 
-
-
 	gui_loadPresets();
-	
-	canvas.dF->addRandomFilter();
+
+	plotCanvas.dF->addRandomFilter();
 
 }
 
 //--------------------------------------------------------------
 void ofApp::exit() {
 	ofRemoveListener(ofEvents().mouseScrolled, this, &ofApp::mouseScrolled);
+	OF_EXIT_APP(0);
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
+	std::stringstream strm;
+	strm << "Canvas (FPS: " << ofGetFrameRate() << ")";
+	ofSetWindowTitle(strm.str());
+
 	soundManager.update();
 	//gui_update();
 	if (sourceController.loadImageNextFrame)
@@ -80,22 +83,22 @@ void ofApp::update() {
 		sourceController.loadImageNextFrame = false;
 	}
 	if (!pauseRender) {
-		if (canvas.resizeRequest) {
+		if (plotCanvas.resizeRequest) {
 			sourceController.isFresh = true;
 		}
-		canvas.update();
+		plotCanvas.update();
 		sourceController.update();
 
 		if (sourceController.isResized) {
 			sourceController.isResized = false;
-			canvas.setSourceDimension(sourceController.frameBuffer.getWidth(), sourceController.frameBuffer.getHeight());
+			plotCanvas.setSourceDimension(sourceController.frameBuffer.getWidth(), sourceController.frameBuffer.getHeight());
 		}
 
 		if (sourceController.isFresh) {
-			canvas.update(&sourceController.frameBuffer.getFrame());
+			plotCanvas.update(&sourceController.frameBuffer.getFrame());
 			sourceController.isFresh = false;
-		} else if (sourceController.frameBuffer.isFresh() || canvas.isFresh()) {
-			canvas.update(&sourceController.frameBuffer.getFrame());
+		} else if (sourceController.frameBuffer.isFresh() || plotCanvas.isFresh()) {
+			plotCanvas.update(&sourceController.frameBuffer.getFrame());
 		}
 	}
 }
@@ -103,20 +106,19 @@ void ofApp::update() {
 //--------------------------------------------------------------
 void ofApp::draw() {
 
-	canvas.draw(offset.x + userOffset.x, offset.y + userOffset.y, canvas.canvasWidth * zoomLevel, canvas.canvasHeight * zoomLevel);
+	plotCanvas.draw(offset.x + userOffset.x, offset.y + userOffset.y, plotCanvas.canvasWidth * zoomLevel, plotCanvas.canvasHeight * zoomLevel);
 	
 	if (sourceController.showSource) {
-		sourceController.frameBuffer.getFrame().draw(offset.x + userOffset.x, offset.y + userOffset.y, canvas.canvasWidth * zoomLevel, canvas.canvasHeight * zoomLevel);
+		sourceController.frameBuffer.getFrame().draw(offset.x + userOffset.x, offset.y + userOffset.y, plotCanvas.canvasWidth * zoomLevel, plotCanvas.canvasHeight * zoomLevel);
 	}
 
 	//gui_draw();
-
-	//ofDrawCircle(200, 200, soundManager.scaledVol * 190.0f);
 }
 
 void ofApp::resetImageOffset() {
-	offset.x = (ofGetWidth() - gui_width - (canvas.canvasWidth * zoomLevel)) * 0.5;
-	offset.y = (ofGetHeight() - (canvas.canvasHeight * zoomLevel)) * 0.5;
+	// Context swiytching multiple windows
+	offset.x = ((ofGetWidth() - (plotCanvas.canvasWidth * zoomLevel)) * 0.5) + (gui_width-12); // Need to fix this with context...
+	offset.y = (ofGetHeight() - (plotCanvas.canvasHeight * zoomLevel)) * 0.5;
 }
 
 void ofApp::resetZoom() {
@@ -149,17 +151,17 @@ void ofApp::saveSettings(string& filepath) {
 
 	settings.addTag("drawFilters");
 	settings.pushTag("drawFilters");
-	for (int i = 0; i < canvas.dF->v_DrawFilters.size(); i++) {
-		ofxXmlSettings filterSettings = canvas.dF->v_DrawFilters[i]->getSettings();
+	for (int i = 0; i < plotCanvas.dF->v_DrawFilters.size(); i++) {
+		ofxXmlSettings filterSettings = plotCanvas.dF->v_DrawFilters[i]->getSettings();
 		string drawFilterSettings;
 		filterSettings.copyXmlToString(drawFilterSettings);
 		settings.addValue("string_settings", drawFilterSettings);
 	}
 	settings.popTag();
 
-	settings.addTag("canvas");
-	settings.pushTag("canvas");
-	ofxXmlSettings canvasSettings = canvas.getSettings();
+	settings.addTag("plotCanvas");
+	settings.pushTag("plotCanvas");
+	ofxXmlSettings canvasSettings = plotCanvas.getSettings();
 	string sCanvasSettings;
 	canvasSettings.copyXmlToString(sCanvasSettings);
 	settings.addValue("string_settings", sCanvasSettings);
@@ -172,7 +174,7 @@ void ofApp::loadSettings(string& filepath) {
 	ofxXmlSettings settings;
 	settings.loadFile(filepath);
 
-	canvas.dF->clearFilters();
+	plotCanvas.dF->clearFilters();
 	sourceController.iF.clearFilters();
 
 	if (settings.tagExists("source")) {
@@ -182,7 +184,7 @@ void ofApp::loadSettings(string& filepath) {
 		sourceSettings.loadFromBuffer(sSourceSettings);
 		sourceController.loadSettings(sourceSettings);
 		settings.popTag();
-		canvas.fresh = true;
+		plotCanvas.fresh = true;
 	}
 
 	if (settings.tagExists("imageFilters")) {
@@ -205,20 +207,20 @@ void ofApp::loadSettings(string& filepath) {
 			ofxXmlSettings filterSettings;
 			string stringSettings = settings.getValue("string_settings", "", i);
 			filterSettings.loadFromBuffer(stringSettings);
-			canvas.dF->addFilter(filterSettings);
+			plotCanvas.dF->addFilter(filterSettings);
 		}
-		canvas.fresh = true;
+		plotCanvas.fresh = true;
 		settings.popTag();
 	}
 
-	if (settings.tagExists("canvas")) {
-		settings.pushTag("canvas");
+	if (settings.tagExists("plotCanvas")) {
+		settings.pushTag("plotCanvas");
 		ofxXmlSettings canvasSettings;
 		string sCanvasSettings = settings.getValue("string_settings", "");
 		canvasSettings.loadFromBuffer(sCanvasSettings);
-		canvas.loadSettings(canvasSettings);
+		plotCanvas.loadSettings(canvasSettings);
 		settings.popTag();
-		canvas.fresh = true;
+		plotCanvas.fresh = true;
 	}
 }
 
@@ -246,15 +248,15 @@ void ofApp::keyPressed(int key) {
 		userOffset.x = 0;
 		userOffset.y = 0;
 		if (sourceController.isLandscape) {
-			zoomLevel = (ofGetWidth() - gui_width) / canvas.canvasWidth;
+			zoomLevel = (ofGetWidth() - gui_width) / plotCanvas.canvasWidth;
 		}
 		else {
-			zoomLevel = ofGetHeight() / canvas.canvasHeight;
+			zoomLevel = ofGetHeight() / plotCanvas.canvasHeight;
 		}
 		resetImageOffset();
 	}
 	else if (key == 'p') {
-		canvas.saveVector = true;
+		plotCanvas.saveVector = true;
 	}
 	else if (key == 'x') {
 		pauseRender = !pauseRender;
@@ -282,8 +284,11 @@ void ofApp::mouseMoved(int x, int y) {
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button) {
 	if (bDragCanvas) {
-		if (x > ofGetWindowWidth() || x < 0) return;
-		if (y > ofGetWindowHeight() || y < 0) return;
+		// This doesn't work anymore either...
+		// Seems to be offset by UI.
+		// Maybe create this contect first and UI second?
+		//if (x > ofGetWidth() || x < 0) return;
+		//if (y > ofGetHeight() || y < 0) return;
 		userOffset.x += x - lastDraggedPos.x;
 		userOffset.y += y - lastDraggedPos.y;
 	}
@@ -320,7 +325,7 @@ void ofApp::mouseExited(int x, int y) {
 //--------------------------------------------------------------
 void ofApp::mouseScrolled(ofMouseEventArgs& mouse) {
 	if (mouse.x < (ofGetWindowWidth()-gui_width)) {
-		glm::vec3 position = canvas.cam.getPosition();
+		glm::vec3 position = plotCanvas.cam.getPosition();
 		if (zoomLevel > 1) {
 			zoomLevel += (mouse.scrollY * 0.1);
 		}

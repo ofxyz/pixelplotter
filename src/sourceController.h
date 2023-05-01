@@ -4,6 +4,7 @@
 #include "ofxImGui.h"
 #include "frameBuffer.h"
 #include "imageFilter_Controller.h"
+#include "generator_Controller.h"
 
 class ofApp;
 
@@ -30,13 +31,15 @@ public:
 	ofVideoGrabber videoGrabber;
 
 	ImageFilterController iF;
-	
+	GeneratorController gC;
+
 	ofImage original;
 	ofPixels pix; // Use ofImage and turn textures off // Turn on when needed?
 
 	std::string src_name = "PixelPlotted";
 	bool showSource = false;
 	bool bUseVideo = false;
+	bool bUseGenerator = false;
 	bool bUseVideoDevice = false;
 	bool isFresh = false;
 	bool isResized = false;
@@ -47,8 +50,8 @@ public:
 	int currentVideoFrame = 1;
 	int currentSourceIndex = 0;
 
-	int width = 0;
-	int height = 0;
+	int width = 640;
+	int height = 480;
 	int camWidth = 640;
 	int camHeight = 480;
 	float imgRatio = 1;

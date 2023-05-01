@@ -1,14 +1,6 @@
 #include "ofApp.h"
 
 void ofApp::gui_update() {
-	if (cleanDrawFilters) {
-		canvas.dF->cleanFilters();
-		canvas.fresh = true;
-	}
-	if (reorderDrawFilters) {
-		canvas.dF->reorder();
-		canvas.fresh = true;
-	}
 	if (cleanImageFilters) {
 		sourceController.iF.cleanFilters();
 		sourceController.isFresh = true;
@@ -28,8 +20,8 @@ void ofApp::gui_draw() {
 			if (ofxImGui::VectorCombo("##Presets", &currentPresetIndex, presetFileNames))
 			{
 				loadSettings(presetFiles[currentPresetIndex].getAbsolutePath());
-				canvas.resizeRequest = true;
-				canvas.fresh = true;
+				plotCanvas.resizeRequest = true;
+				plotCanvas.fresh = true;
 			}
 
 			if (presetFileNames.size() > 0) {
@@ -121,61 +113,17 @@ void ofApp::gui_draw() {
 
 			ImGui::Spacing();
 			ImGui::Spacing();
-
-			// Start DrawFilters
-			string sDrawFilterCount = "Plotters (" + ofToString(canvas.dF->v_DrawFilters.size()) + ")###DrawFiltersHolder";
-			if (ImGui::CollapsingHeader(sDrawFilterCount.c_str()))
-			{
-				ImGui::PushStyleColor(ImGuiCol_Header, (ImVec4)ImColor::HSV(0, 0, 0.2));
-				ImGui::PushStyleColor(ImGuiCol_HeaderActive, (ImVec4)ImColor::HSV(0, 0, 0.4));
-				ImGui::PushStyleColor(ImGuiCol_HeaderHovered, (ImVec4)ImColor::HSV(0, 0, 0.7));
-
-				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0, 0, 0.2));
-				ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0, 0, 0.2));
-				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0, 0, 0.7));
-
-				ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)ImColor::HSV(0, 0, 0.2));
-				ImGui::PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4)ImColor::HSV(0, 0, 0.4));
-				ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0, 0, 0.5));
-
-				ImGui::PushStyleColor(ImGuiCol_CheckMark, (ImVec4)ImColor::HSV(0, 0, 0.8));
-
-				cleanDrawFilters = false;
-				reorderDrawFilters = false;
-				for (int i = 0; i < canvas.dF->v_DrawFilters.size(); i++) {
-					ImGui::PushID(i);
-					if (canvas.dF->v_DrawFilters[i]->active) {
-						ImGui::Indent();
-						canvas.dF->v_DrawFilters[i]->renderImGuiSettings();
-						ImGui::Unindent();
-					}
-					else {
-						cleanDrawFilters = true;
-					}
-					if (canvas.dF->v_DrawFilters[i]->moveUp || canvas.dF->v_DrawFilters[i]->moveDown) {
-						reorderDrawFilters = true;
-					}
-					ImGui::PopID();
-				}
-
-				ImGui::PopStyleColor(10);
-
-				if (ofxImGui::VectorCombo("##Draw Filter Selector", &currentDrawFilterIndex, canvas.dF->v_DrawFilterNames))
-				{
-					canvas.dF->addFilter(currentDrawFilterIndex);
-					canvas.fresh = true;
-					currentDrawFilterIndex = 0;
-				}
-			}// End Draw Filters
+			ImGui::Spacing();
+			ImGui::Spacing();
+			ImGui::Spacing();
 
 			//======================================================================================================
 
-			ImGui::Spacing();
-			ImGui::Spacing();
-
 			if (ImGui::CollapsingHeader("Canvas"))
 			{
-				canvas.renderImGuiSettings();
+				ImGui::PushID("plotcanvas");
+				plotCanvas.renderImGuiSettings();
+				ImGui::PopID();
 			}
 
 			ImGui::Spacing();

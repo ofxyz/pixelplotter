@@ -13,6 +13,7 @@ public:
 	ofPixels canvasPix;
 	ImVec4 c_canvas = ofColor(255, 255, 255, 255);
 	string canvasTitle = "Untitled";
+	int currentDrawFilterIndex = 0;
 	int exportCount = 0;
 	int sourceWidth = 640;
 	int sourceHeight = 480;
@@ -23,6 +24,8 @@ public:
 	bool fresh = false;
 	bool isRecording = false;
 	bool resizeRequest = false;
+	bool cleanDrawFilters = false;
+	bool reorderDrawFilters = false;
 	int recFrameCount = 0;
 
 	bool isFresh() {

@@ -4,7 +4,23 @@
 
 class DrawFilterController {
 public:
+	template <typename t> void move(std::vector<t>& v, size_t oldIndex, size_t newIndex)
+	{
+		if (oldIndex > newIndex)
+			std::rotate(v.rend() - oldIndex - 1, v.rend() - oldIndex, v.rend() - newIndex);
+		else
+			std::rotate(v.begin() + oldIndex, v.begin() + oldIndex + 1, v.begin() + newIndex + 1);
+	}
+
 	ofApp* pixelplotter;
+	std::vector<DrawFilter*> v_DrawFilters;
+
+	std::vector<std::string> v_DrawFilterNames{
+		"Add Plotter ...",
+		"Pixelate",
+		"Rings"
+	};
+
 	DrawFilterController() {};
 	DrawFilterController(ofApp* app) {
 		pixelplotter = app;
@@ -28,14 +44,6 @@ public:
 			}
 		}
 	}
-
-	std::vector<DrawFilter*> v_DrawFilters;
-
-	std::vector<std::string> v_DrawFilterNames{
-		"Add Draw Filter ...",
-		"Pixelate",
-		"Rings"
-	};
 
 	void addFilter(DrawFilter* filter) {
 		v_DrawFilters.push_back(filter);
