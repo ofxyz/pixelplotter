@@ -23,6 +23,7 @@ public:
 	void addVideo(ofFile file);
 	void loadImage(string& filepath);
 	void loadVideo(string& filepath);
+	void loadGenerator(string& name);
 
 	void buildSourceNames();
 

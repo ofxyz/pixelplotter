@@ -21,7 +21,21 @@ void G_plaids::draw() {
 }
 
 void G_plaids::renderImGuiSettings() {
+	if (ImGui::ColorEdit4("Background Colour", (float*)&c_bg, ImGuiColorEditFlags_NoInputs)) {
+		bFresh = true;
+	}
 
+	ImGui::Separator(); // Start Size
+
+	ImGui::PushItemWidth(60);
+	ImGui::Text("Size"); ImGui::SameLine(75);
+	if (ImGui::DragInt("W ##canvas_W", &width, 1, 1, 2400)) {
+		bFresh = true;
+	}
+	ImGui::SameLine();
+	if (ImGui::DragInt("H ##canvas_H", &height, 1, 1, 2400)) {
+		bFresh = true;
+	}
 }
 
 void G_plaids::loadSettings(ofxXmlSettings settings) {

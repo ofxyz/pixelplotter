@@ -183,7 +183,7 @@ void SourceController::loadVideo(string& filepath) {
 	bUseVideoDevice = false;
 
 	videoPlayer.load(filepath);
-	videoPlayer.setUseTexture(false);
+	//videoPlayer.setUseTexture(false);
 	currentVideoFrame = 0;
 	videoPlayer.setLoopState(OF_LOOP_NORMAL);
 	videoPlayer.play();
@@ -193,12 +193,34 @@ void SourceController::loadVideo(string& filepath) {
 
 	(videoPlayer.getWidth() > videoPlayer.getHeight()) ? isLandscape = true : isLandscape = false;
 	(isLandscape) ? imgRatio = videoPlayer.getHeight() / videoPlayer.getWidth() : imgRatio = videoPlayer.getWidth() / videoPlayer.getHeight();
-	
+
 	pixelplotter->plotCanvas.setSourceDimension(videoPlayer.getWidth(), videoPlayer.getHeight());
 }
 
-void SourceController::prepImg() {
+void SourceController::loadGenerator(string& name) {
+	// This needs it's own function
+	bUseVideo = false;
+	bUseVideoDevice = false;
+	videoPlayer.stop();
+	videoPlayer.close();
 
+	src_name = name;
+
+	// Set original frame
+	//original.loadImage(filepath);
+	//original.setImageType(OF_IMAGE_COLOR);
+
+	//pix = original.getPixels();
+
+	//frameBuffer.setup(pix);
+
+	//(videoPlayer.getWidth() > videoPlayer.getHeight()) ? isLandscape = true : isLandscape = false;
+	//(isLandscape) ? imgRatio = videoPlayer.getHeight() / videoPlayer.getWidth() : imgRatio = videoPlayer.getWidth() / videoPlayer.getHeight();
+
+	//pixelplotter->plotCanvas.setSourceDimension(videoPlayer.getWidth(), videoPlayer.getHeight());
+}
+
+void SourceController::prepImg() {
 	static ofImage updatedFrame;
 	if (updatedFrame.isAllocated() == false)
 		updatedFrame.allocate(pix.getWidth(), pix.getHeight(), OF_IMAGE_COLOR);

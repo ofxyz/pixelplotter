@@ -18,6 +18,6 @@ void ofGui::draw(){
 }
 
 void ofGui::exit() {
-	//mainApp->exit();
+	mainApp->exit();
 	OF_EXIT_APP(0);
 }

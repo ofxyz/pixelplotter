@@ -1,6 +1,7 @@
 #pragma once
 #include "drawFilter_Pixelate.h"
 #include "drawFilter_Rings.h"
+#include "drawFilter_Noise.h"
 
 class DrawFilterController {
 public:
@@ -18,7 +19,8 @@ public:
 	std::vector<std::string> v_DrawFilterNames{
 		"Add Plotter ...",
 		"Pixelate",
-		"Rings"
+		"Rings",
+		"Noise"
 	};
 
 	DrawFilterController() {};
@@ -56,6 +58,9 @@ public:
 		else if (v_DrawFilterNames[index] == "Rings") {
 			v_DrawFilters.push_back(new Df_rings(pixelplotter));
 		}
+		else if (v_DrawFilterNames[index] == "Noise") {
+			v_DrawFilters.push_back(new Df_noise(pixelplotter));
+		}
 	}
 
 	void addFilter(ofxXmlSettings filterSettings) {
@@ -66,6 +71,10 @@ public:
 		}
 		else if (filterName == "Rings") {
 			v_DrawFilters.push_back(new Df_rings(pixelplotter));
+			v_DrawFilters[v_DrawFilters.size() - 1]->loadSettings(filterSettings);
+		}
+		else if (filterName == "Noise") {
+			v_DrawFilters.push_back(new Df_noise(pixelplotter));
 			v_DrawFilters[v_DrawFilters.size() - 1]->loadSettings(filterSettings);
 		}
 	}

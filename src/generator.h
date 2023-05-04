@@ -7,6 +7,13 @@ class ofApp;
 class Generator {
 public:
 	std::string name;
+	int width;
+	int height;
+
+	//ofFbo genFbo;
+	//ofPixels genPix;
+	ImVec4 c_bg = ofColor(255, 255, 255, 255);
+
 	bool active = true;
 	bool visible = true;
 	bool moveUp = false;
@@ -25,7 +32,5 @@ public:
 	virtual void renderImGuiSettings() = 0;
 	virtual void loadSettings(ofxXmlSettings settings) = 0;
 	virtual ofxXmlSettings getSettings() = 0;
-private:
-	int w;
-	int h;
+
 };

@@ -4,6 +4,9 @@
 
 #include "ofx2d.h"
 #include "ofxImGui.h"
+#include "imgui_internal.h"
+#include "ImHelpers.h"
+
 #include "ofxPosterize.h"
 #include "ofxXmlSettings.h"
 #include "ofxOpenCv.h"
@@ -86,5 +89,8 @@ class ofApp : public ofBaseApp{
 		void gui_update();
 		void gui_loadPresets();
 		void gui_setup();
+
+		bool bLoadSettingsNextFrame;
+
 		// -------------------------------------------------  End ofUI.cpp
 };

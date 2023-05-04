@@ -37,6 +37,7 @@
 ofx2d x2d;
 
 void ofApp::setup() {
+	bLoadSettingsNextFrame = false;
 	ofLogToConsole();
 	ofSetLogLevel(OF_LOG_ERROR);
 	//ofSetLogLevel(OF_LOG_VERBOSE);
@@ -77,6 +78,11 @@ void ofApp::update() {
 
 	soundManager.update();
 	//gui_update();
+	if (bLoadSettingsNextFrame)
+	{
+		loadSettings(presetFiles[currentPresetIndex].getAbsolutePath());
+		bLoadSettingsNextFrame = false;
+	}
 	if (sourceController.loadImageNextFrame)
 	{
 		sourceController.loadSourceIndex();

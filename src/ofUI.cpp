@@ -19,7 +19,7 @@ void ofApp::gui_draw() {
 			/* Save and load presets ... */
 			if (ofxImGui::VectorCombo("##Presets", &currentPresetIndex, presetFileNames))
 			{
-				loadSettings(presetFiles[currentPresetIndex].getAbsolutePath());
+				bLoadSettingsNextFrame = true;
 				plotCanvas.resizeRequest = true;
 				plotCanvas.fresh = true;
 			}
