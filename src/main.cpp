@@ -1,39 +1,23 @@
 #include "ofMain.h"
 #include "ofApp.h"
-#include "ofGui.h"
 #include "ofAppGLFWWindow.h"
 
 //========================================================================
 int main( ){
 
 	ofGLFWWindowSettings settings;
-
-	settings.decorated = true;
-	settings.resizable = true;
-	settings.windowMode = OF_WINDOW;
-	settings.setSize(gui_width, screenH);
-	settings.setPosition(glm::vec2(50, 50));
-	shared_ptr<ofAppBaseWindow> guiWindow = ofCreateWindow(settings);
-
 	settings.decorated = true;
 	settings.windowMode = OF_WINDOW;
 	settings.setSize(screenW, screenH);
-	settings.setPosition(glm::vec2(50+ gui_width, 50)); // Monitor 1 width ...
+	settings.setPosition(glm::vec2(50, 50));
 	settings.resizable = true;
-	shared_ptr<ofAppBaseWindow> mainWindow = ofCreateWindow(settings);
 
-	shared_ptr<ofGui> mainGui(new ofGui);
+	shared_ptr<ofAppBaseWindow> mainWindow = ofCreateWindow(settings);
 	shared_ptr<ofApp> mainApp(new ofApp);
-	
-	mainApp->mainGui = mainGui;
+
 	mainApp->gl = static_pointer_cast<ofGLRenderer>(mainWindow->renderer());
 
-	mainGui->mainApp = mainApp;
-	mainGui->gl = static_pointer_cast<ofGLRenderer>(guiWindow->renderer());
-
 	ofRunApp(mainWindow, mainApp);
-	ofRunApp(guiWindow, mainGui);
 
 	ofRunMainLoop();
-
 }

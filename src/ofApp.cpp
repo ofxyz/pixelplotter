@@ -50,6 +50,7 @@ void ofApp::setup() {
 
 	//ofSetBackgroundAuto(false);
 
+	gui_setup();
 	soundManager.setup(this);
 	sourceController.setup(this);
 	plotCanvas.setup(this, &sourceController.frameBuffer.getFrame());
@@ -66,17 +67,17 @@ void ofApp::setup() {
 //--------------------------------------------------------------
 void ofApp::exit() {
 	ofRemoveListener(ofEvents().mouseScrolled, this, &ofApp::mouseScrolled);
-	OF_EXIT_APP(0);
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
-	std::stringstream strm;
-	strm << "Canvas (FPS: " << ofGetFrameRate() << ")";
-	ofSetWindowTitle(strm.str());
+	gui_update();
+	//std::stringstream strm;
+	//strm << "Canvas (FPS: " << ofGetFrameRate() << ")";
+	//ofSetWindowTitle(strm.str());
 
 	soundManager.update();
-	//gui_update();
+
 	if (bLoadSettingsNextFrame)
 	{
 		loadSettings(presetFiles[currentPresetIndex].getAbsolutePath());
@@ -117,12 +118,11 @@ void ofApp::draw() {
 		sourceController.frameBuffer.getFrame().draw(offset.x + userOffset.x, offset.y + userOffset.y, plotCanvas.canvasWidth * zoomLevel, plotCanvas.canvasHeight * zoomLevel);
 	}
 
-	//gui_draw();
+	gui_draw();
 }
 
 void ofApp::resetImageOffset() {
-	// Context swiytching multiple windows
-	offset.x = ((ofGetWidth() - (plotCanvas.canvasWidth * zoomLevel)) * 0.5) + (gui_width-12); // Need to fix this with context...
+	offset.x = ((ofGetWidth() - (plotCanvas.canvasWidth * zoomLevel)) * 0.5);
 	offset.y = (ofGetHeight() - (plotCanvas.canvasHeight * zoomLevel)) * 0.5;
 }
 

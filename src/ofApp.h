@@ -1,6 +1,5 @@
 #pragma once
 #include "ofMain.h"
-#include "ofGui.h"
 
 #include "ofx2d.h"
 #include "ofxImGui.h"
@@ -16,15 +15,14 @@
 #include "canvas.h"
 
 const int gui_width = 350;
-const int screenW = 1024;
-const int screenH = 768;
+const int screenW = 1920;
+const int screenH = 1200;
 
 extern ofx2d x2d;
 
 class ofApp : public ofBaseApp{
 
 	public:
-		shared_ptr<ofGui> mainGui;
 		shared_ptr<ofGLRenderer> gl;
 
 		void setup();
