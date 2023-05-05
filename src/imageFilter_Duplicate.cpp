@@ -43,7 +43,7 @@ void If_duplicate::renderImGuiSettings() {
 
 void If_duplicate::apply(ofImage* img) {
 	ofFbo cfbo;
-	cfbo.allocate(img->getWidth(), img->getHeight(), GL_RGB);
+	cfbo.allocate(img->getWidth(), img->getHeight(), GL_RGBA);
 
 	float width = img->getWidth() / hCount;
 	float height = img->getHeight() / vCount;

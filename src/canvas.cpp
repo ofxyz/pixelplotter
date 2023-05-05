@@ -153,7 +153,7 @@ void Canvas::setup(ofApp* app, ofImage* img, string canvas_title) {
 	dF = new DrawFilterController(pixelplotter);
 	canvasTitle  = canvas_title;
 	setSourceDimension(img);
-	canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGB, 8);
+	canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGBA, 8);
 	canvasFbo.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 	update(img);
 }
@@ -173,7 +173,7 @@ void Canvas::setSourceDimension(ofImage* img) {
 void Canvas::update() {
 
 	if (resizeRequest) {
-		canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGB, 8);
+		canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGBA, 8);
 		canvasFbo.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 		resizeRequest = false;
 		fresh = true;

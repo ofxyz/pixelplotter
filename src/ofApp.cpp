@@ -4,7 +4,6 @@
    - Pixelate filter: Add curve widget https://github.com/ocornut/imgui/issues/786
    - Pixelate filter: Create spacing adjustment curve
    - Fix Zoom and make zoom go faster with holding shift
-   - Implement alpha on all images and resources
    - Make sure UI is always rendering fast
    - Add video controls pause, play, next frame, previous frame
    - Add draw order, left to right top to bottom, center out, center in

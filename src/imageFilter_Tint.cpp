@@ -41,7 +41,7 @@ void If_tint::renderImGuiSettings() {
 
 void If_tint::apply(ofImage* img) {
 	ofFbo cfbo;
-	cfbo.allocate(img->getWidth(), img->getHeight(), GL_RGB);
+	cfbo.allocate(img->getWidth(), img->getHeight(), GL_RGBA);
 	cfbo.begin();
 	cfbo.clearColorBuffer(ofColor(0, 0, 0));
 	ofEnableAlphaBlending();

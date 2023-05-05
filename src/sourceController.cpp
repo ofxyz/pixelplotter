@@ -158,7 +158,7 @@ void SourceController::addVideo(ofFile file) {
 
 void SourceController::loadImage(string& filepath) {
 	original.loadImage(filepath);
-	original.setImageType(OF_IMAGE_COLOR);
+	original.setImageType(OF_IMAGE_COLOR_ALPHA);
 
 	pix = original.getPixels();
 
@@ -223,7 +223,7 @@ void SourceController::loadGenerator(string& name) {
 void SourceController::prepImg() {
 	static ofImage updatedFrame;
 	if (updatedFrame.isAllocated() == false)
-		updatedFrame.allocate(pix.getWidth(), pix.getHeight(), OF_IMAGE_COLOR);
+		updatedFrame.allocate(pix.getWidth(), pix.getHeight(), OF_IMAGE_COLOR_ALPHA);
 
 	for (const auto& filter : iF.v_ImageFilters) {
 		updatedFrame.setFromPixels(pix);
