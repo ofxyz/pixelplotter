@@ -132,7 +132,7 @@ void Df_noise::drawPixel(int x, int y) {
 	subpixels.clear();
 	for (int y = 0; y < 10; y++) {
 		for (int x = 0; x < 10; x++) {
-			subpixels.push_back(new subpixel(x,y));
+			subpixels.push_back(subpixel(x,y));
 		}
 	}
 
@@ -146,7 +146,7 @@ void Df_noise::drawPixel(int x, int y) {
 			for (int count = 0; count < col->percent; count++) {
 				if (subpixels.size() > 0) { // Make sure we have pixels left
 					int p = ofRandom(subpixels.size() - 1);
-					ofDrawRectangle(x + subpixels[p]->x, y + subpixels[p]->y, 1, 1);
+					ofDrawRectangle(x + subpixels[p].x, y + subpixels[p].y, 1, 1);
 					subpixels.erase(subpixels.begin() + p);
 				}
 			}

@@ -46,5 +46,5 @@ public:
 		ofColor c;
 	};
 
-	vector<subpixel*> subpixels;
+	vector<subpixel> subpixels;
 };
