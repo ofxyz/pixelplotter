@@ -2,9 +2,10 @@
 #include "ofApp.h"
 #include "ofAppGLFWWindow.h"
 
+#pragma comment(linker, "/SUBSYSTEM:Windows /ENTRY:mainCRTStartup")
+
 //========================================================================
 int main( ){
-
 	ofGLFWWindowSettings settings;
 	settings.decorated = true;
 	settings.windowMode = OF_WINDOW;
