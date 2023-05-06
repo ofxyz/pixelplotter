@@ -60,7 +60,7 @@ void ofApp::setup() {
 
 	gui_loadPresets();
 
-	plotCanvas.dF->addRandomFilter();
+	plotCanvas.dF.addRandomFilter();
 
 }
 
@@ -76,8 +76,6 @@ void ofApp::update() {
 	//strm << "Canvas (FPS: " << ofGetFrameRate() << ")";
 	//ofSetWindowTitle(strm.str());
 
-	soundManager.update();
-
 	if (bLoadSettingsNextFrame)
 	{
 		loadSettings(presetFiles[currentPresetIndex].getAbsolutePath());
@@ -88,22 +86,14 @@ void ofApp::update() {
 		sourceController.loadSourceIndex();
 		sourceController.loadImageNextFrame = false;
 	}
+
 	if (!pauseRender) {
-		if (plotCanvas.resizeRequest) {
-			sourceController.isFresh = true;
-		}
-		plotCanvas.update();
+
+		soundManager.update();
 		sourceController.update();
+		plotCanvas.update();
 
-		if (sourceController.isResized) {
-			sourceController.isResized = false;
-			plotCanvas.setSourceDimension(sourceController.frameBuffer.getWidth(), sourceController.frameBuffer.getHeight());
-		}
-
-		if (sourceController.isFresh) {
-			plotCanvas.update(&sourceController.frameBuffer.getFrame());
-			sourceController.isFresh = false;
-		} else if (sourceController.frameBuffer.isFresh() || plotCanvas.isFresh()) {
+		if (sourceController.frameBuffer.isFresh() || plotCanvas.isFresh()) {
 			plotCanvas.update(&sourceController.frameBuffer.getFrame());
 		}
 	}
@@ -156,8 +146,8 @@ void ofApp::saveSettings(string& filepath) {
 
 	settings.addTag("drawFilters");
 	settings.pushTag("drawFilters");
-	for (int i = 0; i < plotCanvas.dF->v_DrawFilters.size(); i++) {
-		ofxXmlSettings filterSettings = plotCanvas.dF->v_DrawFilters[i]->getSettings();
+	for (int i = 0; i < plotCanvas.dF.v_DrawFilters.size(); i++) {
+		ofxXmlSettings filterSettings = plotCanvas.dF.v_DrawFilters[i]->getSettings();
 		string drawFilterSettings;
 		filterSettings.copyXmlToString(drawFilterSettings);
 		settings.addValue("string_settings", drawFilterSettings);
@@ -179,7 +169,7 @@ void ofApp::loadSettings(string& filepath) {
 	ofxXmlSettings settings;
 	settings.loadFile(filepath);
 
-	plotCanvas.dF->clearFilters();
+	plotCanvas.dF.clearFilters();
 	sourceController.iF.clearFilters();
 
 	if (settings.tagExists("source")) {
@@ -189,7 +179,7 @@ void ofApp::loadSettings(string& filepath) {
 		sourceSettings.loadFromBuffer(sSourceSettings);
 		sourceController.loadSettings(sourceSettings);
 		settings.popTag();
-		plotCanvas.fresh = true;
+		plotCanvas.setFresh(true);
 	}
 
 	if (settings.tagExists("imageFilters")) {
@@ -202,7 +192,6 @@ void ofApp::loadSettings(string& filepath) {
 			sourceController.iF.addFilter(filterSettings);
 		}
 		settings.popTag();
-		sourceController.isFresh = true;
 	}
 
 	if (settings.tagExists("drawFilters")) {
@@ -212,9 +201,9 @@ void ofApp::loadSettings(string& filepath) {
 			ofxXmlSettings filterSettings;
 			string stringSettings = settings.getValue("string_settings", "", i);
 			filterSettings.loadFromBuffer(stringSettings);
-			plotCanvas.dF->addFilter(filterSettings);
+			plotCanvas.dF.addFilter(filterSettings);
 		}
-		plotCanvas.fresh = true;
+		plotCanvas.setFresh(true);
 		settings.popTag();
 	}
 
@@ -225,7 +214,7 @@ void ofApp::loadSettings(string& filepath) {
 		canvasSettings.loadFromBuffer(sCanvasSettings);
 		plotCanvas.loadSettings(canvasSettings);
 		settings.popTag();
-		plotCanvas.fresh = true;
+		plotCanvas.setFresh(true);
 	}
 }
 

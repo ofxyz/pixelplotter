@@ -68,7 +68,7 @@ void Df_noise::renderImGuiSettings() {
 		ImGui::PushItemWidth(60);
 
 		if (ImGui::ColorEdit4("Background", (float*)&cBg, ImGuiColorEditFlags_NoInputs)) {
-			bFresh = true;
+			setFresh(true);
 		}
 		// We need a pallette manager...
 		int index = 0;
@@ -81,7 +81,7 @@ void Df_noise::renderImGuiSettings() {
 			}
 			ImGui::SameLine();
 			if (ImGui::ColorEdit4(col->name.c_str(), (float*)&col->color, ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_NoLabel)) {
-				bFresh = true;
+				setFresh(true);
 			}
 			ImGui::SameLine();
 			char colorName[40];
@@ -95,7 +95,7 @@ void Df_noise::renderImGuiSettings() {
 
 			std::string pName = "Percent ##" + col->name;
 			if (ImGui::DragInt(pName.c_str(), &col->percent, 1, 1, 100)) {
-				bFresh = true;
+				setFresh(true);
 			}
 			ImGui::PopID();
 		}
@@ -109,14 +109,14 @@ void Df_noise::renderImGuiSettings() {
 		if (ImGui::Button("Add Colour"))
 		{
 			palette.push_back(new sColor(ofColor(255, 255, 255, 255), "New " + to_string(palette.size())));
-			bFresh = true;
+			setFresh(true);
 		}
 		ImGui::PopID();
 	}
 }
 
 void Df_noise::draw(ofImage* input, float width, float height, float x, float y) {
-	bFresh = false;
+	setFresh(false);
 	if (!visible) return;
 	
 	for (int y = 0; y < input->getHeight(); y += 10) {

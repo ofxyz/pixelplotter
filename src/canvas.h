@@ -8,7 +8,7 @@ class Canvas {
 public:
 	ofApp* pixelplotter;
 	ofCamera cam;
-	DrawFilterController* dF;
+	DrawFilterController dF;
 	ofFbo canvasFbo;
 	ofPixels canvasPix;
 	ImVec4 c_canvas = ofColor(255, 255, 255, 255);
@@ -21,16 +21,11 @@ public:
 	int canvasHeight = 480;
 	bool saveVector = false;
 	bool savePixels = false;
-	bool fresh = false;
 	bool isRecording = false;
 	bool resizeRequest = false;
 	bool cleanDrawFilters = false;
 	bool reorderDrawFilters = false;
 	int recFrameCount = 0;
-
-	bool isFresh() {
-		return fresh;
-	}
 
 	void renderImGuiSettings();
 	void loadSettings(ofxXmlSettings settings);
@@ -48,8 +43,8 @@ public:
 	void update(ofImage* img);
 	void draw(float x, float y, float w, float h) {
 		canvasFbo.draw(x, y, w, h);
-		fresh = false;
-	};
+		setFresh(false);
+	}
 
 	void setSourceDimension();
 	void setSourceDimension(ofImage* img);
@@ -58,4 +53,14 @@ public:
 		sourceHeight = h;
 		setSourceDimension();
 	}
+
+	bool isFresh() {
+		return bFresh;
+	}
+	void setFresh(bool fresh) {
+		bFresh = fresh;
+	}
+
+private:
+	bool bFresh = false;
 };

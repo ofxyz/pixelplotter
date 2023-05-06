@@ -12,6 +12,9 @@ public:
 	bool isFresh() {
 		return bFresh;
 	}
+	void setFresh(bool fresh) {
+		bFresh = fresh;
+	}
 
 	virtual void apply(ofImage* img) = 0;
 	virtual void renderImGuiSettings() = 0;

@@ -6,7 +6,7 @@ void Canvas::renderImGuiSettings() {
 	ImGui::Indent();
 
 	if (ImGui::ColorEdit4("Canvas Colour", (float*)&c_canvas, ImGuiColorEditFlags_NoInputs)) {
-		fresh = true;
+		setFresh(true);
 	}
 
 	ImGui::Separator(); // Start Size
@@ -28,7 +28,6 @@ void Canvas::renderImGuiSettings() {
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Fit")) {
-		// This still get the window size of current context ...
 		canvasWidth = screenW;
 		canvasHeight = screenH;
 		pixelplotter->resetZoom();
@@ -40,7 +39,7 @@ void Canvas::renderImGuiSettings() {
 
 	// Start DrawFilters
 	//----------------------------------------------------------------------------------------------------------------------
-	string sDrawFilterCount = "Plotters (" + ofToString(dF->v_DrawFilters.size()) + ")###DrawFiltersHolder";
+	string sDrawFilterCount = "Plotters (" + ofToString(dF.v_DrawFilters.size()) + ")###DrawFiltersHolder";
 	if (ImGui::CollapsingHeader(sDrawFilterCount.c_str()))
 	{
 		ImGui::PushStyleColor(ImGuiCol_Header, (ImVec4)ImColor::HSV(0, 0, 0.2));
@@ -59,17 +58,17 @@ void Canvas::renderImGuiSettings() {
 
 		cleanDrawFilters = false;
 		reorderDrawFilters = false;
-		for (int i = 0; i < dF->v_DrawFilters.size(); i++) {
+		for (int i = 0; i < dF.v_DrawFilters.size(); i++) {
 			ImGui::PushID(i);
-			if (dF->v_DrawFilters[i]->active) {
+			if (dF.v_DrawFilters[i]->active) {
 				ImGui::Indent();
-				dF->v_DrawFilters[i]->renderImGuiSettings();
+				dF.v_DrawFilters[i]->renderImGuiSettings();
 				ImGui::Unindent();
 			}
 			else {
 				cleanDrawFilters = true;
 			}
-			if (dF->v_DrawFilters[i]->moveUp || dF->v_DrawFilters[i]->moveDown) {
+			if (dF.v_DrawFilters[i]->moveUp || dF.v_DrawFilters[i]->moveDown) {
 				reorderDrawFilters = true;
 			}
 			ImGui::PopID();
@@ -78,10 +77,9 @@ void Canvas::renderImGuiSettings() {
 		ImGui::PopStyleColor(10);
 
 		ImGui::Indent(); // ADD PLOTTERS
-		if (ofxImGui::VectorCombo("##Draw Filter Selector", &currentDrawFilterIndex, dF->v_DrawFilterNames))
+		if (ofxImGui::VectorCombo("##Draw Filter Selector", &currentDrawFilterIndex, dF.v_DrawFilterNames))
 		{
-			dF->addFilter(currentDrawFilterIndex);
-			fresh = true;
+			dF.addFilter(currentDrawFilterIndex);
 			currentDrawFilterIndex = 0;
 		}
 		ImGui::Unindent();
@@ -101,7 +99,7 @@ void Canvas::renderImGuiSettings() {
 	else {
 		if (ImGui::Button("Start Recording"))
 		{
-			fresh = true;
+			setFresh(true);
 			isRecording = true;
 		}
 	}
@@ -109,12 +107,12 @@ void Canvas::renderImGuiSettings() {
 
 	if (ImGui::Button("Export Vector")) {
 		saveVector = true;
-		fresh = true;
+		setFresh(true);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Export PNG")) {
 		savePixels = true;
-		fresh = true;
+		setFresh(true);
 	}
 	ImGui::Unindent();
 	ImGui::Separator(); // End Size 
@@ -131,7 +129,7 @@ void Canvas::loadSettings(ofxXmlSettings settings) {
 	c_canvas.w = settings.getValue("colors:plotCanvas:a", c_canvas.w);
 
 	resizeRequest = true;
-	fresh = true;
+	setFresh(true);
 }
 
 ofxXmlSettings Canvas::getSettings() {
@@ -150,7 +148,7 @@ ofxXmlSettings Canvas::getSettings() {
 
 void Canvas::setup(ofApp* app, ofImage* img, string canvas_title) {
 	pixelplotter = app;
-	dF = new DrawFilterController(pixelplotter);
+	dF = DrawFilterController(pixelplotter);
 	canvasTitle  = canvas_title;
 	setSourceDimension(img);
 	canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGBA, 8);
@@ -171,35 +169,33 @@ void Canvas::setSourceDimension(ofImage* img) {
 }
 
 void Canvas::update() {
+	dF.update();
+	if (cleanDrawFilters) {
+		dF.cleanFilters();
+	}
+	if (reorderDrawFilters) {
+		dF.reorder();
+	}
+	if (dF.isFresh()) {
+		dF.setFresh(false);
+		setFresh(true);
+	}
 
 	if (resizeRequest) {
 		canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGBA, 8);
 		canvasFbo.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 		resizeRequest = false;
-		fresh = true;
+		setFresh(true);
 		return;
 	}
 	if (isRecording) {
-		fresh = true;
+		setFresh(true);
 		return;
-	}
-	if (cleanDrawFilters) {
-		dF->cleanFilters();
-		fresh = true;
-	}
-	if (reorderDrawFilters) {
-		dF->reorder();
-		fresh = true;
-	}
-	for (const auto& filter : dF->v_DrawFilters) {
-		if (filter->isFresh()) {
-			fresh = true;
-			return;
-		}
 	}
 }
 
 void Canvas::update(ofImage* img) {
+	update();
 	canvasFbo.begin();
 	if (saveVector) {
 		// This swaps out the gl renderer for the ciaro renderer
@@ -208,12 +204,14 @@ void Canvas::update(ofImage* img) {
 
 	ofClear(c_canvas);
 
-	for (const auto& filter : dF->v_DrawFilters) {
+	// This needs to be a filter controller update
+	for (const auto& filter : dF.v_DrawFilters) {
 		// update one filter per frame to keep things speeedy?
 		// Each filter draws to it's own fbo and are drawn here?
 		// filter->update(img); filter->update(settings)
 		filter->draw(img, canvasWidth, canvasHeight);
 	}
+	dF.setFresh(false); // See
 
 	if (saveVector) {
 		ofEndSaveScreenAsPDF();
@@ -234,5 +232,5 @@ void Canvas::update(ofImage* img) {
 		savePixels = false;
 	}
 
-	fresh = true;
+	setFresh(false);
 };

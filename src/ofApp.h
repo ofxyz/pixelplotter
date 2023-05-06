@@ -14,11 +14,22 @@
 #include "sourceController.h"
 #include "canvas.h"
 
-const int gui_width = 350;
+const int gui_width = 400;
 const int screenW = 1920;
 const int screenH = 1200;
 
 extern ofx2d x2d;
+
+static void HelpMarker(const char* desc) {
+	ImGui::TextDisabled("(?)");
+	if (ImGui::IsItemHovered()) {
+		ImGui::BeginTooltip();
+		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+		ImGui::TextUnformatted(desc);
+		ImGui::PopTextWrapPos();
+		ImGui::EndTooltip();
+	}
+}
 
 class ofApp : public ofBaseApp{
 

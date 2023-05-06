@@ -4,10 +4,11 @@
 void SoundManager::renderImGuiSettings() {
 	if (!soundDeviceNames.empty())
 	{
-		if (ofxImGui::VectorCombo("##Sound Devices", &currentSoundDeviceIndex, soundDeviceNames))
+		if (ofxImGui::VectorCombo("Sound Devices", &currentSoundDeviceIndex, soundDeviceNames))
 		{
 			loadSoundDeviceIndex();
 		}
+		ImGui::SameLine(); HelpMarker("A sound source can be used as a modulator.");
 	}
 }
 

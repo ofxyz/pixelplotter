@@ -3,7 +3,7 @@
 void ofApp::gui_update() {
 	if (cleanImageFilters) {
 		sourceController.iF.cleanFilters();
-		sourceController.isFresh = true;
+		cleanImageFilters = false;
 	}
 }
 
@@ -21,7 +21,7 @@ void ofApp::gui_draw() {
 			{
 				bLoadSettingsNextFrame = true;
 				plotCanvas.resizeRequest = true;
-				plotCanvas.fresh = true;
+				plotCanvas.setFresh(true);
 			}
 
 			if (presetFileNames.size() > 0) {
@@ -57,7 +57,7 @@ void ofApp::gui_draw() {
 			ImGui::Spacing();
 			ImGui::Spacing();
 
-			string sSourceFilterCount = "Sources (" + ofToString(sourceController.iF.v_ImageFilters.size()+1) + ")###Source";
+			string sSourceFilterCount = "Plot Source (" + ofToString(sourceController.iF.v_ImageFilters.size()+1) + ")###Source";
 			if (ImGui::CollapsingHeader(sSourceFilterCount.c_str()))
 			{
 				sourceController.renderImGuiSettings();
@@ -119,7 +119,7 @@ void ofApp::gui_draw() {
 
 			//======================================================================================================
 
-			if (ImGui::CollapsingHeader("Canvas"))
+			if (ImGui::CollapsingHeader("Plot Canvas"))
 			{
 				ImGui::PushID("plotcanvas");
 				plotCanvas.renderImGuiSettings();

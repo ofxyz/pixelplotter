@@ -17,6 +17,7 @@ public:
 private:
 	void drawRectangle(float offsetX, float offsetY, float w, float h, ofColor c);
 	void drawEllipse(float offsetX, float offsetY, float w, float h, ofColor c);
+	void drawRoundedRect(float offsetX, float offsetY, float w, float h, ofColor c);
 	void drawRgbSeperation_Fill(float offsetX, float offsetY, float w, float h, ofColor c);
 	void drawRgbSeperation_Center(float offsetX, float offsetY, float w, float h, ofColor c);
 	void drawRgbSeperation_Square(float offsetX, float offsetY, float w, float h, ofColor c);
@@ -26,6 +27,8 @@ private:
 	void drawCMYKSeperation_Bars(float offsetX, float offsetY, float w, float h, ofColor c);
 	void drawColorAdjust(float offsetX, float offsetY, float w, float h, ofColor c);
 	void drawUnusualOverprint(float offsetX, float offsetY, float w, float h, ofColor c);
+
+	void quadraticBezierVertex(float cpx, float cpy, float x, float y, float prevX, float prevY);
 
 	void drawPixel(float w, float h, ofColor c);
 	float getRotation(ofColor c, float w, float h);
@@ -91,6 +94,7 @@ private:
 	int ignoreSeedAddon = 1;
 	int ignoreSeed = 0;
 	float cLerp = 0;
+	float rounded = 0;
 
 	ofVec2f rotationMinMax = ofVec2f(0, 0);
 	ofVec2f widthMinMax = ofVec2f(5, 50);

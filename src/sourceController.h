@@ -42,7 +42,6 @@ public:
 	bool bUseVideo = false;
 	bool bUseGenerator = false;
 	bool bUseVideoDevice = false;
-	bool isFresh = false;
 	bool isResized = false;
 	bool isLandscape = false;
 	bool mirrorV = false;

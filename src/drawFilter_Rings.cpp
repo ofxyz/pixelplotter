@@ -44,38 +44,38 @@ void Df_rings::renderImGuiSettings() {
 
 		ImGui::PushItemWidth(100);
 		if (ImGui::DragInt("Blur ##rings", &cvBlur, 1, 0, 500)) {
-			bFresh = true;
+			setFresh(true);
 		}
 		ImGui::SameLine();
 		if (ImGui::DragFloat("SFX ##blurRings", &sBlurMapTo, 0.1f, 1, 600, "%.3f")) {
-			bFresh = true;
+			setFresh(true);
 		}
 
 		if (ImGui::DragInt("Threshold ##rings", &cvThresh, 1, 0, 255)) {
-			bFresh = true;
+			setFresh(true);
 		}
 		if (ImGui::DragInt("Ring Count ##rings", &cvSteps, 1, 1, 255)) {
-			bFresh = true;
+			setFresh(true);
 		}
 		ImGui::SameLine();
 		if (ImGui::DragFloat("SFX ##stepRings", &sStepMapTo, 0.1f, 1, 500, "%.3f")) {
-			bFresh = true;
+			setFresh(true);
 		}
 
 		if (ImGui::DragFloat("Line Width ##rings", &lineWidth, 0.1f, 0.1, 50, "%.3f")) {
-			bFresh = true;
+			setFresh(true);
 		}
 		
 		ImGui::PopItemWidth();
 
 		if (ImGui::ColorEdit4("Blobline ##rings", (float*)&c_blob, ImGuiColorEditFlags_NoInputs)) {
-			bFresh = true;
+			setFresh(true);
 		}
 	}
 }
 
 void Df_rings::draw(ofImage* input, float width, float height, float x, float y) {
-	bFresh = false;
+	setFresh(false);
 	if (!visible) return;
 
 	// -------------------------------- Update -> MOVE TO!

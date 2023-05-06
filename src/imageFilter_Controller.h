@@ -5,6 +5,22 @@
 
 class ImageFilterController {
 public:
+	bool bFresh = false;
+	bool isFresh() {
+		return bFresh;
+	}
+	void setFresh(bool fresh) {
+		bFresh = fresh;
+	}
+
+	void update() {
+		for (const auto& filter : v_ImageFilters) {
+			if (filter->isFresh()) {
+				bFresh = true;
+				filter->setFresh(false);
+			}
+		}
+	}
 
 	std::vector<ImageFilter*> v_ImageFilters;
 
@@ -17,15 +33,19 @@ public:
 
 	void addFilter(ImageFilter* filter) {
 		v_ImageFilters.push_back(filter);
+		bFresh = true;
 	}
 
 	void addFilter(int index) {
 		if (v_ImageFilterNames[index] == "Mirror") {
 			v_ImageFilters.push_back(new If_mirror);
+			bFresh = true;
 		} else if (v_ImageFilterNames[index] == "Duplicate") {
 			v_ImageFilters.push_back(new If_duplicate);
+			bFresh = true;
 		} else if (v_ImageFilterNames[index] == "Tint") {
 			v_ImageFilters.push_back(new If_tint);
+			bFresh = true;
 		}
 	}
 
@@ -34,12 +54,15 @@ public:
 		if (filterName == "Mirror") {
 			v_ImageFilters.push_back(new If_mirror);
 			v_ImageFilters[v_ImageFilters.size() - 1]->loadSettings(filterSettings);
+			bFresh = true;
 		} else if (filterName == "Duplicate") {
 			v_ImageFilters.push_back(new If_duplicate);
 			v_ImageFilters[v_ImageFilters.size() - 1]->loadSettings(filterSettings);
+			bFresh = true;
 		} else if (filterName == "Tint") {
 			v_ImageFilters.push_back(new If_tint);
 			v_ImageFilters[v_ImageFilters.size() - 1]->loadSettings(filterSettings);
+			bFresh = true;
 		}
 	}
 
@@ -52,6 +75,7 @@ public:
 			if (!v_ImageFilters[i]->active) {
 				delete v_ImageFilters[i];
 				v_ImageFilters[i] = nullptr;
+				bFresh = true;
 			}
 		}
 		v_ImageFilters.erase(std::remove(v_ImageFilters.begin(), v_ImageFilters.end(), nullptr), v_ImageFilters.end());
@@ -63,6 +87,6 @@ public:
 			v_ImageFilters[i] = nullptr;
 		}
 		v_ImageFilters.erase(std::remove(v_ImageFilters.begin(), v_ImageFilters.end(), nullptr), v_ImageFilters.end());
+		bFresh = true;
 	}
-
 };

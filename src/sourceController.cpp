@@ -54,15 +54,14 @@ void SourceController::update() {
 		}
 	}
 	else { // Static Image
-		for (const auto& filter : iF.v_ImageFilters) {
-			if (filter->isFresh()) {
-				pix = original.getPixels();
-				prepImg();
-				continue;
-			}
+		if (iF.isFresh()) {
+			pix = original.getPixels();
+			prepImg();
+			iF.setFresh(false);
 		}
 	}
 
+	iF.update();
 	frameBuffer.update();
 }
 
@@ -132,7 +131,6 @@ void SourceController::loadSourceIndex() {
 		loadImage(imgFiles[currentSourceIndex - videoDevices.size() - videoFiles.size()-1].getAbsolutePath());
 	}
 
-	isFresh = true;
 	isResized = true;
 }
 
@@ -230,6 +228,6 @@ void SourceController::prepImg() {
 		filter->apply(&updatedFrame);
 		pix = updatedFrame.getPixels();
 	}
-
+	iF.setFresh(false);
 	frameBuffer.addFrame(pix);
 }

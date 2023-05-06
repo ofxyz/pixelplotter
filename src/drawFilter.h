@@ -15,14 +15,6 @@ public:
 
 	std::string name;
 
-	bool bFresh = false;
-	bool isFresh() {
-		return bFresh;
-	}
-	void setFresh(bool fresh) {
-		bFresh = fresh;
-	}
-
 	virtual void draw(ofImage* input, float width = 0, float height = 0, float x = 0, float y = 0) = 0;
 	virtual void renderImGuiSettings() = 0;
 	virtual void loadSettings(ofxXmlSettings settings) = 0;
@@ -42,7 +34,7 @@ public:
 		}
 		ImGui::SameLine();
 		if (ImGui::Checkbox("Visible", &visible)) {
-			bFresh = true;
+			setFresh(true);
 		}
 	}
 
@@ -66,7 +58,7 @@ public:
 		c_cyanBlue = ofColor(139, 139, 139);
 		c_yellowGreen = ofColor(239, 239, 239);
 		c_black = ofColor(0, 0, 0);
-		bFresh = true;
+		setFresh(true);
 	}
 
 	void gui_setRGB() {
@@ -74,7 +66,7 @@ public:
 		c_cyanBlue = ofColor(0, 0, 255);
 		c_yellowGreen = ofColor(0, 255, 0);
 		c_black = ofColor(0, 0, 0);
-		bFresh = true;
+		setFresh(true);
 	}
 
 	void gui_setCMYK() {
@@ -82,7 +74,7 @@ public:
 		c_cyanBlue = ofColor(0, 174, 239);
 		c_yellowGreen = ofColor(255, 242, 0);
 		c_black = ofColor(0, 0, 0);
-		bFresh = true;
+		setFresh(true);
 	}
 
 	void gui_setRYB() {
@@ -90,7 +82,7 @@ public:
 		c_cyanBlue = ofColor(19, 57, 166);
 		c_yellowGreen = ofColor(255, 230, 0);
 		c_black = ofColor(0, 0, 0);
-		bFresh = true;
+		setFresh(true);
 	}
 
 	void renderImGuiColourSettings(bool colors, bool mask) {
@@ -99,30 +91,30 @@ public:
 			{
 				if (colors) {
 					if (ImGui::ColorEdit4("Cyan / Blue ##drawFilter", (float*)&c_cyanBlue, ImGuiColorEditFlags_NoInputs)) {
-						bFresh = true;
+						setFresh(true);
 					}
 					if (ImGui::ColorEdit4("Magenta / Red ##drawFilter", (float*)&c_magentaRed, ImGuiColorEditFlags_NoInputs)) {
-						bFresh = true;
+						setFresh(true);
 					}
 					if (ImGui::ColorEdit4("Yellow / Green ##drawFilter", (float*)&c_yellowGreen, ImGuiColorEditFlags_NoInputs)) {
-						bFresh = true;
+						setFresh(true);
 					}
 					if (ImGui::ColorEdit4("Key / Black ##drawFilter", (float*)&c_black, ImGuiColorEditFlags_NoInputs)) {
-						bFresh = true;
+						setFresh(true);
 					}
 				}
 				if (mask) {
 					if (ImGui::ColorEdit4("Mask ##drawFilter", (float*)&c_mask, ImGuiColorEditFlags_NoInputs)) {
-						bFresh = true;
+						setFresh(true);
 					}
 					ImGui::SameLine();
 					if (ImGui::Checkbox("Use Mask ##drawFilter", &useMask)) {
-						bFresh = true;
+						setFresh(true);
 					}
 					ImGui::SameLine();
 					ImGui::PushItemWidth(60);
 					if (ImGui::DragInt("Margin ##drawFilter", &maskMargin, 1, 0, 255)) {
-						bFresh = true;
+						setFresh(true);
 					}
 					ImGui::PopItemWidth();
 				}
@@ -171,7 +163,6 @@ public:
 		else {
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		}
-		bFresh = true;
 	}
 
 	float percent(float percentage, float total) {
@@ -185,5 +176,15 @@ public:
 	ImVec4 c_yellowGreen = ofColor(255, 242, 0, 255);
 	ImVec4 c_black = ofColor(0, 0, 0, 255);
 	ImVec4 c_mask = ofColor(255, 255, 255, 255);
+
+	bool isFresh() {
+		return bFresh;
+	}
+	void setFresh(bool fresh) {
+		bFresh = fresh;
+	}
+
+private:
+	bool bFresh = false;
 };
 
