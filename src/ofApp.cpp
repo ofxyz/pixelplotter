@@ -225,7 +225,8 @@ void ofApp::loadSettings(string& filepath) {
 void ofApp::keyPressed(int key) { 
 
 	if (key == 'g' || key == 'G') {
-		bShowGui = !bShowGui;
+		bShowMenuBar = !bShowMenuBar;
+		//bShowGui = !bShowGui;
 	}
 	else if (key == '-') {
 		zoomLevel -= 0.1;

@@ -9,14 +9,90 @@ void ofApp::gui_update() {
 
 void ofApp::gui_draw() {
 	gui.begin();
+
+	if (bShowMenuBar) {
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(5, 10));
+		ImGui::BeginMainMenuBar();
+		ImGui::PopStyleVar();
+
+		if (ImGui::BeginMenu("PixelPlotter", &bShowMenuBar)) {
+			ImGui::Checkbox("Show Properties", &bShowGui);
+			ImGui::SameLine(); HelpMarker("Shows properties window...");
+
+			// Submenu
+			ImGui::Separator();
+			if (ImGui::BeginMenu("More...")) {
+				ImGui::MenuItem("Something");
+				ImGui::MenuItem("Something else");
+				ImGui::MenuItem("Something different");
+				ImGui::EndMenu();
+			}
+
+			// Exit
+			ImGui::Separator();
+			if (ImGui::MenuItem("Quit")) {
+				ofExit();
+			}
+
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Settings")) {
+
+			// Full Screen
+			static bool fullScreen = false;
+			if (ImGui::Checkbox("Full screen", &fullScreen)) {
+				ofSetFullscreen(fullScreen);
+			}
+
+			// Vertical Sync
+			static bool vSync = false;
+			if (ImGui::Checkbox("Vertical Sync", &vSync)) {
+				ofSetVerticalSync(vSync);
+			}
+
+			ImGui::Separator();
+
+			// Resolution changer
+			static int resolution[2];
+			resolution[0] = ofGetWidth();
+			resolution[1] = ofGetHeight();
+			std::string resString = ofToString(resolution[0]).append(" x ").append(ofToString(resolution[1]));
+			if (ImGui::BeginCombo("Resolution", resString.c_str())) {
+				if (ImGui::Selectable("800 x 600")) {
+					ofSetWindowShape(800, 600);
+				}
+				if (ImGui::Selectable("1024 x 768")) {
+					ofSetWindowShape(1024, 768);
+				}
+				if (ImGui::Selectable("1366 x 768")) {
+					ofSetWindowShape(1366, 768);
+				}
+				if (ImGui::InputInt2("Custom", resolution)) {
+					ofSetWindowShape(resolution[0], resolution[1]);
+				}
+				ImGui::EndCombo();
+			}
+
+			ImGui::Separator();
+
+			soundManager.renderImGuiSettings();
+
+			ImGui::EndMenu();
+		}
+
+		ImGui::EndMainMenuBar();
+		
+	}
+
 	{
 		if (bShowGui)
 		{
-			ImGui::SetNextWindowSize(ofVec2f(gui_width, ofGetHeight()));
-			ImGui::SetNextWindowPos(ofVec2f(ofGetWidth() - gui_width, 0));
-			ImGui::Begin("Pixel Plotter", &bShowGui, ImGuiWindowFlags_NoDecoration);
+			ImGui::SetNextWindowSize(ofVec2f(gui_width, 500), ImGuiCond_Once);
+			ImGui::SetNextWindowPos(ofVec2f(ofGetWidth() - gui_width, 0), ImGuiCond_Once);
+			ImGui::Begin("Properties", &bShowGui);
 
-			/* Save and load presets ... */
+			// Save and load presets ... 
 			if (ofxImGui::VectorCombo("##Presets", &currentPresetIndex, presetFileNames))
 			{
 				bLoadSettingsNextFrame = true;
@@ -102,11 +178,6 @@ void ofApp::gui_draw() {
 
 				// End ImageFilters
 				//-----------------------------------------------------------------------------------------------------
-
-				ImGui::Spacing();
-
-				soundManager.renderImGuiSettings();
-
 			}
 
 			//======================================================================================================
@@ -174,7 +245,7 @@ void ofApp::gui_loadPresets() {
 
 void ofApp::gui_setup()
 {
-	gui.setup();
+	gui.setup(nullptr, true, ImGuiConfigFlags_DockingEnable, true, true);
 
 	ImGui::StyleColorsDark();
 	ImGuiStyle* style = &ImGui::GetStyle();

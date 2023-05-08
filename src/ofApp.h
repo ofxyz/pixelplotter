@@ -75,6 +75,7 @@ class ofApp : public ofBaseApp{
 		bool cleanImageFilters = false;
 		
 		bool bSavePreset = false;
+		bool bShowMenuBar = true;
 		bool bShowGui = true;
 		bool pauseRender = false;
 		bool bDragCanvas = false;
