@@ -12,7 +12,7 @@ public:
 	ofFbo canvasFbo;
 	ofPixels canvasPix;
 	ImVec4 c_canvas = ofColor(255, 255, 255, 255);
-	string canvasTitle = "Untitled";
+	std::string canvasTitle = "Untitled";
 	int currentDrawFilterIndex = 0;
 	int exportCount = 0;
 	int sourceWidth = 640;
@@ -25,6 +25,7 @@ public:
 	bool resizeRequest = false;
 	bool cleanDrawFilters = false;
 	bool reorderDrawFilters = false;
+	bool bExportWithTimeStamp = true;
 	int recFrameCount = 0;
 
 	void renderImGuiSettings();

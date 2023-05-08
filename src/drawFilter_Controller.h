@@ -96,7 +96,7 @@ public:
 	}
 
 	void addRandomFilter() {
-		addFilter(ofRandom(1, v_DrawFilterNames.size() - 1));
+		addFilter(ofRandom(1, v_DrawFilterNames.size() - 2));
 	}
 
 	void cleanFilters() {

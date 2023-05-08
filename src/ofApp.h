@@ -5,6 +5,7 @@
 #include "ofxImGui.h"
 #include "imgui_internal.h"
 #include "ImHelpers.h"
+#include "imgui_stdlib.h"
 
 #include "ofxPosterize.h"
 #include "ofxXmlSettings.h"

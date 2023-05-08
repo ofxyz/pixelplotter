@@ -5,6 +5,8 @@
 void Canvas::renderImGuiSettings() {
 	ImGui::Indent();
 
+	ImGui::InputText("Title", &canvasTitle);
+
 	if (ImGui::ColorEdit4("Canvas Colour", (float*)&c_canvas, ImGuiColorEditFlags_NoInputs)) {
 		setFresh(true);
 	}
@@ -114,6 +116,10 @@ void Canvas::renderImGuiSettings() {
 		savePixels = true;
 		setFresh(true);
 	}
+
+	ImGui::SameLine();
+	ImGui::Checkbox("Add Timestamp", &bExportWithTimeStamp);
+
 	ImGui::Unindent();
 	ImGui::Separator(); // End Size 
 }
@@ -122,6 +128,8 @@ void Canvas::loadSettings(ofxXmlSettings settings) {
 	canvasTitle = settings.getValue("canvasTitle", canvasTitle);
 	canvasWidth = settings.getValue("canvasWidth", canvasWidth);
 	canvasHeight = settings.getValue("canvasHeight", canvasHeight);
+	canvasTitle = settings.getValue("canvasTitle", canvasTitle);
+	bExportWithTimeStamp = settings.getValue("exportWithTimeStamp", bExportWithTimeStamp);
 
 	c_canvas.x = settings.getValue("colors:plotCanvas:r", c_canvas.x);
 	c_canvas.y = settings.getValue("colors:plotCanvas:g", c_canvas.y);
@@ -137,6 +145,8 @@ ofxXmlSettings Canvas::getSettings() {
 	settings.setValue("canvasTitle", canvasTitle);
 	settings.setValue("canvasWidth", canvasWidth);
 	settings.setValue("canvasHeight", canvasHeight);
+	settings.setValue("canvasTitle", canvasTitle);
+	settings.setValue("exportWithTimeStamp", bExportWithTimeStamp);
 
 	settings.setValue("colors:plotCanvas:r", c_canvas.x);
 	settings.setValue("colors:plotCanvas:g", c_canvas.y);
@@ -199,7 +209,11 @@ void Canvas::update(ofImage* img) {
 	canvasFbo.begin();
 	if (saveVector) {
 		// This swaps out the gl renderer for the ciaro renderer
-		ofBeginSaveScreenAsPDF("export//" + canvasTitle + "_" + to_string(++exportCount) + ".pdf", false);
+		string stamp = to_string(++exportCount);
+		if (bExportWithTimeStamp) {
+			stamp = ofGetTimestampString();
+		}
+		ofBeginSaveScreenAsPDF("export//" + canvasTitle + "_" + stamp + ".pdf", false);
 	}
 
 	ofClear(c_canvas);
@@ -228,7 +242,11 @@ void Canvas::update(ofImage* img) {
 		ofSaveImage(canvasPix, "export//frames//" + canvasTitle + "_" + with_leading_zero(++recFrameCount, 8) + ".png");
 	}
 	if (savePixels) {
-		ofSaveImage(canvasPix, "export//" + canvasTitle + "_" + to_string(++exportCount) + ".png");
+		string stamp = to_string(++exportCount);
+		if (bExportWithTimeStamp) {
+			stamp = ofGetTimestampString();
+		}
+		ofSaveImage(canvasPix, "export//" + canvasTitle + "_" + stamp + ".png");
 		savePixels = false;
 	}
 

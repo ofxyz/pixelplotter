@@ -6,10 +6,11 @@ class FrameBuffer {
 public:
 
 	void setup(ofPixels firstFrame) {
+		qFrames.clear();
 		currentFrame.getPixelsRef() = firstFrame;
 		currentFrame.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 		currentFrame.update();
-		setFresh(true);
+		bFresh = true;
 	}
 
 	void addFrame(ofPixels freshPixels) {
@@ -21,12 +22,12 @@ public:
 			currentFrame.getPixelsRef() = qFrames[0];
 			currentFrame.update();
 			qFrames.pop_front();
-			setFresh(true);
+			bFresh = true;
 		}
 	}
 
 	ofImage& getFrame() {
-		setFresh(false);
+		bFresh = false;
 		return currentFrame;
 	}
 
@@ -36,10 +37,6 @@ public:
 
 	float getHeight() {
 		return currentFrame.getHeight();
-	}
-
-	void setFresh(bool fresh) {
-		bFresh = fresh;
 	}
 
 	bool isFresh() {

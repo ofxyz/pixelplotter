@@ -51,6 +51,7 @@ void ofApp::setup() {
 	//ofSetBackgroundAuto(false);
 
 	gui_setup();
+	
 	soundManager.setup(this);
 	sourceController.setup(this);
 	plotCanvas.setup(this, &sourceController.frameBuffer.getFrame());
@@ -172,6 +173,7 @@ void ofApp::loadSettings(string& filepath) {
 	plotCanvas.dF.clearFilters();
 	sourceController.iF.clearFilters();
 
+	/* Don't load source for settings ...
 	if (settings.tagExists("source")) {
 		settings.pushTag("source");
 		ofxXmlSettings sourceSettings;
@@ -181,6 +183,7 @@ void ofApp::loadSettings(string& filepath) {
 		settings.popTag();
 		plotCanvas.setFresh(true);
 	}
+	*/
 
 	if (settings.tagExists("imageFilters")) {
 		settings.pushTag("imageFilters");

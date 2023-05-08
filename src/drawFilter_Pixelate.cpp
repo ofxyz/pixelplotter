@@ -32,7 +32,7 @@ void Df_pixelate::loadSettings(ofxXmlSettings settings) {
 	ignoreSeedAddon = settings.getValue("ignoreSeedAddon", ignoreSeedAddon);
 
 	cLerp = settings.getValue("cLerp", cLerp);
-	rounded = settings.getValue("cLerp", rounded);
+	rounded = settings.getValue("rounded", rounded);
 
 	ui_currentRotationMap = x2d.getIndex(v_pixelDataMapOptions, settings.getValue("rotationMap", "None"), 0);
 	rotationMinMax[0] = settings.getValue("rotationMin", 0);

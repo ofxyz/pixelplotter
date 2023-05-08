@@ -27,7 +27,7 @@ void SourceController::renderImGuiSettings() {
 }
 
 void SourceController::loadSettings(ofxXmlSettings settings) {
-	currentSourceIndex = x2d.getIndex(sourceNames, settings.getValue("source", "Undefined"), 0);
+	currentSourceIndex = x2d.getIndex(sourceNames, settings.getValue("source", "Undefined"), currentSourceIndex);
 	loadSourceIndex();
 }
 
