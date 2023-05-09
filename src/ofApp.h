@@ -88,6 +88,7 @@ class ofApp : public ofBaseApp{
 		glm::vec2 lastDraggedPos;
 
 		ofxImGui::Gui gui;
+
 		ImVec4 c_background = ofColor(50, 50, 50, 255);
 		
 		std::vector<std::string> presetFileNames;
