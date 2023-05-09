@@ -51,9 +51,9 @@ xcuserdata
 ipch/
 
 # Visual Studio + 
-*.sln
-*.vcxproj
-*.vcxproj.*
+#*.sln
+#*.vcxproj
+#*.vcxproj.*
 
 # Eclipse
 .metadata
