@@ -96,11 +96,13 @@ class ofApp : public ofBaseApp{
 		ofVec2f offset;
 
 		// -------------------------------------------------  Start ofUI.cpp
-		void gui_draw();
-		void gui_update();
-		void gui_loadPresets();
 		void gui_setup();
-
+		void gui_update();
+		void gui_draw();
+		void gui_drawMenuBar();
+		void gui_drawCanvasWindow();
+		void gui_loadPresets();
+		
 		bool bLoadSettingsNextFrame;
 
 		// -------------------------------------------------  End ofUI.cpp

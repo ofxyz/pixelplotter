@@ -10,84 +10,38 @@ void ofApp::gui_update() {
 void ofApp::gui_draw() {
 	gui.begin();
 
-	if (bShowMenuBar) {
-		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(5, 10));
-		ImGui::BeginMainMenuBar();
-		ImGui::PopStyleVar();
+	// Make windows transparent, to demonstrate drawing behind them.
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, IM_COL32(200, 200, 200, 128)); // This styles the docked windows
 
-		if (ImGui::BeginMenu("PixelPlotter", &bShowMenuBar)) {
-			ImGui::Checkbox("Show Properties", &bShowGui);
-			ImGui::SameLine(); HelpMarker("Shows properties window...");
+	ImGuiDockNodeFlags dockingFlags = ImGuiDockNodeFlags_PassthruCentralNode; // Make the docking space transparent
+	// Fixes imgui to expected behaviour, having a transparent central node in passthru mode.
+	// Alternative: Otherwise add in ImGui::DockSpace() [±line 14505] : if (flags & ImGuiDockNodeFlags_PassthruCentralNode) window_flags |= ImGuiWindowFlags_NoBackground;
+	ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(0, 0, 0, 0));
 
-			// Submenu
-			ImGui::Separator();
-			if (ImGui::BeginMenu("More...")) {
-				ImGui::MenuItem("Something");
-				ImGui::MenuItem("Something else");
-				ImGui::MenuItem("Something different");
-				ImGui::EndMenu();
-			}
+	//dockingFlags |= ImGuiDockNodeFlags_NoDockingInCentralNode; // Uncomment to always keep an empty "central node" (a visible oF space)
+	//dockingFlags |= ImGuiDockNodeFlags_NoTabBar; // Uncomment to disable creating tabs in the main view
 
-			// Exit
-			ImGui::Separator();
-			if (ImGui::MenuItem("Quit")) {
-				ofExit();
-			}
+	// Define the ofWindow as a docking space
+	ImGuiID dockNodeID = ImGui::DockSpaceOverViewport(NULL, dockingFlags); // Also draws the docked windows
+	ImGui::PopStyleColor(2);
 
-			ImGui::EndMenu();
+	ImGuiDockNode* dockNode = ImGui::DockBuilderGetNode(dockNodeID);
+	if (dockNode) {
+		ImGuiDockNode* centralNode = ImGui::DockBuilderGetCentralNode(dockNodeID);
+		// Verifies if the central node is empty (visible empty space for oF)
+		if (centralNode && centralNode->IsEmpty()) {
+			ImRect availableSpace = centralNode->Rect();
+			//ImGui::GetForegroundDrawList()->AddRect(availableSpace.GetTL() + ImVec2(8, 8), availableSpace.GetBR() - ImVec2(8, 8), IM_COL32(255, 50, 50, 255));
+			//ImVec2 viewCenter = availableSpace.GetCenter();
 		}
-
-		if (ImGui::BeginMenu("Settings")) {
-
-			// Full Screen
-			static bool fullScreen = false;
-			if (ImGui::Checkbox("Full screen", &fullScreen)) {
-				ofSetFullscreen(fullScreen);
-			}
-
-			// Vertical Sync
-			static bool vSync = false;
-			if (ImGui::Checkbox("Vertical Sync", &vSync)) {
-				ofSetVerticalSync(vSync);
-			}
-
-			ImGui::Separator();
-
-			// Resolution changer
-			static int resolution[2];
-			resolution[0] = ofGetWidth();
-			resolution[1] = ofGetHeight();
-			std::string resString = ofToString(resolution[0]).append(" x ").append(ofToString(resolution[1]));
-			if (ImGui::BeginCombo("Resolution", resString.c_str())) {
-				if (ImGui::Selectable("800 x 600")) {
-					ofSetWindowShape(800, 600);
-				}
-				if (ImGui::Selectable("1024 x 768")) {
-					ofSetWindowShape(1024, 768);
-				}
-				if (ImGui::Selectable("1366 x 768")) {
-					ofSetWindowShape(1366, 768);
-				}
-				if (ImGui::InputInt2("Custom", resolution)) {
-					ofSetWindowShape(resolution[0], resolution[1]);
-				}
-				ImGui::EndCombo();
-			}
-
-			ImGui::Separator();
-
-			soundManager.renderImGuiSettings();
-
-			ImGui::EndMenu();
-		}
-
-		ImGui::EndMainMenuBar();
-		
 	}
 
+	gui_drawMenuBar();
 	{
 		if (bShowGui)
 		{
+			gui_drawCanvasWindow();
+
 			ImGui::SetNextWindowSize(ofVec2f(gui_width, 500), ImGuiCond_Once);
 			ImGui::SetNextWindowPos(ofVec2f(ofGetWidth() - gui_width, 0), ImGuiCond_Once);
 			ImGui::Begin("Properties", &bShowGui);
@@ -190,13 +144,14 @@ void ofApp::gui_draw() {
 
 			//======================================================================================================
 
+			/*
 			if (ImGui::CollapsingHeader("Plot Canvas"))
 			{
 				ImGui::PushID("plotcanvas");
 				plotCanvas.renderImGuiSettings();
 				ImGui::PopID();
 			}
-
+			*/
 			ImGui::Spacing();
 			ImGui::Spacing();
 
@@ -245,9 +200,98 @@ void ofApp::gui_loadPresets() {
 
 void ofApp::gui_setup()
 {
-	gui.setup(nullptr, true, ImGuiConfigFlags_DockingEnable, true, true);
+	gui.setup(nullptr, true, ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable, true, true);
 
 	ImGui::StyleColorsDark();
 	ImGuiStyle* style = &ImGui::GetStyle();
 	style->ItemSpacing = ImVec2(5, 5);
+}
+
+void ofApp::gui_drawMenuBar() {
+	if (bShowMenuBar) {
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(5, 10));
+		ImGui::BeginMainMenuBar();
+		ImGui::PopStyleVar();
+
+		if (ImGui::BeginMenu("PixelPlotter", &bShowMenuBar)) {
+			ImGui::Checkbox("Show Properties", &bShowGui);
+			ImGui::SameLine(); HelpMarker("Shows properties window...");
+
+			// Submenu
+			ImGui::Separator();
+			if (ImGui::BeginMenu("More...")) {
+				ImGui::MenuItem("Something");
+				ImGui::MenuItem("Something else");
+				ImGui::MenuItem("Something different");
+				ImGui::EndMenu();
+			}
+
+			// Exit
+			ImGui::Separator();
+			if (ImGui::MenuItem("Quit")) {
+				ofExit();
+			}
+
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Settings")) {
+
+			// Full Screen
+			static bool fullScreen = false;
+			if (ImGui::Checkbox("Full screen", &fullScreen)) {
+				ofSetFullscreen(fullScreen);
+			}
+
+			// Vertical Sync
+			static bool vSync = false;
+			if (ImGui::Checkbox("Vertical Sync", &vSync)) {
+				ofSetVerticalSync(vSync);
+			}
+
+			ImGui::Separator();
+
+			// Resolution changer
+			static int resolution[2];
+			resolution[0] = ofGetWidth();
+			resolution[1] = ofGetHeight();
+			std::string resString = ofToString(resolution[0]).append(" x ").append(ofToString(resolution[1]));
+			if (ImGui::BeginCombo("Resolution", resString.c_str())) {
+				if (ImGui::Selectable("800 x 600")) {
+					ofSetWindowShape(800, 600);
+				}
+				if (ImGui::Selectable("1024 x 768")) {
+					ofSetWindowShape(1024, 768);
+				}
+				if (ImGui::Selectable("1366 x 768")) {
+					ofSetWindowShape(1366, 768);
+				}
+				if (ImGui::InputInt2("Custom", resolution)) {
+					ofSetWindowShape(resolution[0], resolution[1]);
+				}
+				ImGui::EndCombo();
+			}
+
+			ImGui::Separator();
+
+			soundManager.renderImGuiSettings();
+
+			ImGui::EndMenu();
+		}
+
+		ImGui::EndMainMenuBar();
+
+	} //End if bShowMenuBar
+}
+
+void ofApp::gui_drawCanvasWindow() {
+	ImGui::SetNextWindowSize(ofVec2f(gui_width, 500), ImGuiCond_Once);
+	ImGui::SetNextWindowPos(ofVec2f(ofGetWidth() - gui_width, 0), ImGuiCond_Once);
+	ImGui::Begin("Plot Canvas");
+	
+	ImGui::PushID("plotcanvas");
+	plotCanvas.renderImGuiSettings();
+	ImGui::PopID();
+
+	ImGui::End();
 }

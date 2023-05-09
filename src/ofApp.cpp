@@ -42,7 +42,7 @@ void ofApp::setup() {
 	//ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetVerticalSync(false);
 	ofLog() << ofFbo::checkGLSupport();
-	ofSetWindowTitle("Canvas");
+	ofSetWindowTitle("PixelPlotter v0.3");
 	ofEnableAlphaBlending();
 
 	//ofHideCursor();
