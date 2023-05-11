@@ -107,6 +107,10 @@ void ofApp::draw() {
 		sourceController.frameBuffer.getFrame().draw(offset.x + userOffset.x, offset.y + userOffset.y, plotCanvas.canvasWidth * zoomLevel, plotCanvas.canvasHeight * zoomLevel);
 	}
 
+	gui_draw();
+}
+
+void ofApp::blend2dTest() {
 	BLImage img(480, 480, BL_FORMAT_PRGB32);
 
 	// Attach a rendering context into `img`.
@@ -140,14 +144,12 @@ void ofApp::draw() {
 	data.setFromPixels((unsigned char*)imageData.pixelData, imageData.size.w, imageData.size.h, OF_IMAGE_COLOR_ALPHA, false);
 	// process the data..
 	data.update();
-	data.draw(0,0);
-	
-	gui_draw();
+	data.draw(0, 0);
 }
 
 void ofApp::resetImageOffset() {
-	offset.x = ((ofGetWidth() - (plotCanvas.canvasWidth * zoomLevel)) * 0.5);
-	offset.y = (ofGetHeight() - (plotCanvas.canvasHeight * zoomLevel)) * 0.5;
+	offset.x = workSpaceTopLeft.x;
+	offset.y = workSpaceTopLeft.y;
 }
 
 void ofApp::resetZoom() {
@@ -315,11 +317,6 @@ void ofApp::mouseMoved(int x, int y) {
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button) {
 	if (bDragCanvas) {
-		// This doesn't work anymore either...
-		// Seems to be offset by UI.
-		// Maybe create this contect first and UI second?
-		//if (x > ofGetWidth() || x < 0) return;
-		//if (y > ofGetHeight() || y < 0) return;
 		userOffset.x += x - lastDraggedPos.x;
 		userOffset.y += y - lastDraggedPos.y;
 	}

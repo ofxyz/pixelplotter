@@ -30,8 +30,8 @@ void Canvas::renderImGuiSettings() {
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Fit")) {
-		canvasWidth = screenW;
-		canvasHeight = screenH;
+		canvasWidth = pixelplotter->workSpaceWidthHeight.x;
+		canvasHeight = pixelplotter->workSpaceWidthHeight.y;
 		pixelplotter->resetZoom();
 		pixelplotter->resetImageOffset();
 		resizeRequest = true;

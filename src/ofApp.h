@@ -65,6 +65,8 @@ class ofApp : public ofBaseApp{
 		void resetImageOffset();
 		void resetZoom();
 
+		void blend2dTest();
+
 		SoundManager soundManager;
 		SourceController sourceController;
 		Canvas plotCanvas;
@@ -77,6 +79,8 @@ class ofApp : public ofBaseApp{
 		bool bSavePreset = false;
 		bool bShowMenuBar = true;
 		bool bShowGui = true;
+		bool bShowPlotCanvas = true;
+		bool bShowInfoPanel = true;
 		bool pauseRender = false;
 		bool bDragCanvas = false;
 
@@ -86,6 +90,10 @@ class ofApp : public ofBaseApp{
 		float zoomLevel = 1;
 		ofVec2f userOffset;
 		glm::vec2 lastDraggedPos;
+
+		ofVec2f workSpaceWidthHeight;
+		ofVec2f workSpaceTopLeft;
+		glm::vec2 workSpaceCentre;
 
 		ofxImGui::Gui gui;
 
@@ -102,8 +110,9 @@ class ofApp : public ofBaseApp{
 		void gui_draw();
 		void gui_drawMenuBar();
 		void gui_drawCanvasWindow();
+		void gui_drawInfoPanel();
 		void gui_loadPresets();
-		
+
 		bool bLoadSettingsNextFrame;
 
 		// -------------------------------------------------  End ofUI.cpp
