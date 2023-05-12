@@ -42,6 +42,7 @@ void Canvas::renderImGuiSettings() {
 	// Start DrawFilters
 	//----------------------------------------------------------------------------------------------------------------------
 	string sDrawFilterCount = "Plotters (" + ofToString(dF.v_DrawFilters.size()) + ")###DrawFiltersHolder";
+	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 	if (ImGui::CollapsingHeader(sDrawFilterCount.c_str()))
 	{
 		ImGui::PushStyleColor(ImGuiCol_Header, (ImVec4)ImColor::HSV(0, 0, 0.2));

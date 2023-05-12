@@ -39,13 +39,36 @@ public:
 	}
 
 	ofVec4f getCMYK(ofColor rgb) {
-		double dr = (double)rgb.r / 255;
-		double dg = (double)rgb.g / 255;
-		double db = (double)rgb.b / 255;
+		double dr = 0, dg = 0, db = 0;
+		if (rgb.r > 0) {
+			dr = (double)rgb.r / 255;
+		}
+		if (rgb.g > 0) {
+			dg = (double)rgb.g / 255;
+		}
+		if (rgb.b > 0) {
+			db = (double)rgb.b / 255;
+		}
+
 		double k = 1 - max(max(dr, dg), db);
-		double c = (1 - dr - k) / (1 - k);
-		double m = (1 - dg - k) / (1 - k);
-		double y = (1 - db - k) / (1 - k);
+
+		double kop = 1 - k;
+		
+		double c = 1 - dr - k;
+		double m = 1 - dg - k;
+		double y = 1 - db - k;
+
+		if (kop > 0) {
+			if (c > 0) {
+				c /= kop;
+			}
+			if (m > 0) {
+				m /= kop;
+			}
+			if (y > 0) {
+				y /= kop;
+			}
+		}
 
 		return ofVec4f(c, m, y, k);
 	}

@@ -35,6 +35,7 @@ static void HelpMarker(const char* desc) {
 class ofApp : public ofBaseApp{
 
 	public:
+		std::string windowTitle = "PixelPlotter v0.3";
 		shared_ptr<ofGLRenderer> gl;
 
 		void setup();
@@ -83,6 +84,7 @@ class ofApp : public ofBaseApp{
 		bool bShowInfoPanel = true;
 		bool pauseRender = false;
 		bool bDragCanvas = false;
+		bool bShowFps = true;
 
 		int currentPresetIndex = 0;
 		int currentImageFilterIndex = 0;
@@ -104,11 +106,14 @@ class ofApp : public ofBaseApp{
 
 		ofVec2f offset;
 
+		std::stringstream fpsStringStream;
+
 		// -------------------------------------------------  Start ofUI.cpp
 		void gui_setup();
 		void gui_update();
 		void gui_draw();
 		void gui_drawMenuBar();
+		void gui_drawMainDock();
 		void gui_drawCanvasWindow();
 		void gui_drawInfoPanel();
 		void gui_loadPresets();

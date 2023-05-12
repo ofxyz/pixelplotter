@@ -9,43 +9,14 @@ void ofApp::gui_update() {
 
 void ofApp::gui_draw() {
 	gui.begin();
+
 	gui_drawMenuBar();
-
-	// Make main docking space transparent
-	ImGuiDockNodeFlags dockingFlags = ImGuiDockNodeFlags_PassthruCentralNode;
-	
-	// Alternative: Otherwise add in ImGui::DockSpace() [±line 14505] : if (flags & ImGuiDockNodeFlags_PassthruCentralNode) window_flags |= ImGuiWindowFlags_NoBackground;
-	//ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(0, 0, 0, 0));
-
-	dockingFlags |= ImGuiDockNodeFlags_NoDockingInCentralNode; // Uncomment to always keep an empty "central node" (a visible oF space)
-	//dockingFlags |= ImGuiDockNodeFlags_NoTabBar; // Uncomment to disable creating tabs in the main view
-
-	// Define the ofWindow as a docking space
-	ImGuiID dockNodeID = ImGui::DockSpaceOverViewport(NULL, dockingFlags); // Also draws the docked windows
-
-	ImGuiDockNode* dockNode = ImGui::DockBuilderGetNode(dockNodeID);
-	if (dockNode) {
-		ImGuiDockNode* centralNode = ImGui::DockBuilderGetCentralNode(dockNodeID);
-		// Verifies if the central node is empty (visible empty space for oF)
-		if (centralNode && centralNode->IsEmpty()) {
-			ImRect availableSpace = centralNode->Rect();
-			workSpaceWidthHeight.x = availableSpace.GetWidth();
-			workSpaceWidthHeight.y = availableSpace.GetHeight();
-			workSpaceTopLeft = availableSpace.GetTL();
-			workSpaceTopLeft.x -= ofGetWindowPositionX();
-			workSpaceTopLeft.y -= ofGetWindowPositionY();
-
-			workSpaceCentre = availableSpace.GetCenter();
-			//ImGui::GetForegroundDrawList()->AddRect(availableSpace.GetTL() + ImVec2(1, 1), availableSpace.GetBR() - ImVec2(1, 1), IM_COL32(255, 50, 50, 255));
-		}
-	}
-
-	
+	gui_drawMainDock();	
 
 	if (bShowGui)
 	{
-		gui_drawCanvasWindow();
 		gui_drawInfoPanel();
+		gui_drawCanvasWindow();
 	}
 
 	gui.end();
@@ -74,6 +45,36 @@ void ofApp::gui_setup()
 	style->ItemSpacing = ImVec2(5, 5);
 }
 
+void ofApp::gui_drawMainDock() {
+	// Make main docking space transparent
+	ImGuiDockNodeFlags dockingFlags = ImGuiDockNodeFlags_PassthruCentralNode;
+
+	// Alternative: Otherwise add in ImGui::DockSpace() [±line 14505] : if (flags & ImGuiDockNodeFlags_PassthruCentralNode) window_flags |= ImGuiWindowFlags_NoBackground;
+	//ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(0, 0, 0, 0));
+
+	dockingFlags |= ImGuiDockNodeFlags_NoDockingInCentralNode; // Uncomment to always keep an empty "central node" (a visible oF space)
+	//dockingFlags |= ImGuiDockNodeFlags_NoTabBar; // Uncomment to disable creating tabs in the main view
+
+	// Define the ofWindow as a docking space
+	ImGuiID dockNodeID = ImGui::DockSpaceOverViewport(NULL, dockingFlags); // Also draws the docked windows
+
+	ImGuiDockNode* dockNode = ImGui::DockBuilderGetNode(dockNodeID);
+	if (dockNode) {
+		ImGuiDockNode* centralNode = ImGui::DockBuilderGetCentralNode(dockNodeID);
+		// Verifies if the central node is empty (visible empty space for oF)
+		if (centralNode && centralNode->IsEmpty()) {
+			ImRect availableSpace = centralNode->Rect();
+			workSpaceWidthHeight.x = availableSpace.GetWidth();
+			workSpaceWidthHeight.y = availableSpace.GetHeight();
+			offset = availableSpace.GetTL();
+			offset.x -= ofGetWindowPositionX();
+			offset.y -= ofGetWindowPositionY();
+			workSpaceCentre = availableSpace.GetCenter();
+			//ImGui::GetForegroundDrawList()->AddRect(availableSpace.GetTL() + ImVec2(1, 1), availableSpace.GetBR() - ImVec2(1, 1), IM_COL32(255, 50, 50, 255));
+		}
+	}
+}
+
 void ofApp::gui_drawMenuBar() {
 	if (!bShowMenuBar) return;
 	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(5, 8));
@@ -94,7 +95,19 @@ void ofApp::gui_drawMenuBar() {
 				ImGui::EndMenu();
 			}
 		}
-			
+
+		static std::string renderPaused = "Pause Rendering";
+		if (ImGui::MenuItem(renderPaused.c_str())) {
+			if (pauseRender) {
+				pauseRender = false;
+				renderPaused = "Pause Rendering";
+			}
+			else {
+				pauseRender = true;
+				renderPaused = "Continue Rendering";
+			}
+		}
+
 		ImGui::Separator();
 		if (ImGui::MenuItem("Quit")) {
 			ofExit();
@@ -142,6 +155,10 @@ void ofApp::gui_drawMenuBar() {
 
 		ImGui::Separator();
 
+		if (ImGui::Checkbox("Show FPS in Titlebar", &bShowFps)) {
+			if(!bShowFps) ofSetWindowTitle(windowTitle);
+		};
+
 		soundManager.renderImGuiSettings();
 
 		ImGui::EndMenu();
@@ -156,18 +173,13 @@ void ofApp::gui_drawMenuBar() {
 		canvasSelected = "Plot Canvas";
 	}
 
-	if (ImGui::BeginMenu("Canvas")) {
-		// Canvas Viewer
-		if (ImGui::BeginCombo("Canvas", canvasSelected.c_str())) {
-			if (ImGui::Selectable("Source Canvas")) {
-				sourceController.showSource = true;
-			}
-			if (ImGui::Selectable("Plot Canvas")) {
-				sourceController.showSource = false;
-			}
-			ImGui::EndCombo();
+	if (ImGui::BeginMenu(canvasSelected.c_str())) {
+		if (ImGui::MenuItem("Source Canvas")) {
+			sourceController.showSource = true;
 		}
-
+		if (ImGui::MenuItem("Plot Canvas")) {
+			sourceController.showSource = false;
+		}
 		ImGui::EndMenu();
 	}
 
@@ -177,8 +189,8 @@ void ofApp::gui_drawMenuBar() {
 void ofApp::gui_drawCanvasWindow() {
 	if (!bShowPlotCanvas) return;
 
-	ImGui::SetNextWindowSize(ofVec2f(gui_width, 500), ImGuiCond_Once);
-	ImGui::SetNextWindowPos(ofVec2f(ofGetWidth() - gui_width, 0), ImGuiCond_Once);
+	ImGui::SetNextWindowSize(ofVec2f(gui_width, 800), ImGuiCond_Once);
+	ImGui::SetNextWindowPos(ofVec2f( (ofGetWidth() - gui_width) + 45, 200+ 100), ImGuiCond_Once);
 	ImGui::Begin("Plot Canvas", &bShowPlotCanvas);
 	
 	ImGui::PushID("plotcanvas");
@@ -191,9 +203,9 @@ void ofApp::gui_drawCanvasWindow() {
 void ofApp::gui_drawInfoPanel() {
 	if (!bShowInfoPanel) return;
 
-	ImGui::SetNextWindowSize(ofVec2f(gui_width, 500), ImGuiCond_Once);
-	ImGui::SetNextWindowPos(ofVec2f(ofGetWidth() - gui_width, 0), ImGuiCond_Once);
-	ImGui::Begin("Properties", &bShowInfoPanel);
+	ImGui::SetNextWindowSize(ofVec2f(gui_width, 200), ImGuiCond_Once);
+	ImGui::SetNextWindowPos(ofVec2f((ofGetWidth() - gui_width) + 45, 100), ImGuiCond_Once);
+	ImGui::Begin("Source Canvas", &bShowInfoPanel);
 
 	// Save and load presets ... 
 	if (ofxImGui::VectorCombo("##Presets", &currentPresetIndex, presetFileNames))
@@ -237,6 +249,7 @@ void ofApp::gui_drawInfoPanel() {
 	ImGui::Spacing();
 
 	string sSourceFilterCount = "Plot Source (" + ofToString(sourceController.iF.v_ImageFilters.size() + 1) + ")###Source";
+	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 	if (ImGui::CollapsingHeader(sSourceFilterCount.c_str()))
 	{
 		sourceController.renderImGuiSettings();
@@ -281,33 +294,6 @@ void ofApp::gui_drawInfoPanel() {
 
 		// End ImageFilters
 		//-----------------------------------------------------------------------------------------------------
-	}
-
-	//======================================================================================================
-
-	ImGui::Spacing();
-	ImGui::Spacing();
-
-	if (pauseRender) {
-		if (ImGui::Button("Continue"))
-		{
-			pauseRender = false;
-		}
-	}
-	else {
-		if (ImGui::Button("Pause"))
-		{
-			pauseRender = true;
-		}
-	}
-
-	ImGui::SameLine();
-
-	if (pauseRender) {
-		ImGui::Text("Paused at %.1f FPS", ImGui::GetIO().Framerate);
-	}
-	else {
-		ImGui::Text("Rendering at %.1f FPS", ImGui::GetIO().Framerate);
 	}
 
 	ImGui::End();

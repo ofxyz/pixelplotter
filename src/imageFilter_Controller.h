@@ -2,6 +2,7 @@
 #include "imageFilter_Mirror.h"
 #include "imageFilter_Duplicate.h"
 #include "imageFilter_Tint.h"
+#include "imageFilter_Blur.h"
 
 class ImageFilterController {
 public:
@@ -28,7 +29,8 @@ public:
 		"Add Image Filter ...",
 		"Mirror",
 		"Duplicate",
-		"Tint"
+		"Tint",
+		"Blur"
 	};
 
 	void addFilter(ImageFilter* filter) {
@@ -46,6 +48,9 @@ public:
 		} else if (v_ImageFilterNames[index] == "Tint") {
 			v_ImageFilters.push_back(new If_tint);
 			bFresh = true;
+		} else if (v_ImageFilterNames[index] == "Blur") {
+			v_ImageFilters.push_back(new If_blur);
+			bFresh = true;
 		}
 	}
 
@@ -61,6 +66,10 @@ public:
 			bFresh = true;
 		} else if (filterName == "Tint") {
 			v_ImageFilters.push_back(new If_tint);
+			v_ImageFilters[v_ImageFilters.size() - 1]->loadSettings(filterSettings);
+			bFresh = true;
+		} else if (filterName == "Blur") {
+			v_ImageFilters.push_back(new If_blur);
 			v_ImageFilters[v_ImageFilters.size() - 1]->loadSettings(filterSettings);
 			bFresh = true;
 		}

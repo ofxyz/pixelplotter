@@ -43,7 +43,7 @@ void ofApp::setup() {
 	//ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetVerticalSync(false);
 	ofLog() << ofFbo::checkGLSupport();
-	ofSetWindowTitle("PixelPlotter v0.3");
+	ofSetWindowTitle(windowTitle);
 	ofEnableAlphaBlending();
 
 	//ofHideCursor();
@@ -63,7 +63,7 @@ void ofApp::setup() {
 	gui_loadPresets();
 
 	plotCanvas.dF.addRandomFilter();
-
+	resetImageOffset();
 }
 
 //--------------------------------------------------------------
@@ -73,6 +73,13 @@ void ofApp::exit() {
 
 //--------------------------------------------------------------
 void ofApp::update() {
+	if (bShowFps) {
+		fpsStringStream.str(std::string());
+		fpsStringStream.clear();
+		fpsStringStream << "Canvas (FPS: " << ofGetFrameRate() << ")";
+		ofSetWindowTitle(fpsStringStream.str());
+	}
+
 	gui_update();
 	
 	if (bLoadSettingsNextFrame)
@@ -101,10 +108,11 @@ void ofApp::update() {
 //--------------------------------------------------------------
 void ofApp::draw() {
 
-	plotCanvas.draw(offset.x + userOffset.x, offset.y + userOffset.y, plotCanvas.canvasWidth * zoomLevel, plotCanvas.canvasHeight * zoomLevel);
-	
 	if (sourceController.showSource) {
 		sourceController.frameBuffer.getFrame().draw(offset.x + userOffset.x, offset.y + userOffset.y, plotCanvas.canvasWidth * zoomLevel, plotCanvas.canvasHeight * zoomLevel);
+	}
+	else {
+		plotCanvas.draw(offset.x + userOffset.x, offset.y + userOffset.y, plotCanvas.canvasWidth * zoomLevel, plotCanvas.canvasHeight * zoomLevel);
 	}
 
 	gui_draw();
@@ -148,15 +156,13 @@ void ofApp::blend2dTest() {
 }
 
 void ofApp::resetImageOffset() {
-	offset.x = workSpaceTopLeft.x;
-	offset.y = workSpaceTopLeft.y;
+	userOffset.x = 0;
+	userOffset.y = 0;
 }
 
 void ofApp::resetZoom() {
 	zoomLevel = 1;
 	resetImageOffset();
-	userOffset.x = 0;
-	userOffset.y = 0;
 }
 
 void ofApp::saveSettings(string& filepath) {

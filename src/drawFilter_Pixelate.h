@@ -21,6 +21,7 @@ private:
 	void drawRgbSeperation_Fill(float offsetX, float offsetY, float w, float h, ofColor c);
 	void drawRgbSeperation_Center(float offsetX, float offsetY, float w, float h, ofColor c);
 	void drawRgbSeperation_Square(float offsetX, float offsetY, float w, float h, ofColor c);
+	void drawCMYKSeperation_Fill(float offsetX, float offsetY, float w, float h, ofColor c);
 	void drawCMYKSeperation_Square(float offsetX, float offsetY, float w, float h, ofColor c);
 	void drawCMYKSeperation_Left(float offsetX, float offsetY, float w, float h, ofColor c);
 	void drawCMYKSeperation_Hills(float offsetX, float offsetY, float w, float h, ofColor c);
@@ -41,6 +42,7 @@ private:
 			"RGB Seperation Fill",
 			"RGB Seperation Center",
 			"RGB Seperation Square",
+			"CMYK Seperation Fill",
 			"CMYK Seperation Square",
 			"CMYK Seperation Left",
 			"CMYK Seperation Hills",

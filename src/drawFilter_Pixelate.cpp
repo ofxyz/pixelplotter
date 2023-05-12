@@ -452,6 +452,47 @@ void Df_pixelate::drawRgbSeperation_Square(float offsetX, float offsetY, float w
 	drawRoundedRect(offsetX, offsetY, cWidth, cHeight, c_cyanBlue);
 };
 
+void Df_pixelate::drawCMYKSeperation_Fill(float offsetX, float offsetY, float w, float h, ofColor c) {
+	float cWidth;
+
+	ofVec4f cmyk = getCMYK(c);
+
+	float totalInk = cmyk[0] + cmyk[1] + cmyk[2] + cmyk[3];
+	if (totalInk < 0.25) return; // Show some white :)
+
+	ofPushMatrix();
+	ofTranslate(-(w * 0.5), 0, 0);
+
+	if (cmyk[0] > 0) {
+		cWidth = ofMap(cmyk[0], 0, totalInk, 0, w);
+		ofTranslate(cWidth * 0.5, 0, 0);
+		drawRoundedRect(offsetX, offsetY, cWidth, h, c_cyanBlue); // Cyan
+		ofTranslate(cWidth * 0.5, 0, 0);
+	}
+	
+	if (cmyk[1] > 0) {
+		cWidth = ofMap(cmyk[1], 0, totalInk, 0, w);
+		ofTranslate(cWidth * 0.5, 0, 0);
+		drawRoundedRect(offsetX, offsetY, cWidth, h, c_magentaRed); // Magenta
+		ofTranslate(cWidth * 0.5, 0, 0);
+	}
+
+	if (cmyk[2] > 0) {
+		cWidth = ofMap(cmyk[2], 0, totalInk, 0, w);
+		ofTranslate(cWidth * 0.5, 0, 0);
+		drawRoundedRect(offsetX, offsetY, cWidth, h, c_yellowGreen); // Yellow
+		ofTranslate(cWidth * 0.5, 0, 0);
+	}
+
+	if (cmyk[3] > 0) {
+		cWidth = ofMap(cmyk[3], 0, totalInk, 0, w);
+		ofTranslate(cWidth * 0.5, 0, 0);
+		drawRoundedRect(offsetX, offsetY, cWidth, h, c_black); // Black
+	}
+
+	ofPopMatrix();
+};
+
 void Df_pixelate::drawCMYKSeperation_Square(float offsetX, float offsetY, float w, float h, ofColor c) {
 	float cWidth, cHeight;
 	ofVec4f cmyk = getCMYK(c);
@@ -478,7 +519,7 @@ void Df_pixelate::drawCMYKSeperation_Left(float offsetX, float offsetY, float w,
 	float cWidth;
 	ofVec4f cmyk = getCMYK(c);
 
-	ofPushMatrix(); // offset
+	ofPushMatrix();
 
 	cWidth = ofMap(cmyk[3], 0, 1, 0, w / 2);
 	ofTranslate(-(w * 0.5) + (cWidth * 0.5), 0, 0);
@@ -507,31 +548,39 @@ void Df_pixelate::drawCMYKSeperation_Hills(float offsetX, float offsetY, float w
 	ofVec4f cmyk = getCMYK(c);
 
 	float total = cmyk[0] + cmyk[1] + cmyk[2];
-	float pc = (100 * cmyk[0]) / total;
-	float pm = (100 * cmyk[1]) / total;
-	float py = (100 * cmyk[2]) / total;
-
-	cHeight = (pc / 100) * h;
+	if (total == 0) return;
+	
 	ofPushMatrix();
-	ofTranslate(0, (-h * 0.5) + (cHeight * 0.5), 0);
-	drawRoundedRect(offsetX, offsetY, w, cHeight, c_cyanBlue); // Cyan
 
-	ofTranslate(0, cHeight * 0.5, 0);
+	if (cmyk[0] > 0) {
+		float pc = (100 * cmyk[0]) / total;
+		cHeight = (pc / 100) * h;
+		ofTranslate(0, (-h * 0.5) + (cHeight * 0.5), 0);
+		drawRoundedRect(offsetX, offsetY, w, cHeight, c_cyanBlue); // Cyan
+		ofTranslate(0, cHeight * 0.5, 0);
+	}
 
-	cHeight = (pm / 100) * h;
-	ofTranslate(0, cHeight * 0.5, 0);
-	drawRoundedRect(offsetX, offsetY, w, cHeight, c_magentaRed); // Magenta
+	if (cmyk[1] > 0) {
+		float pm = (100 * cmyk[1]) / total;
+		cHeight = (pm / 100) * h;
+		ofTranslate(0, cHeight * 0.5, 0);
+		drawRoundedRect(offsetX, offsetY, w, cHeight, c_magentaRed); // Magenta
+		ofTranslate(0, cHeight * 0.5, 0);
+	}
 
-	ofTranslate(0, cHeight * 0.5, 0);
-
-	cHeight = (py / 100) * h;
-	ofTranslate(0, cHeight * 0.5, 0);
-	drawRoundedRect(offsetX, offsetY, w, cHeight, c_yellowGreen); // Yellow
+	if (cmyk[2] > 0) {
+		float py = (100 * cmyk[2]) / total;
+		cHeight = (py / 100) * h;
+		ofTranslate(0, cHeight * 0.5, 0);
+		drawRoundedRect(offsetX, offsetY, w, cHeight, c_yellowGreen); // Yellow
+	}
 
 	ofPopMatrix();
 
-	cHeight = ofMap(cmyk[3], 0, 1, 0, h);
-	drawRoundedRect(offsetX, offsetY, w, cHeight, c_black); // c_black
+	if (cmyk[3] > 0) {
+		cHeight = ofMap(cmyk[3], 0, 1, 0, h);
+		drawRoundedRect(offsetX, offsetY, w, cHeight, c_black); // c_black
+	}
 };
 
 void Df_pixelate::drawCMYKSeperation_Bars(float offsetX, float offsetY, float w, float h, ofColor c) {
@@ -675,6 +724,14 @@ void Df_pixelate::drawUnusualOverprint(float offsetX, float offsetY, float w, fl
 	ofColor c3(r1, g1, b1);
 	c3.lerp(c2, 0.5);
 
+	c1.setBrightness(c.getBrightness());
+	c2.setBrightness(c.getBrightness());
+	c3.setBrightness(c.getBrightness());
+
+	c1.setSaturation(c.getSaturation());
+	c2.setSaturation(c.getSaturation());
+	c3.setSaturation(c.getSaturation());
+
 	// Center
 	drawRoundedRect(offsetX+ pWidth, offsetY+ pHeight, pWidth, pHeight, c);
 
@@ -716,21 +773,24 @@ void Df_pixelate::drawPixel(float w, float h, ofColor c) {
 		drawRgbSeperation_Square(offsetX, offsetY, w, h, c);
 		break;
 	case 5:
-		drawCMYKSeperation_Square(offsetX, offsetY, w, h, c);
+		drawCMYKSeperation_Fill(offsetX, offsetY, w, h, c);
 		break;
 	case 6:
-		drawCMYKSeperation_Left(offsetX, offsetY, w, h, c);
+		drawCMYKSeperation_Square(offsetX, offsetY, w, h, c);
 		break;
 	case 7:
-		drawCMYKSeperation_Hills(offsetX, offsetY, w, h, c);
+		drawCMYKSeperation_Left(offsetX, offsetY, w, h, c);
 		break;
 	case 8:
-		drawCMYKSeperation_Bars(offsetX, offsetY, w, h, c);
+		drawCMYKSeperation_Hills(offsetX, offsetY, w, h, c);
 		break;
 	case 9:
-		drawColorAdjust(offsetX, offsetY, w, h, c);
+		drawCMYKSeperation_Bars(offsetX, offsetY, w, h, c);
 		break;
 	case 10:
+		drawColorAdjust(offsetX, offsetY, w, h, c);
+		break;
+	case 11:
 		drawUnusualOverprint(offsetX, offsetY, w, h, c);
 		break;
 	default:
