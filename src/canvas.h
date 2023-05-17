@@ -1,5 +1,6 @@
 #pragma once
 #include "drawFilter_Controller.h"
+#include "sourceController.h"
 #include "ofx2d.h"
 
 class ofApp;
@@ -9,11 +10,13 @@ public:
 	ofApp* pixelplotter;
 	ofCamera cam;
 	DrawFilterController dF;
+	SourceController sourceController;
 	ofFbo canvasFbo;
 	ofPixels canvasPix;
 	ImVec4 c_canvas = ofColor(255, 255, 255, 255);
 	std::string canvasTitle = "Untitled";
 	int currentDrawFilterIndex = 0;
+	int currentImageFilterIndex = 0;
 	int exportCount = 0;
 	int sourceWidth = 640;
 	int sourceHeight = 480;
@@ -39,7 +42,7 @@ public:
 		return oss.str();
 	}
 
-	void setup(ofApp* app, ofImage* img, string canvas_title = "Untitled");
+	void setup(ofApp* app, string canvas_title = "Untitled");
 	void update();
 	void update(ofImage* img);
 	void draw(float x, float y, float w, float h) {

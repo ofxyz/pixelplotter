@@ -12,7 +12,6 @@
 #include "ofxOpenCv.h"
 
 #include "soundManager.h"
-#include "sourceController.h"
 #include "canvas.h"
 
 const int gui_width = 400;
@@ -69,7 +68,6 @@ class ofApp : public ofBaseApp{
 		void blend2dTest();
 
 		SoundManager soundManager;
-		SourceController sourceController;
 		Canvas plotCanvas;
 
 		char presetSaveName[128] = "";
@@ -87,7 +85,6 @@ class ofApp : public ofBaseApp{
 		bool bShowFps = true;
 
 		int currentPresetIndex = 0;
-		int currentImageFilterIndex = 0;
 
 		float zoomLevel = 1;
 		ofVec2f userOffset;

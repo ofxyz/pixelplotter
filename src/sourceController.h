@@ -56,6 +56,8 @@ public:
 	int camHeight = 480;
 	float imgRatio = 1;
 
+	ofFbo sourceCanvas;
+	
 	std::vector<std::string> sourceNames;
 
 	std::vector<std::string> videoDeviceNames;

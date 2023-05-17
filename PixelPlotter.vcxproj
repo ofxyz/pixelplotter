@@ -183,6 +183,7 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\drawFilter_Mesh.cpp" />
     <ClCompile Include="src\imageFilter_Blur.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
@@ -242,6 +243,7 @@
     <ClCompile Include="..\..\addons\ofxXmlSettings\libs\tinyxmlparser.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\drawFilter_Mesh.h" />
     <ClInclude Include="src\imageFilter_Blur.h" />
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="src\canvas.h" />

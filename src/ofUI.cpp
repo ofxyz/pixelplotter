@@ -2,7 +2,7 @@
 
 void ofApp::gui_update() {
 	if (cleanImageFilters) {
-		sourceController.iF.cleanFilters();
+		plotCanvas.sourceController.iF.cleanFilters();
 		cleanImageFilters = false;
 	}
 }
@@ -166,7 +166,7 @@ void ofApp::gui_drawMenuBar() {
 	}
 
 	static std::string canvasSelected;
-	if (sourceController.showSource) {
+	if (plotCanvas.sourceController.showSource) {
 		canvasSelected = "Source Canvas";
 	}
 	else {
@@ -175,10 +175,10 @@ void ofApp::gui_drawMenuBar() {
 
 	if (ImGui::BeginMenu(canvasSelected.c_str())) {
 		if (ImGui::MenuItem("Source Canvas")) {
-			sourceController.showSource = true;
+			plotCanvas.sourceController.showSource = true;
 		}
 		if (ImGui::MenuItem("Plot Canvas")) {
-			sourceController.showSource = false;
+			plotCanvas.sourceController.showSource = false;
 		}
 		ImGui::EndMenu();
 	}
@@ -189,10 +189,9 @@ void ofApp::gui_drawMenuBar() {
 void ofApp::gui_drawCanvasWindow() {
 	if (!bShowPlotCanvas) return;
 
-	ImGui::SetNextWindowSize(ofVec2f(gui_width, 800), ImGuiCond_Once);
-	ImGui::SetNextWindowPos(ofVec2f( (ofGetWidth() - gui_width) + 45, 200+ 100), ImGuiCond_Once);
+	//ImGui::SetNextWindowSize(ofVec2f(gui_width, 800), ImGuiCond_Once);
+	//ImGui::SetNextWindowPos(ofVec2f( (ofGetWidth() - gui_width) + 45, 200+ 100), ImGuiCond_Once);
 	ImGui::Begin("Plot Canvas", &bShowPlotCanvas);
-	
 	ImGui::PushID("plotcanvas");
 	plotCanvas.renderImGuiSettings();
 	ImGui::PopID();
@@ -203,9 +202,9 @@ void ofApp::gui_drawCanvasWindow() {
 void ofApp::gui_drawInfoPanel() {
 	if (!bShowInfoPanel) return;
 
-	ImGui::SetNextWindowSize(ofVec2f(gui_width, 200), ImGuiCond_Once);
-	ImGui::SetNextWindowPos(ofVec2f((ofGetWidth() - gui_width) + 45, 100), ImGuiCond_Once);
-	ImGui::Begin("Source Canvas", &bShowInfoPanel);
+	//ImGui::SetNextWindowSize(ofVec2f(gui_width, 200), ImGuiCond_Once);
+	//ImGui::SetNextWindowPos(ofVec2f((ofGetWidth() - gui_width) + 45, 100), ImGuiCond_Once);
+	ImGui::Begin("Presets", &bShowInfoPanel);
 
 	// Save and load presets ... 
 	if (ofxImGui::VectorCombo("##Presets", &currentPresetIndex, presetFileNames))
@@ -243,57 +242,6 @@ void ofApp::gui_drawInfoPanel() {
 			}
 			bSavePreset = true;
 		}
-	}
-
-	ImGui::Spacing();
-	ImGui::Spacing();
-
-	string sSourceFilterCount = "Plot Source (" + ofToString(sourceController.iF.v_ImageFilters.size() + 1) + ")###Source";
-	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-	if (ImGui::CollapsingHeader(sSourceFilterCount.c_str()))
-	{
-		sourceController.renderImGuiSettings();
-
-		// Start ImageFilters
-		//-----------------------------------------------------------------------------------------------------
-		ImGui::PushStyleColor(ImGuiCol_Header, (ImVec4)ImColor::HSV(0, 0, 0.2));
-		ImGui::PushStyleColor(ImGuiCol_HeaderActive, (ImVec4)ImColor::HSV(0, 0, 0.4));
-		ImGui::PushStyleColor(ImGuiCol_HeaderHovered, (ImVec4)ImColor::HSV(0, 0, 0.7));
-
-		ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0, 0, 0.2));
-		ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0, 0, 0.2));
-		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0, 0, 0.7));
-
-		ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)ImColor::HSV(0, 0, 0.2));
-		ImGui::PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4)ImColor::HSV(0, 0, 0.4));
-		ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0, 0, 0.5));
-
-		ImGui::PushStyleColor(ImGuiCol_CheckMark, (ImVec4)ImColor::HSV(0, 0, 0.8));
-
-		cleanImageFilters = false;
-		for (int i = 0; i < sourceController.iF.v_ImageFilters.size(); i++) {
-			ImGui::PushID(i);
-			if (sourceController.iF.v_ImageFilters[i]->active) {
-				ImGui::Indent();
-				sourceController.iF.v_ImageFilters[i]->renderImGuiSettings();
-				ImGui::Unindent();
-			}
-			else {
-				cleanImageFilters = true;
-			}
-			ImGui::PopID();
-		}
-
-		ImGui::PopStyleColor(10);
-
-		if (ofxImGui::VectorCombo("##Image Filter Selector", &currentImageFilterIndex, sourceController.iF.v_ImageFilterNames))
-		{
-			sourceController.iF.addFilter(currentImageFilterIndex);
-			currentImageFilterIndex = 0;
-		}
-
-		// End ImageFilters
-		//-----------------------------------------------------------------------------------------------------
 	}
 
 	ImGui::End();

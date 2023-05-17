@@ -54,8 +54,8 @@ void ofApp::setup() {
 	gui_setup();
 
 	soundManager.setup(this);
-	sourceController.setup(this);
-	plotCanvas.setup(this, &sourceController.frameBuffer.getFrame());
+	
+	plotCanvas.setup(this);
 
 	userOffset.x = 0;
 	userOffset.y = 0;
@@ -87,20 +87,21 @@ void ofApp::update() {
 		loadSettings(presetFiles[currentPresetIndex].getAbsolutePath());
 		bLoadSettingsNextFrame = false;
 	}
-	if (sourceController.loadImageNextFrame)
+	if (plotCanvas.sourceController.loadImageNextFrame)
 	{
-		sourceController.loadSourceIndex();
-		sourceController.loadImageNextFrame = false;
+		plotCanvas.sourceController.loadSourceIndex();
+		plotCanvas.sourceController.loadImageNextFrame = false;
 	}
 
 	if (!pauseRender) {
 
 		soundManager.update();
-		sourceController.update();
+		plotCanvas.sourceController.update();
 		plotCanvas.update();
 
-		if (sourceController.frameBuffer.isFresh() || plotCanvas.isFresh()) {
-			plotCanvas.update(&sourceController.frameBuffer.getFrame());
+		if (plotCanvas.sourceController.frameBuffer.isFresh() || plotCanvas.isFresh()) {
+			// fix
+			plotCanvas.update(&plotCanvas.sourceController.frameBuffer.getFrame());
 		}
 	}
 }
@@ -108,8 +109,8 @@ void ofApp::update() {
 //--------------------------------------------------------------
 void ofApp::draw() {
 
-	if (sourceController.showSource) {
-		sourceController.frameBuffer.getFrame().draw(offset.x + userOffset.x, offset.y + userOffset.y, plotCanvas.canvasWidth * zoomLevel, plotCanvas.canvasHeight * zoomLevel);
+	if (plotCanvas.sourceController.showSource) {
+		plotCanvas.sourceController.frameBuffer.getFrame().draw(offset.x + userOffset.x, offset.y + userOffset.y, plotCanvas.canvasWidth * zoomLevel, plotCanvas.canvasHeight * zoomLevel);
 	}
 	else {
 		plotCanvas.draw(offset.x + userOffset.x, offset.y + userOffset.y, plotCanvas.canvasWidth * zoomLevel, plotCanvas.canvasHeight * zoomLevel);
@@ -170,7 +171,7 @@ void ofApp::saveSettings(string& filepath) {
 
 	settings.addTag("source");
 	settings.pushTag("source");
-	ofxXmlSettings sourceSettings = sourceController.getSettings();
+	ofxXmlSettings sourceSettings = plotCanvas.sourceController.getSettings();
 	string sSourceSettings;
 	sourceSettings.copyXmlToString(sSourceSettings);
 	settings.addValue("string_settings", sSourceSettings);
@@ -178,8 +179,8 @@ void ofApp::saveSettings(string& filepath) {
 
 	settings.addTag("imageFilters");
 	settings.pushTag("imageFilters");
-	for (int i = 0; i < sourceController.iF.v_ImageFilters.size(); i++) {
-		ofxXmlSettings imgFilterSettings = sourceController.iF.v_ImageFilters[i]->getSettings();
+	for (int i = 0; i < plotCanvas.sourceController.iF.v_ImageFilters.size(); i++) {
+		ofxXmlSettings imgFilterSettings = plotCanvas.sourceController.iF.v_ImageFilters[i]->getSettings();
 		string imageFilterSettings;
 		imgFilterSettings.copyXmlToString(imageFilterSettings);
 		settings.addValue("string_settings", imageFilterSettings);
@@ -212,7 +213,7 @@ void ofApp::loadSettings(string& filepath) {
 	settings.loadFile(filepath);
 
 	plotCanvas.dF.clearFilters();
-	sourceController.iF.clearFilters();
+	plotCanvas.sourceController.iF.clearFilters();
 
 	/* Don't load source for settings ...
 	if (settings.tagExists("source")) {
@@ -233,7 +234,7 @@ void ofApp::loadSettings(string& filepath) {
 			ofxXmlSettings filterSettings;
 			string stringSettings = settings.getValue("string_settings", "", i);
 			filterSettings.loadFromBuffer(stringSettings);
-			sourceController.iF.addFilter(filterSettings);
+			plotCanvas.sourceController.iF.addFilter(filterSettings);
 		}
 		settings.popTag();
 	}
@@ -286,7 +287,7 @@ void ofApp::keyPressed(int key) {
 		// fit to screen
 		userOffset.x = 0;
 		userOffset.y = 0;
-		if (sourceController.isLandscape) {
+		if (plotCanvas.sourceController.isLandscape) {
 			zoomLevel = (ofGetWidth() - gui_width) / plotCanvas.canvasWidth;
 		}
 		else {
@@ -385,14 +386,14 @@ void ofApp::gotMessage(ofMessage msg){
 void ofApp::dragEvent(ofDragInfo dragInfo){ 
 	if (dragInfo.files.size() > 0) {
 		for (int i = 0; i < dragInfo.files.size(); i++) {
-			if (std::find(sourceController.img_ext.begin(), sourceController.img_ext.end(), x2d.to_lower(dragInfo.files[i].substr(dragInfo.files[i].find_last_of(".") + 1))) != sourceController.img_ext.end())
+			if (std::find(plotCanvas.sourceController.img_ext.begin(), plotCanvas.sourceController.img_ext.end(), x2d.to_lower(dragInfo.files[i].substr(dragInfo.files[i].find_last_of(".") + 1))) != plotCanvas.sourceController.img_ext.end())
 			{
-				sourceController.addImage(ofFile(dragInfo.files[i]));
+				plotCanvas.sourceController.addImage(ofFile(dragInfo.files[i]));
 				resetZoom();
 			} 
-			else if (std::find(sourceController.vid_ext.begin(), sourceController.vid_ext.end(), x2d.to_lower(dragInfo.files[i].substr(dragInfo.files[i].find_last_of(".") + 1))) != sourceController.vid_ext.end())
+			else if (std::find(plotCanvas.sourceController.vid_ext.begin(), plotCanvas.sourceController.vid_ext.end(), x2d.to_lower(dragInfo.files[i].substr(dragInfo.files[i].find_last_of(".") + 1))) != plotCanvas.sourceController.vid_ext.end())
 			{
-				sourceController.addVideo(ofFile(dragInfo.files[i]));
+				plotCanvas.sourceController.addVideo(ofFile(dragInfo.files[i]));
 				resetZoom();
 			}
 			else {

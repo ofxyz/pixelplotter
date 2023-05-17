@@ -137,6 +137,7 @@ void Df_noise::drawPixel(int x, int y) {
 	}
 
 	ofPushStyle();
+	ofEnableAlphaBlending();
 	ofSetColor(cBg);
 	ofDrawRectangle(x, y, 10, 10);
 

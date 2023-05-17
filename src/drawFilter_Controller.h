@@ -2,6 +2,7 @@
 #include "drawFilter_Pixelate.h"
 #include "drawFilter_Rings.h"
 #include "drawFilter_Noise.h"
+#include "drawFilter_Mesh.h"
 
 class DrawFilterController {
 public:
@@ -29,7 +30,8 @@ public:
 		"Add Plotter ...",
 		"Pixelate",
 		"Rings",
-		"Noise"
+		"Noise",
+		"Mesh"
 	};
 
 	DrawFilterController() {};
@@ -74,6 +76,10 @@ public:
 			v_DrawFilters.push_back(new Df_noise(pixelplotter));
 			setFresh(true);
 		}
+		else if (v_DrawFilterNames[index] == "Mesh") {
+			v_DrawFilters.push_back(new Df_mesh(pixelplotter));
+			setFresh(true);
+		}
 	}
 
 	void addFilter(ofxXmlSettings filterSettings) {
@@ -90,6 +96,11 @@ public:
 		}
 		else if (filterName == "Noise") {
 			v_DrawFilters.push_back(new Df_noise(pixelplotter));
+			v_DrawFilters[v_DrawFilters.size() - 1]->loadSettings(filterSettings);
+			setFresh(true);
+		}
+		else if (filterName == "Mesh") {
+			v_DrawFilters.push_back(new Df_mesh(pixelplotter));
 			v_DrawFilters[v_DrawFilters.size() - 1]->loadSettings(filterSettings);
 			setFresh(true);
 		}

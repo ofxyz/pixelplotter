@@ -39,6 +39,54 @@ void Canvas::renderImGuiSettings() {
 	ImGui::PopItemWidth();
 	ImGui::Separator(); // End Size 
 
+	string sSourceFilterCount = "Plot Source (" + ofToString(sourceController.iF.v_ImageFilters.size() + 1) + ")###Source";
+	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+	if (ImGui::CollapsingHeader(sSourceFilterCount.c_str()))
+	{
+		sourceController.renderImGuiSettings();
+
+		// Start ImageFilters
+		//-----------------------------------------------------------------------------------------------------
+		ImGui::PushStyleColor(ImGuiCol_Header, (ImVec4)ImColor::HSV(0, 0, 0.2));
+		ImGui::PushStyleColor(ImGuiCol_HeaderActive, (ImVec4)ImColor::HSV(0, 0, 0.4));
+		ImGui::PushStyleColor(ImGuiCol_HeaderHovered, (ImVec4)ImColor::HSV(0, 0, 0.7));
+
+		ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0, 0, 0.2));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0, 0, 0.2));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0, 0, 0.7));
+
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)ImColor::HSV(0, 0, 0.2));
+		ImGui::PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4)ImColor::HSV(0, 0, 0.4));
+		ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0, 0, 0.5));
+
+		ImGui::PushStyleColor(ImGuiCol_CheckMark, (ImVec4)ImColor::HSV(0, 0, 0.8));
+
+		pixelplotter->cleanImageFilters = false;
+		for (int i = 0; i < sourceController.iF.v_ImageFilters.size(); i++) {
+			ImGui::PushID(i);
+			if (sourceController.iF.v_ImageFilters[i]->active) {
+				ImGui::Indent();
+				sourceController.iF.v_ImageFilters[i]->renderImGuiSettings();
+				ImGui::Unindent();
+			}
+			else {
+				pixelplotter->cleanImageFilters = true;
+			}
+			ImGui::PopID();
+		}
+
+		ImGui::PopStyleColor(10);
+
+		if (ofxImGui::VectorCombo("##Image Filter Selector", &currentImageFilterIndex, sourceController.iF.v_ImageFilterNames))
+		{
+			sourceController.iF.addFilter(currentImageFilterIndex);
+			currentImageFilterIndex = 0;
+		}
+
+		// End ImageFilters
+		//-----------------------------------------------------------------------------------------------------
+	} // End Plot Source
+
 	// Start DrawFilters
 	//----------------------------------------------------------------------------------------------------------------------
 	string sDrawFilterCount = "Plotters (" + ofToString(dF.v_DrawFilters.size()) + ")###DrawFiltersHolder";
@@ -157,14 +205,16 @@ ofxXmlSettings Canvas::getSettings() {
 	return settings;
 }
 
-void Canvas::setup(ofApp* app, ofImage* img, string canvas_title) {
+void Canvas::setup(ofApp* app, string canvas_title) {
 	pixelplotter = app;
 	dF = DrawFilterController(pixelplotter);
+
+	sourceController.setup(pixelplotter);
 	canvasTitle  = canvas_title;
-	setSourceDimension(img);
+	setSourceDimension(&sourceController.frameBuffer.getFrame());
 	canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGBA, 8);
 	canvasFbo.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
-	update(img);
+	update(&sourceController.frameBuffer.getFrame());
 }
 
 void Canvas::setSourceDimension() {
