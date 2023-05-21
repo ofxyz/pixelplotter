@@ -26,8 +26,7 @@
    - Add grid generator (with noise curve option)
 
    ## Filters
-   - Add mesh filter
-   - Use gradients
+   - Use gradients (Implement Blend2d)
    - Add hatch filter
    - Add asym hex pixel to Pixelate filter.
 */
@@ -142,9 +141,10 @@ void ofApp::blend2dTest() {
 
 	// Detach the rendering context from `img`.
 	ctx.end();
-
+	
 	// Let's use some built-in codecs provided by Blend2D.
-	//img.writeToFile("bl_sample_1.png");
+	img.writeToFile("bl_sample_1.png");
+
 	BLImageData imageData;
 	img.getData(&imageData);
 

@@ -17,5 +17,6 @@ public:
 
 private:
 	ofMesh mesh;
-	bool nineOne = false; // Safe 9 or 1 points per pixel
+	float rotationOffset = 0;
+	ofVec3f getMeshBounds(const ofMesh& mesh);
 };

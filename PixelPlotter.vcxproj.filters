@@ -1,49 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="src\ofApp.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\main.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\canvas.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\drawFilter_Noise.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\drawFilter_Pixelate.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\drawFilter_Rings.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\generator_Plaids.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\imageFilter_Duplicate.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\imageFilter_Mirror.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\imageFilter_Tint.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\ofApp.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ofUI.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\soundManager.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sourceController.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\addons\ofx2d\src\ofx2d.cpp">
@@ -175,10 +136,49 @@
     <ClCompile Include="..\..\addons\ofxXmlSettings\libs\tinyxmlparser.cpp">
       <Filter>addons\ofxXmlSettings\libs</Filter>
     </ClCompile>
-    <ClCompile Include="src\imageFilter_Blur.cpp">
+    <ClCompile Include="src\canvas.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\drawFilter_Mesh.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\drawFilter_Noise.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\drawFilter_Pixelate.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\drawFilter_Rings.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\generator_Plaids.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imageFilter_Blur.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imageFilter_Duplicate.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imageFilter_Mirror.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imageFilter_Tint.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ofApp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ofUI.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\soundManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sourceController.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -408,60 +408,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ofApp.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\canvas.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\drawFilter.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\drawFilter_Controller.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\drawFilter_Noise.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\drawFilter_Pixelate.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\drawFilter_Rings.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\frameBuffer.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\generator.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\generator_Controller.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\generator_Plaids.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\imageFilter.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\imageFilter_Controller.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\imageFilter_Duplicate.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\imageFilter_Mirror.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\imageFilter_Tint.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ofApp.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\soundManager.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\sourceController.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\addons\ofx2d\src\ofx2d.h">
@@ -1484,10 +1430,67 @@
     <ClInclude Include="..\..\addons\ofxXmlSettings\libs\tinyxml.h">
       <Filter>addons\ofxXmlSettings\libs</Filter>
     </ClInclude>
-    <ClInclude Include="src\imageFilter_Blur.h">
+    <ClInclude Include="src\canvas.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\drawFilter.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\drawFilter_Controller.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\drawFilter_Mesh.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\drawFilter_Noise.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\drawFilter_Pixelate.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\drawFilter_Rings.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\frameBuffer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\generator.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\generator_Controller.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\generator_Plaids.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imageFilter.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imageFilter_Blur.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imageFilter_Controller.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imageFilter_Duplicate.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imageFilter_Mirror.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imageFilter_Tint.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ofApp.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\soundManager.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sourceController.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\drawPixel.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
