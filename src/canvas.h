@@ -44,7 +44,7 @@ public:
 
 	void setup(ofApp* app, string canvas_title = "Untitled");
 	void update();
-	void update(ofImage* img);
+	void updateFbo(ofImage* img);
 	void draw(float x, float y, float w, float h) {
 		canvasFbo.draw(x, y, w, h);
 		setFresh(false);
@@ -67,4 +67,5 @@ public:
 
 private:
 	bool bFresh = false;
+	bool redrawFBO = false;
 };

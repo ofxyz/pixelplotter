@@ -13,6 +13,7 @@
 
 #include "soundManager.h"
 #include "canvas.h"
+#include "drawPixels.h"
 
 const int gui_width = 400;
 const int screenW = 1920;
@@ -65,8 +66,7 @@ class ofApp : public ofBaseApp{
 		void resetImageOffset();
 		void resetZoom();
 
-		void blend2dTest();
-
+		DrawPixels drawPixels;
 		SoundManager soundManager;
 		Canvas plotCanvas;
 

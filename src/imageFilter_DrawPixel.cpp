@@ -1,0 +1,77 @@
+#include "imageFilter_DrawPixel.h"
+#include "ofApp.h";
+
+ofxXmlSettings If_drawPixel::getSettings() {
+	ofxXmlSettings settings;
+	settings.setValue("name", name);
+
+	settings.setValue("colors:col:r", c_col.x);
+	settings.setValue("colors:col:g", c_col.y);
+	settings.setValue("colors:col:b", c_col.z);
+	settings.setValue("colors:col:a", c_col.w);
+
+	return settings;
+}
+
+void If_drawPixel::loadSettings(ofxXmlSettings settings) {
+
+	c_col.x = settings.getValue("colors:col:r", c_col.x);
+	c_col.y = settings.getValue("colors:col:g", c_col.y);
+	c_col.z = settings.getValue("colors:col:b", c_col.z);
+	c_col.w = settings.getValue("colors:col:a", c_col.w);
+	return;
+}
+
+void If_drawPixel::renderImGuiSettings() {
+	if (ImGui::CollapsingHeader(name.c_str(), &active)) {
+		ImGui::AlignTextToFramePadding();
+		ImGui::PushItemWidth(60);
+
+		if (ofxImGui::VectorCombo("Pixel Type ##drawPixel", &selectedPixelType, drawPixels.v_DrawPixelsNames)) {
+			bFresh = true;
+		};
+
+		if (ImGui::ColorEdit4("Color ##drawPixel", (float*)&c_col, ImGuiColorEditFlags_NoInputs)) {
+			bFresh = true;
+		}
+	
+		ImGui::Text("Copies"); ImGui::SameLine(75);
+		if (ImGui::DragInt("Horz ##drawpixel_hCount", &hCount, 1, 1, 100)) {
+			bFresh = true;
+		}
+		ImGui::SameLine();
+		if (ImGui::DragInt("Vert ##drawpixel_vCount", &vCount, 1, 1, 100)) {
+			bFresh = true;
+		}
+
+		ImGui::PopItemWidth();
+	}
+}
+
+void If_drawPixel::apply(ofImage* img) {
+	ofFbo cfbo;
+	cfbo.allocate(img->getWidth(), img->getHeight(), GL_RGBA);
+
+	float width = img->getWidth() / hCount;
+	float height = img->getHeight() / vCount;
+
+	cfbo.begin();
+	cfbo.clearColorBuffer(ofColor(0, 0, 0));
+	int xcount = 0;
+	int ycount = 0;
+	for (float y = 0; y < vCount * height; y += height) {
+		float newHeight = height;
+		float newY = y;
+
+		for (float x = 0; x < hCount * width; x += width) {
+			drawPixels.v_DrawPixels[selectedPixelType]->draw(c_col, x+(width*0.5), newY + (newHeight * 0.5), width, newHeight);
+			xcount++;
+		}
+		ycount++;
+	}
+	cfbo.end();
+
+	cfbo.readToPixels(img->getPixelsRef());
+	img->update();
+	bFresh = false;
+}

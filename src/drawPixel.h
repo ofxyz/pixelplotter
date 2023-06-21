@@ -3,55 +3,70 @@
 #include "ofxXmlSettings.h"
 
 /*
-	The draw pixel class draws rectangular art based on a colour.
-	We should use Blend2d for this, step 1 create Blend2D canvas ...
-
-	Add DrawPixel Controller:
-		- Set Pixel Type
-		- DrawFilters
+	A drawpixel draws rectangular art based on a colour.
  */
 
 class DrawPixel {
 public:
 	std::string name; //PixelType
 
-	virtual void draw(ofColor c, float width = 0, float height = 0, float x = 0, float y = 0) = 0;
+	// Pixels are draw from the centre (0,0) ... See drawRectangle()
+	virtual void draw(ofColor c, float offsetX, float offsetY, float width, float height) = 0;
 	virtual void renderImGuiSettings() = 0;
 	virtual void loadSettings(ofxXmlSettings settings) = 0;
 	virtual ofxXmlSettings getSettings() = 0;
+	
+	float rounded = 0;
 
-	ofVec4f getCMYK(ofColor rgb) {
-		double dr = 0, dg = 0, db = 0;
-		if (rgb.r > 0) {
-			dr = (double)rgb.r / 255;
-		}
-		if (rgb.g > 0) {
-			dg = (double)rgb.g / 255;
-		}
-		if (rgb.b > 0) {
-			db = (double)rgb.b / 255;
-		}
+	// Standard drawing methods
+	void drawRectangle(float offsetX, float offsetY, float w, float h, ofColor c) {
+		ofPushStyle();
+		ofFill();
+		ofSetColor(c);
+		ofDrawRectangle(-(w * 0.5) + offsetX, -(h * 0.5) + offsetY, w, h);
+		ofPopStyle();
+	};
 
-		double k = 1 - max(max(dr, dg), db);
+	void drawEllipse(float offsetX, float offsetY, float w, float h, ofColor c) {
+		ofPushStyle();
+		ofFill();
+		ofSetColor(c);
+		//ofSetCircleResolution(4); Does not make sense for ciaro renderer.
+		ofDrawEllipse(offsetX, offsetY, w, h);
+		ofPopStyle();
+	};
 
-		double kop = 1 - k;
-		
-		double c = 1 - dr - k;
-		double m = 1 - dg - k;
-		double y = 1 - db - k;
+	void quadraticBezierVertex(float cpx, float cpy, float x, float y, float prevX, float prevY) {
+		float cp1x = prevX + 2.0 / 3.0 * (cpx - prevX);
+		float cp1y = prevY + 2.0 / 3.0 * (cpy - prevY);
+		float cp2x = cp1x + (x - prevX) / 3.0;
+		float cp2y = cp1y + (y - prevY) / 3.0;
 
-		if (kop > 0) {
-			if (c > 0) {
-				c /= kop;
-			}
-			if (m > 0) {
-				m /= kop;
-			}
-			if (y > 0) {
-				y /= kop;
-			}
-		}
+		// finally call cubic Bezier curve function  
+		ofBezierVertex(cp1x, cp1y, cp2x, cp2y, x, y);
+	};
 
-		return ofVec4f(c, m, y, k);
-	}
+	void drawRoundedRect(float offsetX, float offsetY, float w, float h, ofColor c) {
+		// Use ofDrawRectRounded(p.x, p.y, 0.0, w, h, r,r,r,r) ?
+		ofPushStyle();
+		ofFill();
+		ofSetColor(c);
+
+		float x = -(w * 0.5) + offsetX;
+		float y = -(h * 0.5) + offsetY;
+
+		ofBeginShape();
+		ofVertex(x + rounded, y);
+		ofVertex(x + w - rounded, y);
+		quadraticBezierVertex(x + w, y, x + w, y + rounded, x + w - rounded, y);
+		ofVertex(x + w, y + h - rounded);
+		quadraticBezierVertex(x + w, y + h, x + w - rounded, y + h, x + w, y + h - rounded);
+		ofVertex(x + rounded, y + h);
+		quadraticBezierVertex(x, y + h, x, y + h - rounded, x + rounded, y + h);
+		ofVertex(x, y + rounded);
+		quadraticBezierVertex(x, y, x + rounded, y, x, y + rounded);
+		ofEndShape();
+
+		ofPopStyle();
+	};
 };

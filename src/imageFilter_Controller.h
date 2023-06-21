@@ -3,6 +3,7 @@
 #include "imageFilter_Duplicate.h"
 #include "imageFilter_Tint.h"
 #include "imageFilter_Blur.h"
+#include "imageFilter_DrawPixel.h"
 
 class ImageFilterController {
 public:
@@ -30,7 +31,8 @@ public:
 		"Mirror",
 		"Duplicate",
 		"Tint",
-		"Blur"
+		"Blur",
+		"DrawPixel"
 	};
 
 	void addFilter(ImageFilter* filter) {
@@ -52,6 +54,10 @@ public:
 			v_ImageFilters.push_back(new If_blur);
 			bFresh = true;
 		}
+		else if (v_ImageFilterNames[index] == "DrawPixel") {
+			v_ImageFilters.push_back(new If_drawPixel);
+			bFresh = true;
+		}
 	}
 
 	void addFilter(ofxXmlSettings filterSettings) {
@@ -70,6 +76,10 @@ public:
 			bFresh = true;
 		} else if (filterName == "Blur") {
 			v_ImageFilters.push_back(new If_blur);
+			v_ImageFilters[v_ImageFilters.size() - 1]->loadSettings(filterSettings);
+			bFresh = true;
+		} else if (filterName == "DrawPixel") {
+			v_ImageFilters.push_back(new If_drawPixel);
 			v_ImageFilters[v_ImageFilters.size() - 1]->loadSettings(filterSettings);
 			bFresh = true;
 		}

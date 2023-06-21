@@ -1,5 +1,4 @@
 #include "ofApp.h"
-#include <blend2d.h>
 
 /*
    - Pixelate filter: Add curve widget https://github.com/ocornut/imgui/issues/786
@@ -26,7 +25,7 @@
    - Add grid generator (with noise curve option)
 
    ## Filters
-   - Use gradients (Implement Blend2d)
+   - Use gradients
    - Add hatch filter
    - Add asym hex pixel to Pixelate filter.
 */
@@ -72,13 +71,6 @@ void ofApp::exit() {
 
 //--------------------------------------------------------------
 void ofApp::update() {
-	if (bShowFps) {
-		fpsStringStream.str(std::string());
-		fpsStringStream.clear();
-		fpsStringStream << "Canvas (FPS: " << ofGetFrameRate() << ")";
-		ofSetWindowTitle(fpsStringStream.str());
-	}
-
 	gui_update();
 	
 	if (bLoadSettingsNextFrame)
@@ -93,15 +85,8 @@ void ofApp::update() {
 	}
 
 	if (!pauseRender) {
-
 		soundManager.update();
-		plotCanvas.sourceController.update();
 		plotCanvas.update();
-
-		if (plotCanvas.sourceController.frameBuffer.isFresh() || plotCanvas.isFresh()) {
-			// fix
-			plotCanvas.update(&plotCanvas.sourceController.frameBuffer.getFrame());
-		}
 	}
 }
 
@@ -118,43 +103,7 @@ void ofApp::draw() {
 	gui_draw();
 }
 
-void ofApp::blend2dTest() {
-	BLImage img(480, 480, BL_FORMAT_PRGB32);
 
-	// Attach a rendering context into `img`.
-	BLContext ctx(img);
-
-	// Clear the image.
-	ctx.setCompOp(BL_COMP_OP_SRC_COPY);
-	ctx.setFillStyle(BLRgba(0, 0, 0, 0));
-	ctx.fillAll();
-
-	// Fill some path.
-	BLPath path;
-	path.moveTo(26, 31);
-	path.cubicTo(642, 132, 587, -136, 25, 464);
-	path.cubicTo(882, 404, 144, 267, 27, 31);
-
-	ctx.setCompOp(BL_COMP_OP_SRC_OVER);
-	ctx.setFillStyle(BLRgba32(0xFFFFFFFF));
-	ctx.fillPath(path);
-
-	// Detach the rendering context from `img`.
-	ctx.end();
-	
-	// Let's use some built-in codecs provided by Blend2D.
-	img.writeToFile("bl_sample_1.png");
-
-	BLImageData imageData;
-	img.getData(&imageData);
-
-	ofImage data;
-	//data.setImageType(OF_IMAGE_COLOR_ALPHA);
-	data.setFromPixels((unsigned char*)imageData.pixelData, imageData.size.w, imageData.size.h, OF_IMAGE_COLOR_ALPHA, false);
-	// process the data..
-	data.update();
-	data.draw(0, 0);
-}
 
 void ofApp::resetImageOffset() {
 	userOffset.x = 0;

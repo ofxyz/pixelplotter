@@ -116,6 +116,16 @@ void ofApp::gui_drawMenuBar() {
 		ImGui::EndMenu();
 	}
 
+	if (ImGui::BeginMenu("View")) {
+		if (ImGui::MenuItem("Source Canvas")) {
+			plotCanvas.sourceController.showSource = true;
+		}
+		if (ImGui::MenuItem("Plot Canvas")) {
+			plotCanvas.sourceController.showSource = false;
+		}
+		ImGui::EndMenu();
+	}
+
 	if (ImGui::BeginMenu("Settings")) {
 
 		// Full Screen
@@ -165,22 +175,14 @@ void ofApp::gui_drawMenuBar() {
 		
 	}
 
-	static std::string canvasSelected;
-	if (plotCanvas.sourceController.showSource) {
-		canvasSelected = "Source Canvas";
-	}
-	else {
-		canvasSelected = "Plot Canvas";
-	}
-
-	if (ImGui::BeginMenu(canvasSelected.c_str())) {
-		if (ImGui::MenuItem("Source Canvas")) {
-			plotCanvas.sourceController.showSource = true;
+	if (bShowFps) {
+		fpsStringStream.str(std::string());
+		fpsStringStream.clear();
+		fpsStringStream << "(FPS: " << ofGetFrameRate() << ")";
+		
+		if (ImGui::BeginMenu(fpsStringStream.str().c_str())) {
+			ImGui::EndMenu();
 		}
-		if (ImGui::MenuItem("Plot Canvas")) {
-			plotCanvas.sourceController.showSource = false;
-		}
-		ImGui::EndMenu();
 	}
 
 	ImGui::EndMainMenuBar();

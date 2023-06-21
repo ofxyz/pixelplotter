@@ -214,7 +214,8 @@ void Canvas::setup(ofApp* app, string canvas_title) {
 	setSourceDimension(&sourceController.frameBuffer.getFrame());
 	canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGBA, 8);
 	canvasFbo.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
-	update(&sourceController.frameBuffer.getFrame());
+	update();
+	updateFbo(&sourceController.frameBuffer.getFrame());
 }
 
 void Canvas::setSourceDimension() {
@@ -230,6 +231,7 @@ void Canvas::setSourceDimension(ofImage* img) {
 }
 
 void Canvas::update() {
+	sourceController.update();
 	dF.update();
 	if (cleanDrawFilters) {
 		dF.cleanFilters();
@@ -239,24 +241,32 @@ void Canvas::update() {
 	}
 	if (dF.isFresh()) {
 		dF.setFresh(false);
-		setFresh(true);
+		redrawFBO = true;
 	}
 
 	if (resizeRequest) {
 		canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGBA, 8);
 		canvasFbo.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 		resizeRequest = false;
-		setFresh(true);
+		redrawFBO = true;
 		return;
 	}
+
 	if (isRecording) {
-		setFresh(true);
+		redrawFBO = true;
 		return;
+	}
+
+	// Not nececairy to update if previous frame hasnt been drawn yet
+	// Should not drop frames as we use a framebuffer
+	if (isFresh()) return; 
+
+	if (sourceController.frameBuffer.isFresh() || redrawFBO) {
+		updateFbo(&sourceController.frameBuffer.getFrame());
 	}
 }
 
-void Canvas::update(ofImage* img) {
-	update();
+void Canvas::updateFbo(ofImage* img) {
 	canvasFbo.begin();
 	if (saveVector) {
 		// This swaps out the gl renderer for the ciaro renderer
@@ -301,5 +311,6 @@ void Canvas::update(ofImage* img) {
 		savePixels = false;
 	}
 
-	setFresh(false);
+	setFresh(true); 
+	redrawFBO = false;
 };
