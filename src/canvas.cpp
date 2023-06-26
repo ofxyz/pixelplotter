@@ -257,8 +257,8 @@ void Canvas::update() {
 		return;
 	}
 
-	// Not nececairy to update if previous frame hasnt been drawn yet
-	// Should not drop frames as we use a framebuffer
+	// Not necessarily to update if previous frame has not been drawn yet
+	// Should not drop frames as we use a frame buffer
 	if (isFresh()) return; 
 
 	if (sourceController.frameBuffer.isFresh() || redrawFBO) {

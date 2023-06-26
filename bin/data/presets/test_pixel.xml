@@ -1,0 +1,10 @@
+<source>
+    <string_settings>&lt;source&gt;download.png&lt;/source&gt;&#x0A;</string_settings>
+</source>
+<imageFilters>
+    <string_settings>&lt;name&gt;DrawPixel&lt;/name&gt;&#x0A;&lt;colors&gt;&#x0A;    &lt;col&gt;&#x0A;        &lt;r&gt;0.000000000&lt;/r&gt;&#x0A;        &lt;g&gt;0.000000000&lt;/g&gt;&#x0A;        &lt;b&gt;0.000000000&lt;/b&gt;&#x0A;        &lt;a&gt;1.000000000&lt;/a&gt;&#x0A;    &lt;/col&gt;&#x0A;&lt;/colors&gt;&#x0A;</string_settings>
+</imageFilters>
+<drawFilters></drawFilters>
+<plotCanvas>
+    <string_settings>&lt;canvasTitle&gt;Untitled&lt;/canvasTitle&gt;&#x0A;&lt;canvasWidth&gt;262&lt;/canvasWidth&gt;&#x0A;&lt;canvasHeight&gt;193&lt;/canvasHeight&gt;&#x0A;&lt;exportWithTimeStamp&gt;1&lt;/exportWithTimeStamp&gt;&#x0A;&lt;colors&gt;&#x0A;    &lt;plotCanvas&gt;&#x0A;        &lt;r&gt;1.000000000&lt;/r&gt;&#x0A;        &lt;g&gt;1.000000000&lt;/g&gt;&#x0A;        &lt;b&gt;1.000000000&lt;/b&gt;&#x0A;        &lt;a&gt;1.000000000&lt;/a&gt;&#x0A;    &lt;/plotCanvas&gt;&#x0A;&lt;/colors&gt;&#x0A;</string_settings>
+</plotCanvas>

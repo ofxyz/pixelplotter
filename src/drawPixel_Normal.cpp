@@ -7,7 +7,6 @@ ofxXmlSettings Dp_normal::getSettings() {
 }
 
 void Dp_normal::loadSettings(ofxXmlSettings settings) {
-	// Don't update name
 	// name = settings.getValue("name", name);
 	return;
 }

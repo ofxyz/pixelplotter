@@ -28,21 +28,27 @@ void If_drawPixel::renderImGuiSettings() {
 		ImGui::PushItemWidth(60);
 
 		if (ofxImGui::VectorCombo("Pixel Type ##drawPixel", &selectedPixelType, drawPixels.v_DrawPixelsNames)) {
-			bFresh = true;
+			setFresh(true);
 		};
 
 		if (ImGui::ColorEdit4("Color ##drawPixel", (float*)&c_col, ImGuiColorEditFlags_NoInputs)) {
-			bFresh = true;
+			setFresh(true);
 		}
 	
 		ImGui::Text("Copies"); ImGui::SameLine(75);
 		if (ImGui::DragInt("Horz ##drawpixel_hCount", &hCount, 1, 1, 100)) {
-			bFresh = true;
+			setFresh(true);
 		}
 		ImGui::SameLine();
 		if (ImGui::DragInt("Vert ##drawpixel_vCount", &vCount, 1, 1, 100)) {
-			bFresh = true;
+			setFresh(true);
 		}
+		
+		// Pass fresh through
+		if (drawPixels.v_DrawPixels[selectedPixelType]->isFresh()) {
+			setFresh(true);
+		}
+		drawPixels.v_DrawPixels[selectedPixelType]->renderImGuiSettings();
 
 		ImGui::PopItemWidth();
 	}
@@ -56,15 +62,16 @@ void If_drawPixel::apply(ofImage* img) {
 	float height = img->getHeight() / vCount;
 
 	cfbo.begin();
-	cfbo.clearColorBuffer(ofColor(0, 0, 0));
+	cfbo.clearColorBuffer(ofColor(255, 255, 255));
 	int xcount = 0;
 	int ycount = 0;
 	for (float y = 0; y < vCount * height; y += height) {
+		// Reset for every line
 		float newHeight = height;
 		float newY = y;
 
 		for (float x = 0; x < hCount * width; x += width) {
-			drawPixels.v_DrawPixels[selectedPixelType]->draw(c_col, x+(width*0.5), newY + (newHeight * 0.5), width, newHeight);
+			drawPixels.v_DrawPixels[selectedPixelType]->draw(c_col, x+(width*0.5), newY + (height * 0.5), width, height);
 			xcount++;
 		}
 		ycount++;

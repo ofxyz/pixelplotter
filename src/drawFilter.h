@@ -38,6 +38,8 @@ public:
 		}
 	}
 
+	// -------------------------------------------------
+	// Delete after implementing drawPixel class ...
 	ofVec4f getCMYK(ofColor rgb) {
 		double dr = 0, dg = 0, db = 0;
 		if (rgb.r > 0) {
@@ -76,6 +78,8 @@ public:
 	int currentBlendModeIndex = 0;
 	std::vector<std::string> v_BlendModes{ "OF_BLENDMODE_DISABLED", "OF_BLENDMODE_ALPHA", "OF_BLENDMODE_ADD", "OF_BLENDMODE_SUBTRACT", "OF_BLENDMODE_MULTIPLY", "OF_BLENDMODE_SCREEN" };
 	
+	// -------------------------------------------------
+	// Delete after implementing drawPixel class ...
 	void gui_setGrey() {
 		c_magentaRed = ofColor(108, 108, 108);
 		c_cyanBlue = ofColor(139, 139, 139);
@@ -163,7 +167,7 @@ public:
 						gui_setRYB();
 					}
 				}
-			} // End Colours
+			} // End Colors
 		}
 	}
 	
@@ -193,7 +197,7 @@ public:
 	}
 
 	float lineWidth = 8;
-	// Add UI for standard colours ... 
+	
 	ImVec4 c_cyanBlue = ofColor(0, 174, 239, 255);
 	ImVec4 c_magentaRed = ofColor(236, 0, 140, 255);
 	ImVec4 c_yellowGreen = ofColor(255, 242, 0, 255);
