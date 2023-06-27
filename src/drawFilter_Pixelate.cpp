@@ -1,5 +1,4 @@
 #include "drawFilter_Pixelate.h"
-#include "ofx2d.h"
 #include "ofApp.h"
 
 extern ofx2d x2d;

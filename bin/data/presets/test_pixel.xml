@@ -1,8 +1,8 @@
 <source>
-    <string_settings>&lt;source&gt;download.png&lt;/source&gt;&#x0A;</string_settings>
+    <string_settings>&lt;source&gt;Test_Alpha.png&lt;/source&gt;&#x0A;</string_settings>
 </source>
 <imageFilters>
-    <string_settings>&lt;name&gt;DrawPixel&lt;/name&gt;&#x0A;&lt;colors&gt;&#x0A;    &lt;col&gt;&#x0A;        &lt;r&gt;0.000000000&lt;/r&gt;&#x0A;        &lt;g&gt;0.000000000&lt;/g&gt;&#x0A;        &lt;b&gt;0.000000000&lt;/b&gt;&#x0A;        &lt;a&gt;1.000000000&lt;/a&gt;&#x0A;    &lt;/col&gt;&#x0A;&lt;/colors&gt;&#x0A;</string_settings>
+    <string_settings>&lt;name&gt;DrawPixel&lt;/name&gt;&#x0A;&lt;pixelType&gt;Separate CMYK Bars&lt;/pixelType&gt;&#x0A;&lt;hCount&gt;10&lt;/hCount&gt;&#x0A;&lt;vCount&gt;5&lt;/vCount&gt;&#x0A;&lt;colors&gt;&#x0A;    &lt;col&gt;&#x0A;        &lt;r&gt;1.000000000&lt;/r&gt;&#x0A;        &lt;g&gt;0.016304374&lt;/g&gt;&#x0A;        &lt;b&gt;0.016304374&lt;/b&gt;&#x0A;        &lt;a&gt;1.000000000&lt;/a&gt;&#x0A;    &lt;/col&gt;&#x0A;&lt;/colors&gt;&#x0A;</string_settings>
 </imageFilters>
 <drawFilters></drawFilters>
 <plotCanvas>

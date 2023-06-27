@@ -1,9 +1,12 @@
-#include "imageFilter_DrawPixel.h"
 #include "ofApp.h";
+#include "imageFilter_DrawPixel.h"
 
 ofxXmlSettings If_drawPixel::getSettings() {
 	ofxXmlSettings settings;
 	settings.setValue("name", name);
+	settings.setValue("pixelType", drawPixels.v_DrawPixelsNames[selectedPixelType]);
+	settings.setValue("hCount", hCount);
+	settings.setValue("vCount", vCount);
 
 	settings.setValue("colors:col:r", c_col.x);
 	settings.setValue("colors:col:g", c_col.y);
@@ -14,6 +17,10 @@ ofxXmlSettings If_drawPixel::getSettings() {
 }
 
 void If_drawPixel::loadSettings(ofxXmlSettings settings) {
+
+	selectedPixelType = x2d.getIndex(drawPixels.v_DrawPixelsNames, settings.getValue("pixelType", "Undefined"), 1);
+	hCount = settings.getValue("hCount", hCount);
+	vCount = settings.getValue("vCount", vCount);
 
 	c_col.x = settings.getValue("colors:col:r", c_col.x);
 	c_col.y = settings.getValue("colors:col:g", c_col.y);
