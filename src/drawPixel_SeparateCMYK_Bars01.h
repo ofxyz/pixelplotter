@@ -2,10 +2,10 @@
 
 #include "drawPixel.h"
 
-class Dp_separateCMYK : public DrawPixel {
+class Dp_separateCMYK_Bars01 : public DrawPixel {
 public:
-	Dp_separateCMYK() {
-		name = "Separate CMYK Bars";
+	Dp_separateCMYK_Bars01() {
+		name = "Separate CMYK Bars 01";
 	}
 
 	void draw(ofColor c, float offsetX, float offsetY, float width, float height);

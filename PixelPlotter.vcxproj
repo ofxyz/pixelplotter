@@ -232,7 +232,8 @@
     <ClCompile Include="src\drawFilter_Pixelate.cpp" />
     <ClCompile Include="src\drawFilter_Rings.cpp" />
     <ClCompile Include="src\drawPixel_Normal.cpp" />
-    <ClCompile Include="src\drawPixel_SeparateCMYK.cpp" />
+    <ClCompile Include="src\drawPixel_SeparateCMYK_Bars01.cpp" />
+    <ClCompile Include="src\drawPixel_SeparateRGB_Bars01.cpp" />
     <ClCompile Include="src\generator_Plaids.cpp" />
     <ClCompile Include="src\imageFilter_Blur.cpp" />
     <ClCompile Include="src\imageFilter_DrawPixel.cpp" />
@@ -596,7 +597,8 @@
     <ClInclude Include="src\drawPixel.h" />
     <ClInclude Include="src\drawPixels.h" />
     <ClInclude Include="src\drawPixel_Normal.h" />
-    <ClInclude Include="src\drawPixel_SeparateCMYK.h" />
+    <ClInclude Include="src\drawPixel_SeparateCMYK_Bars01.h" />
+    <ClInclude Include="src\drawPixel_SeparateRGB_Bars01.h" />
     <ClInclude Include="src\frameBuffer.h" />
     <ClInclude Include="src\generator.h" />
     <ClInclude Include="src\generator_Controller.h" />

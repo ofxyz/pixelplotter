@@ -13,6 +13,14 @@ ofxXmlSettings If_drawPixel::getSettings() {
 	settings.setValue("colors:col:b", c_col.z);
 	settings.setValue("colors:col:a", c_col.w);
 
+	settings.addTag("pixelSettings");
+	settings.pushTag("pixelSettings");
+	ofxXmlSettings pixelSettings = drawPixels.v_DrawPixels[selectedPixelType]->getSettings();
+	string sPixelSettings;
+	pixelSettings.copyXmlToString(sPixelSettings);
+	settings.addValue("string_settings", sPixelSettings);
+	settings.popTag();
+
 	return settings;
 }
 
@@ -26,7 +34,15 @@ void If_drawPixel::loadSettings(ofxXmlSettings settings) {
 	c_col.y = settings.getValue("colors:col:g", c_col.y);
 	c_col.z = settings.getValue("colors:col:b", c_col.z);
 	c_col.w = settings.getValue("colors:col:a", c_col.w);
-	return;
+	
+	if (settings.tagExists("pixelSettings")) {
+		settings.pushTag("pixelSettings");
+		ofxXmlSettings pixelSettings;
+		string sPixelSettings = settings.getValue("string_settings", "");
+		pixelSettings.loadFromBuffer(sPixelSettings);
+		drawPixels.v_DrawPixels[selectedPixelType]->loadSettings(pixelSettings);
+		settings.popTag();
+	}
 }
 
 void If_drawPixel::renderImGuiSettings() {

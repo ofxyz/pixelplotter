@@ -1,0 +1,18 @@
+#pragma once
+
+#include "drawPixel.h"
+
+class Dp_separateRGB_Bars01 : public DrawPixel {
+public:
+	Dp_separateRGB_Bars01() {
+		name = "Separate RGB Bars 01";
+		c_magentaRed = ofColor(255, 0, 0, 255);
+		c_yellowGreen = ofColor(0, 255, 0, 255);
+		c_cyanBlue = ofColor(0, 0, 255, 255);
+	}
+
+	void draw(ofColor c, float offsetX, float offsetY, float width, float height);
+	void renderImGuiSettings();
+	void loadSettings(ofxXmlSettings settings);
+	ofxXmlSettings getSettings();
+};

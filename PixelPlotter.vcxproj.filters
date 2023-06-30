@@ -181,13 +181,16 @@
     <ClCompile Include="src\sourceController.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\drawPixel_SeparateCMYK.cpp">
+    <ClCompile Include="src\drawPixel_SeparateCMYK_Bars01.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\drawPixel_Normal.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\imageFilter_DrawPixel.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\drawPixel_SeparateRGB_Bars01.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1502,7 +1505,7 @@
     <ClInclude Include="src\drawPixel.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\drawPixel_SeparateCMYK.h">
+    <ClInclude Include="src\drawPixel_SeparateCMYK_Bars01.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\drawPixels.h">
@@ -1512,6 +1515,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\imageFilter_DrawPixel.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\drawPixel_SeparateRGB_Bars01.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

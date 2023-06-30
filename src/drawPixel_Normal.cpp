@@ -8,6 +8,7 @@ ofxXmlSettings Dp_normal::getSettings() {
 
 void Dp_normal::loadSettings(ofxXmlSettings settings) {
 	// name = settings.getValue("name", name);
+	setFresh(true);
 	return;
 }
 

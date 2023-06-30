@@ -165,6 +165,7 @@ void ofApp::loadSettings(string& filepath) {
 	plotCanvas.sourceController.iF.clearFilters();
 
 	/* Don't load source for settings ...
+	* Add tickbox for this ...
 	if (settings.tagExists("source")) {
 		settings.pushTag("source");
 		ofxXmlSettings sourceSettings;

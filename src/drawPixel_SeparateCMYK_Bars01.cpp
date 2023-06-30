@@ -1,24 +1,23 @@
-#include "drawPixel_SeparateCMYK.h"
+#include "drawPixel_SeparateCMYK_Bars01.h"
 
-ofxXmlSettings Dp_separateCMYK::getSettings() {
+ofxXmlSettings Dp_separateCMYK_Bars01::getSettings() {
 	ofxXmlSettings settings;
 	settings.setValue("name", name);
 	return settings;
 }
 
-void Dp_separateCMYK::loadSettings(ofxXmlSettings settings) {
+void Dp_separateCMYK_Bars01::loadSettings(ofxXmlSettings settings) {
 	// name = settings.getValue("name", name);
 	return;
 }
 
-void Dp_separateCMYK::renderImGuiSettings() {
-	// Add rotation
-	// Add draw order
-	// Save settings n
+void Dp_separateCMYK_Bars01::renderImGuiSettings() {
+	// Add draw order (shuffle ofVec4f)
+	// Save settings
 	renderImGuiColourSettings();
 }
 
-void Dp_separateCMYK::draw(ofColor c, float x, float y, float width, float height) {
+void Dp_separateCMYK_Bars01::draw(ofColor c, float x, float y, float width, float height) {
 	ofVec4f cmyk = getCMYK(c);
 	float whiteVal = 1 - max(max(cmyk[0], cmyk[1]), max(cmyk[2], cmyk[3]));
 	float totalInk = cmyk[0] + cmyk[1] + cmyk[2] + cmyk[3] + whiteVal;
