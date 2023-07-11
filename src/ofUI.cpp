@@ -11,7 +11,7 @@ void ofApp::gui_draw() {
 	gui.begin();
 
 	gui_drawMenuBar();
-	gui_drawMainDock();	
+	gui_drawMainDock();
 
 	if (bShowGui)
 	{
@@ -49,7 +49,7 @@ void ofApp::gui_drawMainDock() {
 	// Make main docking space transparent
 	ImGuiDockNodeFlags dockingFlags = ImGuiDockNodeFlags_PassthruCentralNode;
 
-	// Alternative: Otherwise add in ImGui::DockSpace() [±line 14505] : if (flags & ImGuiDockNodeFlags_PassthruCentralNode) window_flags |= ImGuiWindowFlags_NoBackground;
+	// Alternative: Otherwise add in ImGui::DockSpace() [Â±line 14505] : if (flags & ImGuiDockNodeFlags_PassthruCentralNode) window_flags |= ImGuiWindowFlags_NoBackground;
 	//ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(0, 0, 0, 0));
 
 	dockingFlags |= ImGuiDockNodeFlags_NoDockingInCentralNode; // Uncomment to always keep an empty "central node" (a visible oF space)
@@ -166,20 +166,20 @@ void ofApp::gui_drawMenuBar() {
 		ImGui::Separator();
 
 		if (ImGui::Checkbox("Show FPS in Titlebar", &bShowFps)) {
-			if(!bShowFps) ofSetWindowTitle(windowTitle);
+			if (!bShowFps) ofSetWindowTitle(windowTitle);
 		};
 
 		soundManager.renderImGuiSettings();
 
 		ImGui::EndMenu();
-		
+
 	}
 
 	if (bShowFps) {
 		fpsStringStream.str(std::string());
 		fpsStringStream.clear();
 		fpsStringStream << "(FPS: " << ofGetFrameRate() << ")";
-		
+
 		if (ImGui::BeginMenu(fpsStringStream.str().c_str())) {
 			ImGui::EndMenu();
 		}

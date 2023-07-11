@@ -31,8 +31,8 @@ public:
 		return currentFrame;
 	}
 
-	ofColor getColor(int x, int y, int width, int height ) {
-		return currentFrame.getPixels().getColor( round(ofMap(x,0,width,0, getWidth())), round(ofMap(y, 0, height, 0, getHeight())) );
+	ofColor getColor(int x, int y, int width, int height) {
+		return currentFrame.getPixels().getColor(round(ofMap(x, 0, width, 0, getWidth())), round(ofMap(y, 0, height, 0, getHeight())));
 	}
 
 	ofColor getColor(int x, int y) {

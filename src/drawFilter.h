@@ -55,7 +55,7 @@ public:
 		double k = 1 - max(max(dr, dg), db);
 
 		double kop = 1 - k;
-		
+
 		double c = 1 - dr - k;
 		double m = 1 - dg - k;
 		double y = 1 - db - k;
@@ -77,7 +77,7 @@ public:
 
 	int currentBlendModeIndex = 0;
 	std::vector<std::string> v_BlendModes{ "OF_BLENDMODE_DISABLED", "OF_BLENDMODE_ALPHA", "OF_BLENDMODE_ADD", "OF_BLENDMODE_SUBTRACT", "OF_BLENDMODE_MULTIPLY", "OF_BLENDMODE_SCREEN" };
-	
+
 	// -------------------------------------------------
 	// Delete after implementing drawPixel class ...
 	void gui_setGrey() {
@@ -170,7 +170,7 @@ public:
 			} // End Colors
 		}
 	}
-	
+
 	void setBlendMode() {
 		if (v_BlendModes[currentBlendModeIndex] == "OF_BLENDMODE_ALPHA") {
 			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
@@ -197,7 +197,7 @@ public:
 	}
 
 	float lineWidth = 8;
-	
+
 	ImVec4 c_cyanBlue = ofColor(0, 174, 239, 255);
 	ImVec4 c_magentaRed = ofColor(236, 0, 140, 255);
 	ImVec4 c_yellowGreen = ofColor(255, 242, 0, 255);
@@ -214,4 +214,3 @@ public:
 private:
 	bool bFresh = false;
 };
-

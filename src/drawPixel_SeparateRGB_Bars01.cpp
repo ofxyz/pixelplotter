@@ -45,8 +45,8 @@ void Dp_separateRGB_Bars01::draw(ofColor c, float x, float y, float width, float
 
 	// Do black
 	if (blackVal > 0) { // Offset for white
-		barWidth = (blackVal/255) * width;
-		start += (barWidth*0.5);
+		barWidth = (blackVal / 255) * width;
+		start += (barWidth * 0.5);
 		drawRectangle(start, y, barWidth, height, c_black);
 		start += (barWidth * 0.5);
 	}

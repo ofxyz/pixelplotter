@@ -2,6 +2,9 @@
 
 #include "imageFilter.h"
 
+void apply(ofImage* img);
+void renderImGuiSettings();
+void loadSetti
 class If_duplicate : public ImageFilter {
 public:
 	If_duplicate() {

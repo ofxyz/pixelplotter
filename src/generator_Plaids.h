@@ -17,7 +17,7 @@ public:
 	void loadSettings(ofxXmlSettings settings);
 	ofxXmlSettings getSettings();
 private:
-	int width,height;
+	int width, height;
 	int xcount = 1;
 	int ycount = 1;
 	ImVec4 c_base = ofColor(0, 255, 255, 255);

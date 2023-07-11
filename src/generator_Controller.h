@@ -18,7 +18,7 @@ public:
 
 	std::vector<Generator*> v_Generators;
 
-	std::vector<std::string> v_GeneratorNames {
+	std::vector<std::string> v_GeneratorNames{
 		"Add Generator ...",
 		"Plaids"
 	};

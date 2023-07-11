@@ -4,13 +4,13 @@
 ofxXmlSettings Df_noise::getSettings() {
 	ofxXmlSettings settings;
 	settings.setValue("name", name);
-	
+
 	// Colours
 	settings.setValue("colors:background:r", cBg.x);
 	settings.setValue("colors:background:g", cBg.y);
 	settings.setValue("colors:background:b", cBg.z);
 	settings.setValue("colors:background:a", cBg.w);
-	
+
 	settings.addTag("palette");
 	settings.pushTag("palette");
 	// Palette
@@ -118,7 +118,7 @@ void Df_noise::renderImGuiSettings() {
 void Df_noise::draw(ofImage* input, float width, float height, float x, float y) {
 	setFresh(false);
 	if (!visible) return;
-	
+
 	for (int y = 0; y < input->getHeight(); y += 10) {
 		for (int x = 0; x < input->getWidth(); x += 10) {
 			drawPixel(x, y);
@@ -127,12 +127,12 @@ void Df_noise::draw(ofImage* input, float width, float height, float x, float y)
 }
 
 void Df_noise::drawPixel(int x, int y) {
-	
+
 	// New Pixel
 	subpixels.clear();
 	for (int y = 0; y < 10; y++) {
 		for (int x = 0; x < 10; x++) {
-			subpixels.push_back(subpixel(x,y));
+			subpixels.push_back(subpixel(x, y));
 		}
 	}
 

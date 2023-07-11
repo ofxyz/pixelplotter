@@ -65,7 +65,7 @@ void Df_rings::renderImGuiSettings() {
 		if (ImGui::DragFloat("Line Width ##rings", &lineWidth, 0.1f, 0.1, 50, "%.3f")) {
 			setFresh(true);
 		}
-		
+
 		ImGui::PopItemWidth();
 
 		if (ImGui::ColorEdit4("Blobline ##rings", (float*)&c_blob, ImGuiColorEditFlags_NoInputs)) {
@@ -94,7 +94,7 @@ void Df_rings::draw(ofImage* input, float width, float height, float x, float y)
 	}
 
 	//---------------------------------
-	
+
 	ofPushStyle();
 	ofSetColor(c_blob);
 	ofNoFill();
@@ -111,7 +111,7 @@ void Df_rings::draw(ofImage* input, float width, float height, float x, float y)
 		if (sCvSteps < 1) sCvSteps = 1;
 		if (sCvSteps > 254) sCvSteps = 254;
 	}
-	
+
 
 	while (i < (255 - sCvSteps)) {
 		if (i > cvThresh)
@@ -127,7 +127,7 @@ void Df_rings::draw(ofImage* input, float width, float height, float x, float y)
 			//c.setHsb(c.getHue() + 10, 255, 255);
 			float b = c.getBrightness() + 20;
 			if (b > 255) b -= 255;
-			c.setHsb(c.getHue(), c.getSaturation(), b );
+			c.setHsb(c.getHue(), c.getSaturation(), b);
 			//ofSetColor(c);
 			blobShape.addVertices(contourFinder.blobs.at(i).pts);
 			blobShape.close();

@@ -13,17 +13,17 @@ public:
 	};
 
 	void draw(ofImage* input, float width = 0, float height = 0, float x = 0, float y = 0);
-	
+
 	void drawPixel(int x, int y);
 
 	void renderImGuiSettings();
 	virtual void loadSettings(ofxXmlSettings settings);
 	ofxXmlSettings getSettings();
-	ImVec4 cBg = ofColor(255,255,255,255);
+	ImVec4 cBg = ofColor(255, 255, 255, 255);
 
 	class sColor {
 	public:
-		sColor(ofColor c, std::string n, int p = 0){
+		sColor(ofColor c, std::string n, int p = 0) {
 			color = c;
 			name = n;
 			percent = p;

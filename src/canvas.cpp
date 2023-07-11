@@ -210,7 +210,7 @@ void Canvas::setup(ofApp* app, string canvas_title) {
 	dF = DrawFilterController(pixelplotter);
 
 	sourceController.setup(pixelplotter);
-	canvasTitle  = canvas_title;
+	canvasTitle = canvas_title;
 	setSourceDimension(&sourceController.frameBuffer.getFrame());
 	canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGBA, 8);
 	canvasFbo.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
@@ -259,7 +259,7 @@ void Canvas::update() {
 
 	// Not necessarily to update if previous frame has not been drawn yet
 	// Should not drop frames as we use a frame buffer
-	if (isFresh()) return; 
+	if (isFresh()) return;
 
 	if (sourceController.frameBuffer.isFresh() || redrawFBO) {
 		updateFbo(&sourceController.frameBuffer.getFrame());
@@ -311,6 +311,6 @@ void Canvas::updateFbo(ofImage* img) {
 		savePixels = false;
 	}
 
-	setFresh(true); 
+	setFresh(true);
 	redrawFBO = false;
 };

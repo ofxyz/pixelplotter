@@ -60,7 +60,7 @@ void SoundManager::setup(ofApp* app) {
 	//virtual bool setOutDevice(const ofSoundDevice & device);
 	//virtual bool setApi(ofSoundDevice::Api api);
 
-	
+
 	// settings.device = devices[0];
 
 	// or get the default device for an specific api:
@@ -69,9 +69,9 @@ void SoundManager::setup(ofApp* app) {
 	// or by name
 	//auto devices = soundStream.getMatchingDevices("default");
 
-	
 
-	
+
+
 }
 
 void SoundManager::update() {

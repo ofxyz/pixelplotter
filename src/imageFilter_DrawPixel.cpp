@@ -34,7 +34,7 @@ void If_drawPixel::loadSettings(ofxXmlSettings settings) {
 	c_col.y = settings.getValue("colors:col:g", c_col.y);
 	c_col.z = settings.getValue("colors:col:b", c_col.z);
 	c_col.w = settings.getValue("colors:col:a", c_col.w);
-	
+
 	if (settings.tagExists("pixelSettings")) {
 		settings.pushTag("pixelSettings");
 		ofxXmlSettings pixelSettings;
@@ -57,7 +57,7 @@ void If_drawPixel::renderImGuiSettings() {
 		if (ImGui::ColorEdit4("Color ##drawPixel", (float*)&c_col, ImGuiColorEditFlags_NoInputs)) {
 			setFresh(true);
 		}
-	
+
 		ImGui::Text("Copies"); ImGui::SameLine(75);
 		if (ImGui::DragInt("Horz ##drawpixel_hCount", &hCount, 1, 1, 100)) {
 			setFresh(true);
@@ -66,7 +66,7 @@ void If_drawPixel::renderImGuiSettings() {
 		if (ImGui::DragInt("Vert ##drawpixel_vCount", &vCount, 1, 1, 100)) {
 			setFresh(true);
 		}
-		
+
 		// Pass fresh through
 		if (drawPixels.v_DrawPixels[selectedPixelType]->isFresh()) {
 			setFresh(true);
@@ -94,7 +94,7 @@ void If_drawPixel::apply(ofImage* img) {
 		float newY = y;
 
 		for (float x = 0; x < hCount * width; x += width) {
-			drawPixels.v_DrawPixels[selectedPixelType]->draw(c_col, x+(width*0.5), newY + (height * 0.5), width, height);
+			drawPixels.v_DrawPixels[selectedPixelType]->draw(c_col, x + (width * 0.5), newY + (height * 0.5), width, height);
 			xcount++;
 		}
 		ycount++;

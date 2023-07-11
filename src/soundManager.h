@@ -23,7 +23,7 @@ public:
 	int currentSoundDeviceIndex = 1;
 	int bufferSize = 256;
 	int bufferCounter = 0;
-	int drawCounter  = 0;
+	int drawCounter = 0;
 
 	float smoothedVol = 0.0;
 	float scaledVol = 0.0;

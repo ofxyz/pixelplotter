@@ -3,7 +3,7 @@
 #include "generator_Plaids.h"
 
 void G_plaids::setup(int _width, int _height) {
-	width  = _width;
+	width = _width;
 	height = _height;
 	bFresh = true;
 }

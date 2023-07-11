@@ -7,7 +7,7 @@ public:
 	bool active = true;
 	bool visible = true;
 	std::string name;
-	
+
 	bool bFresh = false;
 	bool isFresh() {
 		return bFresh;
@@ -22,4 +22,3 @@ public:
 	virtual ofxXmlSettings getSettings() = 0;
 
 };
-

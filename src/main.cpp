@@ -5,7 +5,7 @@
 #pragma comment(linker, "/SUBSYSTEM:Windows /ENTRY:mainCRTStartup")
 
 //========================================================================
-int main( ){
+int main() {
 	ofGLFWWindowSettings settings;
 	settings.title = "PixelPlotter V0.3";
 	settings.decorated = true;

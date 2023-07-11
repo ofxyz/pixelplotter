@@ -32,90 +32,90 @@ static void HelpMarker(const char* desc) {
 	}
 }
 
-class ofApp : public ofBaseApp{
+class ofApp : public ofBaseApp {
 
-	public:
-		std::string windowTitle = "PixelPlotter v0.3";
-		shared_ptr<ofGLRenderer> gl;
+public:
+	std::string windowTitle = "PixelPlotter v0.3";
+	shared_ptr<ofGLRenderer> gl;
 
-		void setup();
-		void update();
-		void draw();
-		void exit();
+	void setup();
+	void update();
+	void draw();
+	void exit();
 
-		void keyPressed(int key);
-		void keyReleased(int key);
-		
-		void mouseMoved(int x, int y);
-		void mouseDragged(int x, int y, int button);
-		void mousePressed(int x, int y, int button);
-		void mouseReleased(int x, int y, int button);
-		void mouseEntered(int x, int y);
-		void mouseExited(int x, int y);
-		void mouseScrolled(ofMouseEventArgs& mouse);
-		
-		void audioIn(ofSoundBuffer& input);
+	void keyPressed(int key);
+	void keyReleased(int key);
 
-		void windowResized(int w, int h);
-		void dragEvent(ofDragInfo dragInfo);
-		void gotMessage(ofMessage msg);
+	void mouseMoved(int x, int y);
+	void mouseDragged(int x, int y, int button);
+	void mousePressed(int x, int y, int button);
+	void mouseReleased(int x, int y, int button);
+	void mouseEntered(int x, int y);
+	void mouseExited(int x, int y);
+	void mouseScrolled(ofMouseEventArgs& mouse);
 
-		void saveSettings(string& filepath);
-		void loadSettings(string& filepath);
+	void audioIn(ofSoundBuffer& input);
 
-		void resetImageOffset();
-		void resetZoom();
+	void windowResized(int w, int h);
+	void dragEvent(ofDragInfo dragInfo);
+	void gotMessage(ofMessage msg);
 
-		DrawPixels drawPixels;
-		SoundManager soundManager;
-		Canvas plotCanvas;
+	void saveSettings(string& filepath);
+	void loadSettings(string& filepath);
 
-		char presetSaveName[128] = "";
-		int exportCount = 0;
+	void resetImageOffset();
+	void resetZoom();
 
-		bool cleanImageFilters = false;
-		
-		bool bSavePreset = false;
-		bool bShowMenuBar = true;
-		bool bShowGui = true;
-		bool bShowPlotCanvas = true;
-		bool bShowInfoPanel = true;
-		bool pauseRender = false;
-		bool bDragCanvas = false;
-		bool bShowFps = true;
+	DrawPixels drawPixels;
+	SoundManager soundManager;
+	Canvas plotCanvas;
 
-		int currentPresetIndex = 0;
+	char presetSaveName[128] = "";
+	int exportCount = 0;
 
-		float zoomLevel = 1;
-		ofVec2f userOffset;
-		glm::vec2 lastDraggedPos;
+	bool cleanImageFilters = false;
 
-		ofVec2f workSpaceWidthHeight;
-		ofVec2f workSpaceTopLeft;
-		glm::vec2 workSpaceCentre;
+	bool bSavePreset = false;
+	bool bShowMenuBar = true;
+	bool bShowGui = true;
+	bool bShowPlotCanvas = true;
+	bool bShowInfoPanel = true;
+	bool pauseRender = false;
+	bool bDragCanvas = false;
+	bool bShowFps = true;
 
-		ofxImGui::Gui gui;
+	int currentPresetIndex = 0;
 
-		ImVec4 c_background = ofColor(50, 50, 50, 255);
-		
-		std::vector<std::string> presetFileNames;
-		std::vector<ofFile> presetFiles;
+	float zoomLevel = 1;
+	ofVec2f userOffset;
+	glm::vec2 lastDraggedPos;
 
-		ofVec2f offset;
+	ofVec2f workSpaceWidthHeight;
+	ofVec2f workSpaceTopLeft;
+	glm::vec2 workSpaceCentre;
 
-		std::stringstream fpsStringStream;
+	ofxImGui::Gui gui;
 
-		// -------------------------------------------------  Start ofUI.cpp
-		void gui_setup();
-		void gui_update();
-		void gui_draw();
-		void gui_drawMenuBar();
-		void gui_drawMainDock();
-		void gui_drawCanvasWindow();
-		void gui_drawInfoPanel();
-		void gui_loadPresets();
+	ImVec4 c_background = ofColor(50, 50, 50, 255);
 
-		bool bLoadSettingsNextFrame;
+	std::vector<std::string> presetFileNames;
+	std::vector<ofFile> presetFiles;
 
-		// -------------------------------------------------  End ofUI.cpp
+	ofVec2f offset;
+
+	std::stringstream fpsStringStream;
+
+	// -------------------------------------------------  Start ofUI.cpp
+	void gui_setup();
+	void gui_update();
+	void gui_draw();
+	void gui_drawMenuBar();
+	void gui_drawMainDock();
+	void gui_drawCanvasWindow();
+	void gui_drawInfoPanel();
+	void gui_loadPresets();
+
+	bool bLoadSettingsNextFrame;
+
+	// -------------------------------------------------  End ofUI.cpp
 };

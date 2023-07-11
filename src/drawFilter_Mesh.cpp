@@ -9,11 +9,9 @@ ofxXmlSettings Df_mesh::getSettings() {
 	return settings;
 }
 
-
 void Df_mesh::loadSettings(ofxXmlSettings settings) {
 	name = settings.getValue("name", name);
 	rotationOffset = settings.getValue("rotationOffset", rotationOffset);
-
 	return;
 }
 
@@ -34,8 +32,8 @@ void Df_mesh::draw(ofImage* input, float width, float height, float x, float y) 
 	if (!visible) return;
 	mesh.clear();
 	mesh.setMode(OF_PRIMITIVE_POINTS);
-	//mesh.setMode(OF_PRIMITIVE_);
-	// Quads are not suported any longer we can build from triangles ...
+	//mesh.setMode(OF_PRIMITIVE_TRIANGLES);
+	// Quads are not supported any longer we can build from triangles ...
 	// Main thing is to use it as more flexible data type for transformation
 
 	mesh.enableColors();
@@ -93,7 +91,7 @@ void Df_mesh::draw(ofImage* input, float width, float height, float x, float y) 
 		else {
 			vert.y = ofMap(vert.y, 0, meshCenter.y, 0, height * 0.5);
 		}
-		
+
 		mesh.setVertex(i, vert);
 	}
 	*/
@@ -105,7 +103,7 @@ void Df_mesh::draw(ofImage* input, float width, float height, float x, float y) 
 		ofVec3f mv = mesh.getVertex(v);
 		ofColor vc = mesh.getColor(v);
 		ofSetColor(vc);
-		ofDrawRectangle(x+mv.x- centerOffsetW, y+ mv.y- centerOffsetH, 1+centerOffsetW*2, 1+centerOffsetH * 2);	
+		ofDrawRectangle(x + mv.x - centerOffsetW, y + mv.y - centerOffsetH, 1 + centerOffsetW * 2, 1 + centerOffsetH * 2);
 	}
 	ofPopStyle();
 

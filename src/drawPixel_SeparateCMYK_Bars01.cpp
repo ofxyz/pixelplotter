@@ -72,6 +72,6 @@ void Dp_separateCMYK_Bars01::draw(ofColor c, float x, float y, float width, floa
 	if (cmyk[3] > 0) {
 		barWidth = cmyk[3] * width;
 		start += (barWidth * 0.5);
- 		drawRectangle(start, y, barWidth, height, c_black);
+		drawRectangle(start, y, barWidth, height, c_black);
 	}
 }

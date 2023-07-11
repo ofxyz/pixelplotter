@@ -16,10 +16,10 @@
    - CMYK needs white control option (Nim: Black and white. CMYK RGB)
    - Add modulators (EG X Y tiles between min-max, time)
    - I want to set a value to the colour pallette of four colours
-     To control how much each colour is used. Main Mid Accent? Weight.
+	 To control how much each colour is used. Main Mid Accent? Weight.
    - Push X / Y / C to vector for sorting and drawing order.
-   - Souce effects on GPU with shaders. Output vector. 
-   - Posterise Source (shader?) 
+   - Souce effects on GPU with shaders. Output vector.
+   - Posterise Source (shader?)
 
    ## Generators (They should be able to be placed in the filter section or source section)
    - Add grid generator (with noise curve option)
@@ -52,7 +52,7 @@ void ofApp::setup() {
 	gui_setup();
 
 	soundManager.setup(this);
-	
+
 	plotCanvas.setup(this);
 
 	userOffset.x = 0;
@@ -72,7 +72,7 @@ void ofApp::exit() {
 //--------------------------------------------------------------
 void ofApp::update() {
 	gui_update();
-	
+
 	if (bLoadSettingsNextFrame)
 	{
 		loadSettings(presetFiles[currentPresetIndex].getAbsolutePath());
@@ -214,7 +214,7 @@ void ofApp::loadSettings(string& filepath) {
 }
 
 //-------------------------------------------------------------
-void ofApp::keyPressed(int key) { 
+void ofApp::keyPressed(int key) {
 
 	if (key == 'g' || key == 'G') {
 		bShowMenuBar = !bShowMenuBar;
@@ -286,7 +286,7 @@ void ofApp::mouseDragged(int x, int y, int button) {
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button) {
 	ImGuiIO& io = ImGui::GetIO();
-	if (x < ofGetWindowWidth() && x > 0 && !io.WantCaptureMouse ) {
+	if (x < ofGetWindowWidth() && x > 0 && !io.WantCaptureMouse) {
 		bDragCanvas = true;
 		lastDraggedPos.x = x;
 		lastDraggedPos.y = y;
@@ -310,7 +310,7 @@ void ofApp::mouseExited(int x, int y) {
 
 //--------------------------------------------------------------
 void ofApp::mouseScrolled(ofMouseEventArgs& mouse) {
-	if (mouse.x < (ofGetWindowWidth()-gui_width)) {
+	if (mouse.x < (ofGetWindowWidth() - gui_width)) {
 		glm::vec3 position = plotCanvas.cam.getPosition();
 		if (zoomLevel > 1) {
 			zoomLevel += (mouse.scrollY * 0.1);
@@ -323,24 +323,24 @@ void ofApp::mouseScrolled(ofMouseEventArgs& mouse) {
 }
 
 //--------------------------------------------------------------
-void ofApp::windowResized(int w, int h){
+void ofApp::windowResized(int w, int h) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::gotMessage(ofMessage msg){
+void ofApp::gotMessage(ofMessage msg) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
+void ofApp::dragEvent(ofDragInfo dragInfo) {
 	if (dragInfo.files.size() > 0) {
 		for (int i = 0; i < dragInfo.files.size(); i++) {
 			if (std::find(plotCanvas.sourceController.img_ext.begin(), plotCanvas.sourceController.img_ext.end(), x2d.to_lower(dragInfo.files[i].substr(dragInfo.files[i].find_last_of(".") + 1))) != plotCanvas.sourceController.img_ext.end())
 			{
 				plotCanvas.sourceController.addImage(ofFile(dragInfo.files[i]));
 				resetZoom();
-			} 
+			}
 			else if (std::find(plotCanvas.sourceController.vid_ext.begin(), plotCanvas.sourceController.vid_ext.end(), x2d.to_lower(dragInfo.files[i].substr(dragInfo.files[i].find_last_of(".") + 1))) != plotCanvas.sourceController.vid_ext.end())
 			{
 				plotCanvas.sourceController.addVideo(ofFile(dragInfo.files[i]));

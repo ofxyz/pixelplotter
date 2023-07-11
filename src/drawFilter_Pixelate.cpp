@@ -11,7 +11,7 @@ void Df_pixelate::loadSettings(ofxXmlSettings settings) {
 	ui_currentPixelType = x2d.getIndex(v_pixelType, settings.getValue("pixelType", "Undefined"), 1);
 	tilesX = settings.getValue("tilesX", 64);
 	tilesY = settings.getValue("tilesY", 64);
-	polka  = settings.getValue("polka", false);
+	polka = settings.getValue("polka", false);
 	usePalette = settings.getValue("usePalette", usePalette);
 	addonx = settings.getValue("addonx", 0);
 	addony = settings.getValue("addony", 0);
@@ -21,7 +21,7 @@ void Df_pixelate::loadSettings(ofxXmlSettings settings) {
 	offsety = settings.getValue("offsety", 0);
 	offsetx_rand = settings.getValue("offsetx_rand", 0);
 	offsety_rand = settings.getValue("offsety_rand", 0);
-	
+
 	ui_currentIgnore = x2d.getIndex(v_ignoreOptions, settings.getValue("currentIgnore", "None"), 0);
 	ignorePercent = settings.getValue("ignorePercent", ignorePercent);
 	ignoreModulo = settings.getValue("ignoreModulo", ignoreModulo);
@@ -164,7 +164,7 @@ void Df_pixelate::renderImGuiSettings() {
 			//}
 			setFresh(true);
 		};
-		
+
 		ImGui::PushItemWidth(60);
 
 		if (ImGui::DragFloat("Round ##pixelate_addon", &rounded, 0.1f, -100, 100, "%.3f")) {
@@ -217,12 +217,14 @@ void Df_pixelate::renderImGuiSettings() {
 			if (ImGui::DragInt("Mod ##pixelate_modolo", &ignoreModulo, 1, 1, 500)) {
 				setFresh(true);
 			}
-		} else if (v_ignoreOptions[ui_currentIgnore] == "Plaid") {
+		}
+		else if (v_ignoreOptions[ui_currentIgnore] == "Plaid") {
 			ImGui::SameLine();
 			if (ImGui::DragInt("% ##pixelate_plaid", &ignorePlaid, 1, 0, 100)) {
 				setFresh(true);
 			}
-		} else if (v_ignoreOptions[ui_currentIgnore] == "Scan") {
+		}
+		else if (v_ignoreOptions[ui_currentIgnore] == "Scan") {
 			ImGui::SameLine();
 			if (ImGui::DragInt("% ##pixelate_scan", &ignoreScan, 1, 0, 100)) {
 				setFresh(true);
@@ -236,7 +238,7 @@ void Df_pixelate::renderImGuiSettings() {
 				setFresh(true);
 			}
 		}
- 
+
 		ImGui::Separator();
 
 		ImGui::Text("Offset"); ImGui::SameLine(75);
@@ -309,7 +311,7 @@ void Df_pixelate::renderImGuiSettings() {
 		if (ui_currentPixelType == 9) {
 
 			ImGui::Separator();
-			
+
 			if (ImGui::DragFloat("Color Lerp ##pixelate_clerp", &cLerp, 0.01f, 0.0, 1.0, "%.3f")) {
 				setFresh(true);
 			}
@@ -330,7 +332,7 @@ void Df_pixelate::renderImGuiSettings() {
 		}
 
 		ImGui::PushItemWidth(200);
-		if(ofxImGui::VectorCombo("##Blend Mode", &currentBlendModeIndex, v_BlendModes)) {
+		if (ofxImGui::VectorCombo("##Blend Mode", &currentBlendModeIndex, v_BlendModes)) {
 			setFresh(true);
 		}
 		ImGui::PopItemWidth();
@@ -370,20 +372,20 @@ void Df_pixelate::drawRoundedRect(float offsetX, float offsetY, float w, float h
 	ofPushStyle();
 	ofFill();
 	ofSetColor(c);
-	
+
 	float x = -(w * 0.5) + offsetX;
 	float y = -(h * 0.5) + offsetY;
 
 	ofBeginShape();
-		ofVertex(x + rounded, y);
-		ofVertex(x + w - rounded, y);
-		quadraticBezierVertex(x + w, y, x + w, y + rounded, x + w - rounded, y);
-		ofVertex(x + w, y + h - rounded);
-		quadraticBezierVertex(x + w, y + h, x + w - rounded, y + h, x + w, y + h - rounded);
-		ofVertex(x + rounded, y + h);
-		quadraticBezierVertex(x, y + h, x, y + h - rounded, x + rounded, y + h);
-		ofVertex(x, y + rounded);
-		quadraticBezierVertex(x, y, x + rounded, y, x, y + rounded);
+	ofVertex(x + rounded, y);
+	ofVertex(x + w - rounded, y);
+	quadraticBezierVertex(x + w, y, x + w, y + rounded, x + w - rounded, y);
+	ofVertex(x + w, y + h - rounded);
+	quadraticBezierVertex(x + w, y + h, x + w - rounded, y + h, x + w, y + h - rounded);
+	ofVertex(x + rounded, y + h);
+	quadraticBezierVertex(x, y + h, x, y + h - rounded, x + rounded, y + h);
+	ofVertex(x, y + rounded);
+	quadraticBezierVertex(x, y, x + rounded, y, x, y + rounded);
 	ofEndShape();
 
 	ofPopStyle();
@@ -468,7 +470,7 @@ void Df_pixelate::drawCMYKSeperation_Fill(float offsetX, float offsetY, float w,
 		drawRoundedRect(offsetX, offsetY, cWidth, h, c_cyanBlue); // Cyan
 		ofTranslate(cWidth * 0.5, 0, 0);
 	}
-	
+
 	if (cmyk[1] > 0) {
 		cWidth = ofMap(cmyk[1], 0, totalInk, 0, w);
 		ofTranslate(cWidth * 0.5, 0, 0);
@@ -548,7 +550,7 @@ void Df_pixelate::drawCMYKSeperation_Hills(float offsetX, float offsetY, float w
 
 	float total = cmyk[0] + cmyk[1] + cmyk[2];
 	if (total == 0) return;
-	
+
 	ofPushMatrix();
 
 	if (cmyk[0] > 0) {
@@ -584,7 +586,7 @@ void Df_pixelate::drawCMYKSeperation_Hills(float offsetX, float offsetY, float w
 
 void Df_pixelate::drawCMYKSeperation_Bars(float offsetX, float offsetY, float w, float h, ofColor c) {
 	ofPushMatrix();
-	if(ofRandom(100) > 50) ofRotate(90);
+	if (ofRandom(100) > 50) ofRotate(90);
 
 	ofVec4f cmyk = getCMYK(c);
 
@@ -597,8 +599,8 @@ void Df_pixelate::drawCMYKSeperation_Bars(float offsetX, float offsetY, float w,
 		w_w = 0;
 	}
 
-	float h_w = w*0.5;
-	offsetX -= (h_w - (w_w*0.5));
+	float h_w = w * 0.5;
+	offsetX -= (h_w - (w_w * 0.5));
 
 	bool run = true;
 	float runX = offsetX;
@@ -638,7 +640,7 @@ void Df_pixelate::drawCMYKSeperation_Bars(float offsetX, float offsetY, float w,
 			y_w -= size;
 			runX += size;
 		}
-		else if(y_w != 0 ) {
+		else if (y_w != 0) {
 			drawRoundedRect(runX, offsetY, y_w, h, c_yellowGreen);
 			runX += y_w;
 			y_w = 0;
@@ -717,9 +719,9 @@ void Df_pixelate::drawUnusualOverprint(float offsetX, float offsetY, float w, fl
 	float b1 = c.b * div;
 	float b2 = c.b * idiv;
 
-	ofColor c1(r1,g1,b1);
+	ofColor c1(r1, g1, b1);
 	ofColor c2(r2, g2, b2);
-	
+
 	ofColor c3(r1, g1, b1);
 	c3.lerp(c2, 0.5);
 
@@ -732,15 +734,15 @@ void Df_pixelate::drawUnusualOverprint(float offsetX, float offsetY, float w, fl
 	c3.setSaturation(c.getSaturation());
 
 	// Center
-	drawRoundedRect(offsetX+ pWidth, offsetY+ pHeight, pWidth, pHeight, c);
+	drawRoundedRect(offsetX + pWidth, offsetY + pHeight, pWidth, pHeight, c);
 
 	// Vertical 1
 	drawRoundedRect(offsetX + pWidth, offsetY, pWidth, pHeight, c1);
-	drawRoundedRect(offsetX + pWidth, offsetY + (pHeight*2), pWidth, pHeight, c1);
+	drawRoundedRect(offsetX + pWidth, offsetY + (pHeight * 2), pWidth, pHeight, c1);
 
 	// Horizontal 2
 	drawRoundedRect(offsetX, offsetY + pHeight, pWidth, pHeight, c2);
-	drawRoundedRect(offsetX + (pWidth*2), offsetY + pHeight, pWidth, pHeight, c2);
+	drawRoundedRect(offsetX + (pWidth * 2), offsetY + pHeight, pWidth, pHeight, c2);
 
 	// Corners
 	drawRoundedRect(offsetX, offsetY, pWidth, pHeight, c3);
@@ -847,7 +849,7 @@ void Df_pixelate::draw(ofImage* input, float width, float height, float x, float
 
 	int ycount = 0;
 	int xcount = 0;
-	int ydiv   = 0;
+	int ydiv = 0;
 
 	setBlendMode();
 
@@ -893,12 +895,12 @@ void Df_pixelate::draw(ofImage* input, float width, float height, float x, float
 				float fx = x + halfTileW;
 				float fy = y + halfTileH;
 				ofColor c = input->getPixels().getColor(floor(fx), floor(fy));
-				
+
 				if (useMask) {
 					ofColor d = c_mask;
-					if ( (abs(c.r - d.r) < maskMargin) &&
-						 (abs(c.g - d.g) < maskMargin) &&
-						 (abs(c.b - d.b) < maskMargin) ){
+					if ((abs(c.r - d.r) < maskMargin) &&
+						(abs(c.g - d.g) < maskMargin) &&
+						(abs(c.b - d.b) < maskMargin)) {
 						continue;
 					}
 				}
@@ -921,8 +923,8 @@ void Df_pixelate::draw(ofImage* input, float width, float height, float x, float
 				ofPushMatrix();
 				ofTranslate(fx, fy, 0);
 
-				if(ui_currentRotationMap > 0) {
-					ofRotateZDeg(getRotation(c,x,y));
+				if (ui_currentRotationMap > 0) {
+					ofRotateZDeg(getRotation(c, x, y));
 				}
 
 				// Add or not ...

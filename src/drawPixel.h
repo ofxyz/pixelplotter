@@ -15,7 +15,7 @@ public:
 	virtual void renderImGuiSettings() = 0;
 	virtual void loadSettings(ofxXmlSettings settings) = 0;
 	virtual ofxXmlSettings getSettings() = 0;
-	
+
 	ImVec4 c_cyanBlue = ofColor(0, 174, 239, 255);
 	ImVec4 c_magentaRed = ofColor(236, 0, 140, 255);
 	ImVec4 c_yellowGreen = ofColor(255, 242, 0, 255);

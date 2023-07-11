@@ -98,7 +98,7 @@ void SourceController::buildSourceNames() {
 	sourceNames.clear();
 	sourceNames.insert(sourceNames.end(), videoDeviceNames.begin(), videoDeviceNames.end());
 	sourceNames.insert(sourceNames.end(), videoFileNames.begin(), videoFileNames.end());
-	sourceNames.insert(sourceNames.end(), gC.v_GeneratorNames.begin()+1, gC.v_GeneratorNames.end());
+	sourceNames.insert(sourceNames.end(), gC.v_GeneratorNames.begin() + 1, gC.v_GeneratorNames.end());
 	sourceNames.insert(sourceNames.end(), imgFileNames.begin(), imgFileNames.end());
 }
 
@@ -128,7 +128,7 @@ void SourceController::loadSourceIndex() {
 		//loadGenerator(currentSourceIndex - videoDevices.size() - videoFiles.size());
 	}
 	else {
-		loadImage(imgFiles[currentSourceIndex - videoDevices.size() - videoFiles.size()-1].getAbsolutePath());
+		loadImage(imgFiles[currentSourceIndex - videoDevices.size() - videoFiles.size() - 1].getAbsolutePath());
 	}
 
 	isResized = true;
@@ -142,7 +142,7 @@ void SourceController::addImage(ofFile file) {
 	imgFiles.push_back(file);
 	imgFileNames.push_back(file.getFileName());
 	buildSourceNames();
-	currentSourceIndex = sourceNames.size()-1;
+	currentSourceIndex = sourceNames.size() - 1;
 	loadSourceIndex();
 }
 

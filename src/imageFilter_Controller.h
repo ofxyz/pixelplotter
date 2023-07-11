@@ -44,13 +44,16 @@ public:
 		if (v_ImageFilterNames[index] == "Mirror") {
 			v_ImageFilters.push_back(new If_mirror);
 			bFresh = true;
-		} else if (v_ImageFilterNames[index] == "Duplicate") {
+		}
+		else if (v_ImageFilterNames[index] == "Duplicate") {
 			v_ImageFilters.push_back(new If_duplicate);
 			bFresh = true;
-		} else if (v_ImageFilterNames[index] == "Tint") {
+		}
+		else if (v_ImageFilterNames[index] == "Tint") {
 			v_ImageFilters.push_back(new If_tint);
 			bFresh = true;
-		} else if (v_ImageFilterNames[index] == "Blur") {
+		}
+		else if (v_ImageFilterNames[index] == "Blur") {
 			v_ImageFilters.push_back(new If_blur);
 			bFresh = true;
 		}
@@ -66,19 +69,23 @@ public:
 			v_ImageFilters.push_back(new If_mirror);
 			v_ImageFilters[v_ImageFilters.size() - 1]->loadSettings(filterSettings);
 			bFresh = true;
-		} else if (filterName == "Duplicate") {
+		}
+		else if (filterName == "Duplicate") {
 			v_ImageFilters.push_back(new If_duplicate);
 			v_ImageFilters[v_ImageFilters.size() - 1]->loadSettings(filterSettings);
 			bFresh = true;
-		} else if (filterName == "Tint") {
+		}
+		else if (filterName == "Tint") {
 			v_ImageFilters.push_back(new If_tint);
 			v_ImageFilters[v_ImageFilters.size() - 1]->loadSettings(filterSettings);
 			bFresh = true;
-		} else if (filterName == "Blur") {
+		}
+		else if (filterName == "Blur") {
 			v_ImageFilters.push_back(new If_blur);
 			v_ImageFilters[v_ImageFilters.size() - 1]->loadSettings(filterSettings);
 			bFresh = true;
-		} else if (filterName == "DrawPixel") {
+		}
+		else if (filterName == "DrawPixel") {
 			v_ImageFilters.push_back(new If_drawPixel);
 			v_ImageFilters[v_ImageFilters.size() - 1]->loadSettings(filterSettings);
 			bFresh = true;
