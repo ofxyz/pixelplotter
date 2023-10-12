@@ -12,7 +12,7 @@ class SourceController {
 public:
 	ofApp* pixelplotter;
 
-	void setup(ofApp* app);
+	void setup();
 	void update();
 
 	void renderImGuiSettings();

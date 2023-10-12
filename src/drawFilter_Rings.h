@@ -5,16 +5,20 @@
 
 class Df_rings : public DrawFilter {
 public:
-	ofApp* pixelplotter;
-	Df_rings(ofApp* app) {
-		pixelplotter = app;
+	Df_rings() {
+		pixelplotter = (ofApp*)ofGetAppPtr();
 		name = "Rings";
 	};
 
-	void draw(ofImage* input, float width = 0, float height = 0, float x = 0, float y = 0);
-	void renderImGuiSettings();
+	Df_rings(ofxXmlSettings settings) {
+		Df_rings();
+		loadSettings(settings);
+	};
+
+	virtual void draw(ofImage* input, float width = 0, float height = 0, float x = 0, float y = 0);
+	virtual void renderImGuiSettings();
 	virtual void loadSettings(ofxXmlSettings settings);
-	ofxXmlSettings getSettings();
+	virtual ofxXmlSettings getSettings();
 
 private:
 	int cvThresh = 128;

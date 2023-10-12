@@ -4,15 +4,20 @@
 
 class Df_pixelate : public DrawFilter {
 public:
-	ofApp* pixelplotter;
-	Df_pixelate(ofApp* app) {
-		pixelplotter = app;
+	Df_pixelate() {
+		pixelplotter = (ofApp*)ofGetAppPtr();
 		name = "Pixelate";
 	};
-	void draw(ofImage* input, float width = 0, float height = 0, float x = 0, float y = 0);
-	void renderImGuiSettings();
-	void loadSettings(ofxXmlSettings settings);
-	ofxXmlSettings getSettings();
+
+	Df_pixelate(ofxXmlSettings settings) {
+		Df_pixelate();
+		loadSettings(settings);
+	};
+
+	virtual void draw(ofImage* input, float width = 0, float height = 0, float x = 0, float y = 0);
+	virtual void renderImGuiSettings();
+	virtual void loadSettings(ofxXmlSettings settings);
+	virtual ofxXmlSettings getSettings();
 
 private:
 	void drawRectangle(float offsetX, float offsetY, float w, float h, ofColor c);
@@ -28,6 +33,7 @@ private:
 	void drawCMYKSeperation_Bars(float offsetX, float offsetY, float w, float h, ofColor c);
 	void drawColorAdjust(float offsetX, float offsetY, float w, float h, ofColor c);
 	void drawUnusualOverprint(float offsetX, float offsetY, float w, float h, ofColor c);
+	void drawStarHash(float offsetX, float offsetY, float w, float h, ofColor c);
 
 	void quadraticBezierVertex(float cpx, float cpy, float x, float y, float prevX, float prevY);
 
@@ -48,7 +54,8 @@ private:
 			"CMYK Seperation Hills",
 			"CMYK Seperation Bars",
 			"Color Adjust",
-			"Unusual Overprint"
+			"Unusual Overprint",
+			"Star Hash"
 	};
 
 	std::vector<std::string> v_pixelDataMapOptions{

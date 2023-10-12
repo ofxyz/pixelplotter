@@ -1,13 +1,13 @@
 #include "ofApp.h"
 
 /*
+   - Remove ofxXmlSettings, use ofJson instead
    - Pixelate filter: Add curve widget https://github.com/ocornut/imgui/issues/786
    - Pixelate filter: Create spacing adjustment curve
    - Fix Zoom and make zoom go faster with holding shift
    - Make sure UI is always rendering fast
    - Add video controls pause, play, next frame, previous frame
    - Add draw order, left to right top to bottom, center out, center in
-   - Add duplicate button for filters
    - Support for multiple sources (Add source select per filter?)
    - Add rotation -> Map -> X, Y location
    - Reorder colour layer (based on N x, y)
@@ -39,10 +39,13 @@ void ofApp::setup() {
 	ofLogToConsole();
 	ofSetLogLevel(OF_LOG_ERROR);
 	//ofSetLogLevel(OF_LOG_VERBOSE);
-	ofSetVerticalSync(false);
+	ofSetVerticalSync(vSync);
 	ofLog() << ofFbo::checkGLSupport();
 	ofSetWindowTitle(windowTitle);
 	ofEnableAlphaBlending();
+
+	/* Always disable rectangular textures by default */
+	ofDisableArbTex();
 
 	//ofHideCursor();
 	ofAddListener(ofEvents().mouseScrolled, this, &ofApp::mouseScrolled);
@@ -103,8 +106,6 @@ void ofApp::draw() {
 	gui_draw();
 }
 
-
-
 void ofApp::resetImageOffset() {
 	userOffset.x = 0;
 	userOffset.y = 0;
@@ -113,6 +114,12 @@ void ofApp::resetImageOffset() {
 void ofApp::resetZoom() {
 	zoomLevel = 1;
 	resetImageOffset();
+}
+
+void ofApp::centerImage() {
+	ImRect availableSpace = ImGui::DockBuilderGetCentralNode(dockNodeID)->Rect();
+	userOffset.x = (availableSpace.GetWidth() - (plotCanvas.canvasWidth * zoomLevel)) * 0.5;
+	userOffset.y = (availableSpace.GetHeight() - (plotCanvas.canvasHeight * zoomLevel)) * 0.5;
 }
 
 void ofApp::saveSettings(string& filepath) {
@@ -164,18 +171,17 @@ void ofApp::loadSettings(string& filepath) {
 	plotCanvas.dF.clearFilters();
 	plotCanvas.sourceController.iF.clearFilters();
 
-	/* Don't load source for settings ...
-	* Add tickbox for this ...
-	if (settings.tagExists("source")) {
-		settings.pushTag("source");
-		ofxXmlSettings sourceSettings;
-		string sSourceSettings = settings.getValue("string_settings", "");
-		sourceSettings.loadFromBuffer(sSourceSettings);
-		sourceController.loadSettings(sourceSettings);
-		settings.popTag();
-		plotCanvas.setFresh(true);
+	if (bTryLoadSource) {
+		if (settings.tagExists("source")) {
+			settings.pushTag("source");
+			ofxXmlSettings sourceSettings;
+			string sSourceSettings = settings.getValue("string_settings", "");
+			sourceSettings.loadFromBuffer(sSourceSettings);
+			plotCanvas.sourceController.loadSettings(sourceSettings);
+			settings.popTag();
+			plotCanvas.setFresh(true);
+		}
 	}
-	*/
 
 	if (settings.tagExists("imageFilters")) {
 		settings.pushTag("imageFilters");
@@ -222,28 +228,28 @@ void ofApp::keyPressed(int key) {
 	}
 	else if (key == '-') {
 		zoomLevel -= 0.1;
-		resetImageOffset();
+		//resetImageOffset();
 	}
 	else if (key == '+') {
 		zoomLevel += 0.1;
-		resetImageOffset();
+		//resetImageOffset();
 	}
 	else if (key == '_') {
 		// center image
-		userOffset.x = 0;
-		userOffset.y = 0;
+		centerImage();
 	}
 	else if (key == '=') {
 		// fit to screen
 		userOffset.x = 0;
 		userOffset.y = 0;
+		ImRect availableSpace =  ImGui::DockBuilderGetCentralNode(dockNodeID)->Rect();
 		if (plotCanvas.sourceController.isLandscape) {
-			zoomLevel = (ofGetWidth() - gui_width) / plotCanvas.canvasWidth;
+			zoomLevel = availableSpace.GetWidth() / plotCanvas.canvasWidth;
 		}
 		else {
-			zoomLevel = ofGetHeight() / plotCanvas.canvasHeight;
+			zoomLevel = availableSpace.GetHeight() / plotCanvas.canvasHeight;
 		}
-		resetImageOffset();
+		centerImage();
 	}
 	else if (key == 'p') {
 		plotCanvas.saveVector = true;
@@ -310,7 +316,7 @@ void ofApp::mouseExited(int x, int y) {
 
 //--------------------------------------------------------------
 void ofApp::mouseScrolled(ofMouseEventArgs& mouse) {
-	if (mouse.x < (ofGetWindowWidth() - gui_width)) {
+	if (!ImGui::GetIO().WantCaptureMouse) {
 		glm::vec3 position = plotCanvas.cam.getPosition();
 		if (zoomLevel > 1) {
 			zoomLevel += (mouse.scrollY * 0.1);

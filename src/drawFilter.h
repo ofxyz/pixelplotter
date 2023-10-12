@@ -6,6 +6,7 @@ class ofApp;
 
 class DrawFilter {
 public:
+	ofApp* pixelplotter{ nullptr };
 	bool active = true;
 	bool visible = true;
 	bool useMask = false;
@@ -194,6 +195,11 @@ public:
 
 	float percent(float percentage, float total) {
 		return (percentage / 100) * total;
+	}
+
+	double findDiagonal(double a, double b)
+	{
+		return sqrt(a * a + b * b);
 	}
 
 	float lineWidth = 8;

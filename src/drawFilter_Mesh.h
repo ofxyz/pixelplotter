@@ -4,16 +4,20 @@
 
 class Df_mesh : public DrawFilter {
 public:
-	ofApp* pixelplotter;
-	Df_mesh(ofApp* app) {
-		pixelplotter = app;
+	Df_mesh() {
+		pixelplotter = (ofApp*)ofGetAppPtr();
 		name = "Mesh";
 	};
 
-	void draw(ofImage* input, float width = 0, float height = 0, float x = 0, float y = 0);
-	void renderImGuiSettings();
+	Df_mesh(ofxXmlSettings settings) {
+		Df_mesh();
+		loadSettings(settings);
+	};
+
+	virtual void draw(ofImage* input, float width = 0, float height = 0, float x = 0, float y = 0);
+	virtual void renderImGuiSettings();
 	virtual void loadSettings(ofxXmlSettings settings);
-	ofxXmlSettings getSettings();
+	virtual ofxXmlSettings getSettings();
 
 private:
 	ofMesh mesh;

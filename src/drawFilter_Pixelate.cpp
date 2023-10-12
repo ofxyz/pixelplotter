@@ -215,6 +215,7 @@ void Df_pixelate::renderImGuiSettings() {
 		else if (v_ignoreOptions[ui_currentIgnore] == "Modulo") {
 			ImGui::SameLine();
 			if (ImGui::DragInt("Mod ##pixelate_modolo", &ignoreModulo, 1, 1, 500)) {
+				if (ignoreModulo == 0) ignoreModulo = 1;
 				setFresh(true);
 			}
 		}
@@ -752,6 +753,37 @@ void Df_pixelate::drawUnusualOverprint(float offsetX, float offsetY, float w, fl
 
 }
 
+void Df_pixelate::drawStarHash(float offsetX, float offsetY, float w, float h, ofColor c) {
+	float brightness = 255-c.getLightness();
+	float bPercent = (brightness / 255) * 100;
+	int maxLines = 8;
+	int lineCount = ceil((bPercent / 100)* maxLines);
+
+	if (lineCount == 0) return;
+	float strokeWidth = 1;
+	float lineLen = findDiagonal(w,h);
+	float angle = 360 / lineCount;
+
+	ofPushMatrix();
+	ofPushStyle();
+	ofNoFill();
+	ofSetLineWidth(strokeWidth);
+	//ofSetColor(c);
+	ofSetColor(c_black);
+
+	// Width should be length of diagonal
+
+	for (int i = 0; i < lineCount; i++) {
+		ofDrawLine(-(lineLen * 0.5) + offsetX, -(strokeWidth * 0.5) + offsetY, (lineLen * 0.5) + offsetX, -(strokeWidth * 0.5) + offsetY);
+		ofRotateDeg(angle);
+		//ofDrawRectangle(-(w * 0.5) + offsetX, -(h * 0.5) + offsetY, w, 1);
+	}
+
+	ofPopStyle();
+	ofPopMatrix();
+
+}
+
 void Df_pixelate::drawPixel(float w, float h, ofColor c) {
 
 	float offsetX = offsetx + ofRandom(0, offsetx_rand);
@@ -793,6 +825,9 @@ void Df_pixelate::drawPixel(float w, float h, ofColor c) {
 		break;
 	case 11:
 		drawUnusualOverprint(offsetX, offsetY, w, h, c);
+		break;
+	case 12:
+		drawStarHash(offsetX, offsetY, w, h, c);
 		break;
 	default:
 		ofLog() << "Not a valid draw style: " << ui_currentPixelType << endl;

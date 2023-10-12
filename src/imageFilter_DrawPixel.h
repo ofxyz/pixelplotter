@@ -9,10 +9,11 @@ public:
 		name = "DrawPixel";
 	};
 
-	void apply(ofImage* img);
-	void renderImGuiSettings();
-	void loadSettings(ofxXmlSettings settings);
-	ofxXmlSettings getSettings();
+	virtual void apply(ofImage* img);
+	virtual void renderImGuiSettings();
+	virtual void loadSettings(ofxXmlSettings settings);
+	virtual ofxXmlSettings getSettings();
+
 	DrawPixels drawPixels;
 
 private:

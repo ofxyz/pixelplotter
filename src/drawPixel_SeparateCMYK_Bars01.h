@@ -8,9 +8,14 @@ public:
 		name = "Separate CMYK Bars 01";
 	}
 
-	void draw(ofColor c, float offsetX, float offsetY, float width, float height);
-	void renderImGuiSettings();
-	void loadSettings(ofxXmlSettings settings);
-	ofxXmlSettings getSettings();
+	Dp_separateCMYK_Bars01(ofxXmlSettings settings) {
+		Dp_separateCMYK_Bars01();
+		loadSettings(settings);
+	}
+
+	virtual void draw(ofColor c, float offsetX, float offsetY, float width, float height);
+	virtual void renderImGuiSettings();
+	virtual void loadSettings(ofxXmlSettings settings);
+	virtual ofxXmlSettings getSettings();
 
 };

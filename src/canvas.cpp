@@ -130,7 +130,7 @@ void Canvas::renderImGuiSettings() {
 		ImGui::Indent(); // ADD PLOTTERS
 		if (ofxImGui::VectorCombo("##Draw Filter Selector", &currentDrawFilterIndex, dF.v_DrawFilterNames))
 		{
-			dF.addFilter(currentDrawFilterIndex);
+			dF.addFilter(DrawFilterController::Filtertype(currentDrawFilterIndex));
 			currentDrawFilterIndex = 0;
 		}
 		ImGui::Unindent();
@@ -207,11 +207,19 @@ ofxXmlSettings Canvas::getSettings() {
 
 void Canvas::setup(ofApp* app, string canvas_title) {
 	pixelplotter = app;
-	dF = DrawFilterController(pixelplotter);
+	//dF = DrawFilterController();
 
-	sourceController.setup(pixelplotter);
+	sourceController.setup();
 	canvasTitle = canvas_title;
 	setSourceDimension(&sourceController.frameBuffer.getFrame());
+
+	//ofFboSettings fs;
+	//fs.width = canvasWidth;
+	//fs.height = canvasHeight;
+	//fs.internalformat = GL_RGBA;
+	//fs.textureTarget = GL_TEXTURE_2D;
+	//canvasFbo.allocate(fs);
+
 	canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGBA, 8);
 	canvasFbo.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 	update();
@@ -245,8 +253,10 @@ void Canvas::update() {
 	}
 
 	if (resizeRequest) {
+
 		canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGBA, 8);
 		canvasFbo.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
+
 		resizeRequest = false;
 		redrawFBO = true;
 		return;

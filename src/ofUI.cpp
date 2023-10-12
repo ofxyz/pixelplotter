@@ -1,4 +1,5 @@
 #include "ofApp.h"
+#include "ImGui_Widget_Bezier.h"
 
 void ofApp::gui_update() {
 	if (cleanImageFilters) {
@@ -15,10 +16,17 @@ void ofApp::gui_draw() {
 
 	if (bShowGui)
 	{
+		gui_renderCanvas();
+		gui_drawToolPalette();
 		gui_drawInfoPanel();
 		gui_drawCanvasWindow();
-	}
+		
 
+		if (bShowImGuiMetricsDebugger) {
+			ImGui::ShowMetricsWindow();
+			ImGui::ShowStyleEditor();
+		}
+	}
 	gui.end();
 
 }
@@ -39,10 +47,27 @@ void ofApp::gui_loadPresets() {
 void ofApp::gui_setup()
 {
 	gui.setup(nullptr, true, ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable, true, true);
+	
+	// Font Setup
+	float baseFontSize = 13.0f; // 13.0f is the size of the default font. Change to the font size you use.
+	float iconFontSize = baseFontSize * 2.0f / 3.0f; // FontAwesome fonts need to have their sizes reduced by 2.0f/3.0f in order to align correctly
+	gui.setDefaultFont(baseFontSize);
+
+	ImFontConfig icons_config;
+	icons_config.MergeMode = true;
+	icons_config.PixelSnapH = true;
+	icons_config.GlyphMinAdvanceX = iconFontSize;
+
+	static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
+
+	gui.addFont(FONT_ICON_FILE_NAME_FAS, iconFontSize, &icons_config, icons_ranges);
+	// use FONT_ICON_FILE_NAME_FAR if you want regular instead of solid
+	//---------------------------
 
 	ImGui::StyleColorsDark();
 	ImGuiStyle* style = &ImGui::GetStyle();
 	style->ItemSpacing = ImVec2(5, 5);
+
 }
 
 void ofApp::gui_drawMainDock() {
@@ -56,7 +81,7 @@ void ofApp::gui_drawMainDock() {
 	//dockingFlags |= ImGuiDockNodeFlags_NoTabBar; // Uncomment to disable creating tabs in the main view
 
 	// Define the ofWindow as a docking space
-	ImGuiID dockNodeID = ImGui::DockSpaceOverViewport(NULL, dockingFlags); // Also draws the docked windows
+	dockNodeID = ImGui::DockSpaceOverViewport(NULL, dockingFlags); // Also draws the docked windows
 
 	ImGuiDockNode* dockNode = ImGui::DockBuilderGetNode(dockNodeID);
 	if (dockNode) {
@@ -92,6 +117,8 @@ void ofApp::gui_drawMenuBar() {
 				//ImGui::MenuItem("Something");
 				ImGui::Checkbox("Plot Canvas", &bShowPlotCanvas);
 				ImGui::Checkbox("Info Panel", &bShowInfoPanel);
+				ImGui::Checkbox("Tool Palette", &bShowToolPalette);
+				ImGui::Checkbox("ImGui Metrics Debugger", &bShowImGuiMetricsDebugger);
 				ImGui::EndMenu();
 			}
 		}
@@ -135,7 +162,6 @@ void ofApp::gui_drawMenuBar() {
 		}
 
 		// Vertical Sync
-		static bool vSync = false;
 		if (ImGui::Checkbox("Vertical Sync", &vSync)) {
 			ofSetVerticalSync(vSync);
 		}
@@ -188,6 +214,25 @@ void ofApp::gui_drawMenuBar() {
 	ImGui::EndMainMenuBar();
 }
 
+void ofApp::gui_drawToolPalette() {
+	// TODO: Move all these to where they're drawn ...
+	if (!bShowToolPalette) return;
+	 
+	ImGui::Begin("Tool Pallette", &bShowToolPalette);
+	ImGui::PushID("toolPallette");
+
+	// Set bigger font, needs to be loadded first...
+	if (ImGui::Button(ICON_FA_PEN "Pencil"))
+	{
+		cout << "Pencil Button Pressed";
+	}
+
+	gui_renderBezierWidget();
+
+	ImGui::PopID();
+	ImGui::End();
+}
+
 void ofApp::gui_drawCanvasWindow() {
 	if (!bShowPlotCanvas) return;
 
@@ -198,6 +243,23 @@ void ofApp::gui_drawCanvasWindow() {
 	plotCanvas.renderImGuiSettings();
 	ImGui::PopID();
 
+	ImGui::End();
+}
+
+// This should be a more general texture viewer
+void ofApp::gui_renderCanvas() {
+	ImGui::Begin("Canvas", &bShowCanvas);
+	ImGui::PushID("showcanvas");
+
+	ImTextureID textureID = (ImTextureID)(uintptr_t)plotCanvas.canvasFbo.getTexture().getTextureData().textureID;
+
+	float tw = plotCanvas.canvasFbo.getWidth();
+	float th = plotCanvas.canvasFbo.getHeight();
+	auto availableRegion = ImGui::GetContentRegionAvail();
+	float scale = min(availableRegion.x / tw, availableRegion.y / th);
+
+	ImGui::Image(textureID, glm::vec2(tw * scale, th * scale));
+	ImGui::PopID();
 	ImGui::End();
 }
 
@@ -229,6 +291,7 @@ void ofApp::gui_drawInfoPanel() {
 		ImGui::InputText("##presetname", presetSaveName, IM_ARRAYSIZE(presetSaveName));
 		ImGui::SameLine();
 	}
+
 	if (ImGui::Button("Save Preset"))
 	{
 		if (bSavePreset) {
@@ -246,5 +309,14 @@ void ofApp::gui_drawInfoPanel() {
 		}
 	}
 
+	ImGui::SameLine();
+	ImGui::Checkbox("Load Source File", &bTryLoadSource);
+
 	ImGui::End();
+}
+
+void ofApp::gui_renderBezierWidget() {
+	static float v[5] = { 0.390f, 0.575f, 0.565f, 1.000f };
+	ImGui::Bezier( "easeOutSine", v );       // draw
+	float y = ImGui::BezierValue( 0.5f, v ); // x delta in [0..1] range
 }

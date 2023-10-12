@@ -31,7 +31,7 @@
   - Create pixel class 
       -> Input Colour 
       -> Output colour seperation composition that becomes that colour seen from a large distance.
-  - Pixel Designer UI
+  - Pixel Designer UI / Sprite Editor / PLayer
 
 ## Notes on setting up VS2022
 
@@ -43,7 +43,7 @@
 
 - ofxCv
 - ofxOpenCv
-- ofxImGui
+- ofxImGui (Docking Branch)
+- ofxIconFontCppHeaders
 - ofxPosterize
-
 - [K-Lite Codec Pack](https://files3.codecguide.com/K-Lite_Codec_Pack_1750_Basic.exe)

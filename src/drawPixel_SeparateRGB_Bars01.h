@@ -11,8 +11,13 @@ public:
 		c_cyanBlue = ofColor(0, 0, 255, 255);
 	}
 
-	void draw(ofColor c, float offsetX, float offsetY, float width, float height);
-	void renderImGuiSettings();
-	void loadSettings(ofxXmlSettings settings);
-	ofxXmlSettings getSettings();
+	Dp_separateRGB_Bars01(ofxXmlSettings settings) {
+		Dp_separateRGB_Bars01();
+		loadSettings(settings);
+	}
+
+	virtual void draw(ofColor c, float offsetX, float offsetY, float width, float height);
+	virtual void renderImGuiSettings();
+	virtual void loadSettings(ofxXmlSettings settings);
+	virtual ofxXmlSettings getSettings();
 };

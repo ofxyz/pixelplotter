@@ -10,12 +10,12 @@ public:
 		name = "Rings";
 	};
 
-	void setup(int width, int height);
-	void update();
-	void draw();
-	void renderImGuiSettings();
-	void loadSettings(ofxXmlSettings settings);
-	ofxXmlSettings getSettings();
+	virtual void setup(int width, int height);
+	virtual void update();
+	virtual void draw();
+	virtual void renderImGuiSettings();
+	virtual void loadSettings(ofxXmlSettings settings);
+	virtual ofxXmlSettings getSettings();
 private:
 	int width, height;
 	int xcount = 1;

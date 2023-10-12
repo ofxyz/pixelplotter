@@ -65,8 +65,8 @@ void SourceController::update() {
 	frameBuffer.update();
 }
 
-void SourceController::setup(ofApp* app) {
-	pixelplotter = app;
+void SourceController::setup() {
+	pixelplotter = (ofApp*)ofGetAppPtr();
 
 	videoDevices = videoGrabber.listDevices();
 	for (vector<ofVideoDevice>::iterator it = videoDevices.begin(); it != videoDevices.end(); ++it) {

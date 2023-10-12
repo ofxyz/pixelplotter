@@ -2,10 +2,12 @@
 #include "ofMain.h"
 
 #include "ofx2d.h"
+
 #include "ofxImGui.h"
 #include "imgui_internal.h"
 #include "ImHelpers.h"
 #include "imgui_stdlib.h"
+#include "IconsFontAwesome5.h"
 
 #include "ofxPosterize.h"
 #include "ofxXmlSettings.h"
@@ -38,6 +40,8 @@ public:
 	std::string windowTitle = "PixelPlotter v0.3";
 	shared_ptr<ofGLRenderer> gl;
 
+	ImGuiID dockNodeID;
+
 	void setup();
 	void update();
 	void draw();
@@ -64,6 +68,7 @@ public:
 	void loadSettings(string& filepath);
 
 	void resetImageOffset();
+	void centerImage();
 	void resetZoom();
 
 	DrawPixels drawPixels;
@@ -73,17 +78,20 @@ public:
 	char presetSaveName[128] = "";
 	int exportCount = 0;
 
+	bool vSync = false;
 	bool cleanImageFilters = false;
-
 	bool bSavePreset = false;
 	bool bShowMenuBar = true;
 	bool bShowGui = true;
 	bool bShowPlotCanvas = true;
+	bool bShowToolPalette = true;
 	bool bShowInfoPanel = true;
+	bool bShowImGuiMetricsDebugger = false;
+	bool bShowCanvas = true;
 	bool pauseRender = false;
 	bool bDragCanvas = false;
 	bool bShowFps = true;
-
+	bool bTryLoadSource = false;
 	int currentPresetIndex = 0;
 
 	float zoomLevel = 1;
@@ -113,7 +121,10 @@ public:
 	void gui_drawMainDock();
 	void gui_drawCanvasWindow();
 	void gui_drawInfoPanel();
+	void gui_drawToolPalette();
 	void gui_loadPresets();
+	void gui_renderCanvas();
+	void gui_renderBezierWidget();
 
 	bool bLoadSettingsNextFrame;
 

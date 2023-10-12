@@ -1,6 +1,8 @@
 ofx2d
 ofxOpenCv
 ofxCv
+ofxIconFontCppHeaders
 ofxImGui
 ofxPosterize
+ofxSvg
 ofxXmlSettings

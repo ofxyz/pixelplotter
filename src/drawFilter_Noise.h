@@ -5,20 +5,23 @@
 
 class Df_noise : public DrawFilter {
 public:
-	ofApp* pixelplotter;
-	Df_noise(ofApp* app) {
-		pixelplotter = app;
+	Df_noise() {
+		pixelplotter = (ofApp*)ofGetAppPtr();
 		name = "Noise";
-		//palette.push_back(new sColor(ofColor(255,0,0,255), "Red"));
 	};
 
-	void draw(ofImage* input, float width = 0, float height = 0, float x = 0, float y = 0);
+	Df_noise(ofxXmlSettings settings) {
+		Df_noise();
+		loadSettings(settings);
+	};
+
+	virtual void draw(ofImage* input, float width = 0, float height = 0, float x = 0, float y = 0);
+	virtual void renderImGuiSettings();
+	virtual void loadSettings(ofxXmlSettings settings);
+	virtual ofxXmlSettings getSettings();
 
 	void drawPixel(int x, int y);
 
-	void renderImGuiSettings();
-	virtual void loadSettings(ofxXmlSettings settings);
-	ofxXmlSettings getSettings();
 	ImVec4 cBg = ofColor(255, 255, 255, 255);
 
 	class sColor {
