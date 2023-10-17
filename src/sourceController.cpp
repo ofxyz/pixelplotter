@@ -26,14 +26,15 @@ void SourceController::renderImGuiSettings() {
 	}
 }
 
-void SourceController::loadSettings(ofxXmlSettings settings) {
-	currentSourceIndex = x2d.getIndex(sourceNames, settings.getValue("source", "Undefined"), currentSourceIndex);
+void SourceController::loadSettings(ofJson settings) {
+	std::string sourceString = settings.value("source", std::string());
+	currentSourceIndex = x2d.getIndex(sourceNames, sourceString, currentSourceIndex);
 	loadSourceIndex();
 }
 
-ofxXmlSettings SourceController::getSettings() {
-	ofxXmlSettings settings;
-	settings.setValue("source", sourceNames[currentSourceIndex]);
+ofJson SourceController::getSettings() {
+	ofJson settings;
+	settings["source"] = sourceNames[currentSourceIndex];
 	return settings;
 }
 
@@ -98,7 +99,7 @@ void SourceController::buildSourceNames() {
 	sourceNames.clear();
 	sourceNames.insert(sourceNames.end(), videoDeviceNames.begin(), videoDeviceNames.end());
 	sourceNames.insert(sourceNames.end(), videoFileNames.begin(), videoFileNames.end());
-	sourceNames.insert(sourceNames.end(), gC.v_GeneratorNames.begin() + 1, gC.v_GeneratorNames.end());
+	sourceNames.insert(sourceNames.end(), gC.v_GeneratorNames.begin(), gC.v_GeneratorNames.end());
 	sourceNames.insert(sourceNames.end(), imgFileNames.begin(), imgFileNames.end());
 }
 
@@ -124,11 +125,11 @@ void SourceController::loadSourceIndex() {
 	else if (currentSourceIndex < videoDevices.size() + videoFiles.size()) {
 		loadVideo(videoFiles[currentSourceIndex - videoDevices.size()].getAbsolutePath());
 	}
-	else if (currentSourceIndex < videoDevices.size() + videoFiles.size() + (gC.v_GeneratorNames.size() - 1)) {
+	else if (currentSourceIndex < videoDevices.size() + videoFiles.size() + (gC.v_GeneratorNames.size())) {
 		//loadGenerator(currentSourceIndex - videoDevices.size() - videoFiles.size());
 	}
 	else {
-		loadImage(imgFiles[currentSourceIndex - videoDevices.size() - videoFiles.size() - 1].getAbsolutePath());
+		loadImage(imgFiles[currentSourceIndex - videoDevices.size() - videoFiles.size()].getAbsolutePath());
 	}
 
 	isResized = true;

@@ -2,20 +2,20 @@
 
 // Add resize option?
 
-ofxXmlSettings If_duplicate::getSettings() {
-	ofxXmlSettings settings;
-	settings.setValue("name", name);
-	settings.setValue("hCount", hCount);
-	settings.setValue("vCount", vCount);
-	settings.setValue("bMirror", bMirror);
+ofJson If_duplicate::getSettings() {
+	ofJson settings;
+	settings["name"] = name;
+	settings["hCount"] = hCount;
+	settings["vCount"] = vCount;
+	settings["bMirror"] = bMirror;
 	return settings;
 }
 
-void If_duplicate::loadSettings(ofxXmlSettings settings) {
-	name = settings.getValue("name", "duplicate");
-	hCount = settings.getValue("hCount", hCount);
-	vCount = settings.getValue("vCount", vCount);
-	bMirror = settings.getValue("bMirror", bMirror);
+void If_duplicate::loadSettings(ofJson settings) {
+	name = settings.value("name", "duplicate");
+	hCount = settings.value("hCount", hCount);
+	vCount = settings.value("vCount", vCount);
+	bMirror = settings.value("bMirror", bMirror);
 	return;
 }
 

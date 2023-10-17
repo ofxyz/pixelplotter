@@ -1,13 +1,13 @@
 #include "drawPixel_SeparateCMYK_Bars01.h"
 
-ofxXmlSettings Dp_separateCMYK_Bars01::getSettings() {
-	ofxXmlSettings settings;
-	settings.setValue("name", name);
+ofJson Dp_separateCMYK_Bars01::getSettings() {
+	ofJson settings;
+	settings["name"] = name;
 	return settings;
 }
 
-void Dp_separateCMYK_Bars01::loadSettings(ofxXmlSettings settings) {
-	// name = settings.getValue("name", name);
+void Dp_separateCMYK_Bars01::loadSettings(ofJson settings) {
+	// name = settings.value("name", name);
 	return;
 }
 

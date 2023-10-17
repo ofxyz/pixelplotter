@@ -1,6 +1,5 @@
 #pragma once
 #include "ofMain.h"
-#include "ofxXmlSettings.h"
 #include "ofxImGui.h"
 
 class ofApp;
@@ -32,7 +31,7 @@ public:
 	void update();
 
 	void renderImGuiSettings();
-	void loadSettings(ofxXmlSettings settings);
-	ofxXmlSettings getSettings();
+	void loadSettings(ofJson settings);
+	ofJson getSettings();
 
 };

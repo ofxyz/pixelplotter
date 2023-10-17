@@ -1,15 +1,15 @@
 #include "imageFilter_Blur.h"
 
-ofxXmlSettings If_blur::getSettings() {
-	ofxXmlSettings settings;
-	settings.setValue("name", name);
-	settings.setValue("cvBlur", cvBlur);
+ofJson If_blur::getSettings() {
+	ofJson settings;
+	settings["name"] = name;
+	settings["cvBlur"] = cvBlur;
 	return settings;
 }
 
-void If_blur::loadSettings(ofxXmlSettings settings) {
-	name = settings.getValue("name", "tint");
-	cvBlur = settings.getValue("cvBlur", cvBlur);
+void If_blur::loadSettings(ofJson settings) {
+	name = settings.value("name", "tint");
+	cvBlur = settings.value("cvBlur", cvBlur);
 	return;
 }
 

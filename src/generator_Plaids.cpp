@@ -2,6 +2,12 @@
 
 #include "generator_Plaids.h"
 
+G_plaids::G_plaids(ofApp* app)
+{
+	pixelplotter = app;
+	name = "Rings";
+}
+
 void G_plaids::setup(int _width, int _height) {
 	width = _width;
 	height = _height;
@@ -38,11 +44,11 @@ void G_plaids::renderImGuiSettings() {
 	}
 }
 
-void G_plaids::loadSettings(ofxXmlSettings settings) {
+void G_plaids::loadSettings(ofJson settings) {
 
 }
 
-ofxXmlSettings G_plaids::getSettings() {
-	ofxXmlSettings settings;
+ofJson G_plaids::getSettings() {
+	ofJson settings;
 	return settings;
 }

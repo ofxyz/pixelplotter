@@ -5,4 +5,3 @@ ofxIconFontCppHeaders
 ofxImGui
 ofxPosterize
 ofxSvg
-ofxXmlSettings

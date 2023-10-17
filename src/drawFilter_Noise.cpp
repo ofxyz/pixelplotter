@@ -1,61 +1,51 @@
 #include "drawFilter_Noise.h"
-#include "ofApp.h"
+#include <string>
+#include "ofGraphics.h"
+#include "ofAppRunner.h"
 
-ofxXmlSettings Df_noise::getSettings() {
-	ofxXmlSettings settings;
-	settings.setValue("name", name);
+ofJson Df_noise::getSettings() {
+	ofJson settings;
+	settings["name"] = name;
 
 	// Colours
-	settings.setValue("colors:background:r", cBg.x);
-	settings.setValue("colors:background:g", cBg.y);
-	settings.setValue("colors:background:b", cBg.z);
-	settings.setValue("colors:background:a", cBg.w);
+	settings["colors"]["background"]["r"] = cBg.x;
+	settings["colors"]["background"]["g"] = cBg.y;
+	settings["colors"]["background"]["b"] = cBg.z;
+	settings["colors"]["background"]["w"] = cBg.w;
 
-	settings.addTag("palette");
-	settings.pushTag("palette");
-	// Palette
-	int index = 0;
 	for (auto col : palette) {
-		settings.addTag("color");
-		settings.pushTag("color", index++);
-		settings.setValue("name", col->name);
-		settings.setValue("r", col->color.x);
-		settings.setValue("g", col->color.y);
-		settings.setValue("b", col->color.z);
-		settings.setValue("a", col->color.w);
-		settings.setValue("percent", col->percent);
-		settings.popTag();
+		settings["palette"][col->name]["name"] = col->name;
+		settings["palette"][col->name]["r"] = col->color.x;
+		settings["palette"][col->name]["g"] = col->color.y;
+		settings["palette"][col->name]["b"] = col->color.z;
+		settings["palette"][col->name]["a"] = col->color.w;
+		settings["palette"][col->name]["percent"] = col->percent;
 	}
-	settings.popTag();
 
 	return settings;
 }
 
 
-void Df_noise::loadSettings(ofxXmlSettings settings) {
-	name = settings.getValue("name", name);
+void Df_noise::loadSettings(ofJson settings) {
+	name = settings.value("name", name);
 
 	// Colours
-	cBg.x = settings.getValue("colors:background:r", cBg.x);
-	cBg.y = settings.getValue("colors:background:g", cBg.y);
-	cBg.z = settings.getValue("colors:background:b", cBg.z);
-	cBg.w = settings.getValue("colors:background:a", cBg.w);
+	cBg.x = settings["colors"]["background"].value("r", cBg.x);
+	cBg.y = settings["colors"]["background"].value("g", cBg.y);
+	cBg.z = settings["colors"]["background"].value("b", cBg.z);
+	cBg.w = settings["colors"]["background"].value("a", cBg.w);
 
-	if (settings.tagExists("palette")) {
-		settings.pushTag("palette");
-		palette.clear();
-		int colCount = settings.getNumTags("color");
-		for (int i = 0; i < colCount; i++) {
-			settings.pushTag("color", i);
-			float r = settings.getValue("r", 0.0);
-			float g = settings.getValue("g", 0.0);
-			float b = settings.getValue("b", 0.0);
-			float a = settings.getValue("a", 0.0);
-			palette.push_back(new sColor(ofColor(r * 255, g * 255, b * 255, a * 255), settings.getValue("name", "Color " + to_string(i)), settings.getValue("percent", 0)));
-			settings.popTag();
-		}
-		settings.popTag();
+	palette.clear();
+	int counter = 1;
+	for (auto& pal : settings["palette"]) {
+		float r = pal.value("r", 0.0);
+		float g = pal.value("g", 0.0);
+		float b = pal.value("b", 0.0);
+		float a = pal.value("a", 0.0);
+		palette.push_back(new sColor(ofColor(r * 255, g * 255, b * 255, a * 255), pal.value("name", "Color " + std::to_string(counter)), pal.value("percent", 0)));
+		counter++;
 	}
+
 }
 
 void Df_noise::renderImGuiSettings() {
@@ -108,11 +98,23 @@ void Df_noise::renderImGuiSettings() {
 
 		if (ImGui::Button("Add Colour"))
 		{
-			palette.push_back(new sColor(ofColor(255, 255, 255, 255), "New " + to_string(palette.size())));
+			palette.push_back(new sColor(ofColor(255, 255, 255, 255), "New " + std::to_string(palette.size())));
 			setFresh(true);
 		}
 		ImGui::PopID();
 	}
+}
+
+Df_noise::Df_noise(ofJson settings)
+{
+	Df_noise();
+	loadSettings(settings);
+}
+
+Df_noise::Df_noise()
+{
+	pixelplotter = (ofApp*)ofGetAppPtr();
+	name = "Noise";
 }
 
 void Df_noise::draw(ofImage* input, float width, float height, float x, float y) {
@@ -155,4 +157,17 @@ void Df_noise::drawPixel(int x, int y) {
 	}
 
 	ofPopStyle();
+}
+
+Df_noise::subpixel::subpixel(int _x, int _y)
+{
+	x = _x;
+	y = _y;
+}
+
+Df_noise::sColor::sColor(ofColor c, std::string n, int p /*= 0*/)
+{
+	color = c;
+	name = n;
+	percent = p;
 }

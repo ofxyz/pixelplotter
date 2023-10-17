@@ -1,17 +1,17 @@
 #include "ofApp.h"
 #include "drawFilter_Mesh.h"
 
-ofxXmlSettings Df_mesh::getSettings() {
-	ofxXmlSettings settings;
-	settings.setValue("name", name);
-	settings.setValue("rotationOffset", rotationOffset);
+ofJson Df_mesh::getSettings() {
+	ofJson settings;
+	settings["name"] = name;
+	settings["rotationOffset"] = rotationOffset;
 
 	return settings;
 }
 
-void Df_mesh::loadSettings(ofxXmlSettings settings) {
-	name = settings.getValue("name", name);
-	rotationOffset = settings.getValue("rotationOffset", rotationOffset);
+void Df_mesh::loadSettings(ofJson settings) {
+	name = settings.value("name", name);
+	rotationOffset = settings.value("rotationOffset", rotationOffset);
 	return;
 }
 

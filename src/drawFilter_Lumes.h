@@ -10,7 +10,7 @@ public:
 		name = "Lumes";
 	};
 
-	Df_lumes(ofxXmlSettings settings) {
+	Df_lumes(ofJson settings) {
 		Df_lumes();
 		loadSettings(settings);
 	};
@@ -18,8 +18,8 @@ public:
 	virtual void draw(ofImage* input, float width = 0, float height = 0, float x = 0, float y = 0);
 	void drawKite(ofColor c, float offsetX, float offsetY, float width, float height, float centerPercent, glm::ivec2 pos);
 	virtual void renderImGuiSettings();
-	virtual void loadSettings(ofxXmlSettings settings);
-	ofxXmlSettings getSettings();
+	virtual void loadSettings(ofJson settings);
+	ofJson getSettings();
 
 private:
 	ofxSVG svgKite;

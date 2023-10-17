@@ -4,34 +4,34 @@
 // - Create smooth curves
 // - Remove edge lines
 
-ofxXmlSettings Df_rings::getSettings() {
-	ofxXmlSettings settings;
-	settings.setValue("name", name);
-	settings.setValue("cvThresh", cvThresh);
-	settings.setValue("cvBlur", cvBlur);
-	settings.setValue("cvSteps", cvSteps);
-	settings.setValue("lineWidth", lineWidth);
+ofJson Df_rings::getSettings() {
+	ofJson settings;
+	settings["name"] = name;
+	settings["cvThresh"] = cvThresh;
+	settings["cvBlur"] = cvBlur;
+	settings["cvSteps"] = cvSteps;
+	settings["lineWidth"] = lineWidth;
 
-	settings.setValue("colors:blob:r", c_blob.x);
-	settings.setValue("colors:blob:g", c_blob.y);
-	settings.setValue("colors:blob:b", c_blob.z);
-	settings.setValue("colors:blob:a", c_blob.w);
+	settings["colors"]["blob"]["r"] = c_blob.x;
+	settings["colors"]["blob"]["g"] = c_blob.y;
+	settings["colors"]["blob"]["b"] = c_blob.z;
+	settings["colors"]["blob"]["a"] = c_blob.w;
 
 	return settings;
 }
 
 
-void Df_rings::loadSettings(ofxXmlSettings settings) {
-	name = settings.getValue("name", "rings");
-	cvThresh = settings.getValue("cvThresh", cvThresh);
-	cvBlur = settings.getValue("cvBlur", cvBlur);
-	cvSteps = settings.getValue("cvSteps", cvSteps);
-	lineWidth = settings.getValue("lineWidth", lineWidth);
+void Df_rings::loadSettings(ofJson settings) {
+	name = settings.value("name", "rings");
+	cvThresh = settings.value("cvThresh", cvThresh);
+	cvBlur = settings.value("cvBlur", cvBlur);
+	cvSteps = settings.value("cvSteps", cvSteps);
+	lineWidth = settings.value("lineWidth", lineWidth);
 
-	c_blob.x = settings.getValue("colors:blob:r", c_blob.x);
-	c_blob.y = settings.getValue("colors:blob:g", c_blob.y);
-	c_blob.z = settings.getValue("colors:blob:b", c_blob.z);
-	c_blob.w = settings.getValue("colors:blob:a", c_blob.w);
+	c_blob.x = settings.value("colors:blob:r", c_blob.x);
+	c_blob.y = settings.value("colors:blob:g", c_blob.y);
+	c_blob.z = settings.value("colors:blob:b", c_blob.z);
+	c_blob.w = settings.value("colors:blob:a", c_blob.w);
 
 	return;
 }

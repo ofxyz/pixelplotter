@@ -45,7 +45,7 @@ public:
 	std::vector<std::shared_ptr<DrawFilter>> v_DrawFilters;
 
 	void addFilter(Filtertype filterType);
-	void addFilter(ofxXmlSettings filterSettings);
+	void addFilter(ofJson filterSettings);
 	void addRandomFilter();
 
 	void reorder();

@@ -1,10 +1,14 @@
 #pragma once
-#include "ofMain.h"
-#include "ofxXmlSettings.h"
+
 #include "ofxImGui.h"
 #include "frameBuffer.h"
 #include "imageFilter_Controller.h"
 #include "generator_Controller.h"
+#include "ofVideoPlayer.h"
+#include "ofVideoGrabber.h"
+#include "ofImage.h"
+#include "ofAppGLFWWindow.h"
+#include "ofJson.h"
 
 class ofApp;
 
@@ -16,8 +20,8 @@ public:
 	void update();
 
 	void renderImGuiSettings();
-	void loadSettings(ofxXmlSettings settings);
-	ofxXmlSettings getSettings();
+	void loadSettings(ofJson settings);
+	ofJson getSettings();
 
 	void addImage(ofFile file);
 	void addVideo(ofFile file);
@@ -74,7 +78,7 @@ public:
 
 	int getSourceCount();
 
-	std::vector<std::string> img_ext{
+	const std::vector<std::string> img_ext {
 				"jpg",
 				"jpeg",
 				"png",
@@ -86,7 +90,7 @@ public:
 				"psd"
 	};
 
-	std::vector<std::string> vid_ext{
+	const std::vector<std::string> vid_ext {
 			"mpeg",
 			"mpe",
 			"m1v",

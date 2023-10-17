@@ -1,26 +1,26 @@
 #include "imageFilter_Tint.h"
 
-ofxXmlSettings If_tint::getSettings() {
-	ofxXmlSettings settings;
-	settings.setValue("name", name);
-	settings.setValue("bGrey", bGrey);
+ofJson If_tint::getSettings() {
+	ofJson settings;
+	settings["name"] = name;
+	settings["bGrey"] = bGrey;
 
-	settings.setValue("colors:tint:r", c_Tint.x);
-	settings.setValue("colors:tint:g", c_Tint.y);
-	settings.setValue("colors:tint:b", c_Tint.z);
-	settings.setValue("colors:tint:a", c_Tint.w);
+	settings["colors"]["tint"]["r"] = c_Tint.x;
+	settings["colors"]["tint"]["g"] = c_Tint.y;
+	settings["colors"]["tint"]["b"] = c_Tint.z;
+	settings["colors"]["tint"]["a"] = c_Tint.w;
 
 	return settings;
 }
 
-void If_tint::loadSettings(ofxXmlSettings settings) {
-	//name = settings.getValue("name", "tint");
-	bGrey = settings.getValue("bGrey", bGrey);
+void If_tint::loadSettings(ofJson settings) {
+	//name = settings.value("name", "tint");
+	bGrey = settings.value("bGrey", bGrey);
 
-	c_Tint.x = settings.getValue("colors:tint:r", c_Tint.x);
-	c_Tint.y = settings.getValue("colors:tint:g", c_Tint.y);
-	c_Tint.z = settings.getValue("colors:tint:b", c_Tint.z);
-	c_Tint.w = settings.getValue("colors:tint:a", c_Tint.w);
+	c_Tint.x = settings.value("colors:tint:r", c_Tint.x);
+	c_Tint.y = settings.value("colors:tint:g", c_Tint.y);
+	c_Tint.z = settings.value("colors:tint:b", c_Tint.z);
+	c_Tint.w = settings.value("colors:tint:a", c_Tint.w);
 
 	return;
 }

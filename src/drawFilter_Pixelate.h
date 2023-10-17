@@ -4,20 +4,16 @@
 
 class Df_pixelate : public DrawFilter {
 public:
-	Df_pixelate() {
-		pixelplotter = (ofApp*)ofGetAppPtr();
-		name = "Pixelate";
-	};
+	Df_pixelate();;
 
-	Df_pixelate(ofxXmlSettings settings) {
-		Df_pixelate();
-		loadSettings(settings);
-	};
+	Df_pixelate(ofJson settings);;
+
+	void InitDefaults();
 
 	virtual void draw(ofImage* input, float width = 0, float height = 0, float x = 0, float y = 0);
 	virtual void renderImGuiSettings();
-	virtual void loadSettings(ofxXmlSettings settings);
-	virtual ofxXmlSettings getSettings();
+	virtual void loadSettings(ofJson settings);
+	virtual ofJson getSettings();
 
 private:
 	void drawRectangle(float offsetX, float offsetY, float w, float h, ofColor c);
@@ -42,41 +38,9 @@ private:
 	float getWidth(ofColor c, float w, float h, float r);
 	float getHeight(ofColor c, float w, float h, float r);
 
-	std::vector<std::string> v_pixelType{
-			"Rectangle",
-			"Ellipse",
-			"RGB Seperation Fill",
-			"RGB Seperation Center",
-			"RGB Seperation Square",
-			"CMYK Seperation Fill",
-			"CMYK Seperation Square",
-			"CMYK Seperation Left",
-			"CMYK Seperation Hills",
-			"CMYK Seperation Bars",
-			"Color Adjust",
-			"Unusual Overprint",
-			"Star Hash"
-	};
-
-	std::vector<std::string> v_pixelDataMapOptions{
-		"None",
-		"Between",
-		"Color Lightness",
-		"Sound"/*,
-		"Color Red",
-		"Color Green",
-		"Color Blue",
-		"Location X",
-		"Location Y" */
-	};
-
-	std::vector<std::string> v_ignoreOptions{
-		"None",
-		"Random",
-		"Modulo",
-		"Plaid",
-		"Scan"
-	};
+	std::vector<std::string> v_pixelType;
+	std::vector<std::string> v_pixelDataMapOptions;
+	std::vector<std::string> v_ignoreOptions;
 
 	int ui_currentRotationMap = 0;
 	int ui_currentWidthMap = 0;

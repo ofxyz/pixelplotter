@@ -9,15 +9,15 @@ public:
 		name = "Mesh";
 	};
 
-	Df_mesh(ofxXmlSettings settings) {
+	Df_mesh(ofJson settings) {
 		Df_mesh();
 		loadSettings(settings);
 	};
 
 	virtual void draw(ofImage* input, float width = 0, float height = 0, float x = 0, float y = 0);
 	virtual void renderImGuiSettings();
-	virtual void loadSettings(ofxXmlSettings settings);
-	virtual ofxXmlSettings getSettings();
+	virtual void loadSettings(ofJson settings);
+	virtual ofJson getSettings();
 
 private:
 	ofMesh mesh;

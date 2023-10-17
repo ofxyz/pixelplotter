@@ -1,17 +1,12 @@
 #pragma once
 #include "ofMain.h"
 
-#include "ofx2d.h"
-
 #include "ofxImGui.h"
 #include "imgui_internal.h"
 #include "ImHelpers.h"
 #include "imgui_stdlib.h"
 #include "IconsFontAwesome5.h"
 
-#include "ofxPosterize.h"
-#include "ofxXmlSettings.h"
-#include "ofxOpenCv.h"
 
 #include "soundManager.h"
 #include "canvas.h"

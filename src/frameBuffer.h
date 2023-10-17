@@ -1,55 +1,25 @@
 #pragma once
 
-#include "ofMain.h"
-
 class FrameBuffer {
 public:
 
-	void setup(ofPixels firstFrame) {
-		qFrames.clear();
-		currentFrame.getPixelsRef() = firstFrame;
-		currentFrame.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
-		currentFrame.update();
-		bFresh = true;
-	}
+	void setup(ofPixels& firstFrame);
 
-	void addFrame(ofPixels freshPixels) {
-		qFrames.push_back(freshPixels);
-	}
+	void addFrame(ofPixels& freshPixels);
 
-	void update() {
-		if (!bFresh && qFrames.size() > 0) {
-			currentFrame.getPixelsRef() = qFrames[0];
-			currentFrame.update();
-			qFrames.pop_front();
-			bFresh = true;
-		}
-	}
+	void update();
 
-	ofImage& getFrame() {
-		bFresh = false;
-		return currentFrame;
-	}
+	ofImage& getFrame();
 
-	ofColor getColor(int x, int y, int width, int height) {
-		return currentFrame.getPixels().getColor(round(ofMap(x, 0, width, 0, getWidth())), round(ofMap(y, 0, height, 0, getHeight())));
-	}
+	ofColor getColor(int x, int y, int width, int height);
 
-	ofColor getColor(int x, int y) {
-		return currentFrame.getPixels().getColor(x, y);
-	}
+	ofColor getColor(int x, int y);
 
-	float getWidth() {
-		return currentFrame.getWidth();
-	}
+	float getWidth();
 
-	float getHeight() {
-		return currentFrame.getHeight();
-	}
+	float getHeight();
 
-	bool isFresh() {
-		return bFresh;
-	}
+	bool isFresh();
 
 private:
 	bool bFresh = false;

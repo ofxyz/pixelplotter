@@ -1,6 +1,6 @@
 #pragma once
+#include "ofMain.h"
 #include "ofxImGui.h"
-#include "ofxXmlSettings.h"
 
 class ImageFilter {
 public:
@@ -9,16 +9,12 @@ public:
 	std::string name;
 
 	bool bFresh = false;
-	bool isFresh() {
-		return bFresh;
-	}
-	void setFresh(bool fresh) {
-		bFresh = fresh;
-	}
+	bool isFresh();
+	void setFresh(bool fresh);
 
 	virtual void apply(ofImage* img) = 0;
 	virtual void renderImGuiSettings() = 0;
-	virtual void loadSettings(ofxXmlSettings settings) = 0;
-	virtual ofxXmlSettings getSettings() = 0;
+	virtual void loadSettings(ofJson settings) = 0;
+	virtual ofJson getSettings() = 0;
 
 };

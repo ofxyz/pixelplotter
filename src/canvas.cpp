@@ -173,34 +173,37 @@ void Canvas::renderImGuiSettings() {
 	ImGui::Separator(); // End Size 
 }
 
-void Canvas::loadSettings(ofxXmlSettings settings) {
-	canvasTitle = settings.getValue("canvasTitle", canvasTitle);
-	canvasWidth = settings.getValue("canvasWidth", canvasWidth);
-	canvasHeight = settings.getValue("canvasHeight", canvasHeight);
-	canvasTitle = settings.getValue("canvasTitle", canvasTitle);
-	bExportWithTimeStamp = settings.getValue("exportWithTimeStamp", bExportWithTimeStamp);
+void Canvas::loadSettings(ofJson settings) {
+	//settings["canvasTitle"].get_to(canvasTitle);
+	canvasTitle  = settings.value("canvasTitle", canvasTitle);
+	canvasTitle  = settings.value("canvasTitle", canvasTitle);
+	canvasWidth  = settings.value("canvasWidth", canvasWidth);
+	canvasHeight = settings.value("canvasHeight", canvasHeight);
+	canvasTitle  = settings.value("canvasTitle", canvasTitle);
+	bExportWithTimeStamp = settings.value("exportWithTimeStamp", bExportWithTimeStamp);
 
-	c_canvas.x = settings.getValue("colors:plotCanvas:r", c_canvas.x);
-	c_canvas.y = settings.getValue("colors:plotCanvas:g", c_canvas.y);
-	c_canvas.z = settings.getValue("colors:plotCanvas:b", c_canvas.z);
-	c_canvas.w = settings.getValue("colors:plotCanvas:a", c_canvas.w);
+	c_canvas.x = settings["colors"]["plotcanvas"].value("r", c_canvas.x);
+	c_canvas.y = settings["colors"]["plotcanvas"].value("g", c_canvas.y);
+	c_canvas.z = settings["colors"]["plotcanvas"].value("b", c_canvas.z);
+	c_canvas.w = settings["colors"]["plotcanvas"].value("a", c_canvas.w);
 
 	resizeRequest = true;
 	setFresh(true);
 }
 
-ofxXmlSettings Canvas::getSettings() {
-	ofxXmlSettings settings;
-	settings.setValue("canvasTitle", canvasTitle);
-	settings.setValue("canvasWidth", canvasWidth);
-	settings.setValue("canvasHeight", canvasHeight);
-	settings.setValue("canvasTitle", canvasTitle);
-	settings.setValue("exportWithTimeStamp", bExportWithTimeStamp);
+ofJson Canvas::getSettings() {
+	ofJson settings;
 
-	settings.setValue("colors:plotCanvas:r", c_canvas.x);
-	settings.setValue("colors:plotCanvas:g", c_canvas.y);
-	settings.setValue("colors:plotCanvas:b", c_canvas.z);
-	settings.setValue("colors:plotCanvas:a", c_canvas.w);
+	settings["canvasTitle"] = canvasTitle;
+	settings["canvasWidth"] = canvasWidth;
+	settings["canvasHeight"] = canvasHeight;
+	settings["canvasTitle"] = canvasTitle;
+	settings["exportWithTimeStamp"] = bExportWithTimeStamp;
+
+	settings["colors"]["plotcanvas"]["r"] = c_canvas.x;
+	settings["colors"]["plotcanvas"]["g"] = c_canvas.y;
+	settings["colors"]["plotcanvas"]["b"] = c_canvas.z;
+	settings["colors"]["plotcanvas"]["a"] = c_canvas.w;
 
 	return settings;
 }

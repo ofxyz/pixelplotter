@@ -1,13 +1,13 @@
 #include "drawPixel_Normal.h"
 
-ofxXmlSettings Dp_normal::getSettings() {
-	ofxXmlSettings settings;
-	settings.setValue("name", name);
+ofJson Dp_normal::getSettings() {
+	ofJson settings;
+	settings["name"] = name;
 	return settings;
 }
 
-void Dp_normal::loadSettings(ofxXmlSettings settings) {
-	// name = settings.getValue("name", name);
+void Dp_normal::loadSettings(ofJson settings) {
+	//name = settings.value("name", name);
 	setFresh(true);
 	return;
 }

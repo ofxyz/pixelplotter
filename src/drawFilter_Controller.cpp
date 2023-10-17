@@ -37,7 +37,6 @@ void DrawFilterController::reorder() {
 	}
 }
 
-
 void DrawFilterController::addFilter(Filtertype filterType) {
 
 		if (filterType == Filtertype::PIXELATE)
@@ -63,9 +62,9 @@ void DrawFilterController::addFilter(Filtertype filterType) {
 		setFresh(true);
 }
 
-void DrawFilterController::addFilter(ofxXmlSettings filterSettings) {
+void DrawFilterController::addFilter(ofJson filterSettings) {
 	try {
-		Filtertype filterType = mapFilters.at(filterSettings.getValue("name", "not_found"));
+		Filtertype filterType = mapFilters.at(filterSettings.value("name", "not_found"));
 
 		if (filterType == Filtertype::PIXELATE)
 		{

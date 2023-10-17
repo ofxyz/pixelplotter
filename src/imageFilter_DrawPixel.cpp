@@ -1,48 +1,37 @@
-#include "ofApp.h";
 #include "imageFilter_DrawPixel.h"
+#include "drawPixel.h"
 
-ofxXmlSettings If_drawPixel::getSettings() {
-	ofxXmlSettings settings;
-	settings.setValue("name", name);
-	settings.setValue("pixelType", drawPixels.v_DrawPixelsNames[selectedPixelType]);
-	settings.setValue("hCount", hCount);
-	settings.setValue("vCount", vCount);
+ofJson If_drawPixel::getSettings() {
+	ofJson settings;
+	settings["name"] = name;
+	settings["pixelType"] = drawPixels.v_DrawPixelsNames[selectedPixelType];
+	settings["hCount"] = hCount;
+	settings["vCount"] = vCount;
 
-	settings.setValue("colors:col:r", c_col.x);
-	settings.setValue("colors:col:g", c_col.y);
-	settings.setValue("colors:col:b", c_col.z);
-	settings.setValue("colors:col:a", c_col.w);
+	settings["colors"]["col"]["r"] = c_col.x;
+	settings["colors"]["col"]["g"] = c_col.y;
+	settings["colors"]["col"]["b"] = c_col.z;
+	settings["colors"]["col"]["a"] = c_col.w;
 
-	settings.addTag("pixelSettings");
-	settings.pushTag("pixelSettings");
-	ofxXmlSettings pixelSettings = drawPixels.v_DrawPixels[selectedPixelType]->getSettings();
-	string sPixelSettings;
-	pixelSettings.copyXmlToString(sPixelSettings);
-	settings.addValue("string_settings", sPixelSettings);
-	settings.popTag();
+	ofJson pixelSettings = drawPixels.v_DrawPixels[selectedPixelType]->getSettings();
+	settings["pixelSettings"] = pixelSettings;
 
 	return settings;
 }
 
-void If_drawPixel::loadSettings(ofxXmlSettings settings) {
+void If_drawPixel::loadSettings(ofJson settings) {
 
-	selectedPixelType = x2d.getIndex(drawPixels.v_DrawPixelsNames, settings.getValue("pixelType", "Undefined"), 1);
-	hCount = settings.getValue("hCount", hCount);
-	vCount = settings.getValue("vCount", vCount);
+	selectedPixelType = x2d.getIndex(drawPixels.v_DrawPixelsNames, settings.value("pixelType", "Undefined"), 1);
+	hCount = settings.value("hCount", hCount);
+	vCount = settings.value("vCount", vCount);
 
-	c_col.x = settings.getValue("colors:col:r", c_col.x);
-	c_col.y = settings.getValue("colors:col:g", c_col.y);
-	c_col.z = settings.getValue("colors:col:b", c_col.z);
-	c_col.w = settings.getValue("colors:col:a", c_col.w);
+	c_col.x = settings["colors"]["col"].value("r", c_col.x);
+	c_col.y = settings["colors"]["col"].value("g", c_col.y);
+	c_col.z = settings["colors"]["col"].value("b", c_col.z);
+	c_col.w = settings["colors"]["col"].value("a", c_col.w);
 
-	if (settings.tagExists("pixelSettings")) {
-		settings.pushTag("pixelSettings");
-		ofxXmlSettings pixelSettings;
-		string sPixelSettings = settings.getValue("string_settings", "");
-		pixelSettings.loadFromBuffer(sPixelSettings);
-		drawPixels.v_DrawPixels[selectedPixelType]->loadSettings(pixelSettings);
-		settings.popTag();
-	}
+	ofJson pixelSettings = settings.value("pixelSettings", "");
+	drawPixels.v_DrawPixels[selectedPixelType]->loadSettings(pixelSettings);
 }
 
 void If_drawPixel::renderImGuiSettings() {

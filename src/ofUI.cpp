@@ -191,7 +191,7 @@ void ofApp::gui_drawMenuBar() {
 
 		ImGui::Separator();
 
-		if (ImGui::Checkbox("Show FPS in Titlebar", &bShowFps)) {
+		if (ImGui::Checkbox("Show FPS in Title bar", &bShowFps)) {
 			if (!bShowFps) ofSetWindowTitle(windowTitle);
 		};
 
@@ -218,10 +218,10 @@ void ofApp::gui_drawToolPalette() {
 	// TODO: Move all these to where they're drawn ...
 	if (!bShowToolPalette) return;
 	 
-	ImGui::Begin("Tool Pallette", &bShowToolPalette);
-	ImGui::PushID("toolPallette");
+	ImGui::Begin("Tool palette", &bShowToolPalette);
+	ImGui::PushID("toolPalette");
 
-	// Set bigger font, needs to be loadded first...
+	// Set bigger font, needs to be loaded first...
 	if (ImGui::Button(ICON_FA_PEN "Pencil"))
 	{
 		cout << "Pencil Button Pressed";
@@ -239,7 +239,7 @@ void ofApp::gui_drawCanvasWindow() {
 	//ImGui::SetNextWindowSize(ofVec2f(gui_width, 800), ImGuiCond_Once);
 	//ImGui::SetNextWindowPos(ofVec2f( (ofGetWidth() - gui_width) + 45, 200+ 100), ImGuiCond_Once);
 	ImGui::Begin("Plot Canvas", &bShowPlotCanvas);
-	ImGui::PushID("plotcanvas");
+	ImGui::PushID("plotCanvas");
 	plotCanvas.renderImGuiSettings();
 	ImGui::PopID();
 
@@ -249,7 +249,7 @@ void ofApp::gui_drawCanvasWindow() {
 // This should be a more general texture viewer
 void ofApp::gui_renderCanvas() {
 	ImGui::Begin("Canvas", &bShowCanvas);
-	ImGui::PushID("showcanvas");
+	ImGui::PushID("showCanvas");
 
 	ImTextureID textureID = (ImTextureID)(uintptr_t)plotCanvas.canvasFbo.getTexture().getTextureData().textureID;
 
@@ -295,7 +295,7 @@ void ofApp::gui_drawInfoPanel() {
 	if (ImGui::Button("Save Preset"))
 	{
 		if (bSavePreset) {
-			string savePath = "presets\/" + string(presetSaveName) + ".xml";
+			string savePath = "presets/" + string(presetSaveName) + ".json";
 			saveSettings(savePath);
 			gui_loadPresets();
 			currentPresetIndex = x2d.getIndex(presetFileNames, string(presetSaveName), 0);

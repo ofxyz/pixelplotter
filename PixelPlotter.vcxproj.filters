@@ -187,19 +187,34 @@
     <ClCompile Include="..\..\addons\ofxSvg\src\ofxSvg.cpp">
       <Filter>addons\ofxSvg\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\addons\ofxXmlSettings\src\ofxXmlSettings.cpp">
-      <Filter>addons\ofxXmlSettings\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\addons\ofxXmlSettings\libs\tinyxml.cpp">
-      <Filter>addons\ofxXmlSettings\libs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\addons\ofxXmlSettings\libs\tinyxmlerror.cpp">
-      <Filter>addons\ofxXmlSettings\libs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\addons\ofxXmlSettings\libs\tinyxmlparser.cpp">
-      <Filter>addons\ofxXmlSettings\libs</Filter>
-    </ClCompile>
     <ClCompile Include="src\drawFilter_Controller.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\drawFilter.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\drawPixel.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\drawPixels.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\frameBuffer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\generator.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\generator_Controller.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imageFilter.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imageFilter_Controller.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGui_Widget_Bezier.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -449,15 +464,6 @@
     </Filter>
     <Filter Include="addons\ofxSvg\libs\svgtiny\include">
       <UniqueIdentifier>{F663B0D8-0BED-1137-B2BC-17B3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxXmlSettings">
-      <UniqueIdentifier>{877F005D-13E6-0592-1D97-F2E3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxXmlSettings\src">
-      <UniqueIdentifier>{CCB2AC63-49D2-977C-CFE8-AEAD}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxXmlSettings\libs">
-      <UniqueIdentifier>{687714A8-1662-FA1C-261F-50F0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1744,12 +1750,6 @@
     </ClInclude>
     <ClInclude Include="..\..\addons\ofxSvg\libs\svgtiny\include\svgtiny.h">
       <Filter>addons\ofxSvg\libs\svgtiny\include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\addons\ofxXmlSettings\src\ofxXmlSettings.h">
-      <Filter>addons\ofxXmlSettings\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\addons\ofxXmlSettings\libs\tinyxml.h">
-      <Filter>addons\ofxXmlSettings\libs</Filter>
     </ClInclude>
     <ClInclude Include="src\ImGui_Widget_Bezier.h">
       <Filter>src</Filter>

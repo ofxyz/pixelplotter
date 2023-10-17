@@ -3,7 +3,9 @@
 #include "sourceController.h"
 #include "ofx2d.h"
 
+#ifndef ofApp
 class ofApp;
+#endif
 
 class Canvas {
 public:
@@ -32,8 +34,8 @@ public:
 	int recFrameCount = 0;
 
 	void renderImGuiSettings();
-	void loadSettings(ofxXmlSettings settings);
-	ofxXmlSettings getSettings();
+	void loadSettings(ofJson settings);
+	ofJson getSettings();
 
 	std::string with_leading_zero(int value, int width)
 	{

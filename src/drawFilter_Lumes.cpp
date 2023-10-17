@@ -1,18 +1,18 @@
 #include "ofApp.h"
 #include "drawFilter_Lumes.h"
 
-ofxXmlSettings Df_lumes::getSettings() {
-	ofxXmlSettings settings;
-	settings.setValue("name", name);
-	settings.setValue("tilesX", tilesX);
-	settings.setValue("tilesY", tilesY);
+ofJson Df_lumes::getSettings() {
+	ofJson settings;
+	settings["name"] = name;
+	settings["tilesX"] = tilesX;
+	settings["tilesY"] = tilesY;
 	return settings;
 }
 
-void Df_lumes::loadSettings(ofxXmlSettings settings) {
-	name = settings.getValue("name", name);
-	tilesX = settings.getValue("tilesX", 64);
-	tilesY = settings.getValue("tilesY", 64);
+void Df_lumes::loadSettings(ofJson settings) {
+	name   = settings.value("name", name);
+	tilesX = settings.value("tilesX", 64);
+	tilesY = settings.value("tilesY", 64);
 	return;
 }
 

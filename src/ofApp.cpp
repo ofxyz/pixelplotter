@@ -1,10 +1,10 @@
 #include "ofApp.h"
+#include "ofx2d.h" //TODO: Remove
 
+#include "ofxPosterize.h"
+#include "ofxOpenCv.h"
 /*
-   - Remove ofxXmlSettings, use ofJson instead
-   - Pixelate filter: Add curve widget https://github.com/ocornut/imgui/issues/786
    - Pixelate filter: Create spacing adjustment curve
-   - Fix Zoom and make zoom go faster with holding shift
    - Make sure UI is always rendering fast
    - Add video controls pause, play, next frame, previous frame
    - Add draw order, left to right top to bottom, center out, center in
@@ -15,10 +15,10 @@
    - RGB needs B/W check
    - CMYK needs white control option (Nim: Black and white. CMYK RGB)
    - Add modulators (EG X Y tiles between min-max, time)
-   - I want to set a value to the colour pallette of four colours
+   - I want to set a value to the colour palette of four colours
 	 To control how much each colour is used. Main Mid Accent? Weight.
    - Push X / Y / C to vector for sorting and drawing order.
-   - Souce effects on GPU with shaders. Output vector.
+   - Source effects on GPU with shaders. Output vector.
    - Posterise Source (shader?)
 
    ## Generators (They should be able to be placed in the filter section or source section)
@@ -123,100 +123,60 @@ void ofApp::centerImage() {
 }
 
 void ofApp::saveSettings(string& filepath) {
-	ofxXmlSettings settings;
+	ofJson settings;
 
-	settings.addTag("source");
-	settings.pushTag("source");
-	ofxXmlSettings sourceSettings = plotCanvas.sourceController.getSettings();
-	string sSourceSettings;
-	sourceSettings.copyXmlToString(sSourceSettings);
-	settings.addValue("string_settings", sSourceSettings);
-	settings.popTag();
+	settings["source"].push_back(plotCanvas.sourceController.getSettings());
 
-	settings.addTag("imageFilters");
-	settings.pushTag("imageFilters");
 	for (int i = 0; i < plotCanvas.sourceController.iF.v_ImageFilters.size(); i++) {
-		ofxXmlSettings imgFilterSettings = plotCanvas.sourceController.iF.v_ImageFilters[i]->getSettings();
-		string imageFilterSettings;
-		imgFilterSettings.copyXmlToString(imageFilterSettings);
-		settings.addValue("string_settings", imageFilterSettings);
+		settings["imageFilters"].push_back(plotCanvas.sourceController.iF.v_ImageFilters[i]->getSettings());
 	}
-	settings.popTag();
 
-	settings.addTag("drawFilters");
-	settings.pushTag("drawFilters");
 	for (int i = 0; i < plotCanvas.dF.v_DrawFilters.size(); i++) {
-		ofxXmlSettings filterSettings = plotCanvas.dF.v_DrawFilters[i]->getSettings();
-		string drawFilterSettings;
-		filterSettings.copyXmlToString(drawFilterSettings);
-		settings.addValue("string_settings", drawFilterSettings);
+		settings["drawFilters"].push_back(plotCanvas.dF.v_DrawFilters[i]->getSettings());
 	}
-	settings.popTag();
 
-	settings.addTag("plotCanvas");
-	settings.pushTag("plotCanvas");
-	ofxXmlSettings canvasSettings = plotCanvas.getSettings();
-	string sCanvasSettings;
-	canvasSettings.copyXmlToString(sCanvasSettings);
-	settings.addValue("string_settings", sCanvasSettings);
-	settings.popTag();
+	settings["plotCanvas"] = plotCanvas.getSettings();
 
-	settings.saveFile(filepath);
+	ofSavePrettyJson(filepath, settings);
+
 }
 
 void ofApp::loadSettings(string& filepath) {
-	ofxXmlSettings settings;
-	settings.loadFile(filepath);
+	ofJson settings;
+	ofFile file(filepath);
+	if (file.exists()) {
+		file >> settings;
+	}
 
 	plotCanvas.dF.clearFilters();
 	plotCanvas.sourceController.iF.clearFilters();
-
+	
 	if (bTryLoadSource) {
-		if (settings.tagExists("source")) {
-			settings.pushTag("source");
-			ofxXmlSettings sourceSettings;
-			string sSourceSettings = settings.getValue("string_settings", "");
-			sourceSettings.loadFromBuffer(sSourceSettings);
-			plotCanvas.sourceController.loadSettings(sourceSettings);
-			settings.popTag();
-			plotCanvas.setFresh(true);
+		ofJson sources= settings.value("source", ofJson::array());
+		if (!sources.empty())
+		{
+			for (auto& cSettings : sources) {
+				plotCanvas.sourceController.loadSettings(cSettings);
+			}
 		}
 	}
 
-	if (settings.tagExists("imageFilters")) {
-		settings.pushTag("imageFilters");
-		int count = settings.getNumTags("string_settings");
-		for (int i = 0; i < count; i++) {
-			ofxXmlSettings filterSettings;
-			string stringSettings = settings.getValue("string_settings", "", i);
-			filterSettings.loadFromBuffer(stringSettings);
-			plotCanvas.sourceController.iF.addFilter(filterSettings);
+	ofJson iFilters = settings.value("imageFilters", ofJson::array());
+	if (!iFilters.empty()) {
+		for (auto& fSettings : iFilters) {
+				plotCanvas.sourceController.iF.addFilter(fSettings);
 		}
-		settings.popTag();
 	}
 
-	if (settings.tagExists("drawFilters")) {
-		settings.pushTag("drawFilters");
-		int count = settings.getNumTags("string_settings");
-		for (int i = 0; i < count; i++) {
-			ofxXmlSettings filterSettings;
-			string stringSettings = settings.getValue("string_settings", "", i);
-			filterSettings.loadFromBuffer(stringSettings);
-			plotCanvas.dF.addFilter(filterSettings);
+	ofJson dDilters = settings.value("drawFilters", ofJson::array());
+	if (!dDilters.empty()) {
+		for (auto& fSettings : dDilters) {
+			plotCanvas.dF.addFilter(fSettings);
 		}
-		plotCanvas.setFresh(true);
-		settings.popTag();
 	}
 
-	if (settings.tagExists("plotCanvas")) {
-		settings.pushTag("plotCanvas");
-		ofxXmlSettings canvasSettings;
-		string sCanvasSettings = settings.getValue("string_settings", "");
-		canvasSettings.loadFromBuffer(sCanvasSettings);
-		plotCanvas.loadSettings(canvasSettings);
-		settings.popTag();
-		plotCanvas.setFresh(true);
-	}
+	plotCanvas.loadSettings(settings.value("plotCanvas", ofJson::array()));
+
 }
 
 //-------------------------------------------------------------

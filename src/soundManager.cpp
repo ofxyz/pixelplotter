@@ -12,12 +12,12 @@ void SoundManager::renderImGuiSettings() {
 	}
 }
 
-void SoundManager::loadSettings(ofxXmlSettings settings) {
+void SoundManager::loadSettings(ofJson settings) {
 
 }
 
-ofxXmlSettings SoundManager::getSettings() {
-	ofxXmlSettings settings;
+ofJson SoundManager::getSettings() {
+	ofJson settings;
 	return settings;
 }
 

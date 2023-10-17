@@ -183,7 +183,16 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\drawFilter.cpp" />
     <ClCompile Include="src\drawFilter_Controller.cpp" />
+    <ClCompile Include="src\drawPixel.cpp" />
+    <ClCompile Include="src\drawPixels.cpp" />
+    <ClCompile Include="src\frameBuffer.cpp" />
+    <ClCompile Include="src\generator.cpp" />
+    <ClCompile Include="src\generator_Controller.cpp" />
+    <ClCompile Include="src\imageFilter.cpp" />
+    <ClCompile Include="src\imageFilter_Controller.cpp" />
+    <ClCompile Include="src\ImGui_Widget_Bezier.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
     <ClCompile Include="src\canvas.cpp" />
@@ -244,10 +253,6 @@
     <ClCompile Include="..\..\addons\ofxImGui\libs\imgui\src\imgui_tables.cpp" />
     <ClCompile Include="..\..\addons\ofxImGui\libs\imgui\src\imgui_widgets.cpp" />
     <ClCompile Include="..\..\addons\ofxSvg\src\ofxSvg.cpp" />
-    <ClCompile Include="..\..\addons\ofxXmlSettings\src\ofxXmlSettings.cpp" />
-    <ClCompile Include="..\..\addons\ofxXmlSettings\libs\tinyxml.cpp" />
-    <ClCompile Include="..\..\addons\ofxXmlSettings\libs\tinyxmlerror.cpp" />
-    <ClCompile Include="..\..\addons\ofxXmlSettings\libs\tinyxmlparser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ImGui_Widget_Bezier.h" />
@@ -678,8 +683,6 @@
     <ClInclude Include="..\..\addons\ofxSvg\libs\libxml2\include\libxml\xpathInternals.h" />
     <ClInclude Include="..\..\addons\ofxSvg\libs\libxml2\include\libxml\xpointer.h" />
     <ClInclude Include="..\..\addons\ofxSvg\libs\svgtiny\include\svgtiny.h" />
-    <ClInclude Include="..\..\addons\ofxXmlSettings\src\ofxXmlSettings.h" />
-    <ClInclude Include="..\..\addons\ofxXmlSettings\libs\tinyxml.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(OF_ROOT)\libs\openFrameworksCompiled\project\vs\openframeworksLib.vcxproj">
