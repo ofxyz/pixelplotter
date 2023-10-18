@@ -1,5 +1,11 @@
-#include "soundManager.h"
 #include "ofApp.h";
+#include "soundManager.h"
+
+#include "imgui_internal.h"
+#include "ImHelpers.h"
+#include "imgui_stdlib.h"
+#include "IconsFontAwesome5.h"
+#include "ImGui_Widget_Tooltip.h"
 
 void SoundManager::renderImGuiSettings() {
 	if (!soundDeviceNames.empty())
@@ -8,7 +14,7 @@ void SoundManager::renderImGuiSettings() {
 		{
 			loadSoundDeviceIndex();
 		}
-		ImGui::SameLine(); HelpMarker("A sound source can be used as a modulator.");
+		ImGui::SameLine(); ImGui::HelpMarker("A sound source can be used as a modulator.");
 	}
 }
 
@@ -68,9 +74,6 @@ void SoundManager::setup(ofApp* app) {
 
 	// or by name
 	//auto devices = soundStream.getMatchingDevices("default");
-
-
-
 
 }
 

@@ -4,6 +4,7 @@
 
 DrawFilter::DrawFilter()
 {
+	pixelplotter = (ofApp*)ofGetAppPtr();
 	v_BlendModes.insert(v_BlendModes.end(), { "OF_BLENDMODE_DISABLED", "OF_BLENDMODE_ALPHA", "OF_BLENDMODE_ADD", "OF_BLENDMODE_SUBTRACT", "OF_BLENDMODE_MULTIPLY", "OF_BLENDMODE_SCREEN" });
 }
 

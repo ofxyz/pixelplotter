@@ -1,4 +1,5 @@
 #include "ofApp.h"
+#include "ofx2d.h"
 #include "sourceController.h"
 
 void SourceController::renderImGuiSettings() {
@@ -28,7 +29,7 @@ void SourceController::renderImGuiSettings() {
 
 void SourceController::loadSettings(ofJson settings) {
 	std::string sourceString = settings.value("source", std::string());
-	currentSourceIndex = x2d.getIndex(sourceNames, sourceString, currentSourceIndex);
+	currentSourceIndex = ofx2d::getIndex(sourceNames, sourceString, currentSourceIndex);
 	loadSourceIndex();
 }
 

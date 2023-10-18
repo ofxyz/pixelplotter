@@ -1,40 +1,8 @@
 #include "ofApp.h"
-#include "ofx2d.h" //TODO: Remove
-
-#include "ofxPosterize.h"
-#include "ofxOpenCv.h"
-/*
-   - Pixelate filter: Create spacing adjustment curve
-   - Make sure UI is always rendering fast
-   - Add video controls pause, play, next frame, previous frame
-   - Add draw order, left to right top to bottom, center out, center in
-   - Support for multiple sources (Add source select per filter?)
-   - Add rotation -> Map -> X, Y location
-   - Reorder colour layer (based on N x, y)
-   - Optional adjust colour hue  (based on N x, y, etc)
-   - RGB needs B/W check
-   - CMYK needs white control option (Nim: Black and white. CMYK RGB)
-   - Add modulators (EG X Y tiles between min-max, time)
-   - I want to set a value to the colour palette of four colours
-	 To control how much each colour is used. Main Mid Accent? Weight.
-   - Push X / Y / C to vector for sorting and drawing order.
-   - Source effects on GPU with shaders. Output vector.
-   - Posterise Source (shader?)
-
-   ## Generators (They should be able to be placed in the filter section or source section)
-   - Add grid generator (with noise curve option)
-
-   ## Filters
-   - Use gradients
-   - Add hatch filter
-   - Add asym hex pixel to Pixelate filter.
-*/
-
-//--------------------------------------------------------------
-
-ofx2d x2d;
+#include "ofx2d.h"
 
 void ofApp::setup() {
+
 	bLoadSettingsNextFrame = false;
 	ofLogToConsole();
 	ofSetLogLevel(OF_LOG_ERROR);
@@ -302,18 +270,18 @@ void ofApp::gotMessage(ofMessage msg) {
 void ofApp::dragEvent(ofDragInfo dragInfo) {
 	if (dragInfo.files.size() > 0) {
 		for (int i = 0; i < dragInfo.files.size(); i++) {
-			if (std::find(plotCanvas.sourceController.img_ext.begin(), plotCanvas.sourceController.img_ext.end(), x2d.to_lower(dragInfo.files[i].substr(dragInfo.files[i].find_last_of(".") + 1))) != plotCanvas.sourceController.img_ext.end())
+			if (std::find(plotCanvas.sourceController.img_ext.begin(), plotCanvas.sourceController.img_ext.end(), ofx2d::to_lower(dragInfo.files[i].substr(dragInfo.files[i].find_last_of(".") + 1))) != plotCanvas.sourceController.img_ext.end())
 			{
 				plotCanvas.sourceController.addImage(ofFile(dragInfo.files[i]));
 				resetZoom();
 			}
-			else if (std::find(plotCanvas.sourceController.vid_ext.begin(), plotCanvas.sourceController.vid_ext.end(), x2d.to_lower(dragInfo.files[i].substr(dragInfo.files[i].find_last_of(".") + 1))) != plotCanvas.sourceController.vid_ext.end())
+			else if (std::find(plotCanvas.sourceController.vid_ext.begin(), plotCanvas.sourceController.vid_ext.end(), ofx2d::to_lower(dragInfo.files[i].substr(dragInfo.files[i].find_last_of(".") + 1))) != plotCanvas.sourceController.vid_ext.end())
 			{
 				plotCanvas.sourceController.addVideo(ofFile(dragInfo.files[i]));
 				resetZoom();
 			}
 			else {
-				ofLog(OF_LOG_ERROR) << "No support for file format " << x2d.to_lower(dragInfo.files[i].substr(dragInfo.files[i].find_last_of(".") + 1));
+				ofLog(OF_LOG_ERROR) << "No support for file format " << ofx2d::to_lower(dragInfo.files[i].substr(dragInfo.files[i].find_last_of(".") + 1));
 			}
 		}
 	}

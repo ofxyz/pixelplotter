@@ -1,6 +1,12 @@
 #pragma once
+
 #include "canvas.h"
 #include "ofApp.h"
+
+Canvas::Canvas()
+{
+	pixelplotter = (ofApp*)ofGetAppPtr();
+}
 
 void Canvas::renderImGuiSettings() {
 	ImGui::Indent();
@@ -252,7 +258,7 @@ void Canvas::update() {
 	}
 	if (dF.isFresh()) {
 		dF.setFresh(false);
-		redrawFBO = true;
+		setFresh(true);
 	}
 
 	if (resizeRequest) {
@@ -261,20 +267,18 @@ void Canvas::update() {
 		canvasFbo.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 
 		resizeRequest = false;
-		redrawFBO = true;
-		return;
+		setFresh(true);
+
 	}
 
+	/*
 	if (isRecording) {
-		redrawFBO = true;
+		setFresh(true);
 		return;
 	}
+	*/
 
-	// Not necessarily to update if previous frame has not been drawn yet
-	// Should not drop frames as we use a frame buffer
-	if (isFresh()) return;
-
-	if (sourceController.frameBuffer.isFresh() || redrawFBO) {
+	if (isFresh() || sourceController.frameBuffer.isFresh()) {
 		updateFbo(&sourceController.frameBuffer.getFrame());
 	}
 }
@@ -282,7 +286,7 @@ void Canvas::update() {
 void Canvas::updateFbo(ofImage* img) {
 	canvasFbo.begin();
 	if (saveVector) {
-		// This swaps out the gl renderer for the ciaro renderer
+		// This swaps out the gl renderer for the Ciaro renderer
 		string stamp = to_string(++exportCount);
 		if (bExportWithTimeStamp) {
 			stamp = ofGetTimestampString();
@@ -325,5 +329,4 @@ void Canvas::updateFbo(ofImage* img) {
 	}
 
 	setFresh(true);
-	redrawFBO = false;
 };

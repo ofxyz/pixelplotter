@@ -193,6 +193,7 @@
     <ClCompile Include="src\imageFilter.cpp" />
     <ClCompile Include="src\imageFilter_Controller.cpp" />
     <ClCompile Include="src\ImGui_Widget_Bezier.cpp" />
+    <ClCompile Include="src\ImGui_Widget_Tooltip.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
     <ClCompile Include="src\canvas.cpp" />
@@ -256,6 +257,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ImGui_Widget_Bezier.h" />
+    <ClInclude Include="src\ImGui_Widget_Tooltip.h" />
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="src\canvas.h" />
     <ClInclude Include="src\drawFilter.h" />

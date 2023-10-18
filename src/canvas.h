@@ -1,14 +1,11 @@
 #pragma once
+
 #include "drawFilter_Controller.h"
 #include "sourceController.h"
-#include "ofx2d.h"
-
-#ifndef ofApp
-class ofApp;
-#endif
 
 class Canvas {
 public:
+	Canvas();
 	ofApp* pixelplotter;
 	ofCamera cam;
 	DrawFilterController dF;

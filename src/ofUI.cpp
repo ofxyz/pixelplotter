@@ -1,4 +1,5 @@
 #include "ofApp.h"
+#include "ofx2d.h"
 #include "ImGui_Widget_Bezier.h"
 
 void ofApp::gui_update() {
@@ -68,6 +69,9 @@ void ofApp::gui_setup()
 	ImGuiStyle* style = &ImGui::GetStyle();
 	style->ItemSpacing = ImVec2(5, 5);
 
+	ImGuiIO IO = ImGui::GetIO();
+	IO.ConfigWindowsMoveFromTitleBarOnly = true;
+ 
 }
 
 void ofApp::gui_drawMainDock() {
@@ -88,6 +92,7 @@ void ofApp::gui_drawMainDock() {
 		ImGuiDockNode* centralNode = ImGui::DockBuilderGetCentralNode(dockNodeID);
 		// Verifies if the central node is empty (visible empty space for oF)
 		if (centralNode && centralNode->IsEmpty()) {
+			// TODO: This needs to be a separate function we can call
 			ImRect availableSpace = centralNode->Rect();
 			workSpaceWidthHeight.x = availableSpace.GetWidth();
 			workSpaceWidthHeight.y = availableSpace.GetHeight();
@@ -111,7 +116,7 @@ void ofApp::gui_drawMenuBar() {
 		//ImGui::SameLine(); HelpMarker("Shows properties window...");
 
 		if (bShowGui) {
-			// Submenu 
+			// Sub Menu 
 			//ImGui::Separator();
 			if (ImGui::BeginMenu("Windows...")) {
 				//ImGui::MenuItem("Something");
@@ -236,8 +241,6 @@ void ofApp::gui_drawToolPalette() {
 void ofApp::gui_drawCanvasWindow() {
 	if (!bShowPlotCanvas) return;
 
-	//ImGui::SetNextWindowSize(ofVec2f(gui_width, 800), ImGuiCond_Once);
-	//ImGui::SetNextWindowPos(ofVec2f( (ofGetWidth() - gui_width) + 45, 200+ 100), ImGuiCond_Once);
 	ImGui::Begin("Plot Canvas", &bShowPlotCanvas);
 	ImGui::PushID("plotCanvas");
 	plotCanvas.renderImGuiSettings();
@@ -266,8 +269,6 @@ void ofApp::gui_renderCanvas() {
 void ofApp::gui_drawInfoPanel() {
 	if (!bShowInfoPanel) return;
 
-	//ImGui::SetNextWindowSize(ofVec2f(gui_width, 200), ImGuiCond_Once);
-	//ImGui::SetNextWindowPos(ofVec2f((ofGetWidth() - gui_width) + 45, 100), ImGuiCond_Once);
 	ImGui::Begin("Presets", &bShowInfoPanel);
 
 	// Save and load presets ... 
@@ -298,7 +299,7 @@ void ofApp::gui_drawInfoPanel() {
 			string savePath = "presets/" + string(presetSaveName) + ".json";
 			saveSettings(savePath);
 			gui_loadPresets();
-			currentPresetIndex = x2d.getIndex(presetFileNames, string(presetSaveName), 0);
+			currentPresetIndex = ofx2d::getIndex(presetFileNames, string(presetSaveName), 0);
 			bSavePreset = false;
 		}
 		else {

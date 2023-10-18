@@ -69,7 +69,7 @@ private:
 	float cLerp = 0;
 	float rounded = 0;
 
-	ofVec2f rotationMinMax = ofVec2f(0, 0);
-	ofVec2f widthMinMax = ofVec2f(5, 50);
-	ofVec2f heightMinMax = ofVec2f(5, 50);
+	glm::vec2 rotationMinMax;
+	glm::vec2 widthMinMax;
+	glm::vec2 heightMinMax;
 };

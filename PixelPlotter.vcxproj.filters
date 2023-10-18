@@ -217,6 +217,9 @@
     <ClCompile Include="src\ImGui_Widget_Bezier.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\ImGui_Widget_Tooltip.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -1752,6 +1755,9 @@
       <Filter>addons\ofxSvg\libs\svgtiny\include</Filter>
     </ClInclude>
     <ClInclude Include="src\ImGui_Widget_Bezier.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGui_Widget_Tooltip.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

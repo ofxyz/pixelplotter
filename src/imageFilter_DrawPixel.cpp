@@ -1,5 +1,6 @@
 #include "imageFilter_DrawPixel.h"
 #include "drawPixel.h"
+#include "ofx2d.h"
 
 ofJson If_drawPixel::getSettings() {
 	ofJson settings;
@@ -21,7 +22,7 @@ ofJson If_drawPixel::getSettings() {
 
 void If_drawPixel::loadSettings(ofJson settings) {
 
-	selectedPixelType = x2d.getIndex(drawPixels.v_DrawPixelsNames, settings.value("pixelType", "Undefined"), 1);
+	selectedPixelType = ofx2d::getIndex(drawPixels.v_DrawPixelsNames, settings.value("pixelType", "Undefined"), 1);
 	hCount = settings.value("hCount", hCount);
 	vCount = settings.value("vCount", vCount);
 

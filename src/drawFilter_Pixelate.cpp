@@ -1,14 +1,66 @@
 #include "drawFilter_Pixelate.h"
+#include "ofx2d.h"
 #include "ofApp.h"
 
-extern ofx2d x2d;
+Df_pixelate::Df_pixelate()
+{
+	InitDefaults();
+}
+
+Df_pixelate::Df_pixelate(ofJson settings)
+	: Df_pixelate()
+{
+	loadSettings(settings);
+}
+
+void Df_pixelate::InitDefaults()
+{
+	pixelplotter = (ofApp*)ofGetAppPtr();
+	name = "Pixelate";
+	v_pixelType = {
+			"Rectangle",
+			"Ellipse",
+			"RGB Seperation Fill",
+			"RGB Seperation Center",
+			"RGB Seperation Square",
+			"CMYK Seperation Fill",
+			"CMYK Seperation Square",
+			"CMYK Seperation Left",
+			"CMYK Seperation Hills",
+			"CMYK Seperation Bars",
+			"Color Adjust",
+			"Unusual Overprint",
+			"Star Hash"
+	};
+	v_pixelDataMapOptions = {
+		"None",
+		"Between",
+		"Color Lightness",
+		"Sound"/*,
+		"Color Red",
+		"Color Green",
+		"Color Blue",
+		"Location X",
+		"Location Y" */
+	};
+	v_ignoreOptions = {
+		"None",
+		"Random",
+		"Modulo",
+		"Plaid",
+		"Scan"
+	};
+	rotationMinMax = glm::vec2(0, 0);
+	widthMinMax = glm::vec2(5, 50);
+	heightMinMax = glm::vec2(5, 50);
+}
 
 void Df_pixelate::loadSettings(ofJson settings) {
 	name = settings.value("name", "pixelate");
 	visible = settings.value("visible", true);
 	useMask = settings.value("useMask", false);
 	maskMargin = settings.value("maskMargin", maskMargin);
-	ui_currentPixelType = x2d.getIndex(v_pixelType, settings.value("pixelType", "Undefined"), 1);
+	ui_currentPixelType = ofx2d::getIndex(v_pixelType, settings.value("pixelType", "Undefined"), 1);
 	tilesX = settings.value("tilesX", 64);
 	tilesY = settings.value("tilesY", 64);
 	polka = settings.value("polka", false);
@@ -22,7 +74,7 @@ void Df_pixelate::loadSettings(ofJson settings) {
 	offsetx_rand = settings.value("offsetx_rand", 0);
 	offsety_rand = settings.value("offsety_rand", 0);
 
-	ui_currentIgnore = x2d.getIndex(v_ignoreOptions, settings.value("currentIgnore", "None"), 0);
+	ui_currentIgnore = ofx2d::getIndex(v_ignoreOptions, settings.value("currentIgnore", "None"), 0);
 	ignorePercent = settings.value("ignorePercent", ignorePercent);
 	ignoreModulo = settings.value("ignoreModulo", ignoreModulo);
 	ignorePlaid = settings.value("ignorePlaid", ignorePlaid);
@@ -33,15 +85,15 @@ void Df_pixelate::loadSettings(ofJson settings) {
 	cLerp = settings.value("cLerp", cLerp);
 	rounded = settings.value("rounded", rounded);
 
-	ui_currentRotationMap = x2d.getIndex(v_pixelDataMapOptions, settings.value("rotationMap", "None"), 0);
+	ui_currentRotationMap = ofx2d::getIndex(v_pixelDataMapOptions, settings.value("rotationMap", "None"), 0);
 	rotationMinMax[0] = settings.value("rotationMin", 0);
 	rotationMinMax[1] = settings.value("rotationMax", 0);
 
-	ui_currentWidthMap = x2d.getIndex(v_pixelDataMapOptions, settings.value("widthMap", "None"), 0);
+	ui_currentWidthMap = ofx2d::getIndex(v_pixelDataMapOptions, settings.value("widthMap", "None"), 0);
 	widthMinMax[0] = settings.value("widthMin", 0);
 	widthMinMax[1] = settings.value("widthMax", 0);
 
-	ui_currentHeightMap = x2d.getIndex(v_pixelDataMapOptions, settings.value("heightMap", "None"), 0);
+	ui_currentHeightMap = ofx2d::getIndex(v_pixelDataMapOptions, settings.value("heightMap", "None"), 0);
 	heightMinMax[0] = settings.value("heightMin", 0);
 	heightMinMax[1] = settings.value("heightMax", 0);
 
@@ -868,58 +920,6 @@ float Df_pixelate::getHeight(ofColor c, float x, float y, float r) {
 		return ofMap(pixelplotter->soundManager.smoothedVol, 0, 0.85, heightMinMax[0], heightMinMax[1]);
 	}
 	return r;
-}
-
-Df_pixelate::Df_pixelate()
-{
-	InitDefaults();
-
-}
-
-Df_pixelate::Df_pixelate(ofJson settings) 
-	: Df_pixelate()
-{
-	
-	loadSettings(settings);
-}
-
-void Df_pixelate::InitDefaults()
-{
-	pixelplotter = (ofApp*)ofGetAppPtr();
-	name = "Pixelate";
-	v_pixelType = {
-			"Rectangle",
-			"Ellipse",
-			"RGB Seperation Fill",
-			"RGB Seperation Center",
-			"RGB Seperation Square",
-			"CMYK Seperation Fill",
-			"CMYK Seperation Square",
-			"CMYK Seperation Left",
-			"CMYK Seperation Hills",
-			"CMYK Seperation Bars",
-			"Color Adjust",
-			"Unusual Overprint",
-			"Star Hash"
-	};
-	v_pixelDataMapOptions = {
-		"None",
-		"Between",
-		"Color Lightness",
-		"Sound"/*,
-		"Color Red",
-		"Color Green",
-		"Color Blue",
-		"Location X",
-		"Location Y" */
-	};
-	v_ignoreOptions = {
-		"None",
-		"Random",
-		"Modulo",
-		"Plaid",
-		"Scan"
-	};
 }
 
 void Df_pixelate::draw(ofImage* input, float width, float height, float x, float y) {

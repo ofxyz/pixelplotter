@@ -7,33 +7,14 @@
 #include "imgui_stdlib.h"
 #include "IconsFontAwesome5.h"
 
-
-#include "soundManager.h"
 #include "canvas.h"
 #include "drawPixels.h"
-
-const int gui_width = 400;
-const int screenW = 1920;
-const int screenH = 1200;
-
-extern ofx2d x2d;
-
-static void HelpMarker(const char* desc) {
-	ImGui::TextDisabled("(?)");
-	if (ImGui::IsItemHovered()) {
-		ImGui::BeginTooltip();
-		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-		ImGui::TextUnformatted(desc);
-		ImGui::PopTextWrapPos();
-		ImGui::EndTooltip();
-	}
-}
+#include "soundManager.h"
 
 class ofApp : public ofBaseApp {
 
 public:
 	std::string windowTitle = "PixelPlotter v0.3";
-	shared_ptr<ofGLRenderer> gl;
 
 	ImGuiID dockNodeID;
 
@@ -66,9 +47,9 @@ public:
 	void centerImage();
 	void resetZoom();
 
+	Canvas plotCanvas;
 	DrawPixels drawPixels;
 	SoundManager soundManager;
-	Canvas plotCanvas;
 
 	char presetSaveName[128] = "";
 	int exportCount = 0;
@@ -90,21 +71,21 @@ public:
 	int currentPresetIndex = 0;
 
 	float zoomLevel = 1;
-	ofVec2f userOffset;
+	glm::vec2 userOffset;
 	glm::vec2 lastDraggedPos;
 
-	ofVec2f workSpaceWidthHeight;
-	ofVec2f workSpaceTopLeft;
+	glm::vec2 workSpaceWidthHeight;
+	glm::vec2 workSpaceTopLeft;
 	glm::vec2 workSpaceCentre;
 
 	ofxImGui::Gui gui;
 
-	ImVec4 c_background = ofColor(50, 50, 50, 255);
+	ofColor c_background = ofColor(50, 50, 50, 255);
 
 	std::vector<std::string> presetFileNames;
 	std::vector<ofFile> presetFiles;
 
-	ofVec2f offset;
+	glm::vec2 offset;
 
 	std::stringstream fpsStringStream;
 
