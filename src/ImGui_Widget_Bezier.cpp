@@ -187,8 +187,10 @@ int ImGui::Bezier(const char* label, float P[5])
 	}
 
 	// draw preview (cycles every 1s)
-	static clock_t epoch = clock();
+	
 	ImVec4 white(GetStyle().Colors[ImGuiCol_Text]);
+	/*
+	static clock_t epoch = clock();
 	for (int i = 0; i < 3; ++i) {
 		double now = ((clock() - epoch) / (double)CLOCKS_PER_SEC);
 		float delta = ((int)(now * 1000) % 1000) / 1000.f; delta += i / 3.f; if (delta > 1) delta -= 1;
@@ -202,6 +204,7 @@ int ImGui::Bezier(const char* label, float P[5])
 		DrawList->AddCircleFilled(p1, GRAB_RADIUS / 2, ImColor(white));
 		DrawList->AddCircleFilled(p2, GRAB_RADIUS / 2, ImColor(white));
 	}
+	*/
 
 	// draw lines and grabbers
 	float luma = IsItemActive() || IsItemHovered() ? 0.5f : 1.0f;
