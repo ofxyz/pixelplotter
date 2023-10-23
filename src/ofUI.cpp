@@ -85,11 +85,11 @@ void ofApp::gui_drawMainDock() {
 	//dockingFlags |= ImGuiDockNodeFlags_NoTabBar; // Uncomment to disable creating tabs in the main view
 
 	// Define the ofWindow as a docking space
-	dockNodeID = ImGui::DockSpaceOverViewport(NULL, dockingFlags); // Also draws the docked windows
+	MainDockNodeID = ImGui::DockSpaceOverViewport(NULL, dockingFlags); // Also draws the docked windows
 
-	ImGuiDockNode* dockNode = ImGui::DockBuilderGetNode(dockNodeID);
+	ImGuiDockNode* dockNode = ImGui::DockBuilderGetNode(MainDockNodeID);
 	if (dockNode) {
-		ImGuiDockNode* centralNode = ImGui::DockBuilderGetCentralNode(dockNodeID);
+		ImGuiDockNode* centralNode = ImGui::DockBuilderGetCentralNode(MainDockNodeID);
 		// Verifies if the central node is empty (visible empty space for oF)
 		if (centralNode && centralNode->IsEmpty()) {
 			// TODO: This needs to be a separate function we can call
@@ -197,7 +197,7 @@ void ofApp::gui_drawMenuBar() {
 		ImGui::Separator();
 
 		if (ImGui::Checkbox("Show FPS in Title bar", &bShowFps)) {
-			if (!bShowFps) ofSetWindowTitle(windowTitle);
+			if (!bShowFps) ofSetWindowTitle(getWindowTitle());
 		};
 
 		soundManager.renderImGuiSettings();

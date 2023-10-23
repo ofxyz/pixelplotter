@@ -20,5 +20,6 @@ private:
 	int selectedPixelType = 0;
 	int hCount = 1;
 	int vCount = 1;
+	bool bMirror = true;
 	ImVec4 c_col = ofColor(0, 128, 128, 255);
 };

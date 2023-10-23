@@ -57,9 +57,9 @@ void DrawPixel::drawRoundedRect(float offsetX, float offsetY, float w, float h, 
 	ofPopStyle();
 }
 
-ofVec4f DrawPixel::getCMYK(ofColor rgb)
+glm::vec4 DrawPixel::getCMYK(ofColor rgb)
 {
-	if (rgb.r + rgb.g + rgb.b == 0) return ofVec4f(0, 0, 0, 1);
+	if (rgb.r + rgb.g + rgb.b == 0) return glm::vec4(0, 0, 0, 1);
 	double dr = 0, dg = 0, db = 0;
 	if (rgb.r > 0) {
 		dr = (double)rgb.r / 255;
@@ -91,7 +91,7 @@ ofVec4f DrawPixel::getCMYK(ofColor rgb)
 		}
 	}
 
-	return ofVec4f(c, m, y, k);
+	return glm::vec4(c, m, y, k);
 }
 
 void DrawPixel::gui_setGrey()

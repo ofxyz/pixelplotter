@@ -6,7 +6,7 @@
 ## Roadmap
 
 ### Colour
-  - Swatch generators / helper tools. (You can break down colours using tertiary colors of different variety)
+  - Swatch generator / helper tools. (You can break down colours using tertiary colors of different variety)
   - Split colours into primary colors, secondary colors and tertiary colors.
   
     B = M + C
@@ -23,9 +23,8 @@
     Yellow-Orange
 
 ### Geometry
-  - Implement Cairo render with threading for now. If it turns out to be too slow for prototyping we will need to move to NV_path_rendering.
   - Ability to interpolate shapes
-  - Add pattern generators, copy, rotate etc. EG. Plaid Generator, Stripe/grid generator.
+  - Add pattern generators, copy, rotate. Plaid Generator, Stripe/Grid generator.
 
 ### Pixelate Filter
   - Create pixel class 
@@ -45,5 +44,4 @@
 - ofxOpenCv
 - ofxImGui (Docking Branch)
 - ofxIconFontCppHeaders
-- ofxPosterize
 - [K-Lite Codec Pack](https://files3.codecguide.com/K-Lite_Codec_Pack_1750_Basic.exe)

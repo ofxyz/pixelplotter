@@ -4,12 +4,11 @@
 void ofApp::setup() {
 
 	bLoadSettingsNextFrame = false;
-	ofLogToConsole();
-	ofSetLogLevel(OF_LOG_ERROR);
+
+	//ofSetLogLevel(OF_LOG_ERROR);
 	//ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetVerticalSync(vSync);
-	ofLog() << ofFbo::checkGLSupport();
-	ofSetWindowTitle(windowTitle);
+	ofLog(OF_LOG_VERBOSE) << ofFbo::checkGLSupport();
 	ofEnableAlphaBlending();
 
 	/* Always disable rectangular textures by default */
@@ -85,7 +84,7 @@ void ofApp::resetZoom() {
 }
 
 void ofApp::centerImage() {
-	ImRect availableSpace = ImGui::DockBuilderGetCentralNode(dockNodeID)->Rect();
+	ImRect availableSpace = ImGui::DockBuilderGetCentralNode(MainDockNodeID)->Rect();
 	userOffset.x = (availableSpace.GetWidth() - (plotCanvas.canvasWidth * zoomLevel)) * 0.5;
 	userOffset.y = (availableSpace.GetHeight() - (plotCanvas.canvasHeight * zoomLevel)) * 0.5;
 }
@@ -170,7 +169,7 @@ void ofApp::keyPressed(int key) {
 		// fit to screen
 		userOffset.x = 0;
 		userOffset.y = 0;
-		ImRect availableSpace =  ImGui::DockBuilderGetCentralNode(dockNodeID)->Rect();
+		ImRect availableSpace =  ImGui::DockBuilderGetCentralNode(MainDockNodeID)->Rect();
 		if (plotCanvas.sourceController.isLandscape) {
 			zoomLevel = availableSpace.GetWidth() / plotCanvas.canvasWidth;
 		}

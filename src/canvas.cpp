@@ -230,7 +230,7 @@ void Canvas::setup(ofApp* app, string canvas_title) {
 	//canvasFbo.allocate(fs);
 
 	canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGBA, 8);
-	canvasFbo.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
+	canvasFbo.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 	update();
 	updateFbo(&sourceController.frameBuffer.getFrame());
 }
@@ -264,7 +264,7 @@ void Canvas::update() {
 	if (resizeRequest) {
 
 		canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGBA, 8);
-		canvasFbo.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
+		canvasFbo.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 
 		resizeRequest = false;
 		setFresh(true);

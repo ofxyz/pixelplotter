@@ -33,7 +33,7 @@ void If_duplicate::renderImGuiSettings() {
 			bFresh = true;
 		}
 		ImGui::SameLine();
-		if (ImGui::Checkbox("Mirror Align", &bMirror)) {
+		if (ImGui::Checkbox("Mirror", &bMirror)) {
 			bFresh = true;
 		}
 

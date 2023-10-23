@@ -9,7 +9,7 @@ public:
 	}
 
 	Dp_separateCMYK_Bars01(ofJson settings) {
-		Dp_separateCMYK_Bars01();
+		name = "Separate CMYK Bars 01";
 		loadSettings(settings);
 	}
 

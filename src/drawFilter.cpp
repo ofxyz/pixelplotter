@@ -27,7 +27,7 @@ void DrawFilter::renderUpDownButtons()
 	}
 }
 
-ofVec4f DrawFilter::getCMYK(ofColor rgb)
+glm::vec4 DrawFilter::getCMYK(ofColor rgb)
 {
 	double dr = 0, dg = 0, db = 0;
 	if (rgb.r > 0) {
@@ -60,7 +60,7 @@ ofVec4f DrawFilter::getCMYK(ofColor rgb)
 		}
 	}
 
-	return ofVec4f(c, m, y, k);
+	return glm::vec4(c, m, y, k);
 }
 
 void DrawFilter::gui_setGrey()

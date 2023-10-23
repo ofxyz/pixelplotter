@@ -12,7 +12,10 @@ public:
 	}
 
 	Dp_separateRGB_Bars01(ofJson settings) {
-		Dp_separateRGB_Bars01();
+		name = "Separate RGB Bars 01";
+		c_magentaRed = ofColor(255, 0, 0, 255);
+		c_yellowGreen = ofColor(0, 255, 0, 255);
+		c_cyanBlue = ofColor(0, 0, 255, 255);
 		loadSettings(settings);
 	}
 

@@ -509,7 +509,7 @@ void Df_pixelate::drawRgbSeperation_Square(float offsetX, float offsetY, float w
 void Df_pixelate::drawCMYKSeperation_Fill(float offsetX, float offsetY, float w, float h, ofColor c) {
 	float cWidth;
 
-	ofVec4f cmyk = getCMYK(c);
+	glm::vec4 cmyk = getCMYK(c);
 
 	float totalInk = cmyk[0] + cmyk[1] + cmyk[2] + cmyk[3];
 	if (totalInk < 0.25) return; // Show some white :)
@@ -549,7 +549,7 @@ void Df_pixelate::drawCMYKSeperation_Fill(float offsetX, float offsetY, float w,
 
 void Df_pixelate::drawCMYKSeperation_Square(float offsetX, float offsetY, float w, float h, ofColor c) {
 	float cWidth, cHeight;
-	ofVec4f cmyk = getCMYK(c);
+	glm::vec4 cmyk = getCMYK(c);
 
 	cWidth = ofMap(cmyk[2], 0, 1, 0, w);
 	cHeight = ofMap(cmyk[2], 0, 1, 0, h);
@@ -571,7 +571,7 @@ void Df_pixelate::drawCMYKSeperation_Square(float offsetX, float offsetY, float 
 
 void Df_pixelate::drawCMYKSeperation_Left(float offsetX, float offsetY, float w, float h, ofColor c) {
 	float cWidth;
-	ofVec4f cmyk = getCMYK(c);
+	glm::vec4 cmyk = getCMYK(c);
 
 	ofPushMatrix();
 
@@ -599,7 +599,7 @@ void Df_pixelate::drawCMYKSeperation_Left(float offsetX, float offsetY, float w,
 
 void Df_pixelate::drawCMYKSeperation_Hills(float offsetX, float offsetY, float w, float h, ofColor c) {
 	float cHeight;
-	ofVec4f cmyk = getCMYK(c);
+	glm::vec4 cmyk = getCMYK(c);
 
 	float total = cmyk[0] + cmyk[1] + cmyk[2];
 	if (total == 0) return;
@@ -639,9 +639,9 @@ void Df_pixelate::drawCMYKSeperation_Hills(float offsetX, float offsetY, float w
 
 void Df_pixelate::drawCMYKSeperation_Bars(float offsetX, float offsetY, float w, float h, ofColor c) {
 	ofPushMatrix();
-	if (ofRandom(100) > 50) ofRotate(90);
+	if (ofRandom(100) > 50) ofRotateDeg(90);
 
-	ofVec4f cmyk = getCMYK(c);
+	glm::vec4 cmyk = getCMYK(c);
 
 	float c_w = ofMap(cmyk[0], 0, 1, 0, w * 0.75);
 	float m_w = ofMap(cmyk[1], 0, 1, 0, w * 0.75);

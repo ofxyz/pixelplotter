@@ -1,12 +1,12 @@
 #include "ofMain.h"
 #include "ofApp.h"
 
-#pragma comment(linker, "/SUBSYSTEM:Windows /ENTRY:mainCRTStartup")
+//#pragma comment(linker, "/SUBSYSTEM:Windows /ENTRY:mainCRTStartup")
 
 int main() {
 	ofGLFWWindowSettings settings;
 
-	settings.title = "PixelPlotter V0.3";
+	settings.title = ofApp::getWindowTitle();
 	// Until we can drag main menu and can switch between full screen
 	settings.decorated = true;
 	settings.windowMode = OF_WINDOW;

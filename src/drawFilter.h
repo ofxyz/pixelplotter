@@ -28,7 +28,7 @@ public:
 
 	// -------------------------------------------------
 	// Delete after implementing drawPixel class ...
-	ofVec4f getCMYK(ofColor rgb);
+	glm::vec4 getCMYK(ofColor rgb);
 
 	int currentBlendModeIndex = 0;
 	std::vector<std::string> v_BlendModes;

@@ -14,9 +14,11 @@
 class ofApp : public ofBaseApp {
 
 public:
-	std::string windowTitle = "PixelPlotter v0.3";
+	static std::string getWindowTitle() {
+		return "PixelPlotter v0.3";
+	}
 
-	ImGuiID dockNodeID;
+	ImGuiID MainDockNodeID;
 
 	void setup();
 	void update();
@@ -46,6 +48,8 @@ public:
 	void resetImageOffset();
 	void centerImage();
 	void resetZoom();
+
+	ofxImGui::Gui gui;
 
 	Canvas plotCanvas;
 	DrawPixels drawPixels;
@@ -77,8 +81,6 @@ public:
 	glm::vec2 workSpaceWidthHeight;
 	glm::vec2 workSpaceTopLeft;
 	glm::vec2 workSpaceCentre;
-
-	ofxImGui::Gui gui;
 
 	ofColor c_background = ofColor(50, 50, 50, 255);
 

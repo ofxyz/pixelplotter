@@ -47,14 +47,14 @@ void Df_mesh::draw(ofImage* input, float width, float height, float x, float y) 
 	for (int _x = 0; _x < imgW; _x++) {
 		for (int _y = 0; _y < imgH; _y++) {
 			ofColor c = input->getColor(_x, _y);
-			ofVec3f pos(ofMap(_x, 0, imgW, 0, width) + centerOffsetW, ofMap(_y, 0, imgH, 0, height) + centerOffsetH, 0.0);
+			glm::vec3 pos(ofMap(_x, 0, imgW, 0, width) + centerOffsetW, ofMap(_y, 0, imgH, 0, height) + centerOffsetH, 0.0);
 			mesh.addVertex(pos);
 			mesh.addColor(c);
 		}
 	}
 
 	// Transform
-	int numVerts = mesh.getNumVertices();
+	size_t numVerts = mesh.getNumVertices();
 	ofVec3f meshCentroid = mesh.getCentroid();
 	ofVec3f topLeft = mesh.getVertex(0);
 	float maxDist = topLeft.distance(meshCentroid);

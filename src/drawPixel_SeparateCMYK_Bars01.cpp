@@ -18,7 +18,7 @@ void Dp_separateCMYK_Bars01::renderImGuiSettings() {
 }
 
 void Dp_separateCMYK_Bars01::draw(ofColor c, float x, float y, float width, float height) {
-	ofVec4f cmyk = getCMYK(c);
+	glm::vec4 cmyk = getCMYK(c);
 	float whiteVal = 1 - max(max(cmyk[0], cmyk[1]), max(cmyk[2], cmyk[3]));
 	float totalInk = cmyk[0] + cmyk[1] + cmyk[2] + cmyk[3] + whiteVal;
 

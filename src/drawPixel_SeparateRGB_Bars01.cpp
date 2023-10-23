@@ -21,7 +21,7 @@ void Dp_separateRGB_Bars01::draw(ofColor c, float x, float y, float width, float
 	float whiteVal = min(min(c.r, c.g), c.b);
 	float blackVal = 255 - max(max(c.r, c.g), c.b);
 
-	ofVec4f rgbk = { (float)c.r - whiteVal, (float)c.g - whiteVal, (float)c.b - whiteVal, blackVal };
+	glm::vec4 rgbk = { (float)c.r - whiteVal, (float)c.g - whiteVal, (float)c.b - whiteVal, blackVal };
 
 	float totalInk = rgbk[0] + rgbk[1] + rgbk[2] + whiteVal + blackVal;
 

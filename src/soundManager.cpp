@@ -1,4 +1,4 @@
-#include "ofApp.h";
+#include "ofApp.h"
 #include "soundManager.h"
 
 #include "imgui_internal.h"
