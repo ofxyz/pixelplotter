@@ -14,10 +14,10 @@ public:
 		loadSettings(settings);
 	};
 
-	virtual void draw(ofImage* input, float width = 0, float height = 0, float x = 0, float y = 0);
-	virtual void renderImGuiSettings();
-	virtual void loadSettings(ofJson settings);
-	virtual ofJson getSettings();
+	void draw(ofImage* input, float width = 0, float height = 0, float x = 0, float y = 0) override;
+	void renderImGuiSettings() override;
+	void loadSettings(ofJson settings) override;
+	ofJson getSettings() override;
 
 private:
 	ofMesh mesh;

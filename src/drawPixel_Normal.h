@@ -13,9 +13,9 @@ public:
 		loadSettings(settings);
 	}
 
-	virtual void draw(ofColor c, float offsetX, float offsetY, float width, float height);
-	virtual void renderImGuiSettings();
-	virtual void loadSettings(ofJson settings);
-	virtual ofJson getSettings();
+	void draw(ofColor c, float offsetX, float offsetY, float width, float height) override;
+	void renderImGuiSettings() override;
+	void loadSettings(ofJson settings) override;
+	ofJson getSettings() override;
 
 };

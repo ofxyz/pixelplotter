@@ -9,10 +9,10 @@ public:
 		name = "Blur";
 	};
 
-	virtual void apply(ofImage* img);
-	virtual void renderImGuiSettings();
-	virtual void loadSettings(ofJson settings);
-	virtual ofJson getSettings();
+	void apply(ofImage* img) override;
+	void renderImGuiSettings() override;
+	void loadSettings(ofJson settings) override;
+	ofJson getSettings() override;
 
 private:
 	ofxCvColorImage colorCvImage;

@@ -7,12 +7,13 @@ public:
 	ofApp* pixelplotter;
 	G_plaids(ofApp* app);;
 
-	virtual void setup(int width, int height);
-	virtual void update();
-	virtual void draw();
-	virtual void renderImGuiSettings();
-	virtual void loadSettings(ofJson settings);
-	virtual ofJson getSettings();
+	void setup(int width, int height) override;
+	void update() override;
+	void draw() override;
+	void renderImGuiSettings() override;
+	void loadSettings(ofJson settings) override;
+	ofJson getSettings() override;
+
 private:
 	int width, height;
 	int xcount = 1;
