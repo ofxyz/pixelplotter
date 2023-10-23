@@ -2,6 +2,9 @@
 
 #include "canvas.h"
 #include "ofApp.h"
+#include "ofxImGui.h"
+#include "imgui_internal.h"
+#include "ImHelpers.h"
 
 Canvas::Canvas()
 {
@@ -11,7 +14,7 @@ Canvas::Canvas()
 void Canvas::renderImGuiSettings() {
 	ImGui::Indent();
 
-	ImGui::InputText("Title", &canvasTitle);
+	//ImGui::InputText("Title", &canvasTitle);
 
 	if (ImGui::ColorEdit4("Canvas Colour", (float*)&c_canvas, ImGuiColorEditFlags_NoInputs)) {
 		setFresh(true);
@@ -36,8 +39,9 @@ void Canvas::renderImGuiSettings() {
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Fit")) {
-		canvasWidth = pixelplotter->workSpaceWidthHeight.x;
-		canvasHeight = pixelplotter->workSpaceWidthHeight.y;
+		ImVec4 as = pixelplotter->ofGui.availableSpace();
+		canvasWidth = as.x;
+		canvasHeight = as.y;
 		pixelplotter->resetZoom();
 		pixelplotter->resetImageOffset();
 		resizeRequest = true;

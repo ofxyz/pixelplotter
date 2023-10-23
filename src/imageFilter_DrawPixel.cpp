@@ -1,6 +1,9 @@
 #include "imageFilter_DrawPixel.h"
 #include "drawPixel.h"
 #include "ofx2d.h"
+#include "ofxImGui.h"
+#include "imgui_internal.h"
+#include "ImHelpers.h"
 
 ofJson If_drawPixel::getSettings() {
 	ofJson settings;

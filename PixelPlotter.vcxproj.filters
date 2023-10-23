@@ -58,9 +58,6 @@
     <ClCompile Include="src\ofApp.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\ofUI.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\soundManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -218,6 +215,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\ImGui_Widget_Tooltip.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ofGui.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1758,6 +1758,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\ImGui_Widget_Tooltip.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ofGui.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

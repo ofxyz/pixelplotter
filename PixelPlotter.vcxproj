@@ -211,7 +211,7 @@
     <ClCompile Include="src\imageFilter_Duplicate.cpp" />
     <ClCompile Include="src\imageFilter_Mirror.cpp" />
     <ClCompile Include="src\imageFilter_Tint.cpp" />
-    <ClCompile Include="src\ofUI.cpp" />
+    <ClCompile Include="src\ofGui.cpp" />
     <ClCompile Include="src\soundManager.cpp" />
     <ClCompile Include="src\sourceController.cpp" />
     <ClCompile Include="..\..\addons\ofx2d\src\ofx2d.cpp" />
@@ -283,6 +283,7 @@
     <ClInclude Include="src\imageFilter_Duplicate.h" />
     <ClInclude Include="src\imageFilter_Mirror.h" />
     <ClInclude Include="src\imageFilter_Tint.h" />
+    <ClInclude Include="src\ofGui.h" />
     <ClInclude Include="src\soundManager.h" />
     <ClInclude Include="src\sourceController.h" />
     <ClInclude Include="..\..\addons\ofx2d\src\ofx2d.h" />

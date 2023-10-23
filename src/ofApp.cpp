@@ -4,6 +4,7 @@
 void ofApp::setup() {
 
 	bLoadSettingsNextFrame = false;
+	c_background = ofColor(50, 50, 50, 255);
 
 	//ofSetLogLevel(OF_LOG_ERROR);
 	//ofSetLogLevel(OF_LOG_VERBOSE);
@@ -19,7 +20,7 @@ void ofApp::setup() {
 
 	//ofSetBackgroundAuto(false);
 
-	gui_setup();
+	ofGui.setup();
 
 	soundManager.setup(this);
 
@@ -28,7 +29,7 @@ void ofApp::setup() {
 	userOffset.x = 0;
 	userOffset.y = 0;
 
-	gui_loadPresets();
+	ofGui.loadPresets();
 
 	plotCanvas.dF.addRandomFilter();
 	resetImageOffset();
@@ -41,11 +42,15 @@ void ofApp::exit() {
 
 //--------------------------------------------------------------
 void ofApp::update() {
-	gui_update();
+	if (cleanImageFilters) {
+		plotCanvas.sourceController.iF.cleanFilters();
+		cleanImageFilters = false;
+	}
 
 	if (bLoadSettingsNextFrame)
 	{
-		loadSettings(presetFiles[currentPresetIndex].getAbsolutePath());
+		//TODO: Fix please
+		loadSettings(ofGui.getPresetAbsolutePath(ofGui.currentPresetIndex));
 		bLoadSettingsNextFrame = false;
 	}
 	if (plotCanvas.sourceController.loadImageNextFrame)
@@ -54,7 +59,7 @@ void ofApp::update() {
 		plotCanvas.sourceController.loadImageNextFrame = false;
 	}
 
-	if (!pauseRender) {
+	if (!ofGui.bRenderingPaused) {
 		soundManager.update();
 		plotCanvas.update();
 	}
@@ -70,7 +75,7 @@ void ofApp::draw() {
 		plotCanvas.draw(offset.x + userOffset.x, offset.y + userOffset.y, plotCanvas.canvasWidth * zoomLevel, plotCanvas.canvasHeight * zoomLevel);
 	}
 
-	gui_draw();
+	ofGui.draw();
 }
 
 void ofApp::resetImageOffset() {
@@ -84,9 +89,9 @@ void ofApp::resetZoom() {
 }
 
 void ofApp::centerImage() {
-	ImRect availableSpace = ImGui::DockBuilderGetCentralNode(MainDockNodeID)->Rect();
-	userOffset.x = (availableSpace.GetWidth() - (plotCanvas.canvasWidth * zoomLevel)) * 0.5;
-	userOffset.y = (availableSpace.GetHeight() - (plotCanvas.canvasHeight * zoomLevel)) * 0.5;
+	ImVec4 availableSpace = ofGui.availableSpace();
+	userOffset.x = (availableSpace.x - (plotCanvas.canvasWidth * zoomLevel)) * 0.5;
+	userOffset.y = (availableSpace.y - (plotCanvas.canvasHeight * zoomLevel)) * 0.5;
 }
 
 void ofApp::saveSettings(string& filepath) {
@@ -118,7 +123,7 @@ void ofApp::loadSettings(string& filepath) {
 	plotCanvas.dF.clearFilters();
 	plotCanvas.sourceController.iF.clearFilters();
 	
-	if (bTryLoadSource) {
+	if (ofGui.bTryLoadSource) {
 		ofJson sources= settings.value("source", ofJson::array());
 		if (!sources.empty())
 		{
@@ -150,7 +155,7 @@ void ofApp::loadSettings(string& filepath) {
 void ofApp::keyPressed(int key) {
 
 	if (key == 'g' || key == 'G') {
-		bShowMenuBar = !bShowMenuBar;
+		ofGui.bShowMenuBar = !ofGui.bShowMenuBar;
 		//bShowGui = !bShowGui;
 	}
 	else if (key == '-') {
@@ -169,12 +174,12 @@ void ofApp::keyPressed(int key) {
 		// fit to screen
 		userOffset.x = 0;
 		userOffset.y = 0;
-		ImRect availableSpace =  ImGui::DockBuilderGetCentralNode(MainDockNodeID)->Rect();
+		ImVec4 availableSpace =  ofGui.availableSpace();
 		if (plotCanvas.sourceController.isLandscape) {
-			zoomLevel = availableSpace.GetWidth() / plotCanvas.canvasWidth;
+			zoomLevel = availableSpace.x / plotCanvas.canvasWidth;
 		}
 		else {
-			zoomLevel = availableSpace.GetHeight() / plotCanvas.canvasHeight;
+			zoomLevel = availableSpace.y / plotCanvas.canvasHeight;
 		}
 		centerImage();
 	}
@@ -182,7 +187,7 @@ void ofApp::keyPressed(int key) {
 		plotCanvas.saveVector = true;
 	}
 	else if (key == 'x') {
-		pauseRender = !pauseRender;
+		ofGui.bRenderingPaused = !ofGui.bRenderingPaused;
 	}
 	else if (key == '?') {
 		//cout << x << end=l;

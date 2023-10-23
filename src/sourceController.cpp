@@ -1,6 +1,10 @@
 #include "ofApp.h"
 #include "ofx2d.h"
 #include "sourceController.h"
+#include "ofxImGui.h"
+#include "imgui_internal.h"
+#include "ImHelpers.h"
+#include "imgui_stdlib.h"
 
 void SourceController::renderImGuiSettings() {
 	if (!sourceNames.empty())

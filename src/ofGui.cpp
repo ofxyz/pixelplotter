@@ -1,54 +1,45 @@
-#include "ofApp.h"
-#include "ofx2d.h"
+#pragma once
+
+#include "ofGui.h"
+#include "ofxImGui.h"
+#include "imgui_internal.h"
+#include "ImHelpers.h"
+#include "imgui_stdlib.h"
+#include "IconsFontAwesome5.h"
 #include "ImGui_Widget_Bezier.h"
 
-void ofApp::gui_update() {
-	if (cleanImageFilters) {
-		plotCanvas.sourceController.iF.cleanFilters();
-		cleanImageFilters = false;
-	}
-}
+#include "ofApp.h"
+#include "ofx2d.h"
 
-void ofApp::gui_draw() {
-	gui.begin();
-
-	gui_drawMenuBar();
-	gui_drawMainDock();
-
-	if (bShowGui)
-	{
-		gui_renderCanvas();
-		gui_drawToolPalette();
-		gui_drawInfoPanel();
-		gui_drawCanvasWindow();
-		
-
-		if (bShowImGuiMetricsDebugger) {
-			ImGui::ShowMetricsWindow();
-			ImGui::ShowStyleEditor();
-		}
-	}
-	gui.end();
-
-}
-
-//--------------------------------------------------------------
-void ofApp::gui_loadPresets() {
-	ofDirectory presetDirectory(ofToDataPath("presets", true));
-	presetFileNames.clear();
-	presetFiles = presetDirectory.getFiles();
-	for (int i = 0; i < presetFiles.size(); i++)
-	{
-		string base_filename = presetFiles[i].getFileName();
-		string pname = base_filename.substr(0, base_filename.find_last_of('.'));
-		presetFileNames.push_back(pname);
-	}
-}
-
-void ofApp::gui_setup()
+OfGui::OfGui()
 {
+	pixelplotter = (ofApp*)ofGetAppPtr();
+	bShowGui = true;
+	bShowMenuBar = true;
+	bShowPlotCanvas = true;
+	bShowInfoPanel = true;
+	bShowToolPalette = true;
+	bShowImGuiMetricsDebugger = false;
+	bShowCanvas = true;
+
+	bRenderingPaused = false;
+	bShowFps = true;
+	bSavePreset = false;
+	bTryLoadSource = true;
+
+	currentPresetIndex = 0;
+
+	memset(presetSaveName, 0, sizeof(char)*128);
+
+	ofDirectory presetDirectory(ofToDataPath("presets", true));
+
+}
+
+void OfGui::setup()
+{
+	pixelplotter = (ofApp*)ofGetAppPtr();
 	gui.setup(nullptr, true, ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable, true, true);
-	
+
 	// Font Setup
 	float baseFontSize = 13.0f; // 13.0f is the size of the default font. Change to the font size you use.
 	float iconFontSize = baseFontSize * 2.0f / 3.0f; // FontAwesome fonts need to have their sizes reduced by 2.0f/3.0f in order to align correctly
@@ -71,14 +62,44 @@ void ofApp::gui_setup()
 
 	ImGuiIO IO = ImGui::GetIO();
 	IO.ConfigWindowsMoveFromTitleBarOnly = true;
- 
+
+	loadPresets();
 }
 
-void ofApp::gui_drawMainDock() {
+void OfGui::update()
+{
+
+}
+
+void OfGui::draw()
+{
+	gui.begin();
+
+	drawMenuBar();
+	drawMainDock();
+
+	if (bShowGui)
+	{
+		drawCanvas();
+		drawToolPalette();
+		drawInfoPanel();
+		drawCanvasWindow();
+
+		if (bShowImGuiMetricsDebugger) {
+			ImGui::ShowMetricsWindow();
+			ImGui::ShowStyleEditor();
+		}
+	}
+
+	gui.end();
+}
+
+void OfGui::drawMainDock()
+{
 	// Make main docking space transparent
 	ImGuiDockNodeFlags dockingFlags = ImGuiDockNodeFlags_PassthruCentralNode;
 
-	// Alternative: Otherwise add in ImGui::DockSpace() [Â±line 14505] : if (flags & ImGuiDockNodeFlags_PassthruCentralNode) window_flags |= ImGuiWindowFlags_NoBackground;
+	// Alternative: Otherwise add in ImGui::DockSpace() [±line 14505] : if (flags & ImGuiDockNodeFlags_PassthruCentralNode) window_flags |= ImGuiWindowFlags_NoBackground;
 	//ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(0, 0, 0, 0));
 
 	dockingFlags |= ImGuiDockNodeFlags_NoDockingInCentralNode; // Uncomment to always keep an empty "central node" (a visible oF space)
@@ -87,25 +108,10 @@ void ofApp::gui_drawMainDock() {
 	// Define the ofWindow as a docking space
 	MainDockNodeID = ImGui::DockSpaceOverViewport(NULL, dockingFlags); // Also draws the docked windows
 
-	ImGuiDockNode* dockNode = ImGui::DockBuilderGetNode(MainDockNodeID);
-	if (dockNode) {
-		ImGuiDockNode* centralNode = ImGui::DockBuilderGetCentralNode(MainDockNodeID);
-		// Verifies if the central node is empty (visible empty space for oF)
-		if (centralNode && centralNode->IsEmpty()) {
-			// TODO: This needs to be a separate function we can call
-			ImRect availableSpace = centralNode->Rect();
-			workSpaceWidthHeight.x = availableSpace.GetWidth();
-			workSpaceWidthHeight.y = availableSpace.GetHeight();
-			offset = availableSpace.GetTL();
-			offset.x -= ofGetWindowPositionX();
-			offset.y -= ofGetWindowPositionY();
-			workSpaceCentre = availableSpace.GetCenter();
-			//ImGui::GetForegroundDrawList()->AddRect(availableSpace.GetTL() + ImVec2(1, 1), availableSpace.GetBR() - ImVec2(1, 1), IM_COL32(255, 50, 50, 255));
-		}
-	}
 }
 
-void ofApp::gui_drawMenuBar() {
+void OfGui::drawMenuBar()
+{
 	if (!bShowMenuBar) return;
 	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(5, 8));
 	ImGui::BeginMainMenuBar();
@@ -130,12 +136,12 @@ void ofApp::gui_drawMenuBar() {
 
 		static std::string renderPaused = "Pause Rendering";
 		if (ImGui::MenuItem(renderPaused.c_str())) {
-			if (pauseRender) {
-				pauseRender = false;
+			if (bRenderingPaused) {
+				bRenderingPaused = false;
 				renderPaused = "Pause Rendering";
 			}
 			else {
-				pauseRender = true;
+				bRenderingPaused = true;
 				renderPaused = "Continue Rendering";
 			}
 		}
@@ -150,10 +156,10 @@ void ofApp::gui_drawMenuBar() {
 
 	if (ImGui::BeginMenu("View")) {
 		if (ImGui::MenuItem("Source Canvas")) {
-			plotCanvas.sourceController.showSource = true;
+			pixelplotter->plotCanvas.sourceController.showSource = true;
 		}
 		if (ImGui::MenuItem("Plot Canvas")) {
-			plotCanvas.sourceController.showSource = false;
+			pixelplotter->plotCanvas.sourceController.showSource = false;
 		}
 		ImGui::EndMenu();
 	}
@@ -167,8 +173,8 @@ void ofApp::gui_drawMenuBar() {
 		}
 
 		// Vertical Sync
-		if (ImGui::Checkbox("Vertical Sync", &vSync)) {
-			ofSetVerticalSync(vSync);
+		if (ImGui::Checkbox("Vertical Sync", &pixelplotter->vSync)) {
+			ofSetVerticalSync(pixelplotter->vSync);
 		}
 
 		ImGui::Separator();
@@ -197,10 +203,10 @@ void ofApp::gui_drawMenuBar() {
 		ImGui::Separator();
 
 		if (ImGui::Checkbox("Show FPS in Title bar", &bShowFps)) {
-			if (!bShowFps) ofSetWindowTitle(getWindowTitle());
+			if (!bShowFps) ofSetWindowTitle(pixelplotter->getWindowTitle());
 		};
 
-		soundManager.renderImGuiSettings();
+		pixelplotter->soundManager.renderImGuiSettings();
 
 		ImGui::EndMenu();
 
@@ -219,10 +225,29 @@ void ofApp::gui_drawMenuBar() {
 	ImGui::EndMainMenuBar();
 }
 
-void ofApp::gui_drawToolPalette() {
+// TODO: This should be a general texture viewer...
+void OfGui::drawCanvas()
+{
+	ImGui::Begin("Canvas", &bShowCanvas);
+	ImGui::PushID("showCanvas");
+
+	ImTextureID textureID = (ImTextureID)(uintptr_t)pixelplotter->plotCanvas.canvasFbo.getTexture().getTextureData().textureID;
+
+	float tw = pixelplotter->plotCanvas.canvasFbo.getWidth();
+	float th = pixelplotter->plotCanvas.canvasFbo.getHeight();
+	auto availableRegion = ImGui::GetContentRegionAvail();
+	float scale = min(availableRegion.x / tw, availableRegion.y / th);
+
+	ImGui::Image(textureID, glm::vec2(tw * scale, th * scale));
+	ImGui::PopID();
+	ImGui::End();
+}
+
+void OfGui::drawToolPalette()
+{
 	// TODO: Move all these to where they're drawn ...
 	if (!bShowToolPalette) return;
-	 
+
 	ImGui::Begin("Tool palette", &bShowToolPalette);
 	ImGui::PushID("toolPalette");
 
@@ -232,41 +257,14 @@ void ofApp::gui_drawToolPalette() {
 		cout << "Pencil Button Pressed";
 	}
 
-	gui_renderBezierWidget();
+	drawBezierWidget();
 
 	ImGui::PopID();
 	ImGui::End();
 }
 
-void ofApp::gui_drawCanvasWindow() {
-	if (!bShowPlotCanvas) return;
-
-	ImGui::Begin("Plot Canvas", &bShowPlotCanvas);
-	ImGui::PushID("plotCanvas");
-	plotCanvas.renderImGuiSettings();
-	ImGui::PopID();
-
-	ImGui::End();
-}
-
-// This should be a more general texture viewer
-void ofApp::gui_renderCanvas() {
-	ImGui::Begin("Canvas", &bShowCanvas);
-	ImGui::PushID("showCanvas");
-
-	ImTextureID textureID = (ImTextureID)(uintptr_t)plotCanvas.canvasFbo.getTexture().getTextureData().textureID;
-
-	float tw = plotCanvas.canvasFbo.getWidth();
-	float th = plotCanvas.canvasFbo.getHeight();
-	auto availableRegion = ImGui::GetContentRegionAvail();
-	float scale = min(availableRegion.x / tw, availableRegion.y / th);
-
-	ImGui::Image(textureID, glm::vec2(tw * scale, th * scale));
-	ImGui::PopID();
-	ImGui::End();
-}
-
-void ofApp::gui_drawInfoPanel() {
+void OfGui::drawInfoPanel()
+{
 	if (!bShowInfoPanel) return;
 
 	ImGui::Begin("Presets", &bShowInfoPanel);
@@ -274,9 +272,10 @@ void ofApp::gui_drawInfoPanel() {
 	// Save and load presets ... 
 	if (ofxImGui::VectorCombo("##Presets", &currentPresetIndex, presetFileNames))
 	{
-		bLoadSettingsNextFrame = true;
-		plotCanvas.resizeRequest = true;
-		plotCanvas.setFresh(true);
+		//TODO: This should be a function in ofApp
+		pixelplotter->bLoadSettingsNextFrame = true;
+		pixelplotter->plotCanvas.resizeRequest = true;
+		pixelplotter->plotCanvas.setFresh(true);
 	}
 
 	if (presetFileNames.size() > 0) {
@@ -284,7 +283,7 @@ void ofApp::gui_drawInfoPanel() {
 		if (ImGui::Button("Delete Preset"))
 		{
 			presetFiles[currentPresetIndex].remove();
-			gui_loadPresets();
+			loadPresets();
 		}
 	}
 
@@ -296,9 +295,8 @@ void ofApp::gui_drawInfoPanel() {
 	if (ImGui::Button("Save Preset"))
 	{
 		if (bSavePreset) {
-			string savePath = "presets/" + string(presetSaveName) + ".json";
-			saveSettings(savePath);
-			gui_loadPresets();
+			savePreset();
+			loadPresets();
 			currentPresetIndex = ofx2d::getIndex(presetFileNames, string(presetSaveName), 0);
 			bSavePreset = false;
 		}
@@ -316,8 +314,80 @@ void ofApp::gui_drawInfoPanel() {
 	ImGui::End();
 }
 
-void ofApp::gui_renderBezierWidget() {
+void OfGui::drawCanvasWindow()
+{
+	if (!bShowPlotCanvas) return;
+
+	ImGui::Begin("Plot Canvas", &bShowPlotCanvas);
+	ImGui::PushID("plotCanvas");
+	pixelplotter->plotCanvas.renderImGuiSettings();
+	ImGui::PopID();
+
+	ImGui::End();
+}
+
+void OfGui::drawBezierWidget()
+{
 	static float v[5] = { 0.390f, 0.575f, 0.565f, 1.000f };
-	ImGui::Bezier( "easeOutSine", v );       // draw
-	float y = ImGui::BezierValue( 0.5f, v ); // x delta in [0..1] range
+	ImGui::Bezier("easeOutSine", v);       // draw
+	float y = ImGui::BezierValue(0.5f, v); // x delta in [0..1] range
+}
+
+void OfGui::savePreset()
+{
+	string savePath = "presets/" + string(presetSaveName) + ".json";
+
+	ofJson settings;
+
+	settings["source"].push_back(pixelplotter->plotCanvas.sourceController.getSettings());
+
+	for (int i = 0; i < pixelplotter->plotCanvas.sourceController.iF.v_ImageFilters.size(); i++) {
+		settings["imageFilters"].push_back(pixelplotter->plotCanvas.sourceController.iF.v_ImageFilters[i]->getSettings());
+	}
+
+	for (int i = 0; i < pixelplotter->plotCanvas.dF.v_DrawFilters.size(); i++) {
+		settings["drawFilters"].push_back(pixelplotter->plotCanvas.dF.v_DrawFilters[i]->getSettings());
+	}
+
+	settings["plotCanvas"] = pixelplotter->plotCanvas.getSettings();
+
+	ofSavePrettyJson(savePath, settings);
+}
+
+void OfGui::loadPresets()
+{
+	presetFileNames.clear();
+	presetFiles = presetDirectory.getFiles();
+	for (int i = 0; i < presetFiles.size(); i++)
+	{
+		string base_filename = presetFiles[i].getFileName();
+		string pname = base_filename.substr(0, base_filename.find_last_of('.'));
+		presetFileNames.push_back(pname);
+	}
+}
+
+std::string OfGui::getPresetAbsolutePath(int presetIndex)
+{
+	return presetFiles[presetIndex].getAbsolutePath();
+}
+
+ImVec4 OfGui::availableSpace()
+{
+	// Width, Height, Top, Left
+	ImVec4 rVal(0,0,0,0);
+
+	ImGuiDockNode* centralNode = ImGui::DockBuilderGetCentralNode(MainDockNodeID);
+	if (centralNode && centralNode->IsEmpty()) {
+		ImRect availableSpace = centralNode->Rect();
+		ImVec2 offset = availableSpace.GetTL();
+		offset.x -= ofGetWindowPositionX();
+		offset.y -= ofGetWindowPositionY();
+
+		rVal.x = availableSpace.GetWidth();
+		rVal.y = availableSpace.GetHeight();
+		rVal.z = offset.x;
+		rVal.w = offset.y;
+	}
+
+	return rVal;
 }

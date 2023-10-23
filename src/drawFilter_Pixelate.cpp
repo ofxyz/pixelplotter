@@ -1,6 +1,9 @@
 #include "drawFilter_Pixelate.h"
 #include "ofx2d.h"
 #include "ofApp.h"
+#include "ofxImGui.h"
+#include "imgui_internal.h"
+#include "ImHelpers.h"
 
 Df_pixelate::Df_pixelate()
 {
