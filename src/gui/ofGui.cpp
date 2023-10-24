@@ -371,6 +371,21 @@ std::string OfGui::getPresetAbsolutePath(int presetIndex)
 	return presetFiles[presetIndex].getAbsolutePath();
 }
 
+ofJson OfGui::getPreset(int presetIndex)
+{
+	ofJson settings;
+	ofFile file(presetFiles[presetIndex].getAbsolutePath());
+	if (file.exists()) {
+		file >> settings;
+	}
+	return settings;
+}
+
+ofJson OfGui::getCurrentPreset()
+{
+	return getPreset(currentPresetIndex);
+}
+
 ImVec4 OfGui::availableSpace()
 {
 	// Width, Height, Top, Left

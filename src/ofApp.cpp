@@ -49,8 +49,7 @@ void ofApp::update() {
 
 	if (bLoadSettingsNextFrame)
 	{
-		//TODO: Fix please
-		loadSettings(ofGui.getPresetAbsolutePath(ofGui.currentPresetIndex));
+		loadSettings(ofGui.getCurrentPreset());
 		bLoadSettingsNextFrame = false;
 	}
 	if (plotCanvas.sourceController.loadImageNextFrame)
@@ -114,12 +113,7 @@ void ofApp::saveSettings(string& filepath) {
 
 }
 
-void ofApp::loadSettings(string& filepath) {
-	ofJson settings;
-	ofFile file(filepath);
-	if (file.exists()) {
-		file >> settings;
-	}
+void ofApp::loadSettings(ofJson settings) {
 
 	plotCanvas.dF.clearFilters();
 	plotCanvas.sourceController.iF.clearFilters();
@@ -157,7 +151,6 @@ void ofApp::keyPressed(int key) {
 
 	if (key == 'g' || key == 'G') {
 		ofGui.bShowMenuBar = !ofGui.bShowMenuBar;
-		//bShowGui = !bShowGui;
 	}
 	else if (key == '-') {
 		zoomLevel -= 0.1;
@@ -167,14 +160,16 @@ void ofApp::keyPressed(int key) {
 		zoomLevel += 0.1;
 		//resetImageOffset();
 	}
+	else if (key == '1') {
+		zoomLevel = 1;
+		centerImage();
+	}
 	else if (key == '_') {
 		// center image
 		centerImage();
 	}
 	else if (key == '=') {
 		// fit to screen
-		userOffset.x = 0;
-		userOffset.y = 0;
 		ImVec4 availableSpace =  ofGui.availableSpace();
 		if (plotCanvas.sourceController.isLandscape) {
 			zoomLevel = availableSpace.x / plotCanvas.canvasWidth;

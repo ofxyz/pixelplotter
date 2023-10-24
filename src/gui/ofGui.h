@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofxImGui.h"
+#include "ofJson.h"
 
 class ofApp;
 
@@ -32,6 +33,8 @@ public:
 
 	int currentPresetIndex;
 	std::string getPresetAbsolutePath(int presetIndex);
+	ofJson getPreset(int presetIndex);
+	ofJson getCurrentPreset();
 
 	ImVec4 availableSpace();
 

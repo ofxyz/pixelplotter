@@ -35,7 +35,7 @@ public:
 	void gotMessage(ofMessage msg);
 
 	void saveSettings(string& filepath);
-	void loadSettings(string& filepath);
+	void loadSettings(ofJson settings);
 
 	void resetImageOffset();
 	void centerImage();
