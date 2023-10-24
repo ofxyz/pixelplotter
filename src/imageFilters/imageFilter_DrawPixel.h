@@ -1,7 +1,7 @@
 #pragma once
 
 #include "imageFilter.h"
-#include "drawPixels.h"
+#include "drawPixel_Controller.h"
 
 class If_drawPixel : public ImageFilter {
 public:
@@ -14,7 +14,7 @@ public:
 	void loadSettings(ofJson settings) override;
 	ofJson getSettings() override;
 
-	DrawPixels drawPixels;
+	DrawPixelController drawPixels;
 
 private:
 	int selectedPixelType = 0;

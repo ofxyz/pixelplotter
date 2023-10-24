@@ -183,8 +183,9 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\controllers\controller.cpp" />
     <ClCompile Include="src\controllers\drawFilter_Controller.cpp" />
-    <ClCompile Include="src\controllers\drawPixels.cpp" />
+    <ClCompile Include="src\controllers\drawPixel_Controller.cpp" />
     <ClCompile Include="src\controllers\generator_Controller.cpp" />
     <ClCompile Include="src\controllers\sourceController.cpp" />
     <ClCompile Include="src\drawFilters\drawFilter.cpp" />
@@ -256,8 +257,9 @@
     <ClCompile Include="..\..\addons\ofxSvg\src\ofxSvg.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\controllers\controller.h" />
     <ClInclude Include="src\controllers\drawFilter_Controller.h" />
-    <ClInclude Include="src\controllers\drawPixels.h" />
+    <ClInclude Include="src\controllers\drawPixel_Controller.h" />
     <ClInclude Include="src\controllers\generator_Controller.h" />
     <ClInclude Include="src\controllers\sourceController.h" />
     <ClInclude Include="src\drawFilters\drawFilter.h" />

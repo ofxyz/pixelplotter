@@ -72,7 +72,7 @@ void If_duplicate::apply(ofImage* img) {
 	}
 	cfbo.end();
 
-	cfbo.readToPixels(img->getPixelsRef());
+	cfbo.readToPixels(img->getPixels());
 	img->update();
 	bFresh = false;
 }

@@ -163,7 +163,7 @@ void SourceController::addVideo(ofFile file) {
 void SourceController::loadImage(string& filepath) {
 	original.loadImage(filepath);
 	original.setImageType(OF_IMAGE_COLOR_ALPHA);
-	original.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
+	original.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 
 	pix = original.getPixels();
 
@@ -229,7 +229,7 @@ void SourceController::prepImg() {
 	static ofImage updatedFrame;
 	if (updatedFrame.isAllocated() == false) {
 		updatedFrame.allocate(pix.getWidth(), pix.getHeight(), OF_IMAGE_COLOR_ALPHA);
-		updatedFrame.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
+		updatedFrame.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 	}
 
 	for (const auto& filter : iF.v_ImageFilters) {

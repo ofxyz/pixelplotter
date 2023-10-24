@@ -37,14 +37,12 @@ public:
 
 private:
 	bool bShowGui;
-	
 	bool bShowPlotCanvas;
 	bool bShowInfoPanel;
 	bool bShowToolPalette;
 	bool bShowImGuiMetricsDebugger;
 	bool bShowCanvas;
 
-	
 	bool bShowFps;
 	bool bSavePreset;
 

@@ -8,7 +8,8 @@
 
 class DrawFilterController {
 public:
-	ofApp* pixelplotter{ nullptr };
+	ofApp* pixelplotter{ nullptr }; 
+	DrawFilterController();
 
 	// Sorted alphabetically
 	enum Filtertype {
@@ -29,15 +30,6 @@ public:
 
 	std::vector<std::string> v_DrawFilterNames;
 
-	DrawFilterController() {
-		pixelplotter = (ofApp*)ofGetAppPtr();
-
-		v_DrawFilterNames.push_back("Add Plotter ...");
-		for (auto i = mapFilters.begin(); i != mapFilters.end(); i++) {
-			v_DrawFilterNames.push_back(i->first);
-		}
-	};
-
 	void update();
 
 	template <typename t> void move(std::vector<t>& v, size_t oldIndex, size_t newIndex);
@@ -52,14 +44,10 @@ public:
 	void cleanFilters();
 	void clearFilters();
 
-	bool isFresh() {
-		return bFresh;
-	}
-	void setFresh(bool fresh) {
-		bFresh = fresh;
-	}
+	bool isFresh();
+	void setFresh(bool fresh);
 
 private:
-	bool bFresh = false;
+	bool _bFresh = false;
 
 };

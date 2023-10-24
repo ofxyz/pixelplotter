@@ -208,7 +208,7 @@
     <ClCompile Include="src\controllers\drawFilter_Controller.cpp">
       <Filter>src\controllers</Filter>
     </ClCompile>
-    <ClCompile Include="src\controllers\drawPixels.cpp">
+    <ClCompile Include="src\controllers\drawPixel_Controller.cpp">
       <Filter>src\controllers</Filter>
     </ClCompile>
     <ClCompile Include="src\controllers\generator_Controller.cpp">
@@ -219,6 +219,9 @@
     </ClCompile>
     <ClCompile Include="src\imageFilters\imageFilter.cpp">
       <Filter>src\imageFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\controllers\controller.cpp">
+      <Filter>src\controllers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1769,7 +1772,7 @@
     <ClInclude Include="src\controllers\drawFilter_Controller.h">
       <Filter>src\controllers</Filter>
     </ClInclude>
-    <ClInclude Include="src\controllers\drawPixels.h">
+    <ClInclude Include="src\controllers\drawPixel_Controller.h">
       <Filter>src\controllers</Filter>
     </ClInclude>
     <ClInclude Include="src\controllers\generator_Controller.h">
@@ -1780,6 +1783,9 @@
     </ClInclude>
     <ClInclude Include="src\imageFilters\imageFilter.h">
       <Filter>src\imageFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\controllers\controller.h">
+      <Filter>src\controllers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

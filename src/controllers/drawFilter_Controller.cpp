@@ -1,6 +1,16 @@
 #pragma once
 #include "drawFilter_Controller.h"
 
+DrawFilterController::DrawFilterController()
+{
+	pixelplotter = (ofApp*)ofGetAppPtr();
+
+	v_DrawFilterNames.push_back("Add Plotter ...");
+	for (auto i = mapFilters.begin(); i != mapFilters.end(); i++) {
+		v_DrawFilterNames.push_back(i->first);
+	}
+}
+
 void DrawFilterController::update() {
 	for (const auto& filter : v_DrawFilters) {
 		if (filter->isFresh()) {
@@ -110,4 +120,12 @@ void DrawFilterController::cleanFilters() {
 void DrawFilterController::clearFilters() {
 	v_DrawFilters.clear();
 	setFresh(true);
+}
+
+bool DrawFilterController::isFresh() {
+	return _bFresh;
+}
+
+void DrawFilterController::setFresh(bool fresh) {
+	_bFresh = fresh;
 }

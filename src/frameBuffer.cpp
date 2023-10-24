@@ -4,8 +4,8 @@
 void FrameBuffer::setup(ofPixels& firstFrame)
 {
 	qFrames.clear();
-	currentFrame.getPixelsRef() = firstFrame;
-	currentFrame.getTextureReference().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
+	currentFrame.getPixels() = firstFrame;
+	currentFrame.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 	currentFrame.update();
 	bFresh = true;
 }
@@ -18,7 +18,7 @@ void FrameBuffer::addFrame(ofPixels& freshPixels)
 void FrameBuffer::update()
 {
 	if (!bFresh && qFrames.size() > 0) {
-		currentFrame.getPixelsRef() = qFrames[0];
+		currentFrame.getPixels() = qFrames[0];
 		currentFrame.update();
 		qFrames.pop_front();
 		bFresh = true;

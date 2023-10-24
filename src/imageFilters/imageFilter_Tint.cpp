@@ -51,7 +51,7 @@ void If_tint::apply(ofImage* img) {
 	ofPopStyle();
 	ofDisableAlphaBlending();
 	cfbo.end();
-	cfbo.readToPixels(img->getPixelsRef());
+	cfbo.readToPixels(img->getPixels());
 	if (bGrey) {
 		img->setImageType(OF_IMAGE_GRAYSCALE);
 	}

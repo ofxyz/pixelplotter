@@ -84,7 +84,7 @@ void Df_rings::draw(ofImage* input, float width, float height, float x, float y)
 	greyCvBlur.allocate(input->getWidth(), input->getHeight());
 	greyCvThresh.allocate(input->getWidth(), input->getHeight());
 
-	colorCvImage.setFromPixels(input->getPixelsRef());
+	colorCvImage.setFromPixels(input->getPixels());
 	greyCvImage = colorCvImage; // Convert to Grey
 	greyCvBlur = greyCvImage;
 	//greyCvBlur.blur(cvBlur);

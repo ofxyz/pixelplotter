@@ -3,7 +3,6 @@
 
 #include "ofGui.h"
 #include "canvas.h"
-#include "drawPixels.h"
 #include "soundManager.h"
 
 class ofApp : public ofBaseApp {
@@ -44,7 +43,6 @@ public:
 
 	OfGui ofGui;
 	Canvas plotCanvas;
-	DrawPixels drawPixels;
 	SoundManager soundManager;
 
 	bool vSync = false;

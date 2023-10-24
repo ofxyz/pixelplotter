@@ -92,6 +92,7 @@ void ofApp::centerImage() {
 	ImVec4 availableSpace = ofGui.availableSpace();
 	userOffset.x = (availableSpace.x - (plotCanvas.canvasWidth * zoomLevel)) * 0.5;
 	userOffset.y = (availableSpace.y - (plotCanvas.canvasHeight * zoomLevel)) * 0.5;
+	userOffset.y += availableSpace.w;
 }
 
 void ofApp::saveSettings(string& filepath) {

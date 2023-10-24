@@ -1,10 +1,10 @@
-#include "drawPixels.h"
+#include "DrawPixel_Controller.h"
 #include "drawPixel.h"
 #include "drawPixel_Normal.h"
 #include "drawPixel_SeparateCMYK_Bars01.h"
 #include "drawPixel_SeparateRGB_Bars01.h"
 
-DrawPixels::DrawPixels()
+DrawPixelController::DrawPixelController()
 {
 	v_DrawPixels.push_back(new Dp_normal());
 	v_DrawPixels.push_back(new Dp_separateCMYK_Bars01());
