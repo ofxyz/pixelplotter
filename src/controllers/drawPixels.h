@@ -3,6 +3,7 @@
 #include <vector>
 class DrawPixel;
 
+//TODO: Should this be called DrawPixel_Controller?
 class DrawPixels {
 public:
 	std::vector<std::string> v_DrawPixelsNames;

@@ -10,48 +10,6 @@
     <ClCompile Include="src\canvas.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\drawFilter_Lumes.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\drawFilter_Mesh.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\drawFilter_Noise.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\drawFilter_Pixelate.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\drawFilter_Rings.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\drawPixel_Normal.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\drawPixel_SeparateCMYK_Bars01.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\drawPixel_SeparateRGB_Bars01.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\generator_Plaids.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\imageFilter_Blur.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\imageFilter_DrawPixel.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\imageFilter_Duplicate.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\imageFilter_Mirror.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\imageFilter_Tint.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -59,9 +17,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\soundManager.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\sourceController.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\addons\ofx2d\src\ofx2d.cpp">
@@ -184,41 +139,86 @@
     <ClCompile Include="..\..\addons\ofxSvg\src\ofxSvg.cpp">
       <Filter>addons\ofxSvg\src</Filter>
     </ClCompile>
-    <ClCompile Include="src\drawFilter_Controller.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\drawFilter.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\drawPixel.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\drawPixels.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\frameBuffer.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\generator.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="src\drawFilters\drawFilter_Lumes.cpp">
+      <Filter>src\drawFilters</Filter>
     </ClCompile>
-    <ClCompile Include="src\generator_Controller.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="src\drawFilters\drawFilter_Mesh.cpp">
+      <Filter>src\drawFilters</Filter>
     </ClCompile>
-    <ClCompile Include="src\imageFilter.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="src\drawFilters\drawFilter_Noise.cpp">
+      <Filter>src\drawFilters</Filter>
     </ClCompile>
-    <ClCompile Include="src\imageFilter_Controller.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="src\drawFilters\drawFilter_Pixelate.cpp">
+      <Filter>src\drawFilters</Filter>
     </ClCompile>
-    <ClCompile Include="src\ImGui_Widget_Bezier.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="src\drawFilters\drawFilter_Rings.cpp">
+      <Filter>src\drawFilters</Filter>
     </ClCompile>
-    <ClCompile Include="src\ImGui_Widget_Tooltip.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="src\imageFilters\imageFilter_Blur.cpp">
+      <Filter>src\imageFilters</Filter>
     </ClCompile>
-    <ClCompile Include="src\ofGui.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="src\imageFilters\imageFilter_Controller.cpp">
+      <Filter>src\imageFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imageFilters\imageFilter_DrawPixel.cpp">
+      <Filter>src\imageFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imageFilters\imageFilter_Duplicate.cpp">
+      <Filter>src\imageFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imageFilters\imageFilter_Mirror.cpp">
+      <Filter>src\imageFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imageFilters\imageFilter_Tint.cpp">
+      <Filter>src\imageFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\drawPixels\drawPixel_Normal.cpp">
+      <Filter>src\drawPixels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\drawPixels\drawPixel_SeparateCMYK_Bars01.cpp">
+      <Filter>src\drawPixels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\drawPixels\drawPixel_SeparateRGB_Bars01.cpp">
+      <Filter>src\drawPixels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\drawFilters\drawFilter.cpp">
+      <Filter>src\drawFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\drawPixels\drawPixel.cpp">
+      <Filter>src\drawPixels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\ImGui_Widget_Bezier.cpp">
+      <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\ImGui_Widget_Tooltip.cpp">
+      <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\ofGui.cpp">
+      <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\generators\generator.cpp">
+      <Filter>src\generators</Filter>
+    </ClCompile>
+    <ClCompile Include="src\generators\generator_Plaids.cpp">
+      <Filter>src\generators</Filter>
+    </ClCompile>
+    <ClCompile Include="src\controllers\drawFilter_Controller.cpp">
+      <Filter>src\controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\controllers\drawPixels.cpp">
+      <Filter>src\controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\controllers\generator_Controller.cpp">
+      <Filter>src\controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\controllers\sourceController.cpp">
+      <Filter>src\controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imageFilters\imageFilter.cpp">
+      <Filter>src\imageFilters</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -468,6 +468,24 @@
     <Filter Include="addons\ofxSvg\libs\svgtiny\include">
       <UniqueIdentifier>{F663B0D8-0BED-1137-B2BC-17B3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\drawFilters">
+      <UniqueIdentifier>{f3aa7730-eea6-4cd4-a729-f8e9c6038642}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\imageFilters">
+      <UniqueIdentifier>{1b055d5b-0348-43ca-8692-2560ed339a3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\drawPixels">
+      <UniqueIdentifier>{d619b1f3-cf9f-41b1-a363-f1a6bf7bf8dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\gui">
+      <UniqueIdentifier>{c52edfb8-7186-4ed5-8bbd-ffb5cf25172e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\generators">
+      <UniqueIdentifier>{8e8832e6-da83-439f-8e3a-c9b14dfe1248}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\controllers">
+      <UniqueIdentifier>{f631bd3a-098a-4878-98c0-53058ee3b3f1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ofApp.h">
@@ -476,82 +494,13 @@
     <ClInclude Include="src\canvas.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\drawFilter.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\drawFilter_Controller.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\drawFilter_Lumes.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\drawFilter_Mesh.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\drawFilter_Noise.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\drawFilter_Pixelate.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\drawFilter_Rings.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\drawPixel.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\drawPixels.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\drawPixel_Normal.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\drawPixel_SeparateCMYK_Bars01.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\drawPixel_SeparateRGB_Bars01.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\frameBuffer.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\generator.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\generator_Controller.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\generator_Plaids.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\imageFilter.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\imageFilter_Blur.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\imageFilter_Controller.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\imageFilter_DrawPixel.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\imageFilter_Duplicate.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\imageFilter_Mirror.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\imageFilter_Tint.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\ofApp.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\soundManager.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\sourceController.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\addons\ofx2d\src\ofx2d.h">
@@ -1754,14 +1703,83 @@
     <ClInclude Include="..\..\addons\ofxSvg\libs\svgtiny\include\svgtiny.h">
       <Filter>addons\ofxSvg\libs\svgtiny\include</Filter>
     </ClInclude>
-    <ClInclude Include="src\ImGui_Widget_Bezier.h">
-      <Filter>src</Filter>
+    <ClInclude Include="src\drawFilters\drawFilter_Lumes.h">
+      <Filter>src\drawFilters</Filter>
     </ClInclude>
-    <ClInclude Include="src\ImGui_Widget_Tooltip.h">
-      <Filter>src</Filter>
+    <ClInclude Include="src\drawFilters\drawFilter_Mesh.h">
+      <Filter>src\drawFilters</Filter>
     </ClInclude>
-    <ClInclude Include="src\ofGui.h">
-      <Filter>src</Filter>
+    <ClInclude Include="src\drawFilters\drawFilter_Noise.h">
+      <Filter>src\drawFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\drawFilters\drawFilter_Pixelate.h">
+      <Filter>src\drawFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\drawFilters\drawFilter_Rings.h">
+      <Filter>src\drawFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imageFilters\imageFilter_Blur.h">
+      <Filter>src\imageFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imageFilters\imageFilter_Controller.h">
+      <Filter>src\imageFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imageFilters\imageFilter_DrawPixel.h">
+      <Filter>src\imageFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imageFilters\imageFilter_Duplicate.h">
+      <Filter>src\imageFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imageFilters\imageFilter_Mirror.h">
+      <Filter>src\imageFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imageFilters\imageFilter_Tint.h">
+      <Filter>src\imageFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\drawPixels\drawPixel_Normal.h">
+      <Filter>src\drawPixels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\drawPixels\drawPixel_SeparateCMYK_Bars01.h">
+      <Filter>src\drawPixels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\drawPixels\drawPixel_SeparateRGB_Bars01.h">
+      <Filter>src\drawPixels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\drawFilters\drawFilter.h">
+      <Filter>src\drawFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\drawPixels\drawPixel.h">
+      <Filter>src\drawPixels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\ImGui_Widget_Bezier.h">
+      <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\ImGui_Widget_Tooltip.h">
+      <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\ofGui.h">
+      <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\generators\generator.h">
+      <Filter>src\generators</Filter>
+    </ClInclude>
+    <ClInclude Include="src\generators\generator_Plaids.h">
+      <Filter>src\generators</Filter>
+    </ClInclude>
+    <ClInclude Include="src\controllers\drawFilter_Controller.h">
+      <Filter>src\controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\controllers\drawPixels.h">
+      <Filter>src\controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\controllers\generator_Controller.h">
+      <Filter>src\controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\controllers\sourceController.h">
+      <Filter>src\controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imageFilters\imageFilter.h">
+      <Filter>src\imageFilters</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
