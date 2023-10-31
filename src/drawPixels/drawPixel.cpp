@@ -56,38 +56,23 @@ void DrawPixel::drawRoundedRect(float offsetX, float offsetY, float w, float h, 
 }
 
 glm::vec4 DrawPixel::getCMYK(ofColor rgb)
-{
-	if (rgb.r + rgb.g + rgb.b == 0) return glm::vec4(0, 0, 0, 1);
-	double dr = 0, dg = 0, db = 0;
+{	
+	// Normalize Values
+	double nr = 0, ng = 0, nb = 0;
 	if (rgb.r > 0) {
-		dr = (double)rgb.r / 255;
+		nr = (double)rgb.r / 255;
 	}
 	if (rgb.g > 0) {
-		dg = (double)rgb.g / 255;
+		ng = (double)rgb.g / 255;
 	}
 	if (rgb.b > 0) {
-		db = (double)rgb.b / 255;
+		nb = (double)rgb.b / 255;
 	}
 
-	double k = 1 - max(max(dr, dg), db);
-
-	double kop = 1 - k;
-
-	double c = 1 - dr - k;
-	double m = 1 - dg - k;
-	double y = 1 - db - k;
-
-	if (kop > 0) {
-		if (c > 0) {
-			c /= kop;
-		}
-		if (m > 0) {
-			m /= kop;
-		}
-		if (y > 0) {
-			y /= kop;
-		}
-	}
+	double k = 1 - max(max(nr, ng), nb);
+	double c = 1 - nr - k;
+	double m = 1 - ng - k;
+	double y = 1 - nb - k;
 
 	return glm::vec4(c, m, y, k);
 }

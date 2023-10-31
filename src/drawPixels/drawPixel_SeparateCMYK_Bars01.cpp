@@ -20,9 +20,13 @@ void Dp_separateCMYK_Bars01::renderImGuiSettings() {
 void Dp_separateCMYK_Bars01::draw(ofColor c, glm::vec2 dim, glm::vec2 pos /*= { 0,0 }*/, glm::vec2 posNorm /*= { 0,0 }*/)
 {
 	glm::vec4 cmyk = getCMYK(c);
-	float whiteVal = 1 - max(max(cmyk[0], cmyk[1]), max(cmyk[2], cmyk[3]));
-	// float totalInk = cmyk[0] + cmyk[1] + cmyk[2] + cmyk[3] + whiteVal;
-	float totalInk = 1;
+	
+	float whiteVal = min(min(c.r, c.g), c.b);
+	if (whiteVal > 0) {
+		whiteVal /= 255;
+	}
+
+	float totalInk = cmyk[0] + cmyk[1] + cmyk[2] + cmyk[3] + whiteVal;
 
 	cmyk[0] = ofMap(cmyk[0], 0, totalInk, 0, 1);
 	cmyk[1] = ofMap(cmyk[1], 0, totalInk, 0, 1);
