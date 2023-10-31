@@ -17,10 +17,12 @@ void Dp_separateCMYK_Bars01::renderImGuiSettings() {
 	renderImGuiColourSettings();
 }
 
-void Dp_separateCMYK_Bars01::draw(ofColor c, float x, float y, float width, float height) {
+void Dp_separateCMYK_Bars01::draw(ofColor c, glm::vec2 dim, glm::vec2 pos /*= { 0,0 }*/, glm::vec2 posNorm /*= { 0,0 }*/)
+{
 	glm::vec4 cmyk = getCMYK(c);
 	float whiteVal = 1 - max(max(cmyk[0], cmyk[1]), max(cmyk[2], cmyk[3]));
-	float totalInk = cmyk[0] + cmyk[1] + cmyk[2] + cmyk[3] + whiteVal;
+	// float totalInk = cmyk[0] + cmyk[1] + cmyk[2] + cmyk[3] + whiteVal;
+	float totalInk = 1;
 
 	cmyk[0] = ofMap(cmyk[0], 0, totalInk, 0, 1);
 	cmyk[1] = ofMap(cmyk[1], 0, totalInk, 0, 1);
@@ -42,8 +44,8 @@ void Dp_separateCMYK_Bars01::draw(ofColor c, float x, float y, float width, floa
 	}
 	if (barCount == 0) return;
 
-	float start = x - (width * 0.5);
-	float barWidth = width; // Space left
+	float start = pos.x - (dim.x * 0.5);
+	float barWidth = dim.x; // Space left
 
 	/* white at end ...
 	if (whiteVal > 0) { // Offset for white
@@ -52,26 +54,26 @@ void Dp_separateCMYK_Bars01::draw(ofColor c, float x, float y, float width, floa
 	}
 	*/
 	if (cmyk[0] > 0) {
-		barWidth = cmyk[0] * width;
+		barWidth = cmyk[0] * dim.x;
 		start += (barWidth * 0.5);
-		drawRectangle(start, y, barWidth, height, c_cyanBlue);
+		drawRectangle(start, pos.y, barWidth, dim.y, c_cyanBlue);
 		start += (barWidth * 0.5);
 	}
 	if (cmyk[1] > 0) {
-		barWidth = cmyk[1] * width;
+		barWidth = cmyk[1] * dim.x;
 		start += (barWidth * 0.5);
-		drawRectangle(start, y, barWidth, height, c_magentaRed);
+		drawRectangle(start, pos.y, barWidth, dim.y, c_magentaRed);
 		start += (barWidth * 0.5);
 	}
 	if (cmyk[2] > 0) {
-		barWidth = cmyk[2] * width;
+		barWidth = cmyk[2] * dim.x;
 		start += (barWidth * 0.5);
-		drawRectangle(start, y, barWidth, height, c_yellowGreen);
+		drawRectangle(start, pos.y, barWidth, dim.y, c_yellowGreen);
 		start += (barWidth * 0.5);
 	}
 	if (cmyk[3] > 0) {
-		barWidth = cmyk[3] * width;
+		barWidth = cmyk[3] * dim.x;
 		start += (barWidth * 0.5);
-		drawRectangle(start, y, barWidth, height, c_black);
+		drawRectangle(start, pos.y, barWidth, dim.y, c_black);
 	}
 }

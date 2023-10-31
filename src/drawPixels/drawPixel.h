@@ -2,15 +2,22 @@
 #include "ofApp.h"
 #include "ofxImGui.h"
 /*
-	A drawpixel draws rectangular art based on a colour.
+	A DrawPixel draws rectangular art based on a colour.
  */
 
 class DrawPixel {
 public:
 	std::string name; //PixelType
+	
+	/* PARAMS
+		ofColor    c        : Colour of the pixel
+		glm::vec2  dim      : (w, h): Dimension (Width, Height) of the pixel
+		glm::vec2  pos      : (x, y): Position or Offset of the pixel (Drawing happens from the center out)
+		glm::vec2  posNorm  : (x, y): Position Normal of the pixel. Between 0 and 1,
+		                              Used to interpolate and extrapolate position of sub pixels
+	*/
+	virtual void draw(ofColor c, glm::vec2 dim, glm::vec2 pos = { 0,0 }, glm::vec2 posNorm = { 0,0 }) = 0;
 
-	// Pixels are draw from the centre (0,0) ... See drawRectangle()
-	virtual void draw(ofColor c, float offsetX, float offsetY, float width, float height) = 0;
 	virtual void renderImGuiSettings() = 0;
 	virtual void loadSettings(ofJson settings) = 0;
 	virtual ofJson getSettings() = 0;
@@ -23,16 +30,16 @@ public:
 	float rounded = 0;
 
 	// Standard drawing methods
-	void drawRectangle(float offsetX, float offsetY, float w, float h, ofColor c);;
+	void drawRectangle(float offsetX, float offsetY, float w, float h, ofColor c);
 
-	void drawEllipse(float offsetX, float offsetY, float w, float h, ofColor c);;
+	void drawEllipse(float offsetX, float offsetY, float w, float h, ofColor c);
 
-	void quadraticBezierVertex(float cpx, float cpy, float x, float y, float prevX, float prevY);;
+	void quadraticBezierVertex(float cpx, float cpy, float x, float y, float prevX, float prevY);
 
-	void drawRoundedRect(float offsetX, float offsetY, float w, float h, ofColor c);;
+	void drawRoundedRect(float offsetX, float offsetY, float w, float h, ofColor c);
 
 	// Standard color methods
-	glm::vec4 getCMYK(ofColor rgb);;
+	glm::vec4 getCMYK(ofColor rgb);
 
 	void gui_setGrey();
 
@@ -42,7 +49,7 @@ public:
 
 	void gui_setRYB();
 
-	void renderImGuiColourSettings();;
+	void renderImGuiColourSettings();
 
 	bool isFresh();
 	void setFresh(bool fresh);

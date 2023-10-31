@@ -1,7 +1,5 @@
 #include "drawPixel.h"
 
-
-
 void DrawPixel::drawRectangle(float offsetX, float offsetY, float w, float h, ofColor c)
 {
 	ofPushStyle();

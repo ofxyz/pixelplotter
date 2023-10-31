@@ -19,7 +19,7 @@ public:
 		loadSettings(settings);
 	}
 
-	void draw(ofColor c, float offsetX, float offsetY, float width, float height) override;
+	void draw(ofColor c, glm::vec2 dim, glm::vec2 pos = { 0,0 }, glm::vec2 posNorm = { 0,0 }) override;
 	void renderImGuiSettings() override;
 	void loadSettings(ofJson settings) override;
 	ofJson getSettings() override;

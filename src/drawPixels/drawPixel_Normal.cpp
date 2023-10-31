@@ -16,6 +16,7 @@ void Dp_normal::renderImGuiSettings() {
 	// Nothing to see here ...
 }
 
-void Dp_normal::draw(ofColor c, float x, float y, float width, float height) {
-	drawRectangle(x, y, width, height, c);
+void Dp_normal::draw(ofColor c, glm::vec2 dim, glm::vec2 pos /*= { 0,0 }*/, glm::vec2 posNorm /*= { 0,0 }*/)
+{
+	drawRectangle(pos.x, pos.y, dim.x, dim.y, c);
 }
