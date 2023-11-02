@@ -27,25 +27,29 @@ ofJson Df_noise::getSettings() {
 
 
 void Df_noise::loadSettings(ofJson settings) {
-	name = settings.value("name", name);
+	try {
+		name = settings.value("name", name);
 
-	// Colours
-	cBg.x = settings["colors"]["background"].value("r", cBg.x);
-	cBg.y = settings["colors"]["background"].value("g", cBg.y);
-	cBg.z = settings["colors"]["background"].value("b", cBg.z);
-	cBg.w = settings["colors"]["background"].value("a", cBg.w);
+		// Colours
+		cBg.x = settings["colors"]["background"].value("r", cBg.x);
+		cBg.y = settings["colors"]["background"].value("g", cBg.y);
+		cBg.z = settings["colors"]["background"].value("b", cBg.z);
+		cBg.w = settings["colors"]["background"].value("a", cBg.w);
 
-	palette.clear();
-	int counter = 1;
-	for (auto& pal : settings["palette"]) {
-		float r = pal.value("r", 0.0);
-		float g = pal.value("g", 0.0);
-		float b = pal.value("b", 0.0);
-		float a = pal.value("a", 0.0);
-		palette.push_back(new sColor(ofColor(r * 255, g * 255, b * 255, a * 255), pal.value("name", "Color " + std::to_string(counter)), pal.value("percent", 0)));
-		counter++;
+		palette.clear();
+		int counter = 1;
+		for (auto& pal : settings["palette"]) {
+			float r = pal.value("r", 0.0);
+			float g = pal.value("g", 0.0);
+			float b = pal.value("b", 0.0);
+			float a = pal.value("a", 0.0);
+			palette.push_back(new sColor(ofColor(r * 255, g * 255, b * 255, a * 255), pal.value("name", "Color " + std::to_string(counter)), pal.value("percent", 0)));
+			counter++;
+		}
 	}
-
+	catch (...) {
+		ofLogNotice() << "Failed to load settings Df_noise";
+	}
 }
 
 void Df_noise::renderImGuiSettings() {

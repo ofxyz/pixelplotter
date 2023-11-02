@@ -202,32 +202,32 @@
     <ClCompile Include="src\generators\generator_Plaids.cpp">
       <Filter>src\generators</Filter>
     </ClCompile>
-    <ClCompile Include="src\controllers\drawFilter_Controller.cpp">
-      <Filter>src\controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\controllers\drawPixel_Controller.cpp">
-      <Filter>src\controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\controllers\generator_Controller.cpp">
-      <Filter>src\controllers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\controllers\source_Controller.cpp">
-      <Filter>src\controllers</Filter>
-    </ClCompile>
     <ClCompile Include="src\imageFilters\imageFilter.cpp">
       <Filter>src\imageFilters</Filter>
-    </ClCompile>
-    <ClCompile Include="src\controllers\Managing_Factory.cpp">
-      <Filter>src\controllers</Filter>
     </ClCompile>
     <ClCompile Include="src\drawFilters\drawFilter_Pixelate2.cpp">
       <Filter>src\drawFilters</Filter>
     </ClCompile>
-    <ClCompile Include="src\controllers\soundDevice_Controller.cpp">
-      <Filter>src\controllers</Filter>
+    <ClCompile Include="src\plants\drawFilter_Controller.cpp">
+      <Filter>src\plants</Filter>
     </ClCompile>
-    <ClCompile Include="src\controllers\swatch_Controller.cpp">
-      <Filter>src\controllers</Filter>
+    <ClCompile Include="src\plants\drawPixel_Controller.cpp">
+      <Filter>src\plants</Filter>
+    </ClCompile>
+    <ClCompile Include="src\plants\generator_Controller.cpp">
+      <Filter>src\plants</Filter>
+    </ClCompile>
+    <ClCompile Include="src\plants\Managing_Factory.cpp">
+      <Filter>src\plants</Filter>
+    </ClCompile>
+    <ClCompile Include="src\plants\soundDevice_Controller.cpp">
+      <Filter>src\plants</Filter>
+    </ClCompile>
+    <ClCompile Include="src\plants\source_Controller.cpp">
+      <Filter>src\plants</Filter>
+    </ClCompile>
+    <ClCompile Include="src\plants\swatch_Controller.cpp">
+      <Filter>src\plants</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -492,7 +492,7 @@
     <Filter Include="src\generators">
       <UniqueIdentifier>{8e8832e6-da83-439f-8e3a-c9b14dfe1248}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\controllers">
+    <Filter Include="src\plants">
       <UniqueIdentifier>{f631bd3a-098a-4878-98c0-53058ee3b3f1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -1772,32 +1772,32 @@
     <ClInclude Include="src\generators\generator_Plaids.h">
       <Filter>src\generators</Filter>
     </ClInclude>
-    <ClInclude Include="src\controllers\drawFilter_Controller.h">
-      <Filter>src\controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\controllers\drawPixel_Controller.h">
-      <Filter>src\controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\controllers\generator_Controller.h">
-      <Filter>src\controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\controllers\source_Controller.h">
-      <Filter>src\controllers</Filter>
-    </ClInclude>
     <ClInclude Include="src\imageFilters\imageFilter.h">
       <Filter>src\imageFilters</Filter>
-    </ClInclude>
-    <ClInclude Include="src\controllers\Managing_Factory.h">
-      <Filter>src\controllers</Filter>
     </ClInclude>
     <ClInclude Include="src\drawFilters\drawFilter_Pixelate2.h">
       <Filter>src\drawFilters</Filter>
     </ClInclude>
-    <ClInclude Include="src\controllers\soundDevice_Controller.h">
-      <Filter>src\controllers</Filter>
+    <ClInclude Include="src\plants\drawFilter_Controller.h">
+      <Filter>src\plants</Filter>
     </ClInclude>
-    <ClInclude Include="src\controllers\swatch_Controller.h">
-      <Filter>src\controllers</Filter>
+    <ClInclude Include="src\plants\drawPixel_Controller.h">
+      <Filter>src\plants</Filter>
+    </ClInclude>
+    <ClInclude Include="src\plants\generator_Controller.h">
+      <Filter>src\plants</Filter>
+    </ClInclude>
+    <ClInclude Include="src\plants\Managing_Factory.h">
+      <Filter>src\plants</Filter>
+    </ClInclude>
+    <ClInclude Include="src\plants\soundDevice_Controller.h">
+      <Filter>src\plants</Filter>
+    </ClInclude>
+    <ClInclude Include="src\plants\source_Controller.h">
+      <Filter>src\plants</Filter>
+    </ClInclude>
+    <ClInclude Include="src\plants\swatch_Controller.h">
+      <Filter>src\plants</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -345,8 +345,8 @@ void OfGui::savePreset()
 		settings["imageFilters"].push_back(pixelplotter->plotCanvas.sourceController.iF.v_ImageFilters[i]->getSettings());
 	}
 
-	for (int i = 0; i < pixelplotter->plotCanvas.dF.v_DrawFilters.size(); i++) {
-		settings["drawFilters"].push_back(pixelplotter->plotCanvas.dF.v_DrawFilters[i]->getSettings());
+	for (int i = 0; i < pixelplotter->plotCanvas.dF.v_Objects.size(); i++) {
+		settings["drawFilters"].push_back(pixelplotter->plotCanvas.dF.v_Objects[i]->getSettings());
 	}
 
 	settings["plotCanvas"] = pixelplotter->plotCanvas.getSettings();

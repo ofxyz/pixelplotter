@@ -109,7 +109,7 @@ void Canvas::renderImGuiSettings() {
 
 	// Start DrawFilters
 	//----------------------------------------------------------------------------------------------------------------------
-	string sDrawFilterCount = "Plotters (" + ofToString(dF.v_DrawFilters.size()) + ")###DrawFiltersHolder";
+	string sDrawFilterCount = "Plotters (" + ofToString(dF.v_Objects.size()) + ")###DrawFiltersHolder";
 	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 	if (ImGui::CollapsingHeader(sDrawFilterCount.c_str()))
 	{
@@ -129,17 +129,17 @@ void Canvas::renderImGuiSettings() {
 
 		cleanDrawFilters = false;
 		reorderDrawFilters = false;
-		for (int i = 0; i < dF.v_DrawFilters.size(); i++) {
+		for (int i = 0; i < dF.v_Objects.size(); i++) {
 			ImGui::PushID(i);
-			if (dF.v_DrawFilters[i]->active) {
+			if (dF.v_Objects[i]->active) {
 				ImGui::Indent();
-				dF.v_DrawFilters[i]->renderImGuiSettings();
+				dF.v_Objects[i]->renderImGuiSettings();
 				ImGui::Unindent();
 			}
 			else {
 				cleanDrawFilters = true;
 			}
-			if (dF.v_DrawFilters[i]->moveUp || dF.v_DrawFilters[i]->moveDown) {
+			if (dF.v_Objects[i]->moveUp || dF.v_Objects[i]->moveDown) {
 				reorderDrawFilters = true;
 			}
 			ImGui::PopID();
@@ -148,9 +148,9 @@ void Canvas::renderImGuiSettings() {
 		ImGui::PopStyleColor(10);
 
 		ImGui::Indent(); // ADD PLOTTERS
-		if (ofxImGui::VectorCombo("##Draw Filter Selector", &currentDrawFilterIndex, dF.v_DrawFilterNames))
+		if (ofxImGui::VectorCombo("##Draw Filter Selector", &currentDrawFilterIndex, dF.v_MenuValues))
 		{
-			dF.addFilter(DrawFilterController::Filtertype(currentDrawFilterIndex));
+			dF.add(dF.v_MenuValues[currentDrawFilterIndex]);
 			currentDrawFilterIndex = 0;
 		}
 		ImGui::Unindent();
@@ -313,7 +313,7 @@ void Canvas::updateFbo(ofImage* img) {
 	ofClear(c_canvas);
 
 	// This needs to be a filter controller update
-	for (const auto& filter : dF.v_DrawFilters) {
+	for (const auto& filter : dF.v_Objects) {
 		// update one filter per frame to keep things speeedy?
 		// Each filter draws to it's own fbo and are drawn here?
 		// filter->update(img); filter->update(settings)

@@ -11,7 +11,8 @@ public:
 	};
 
 	Df_lumes(ofJson settings) {
-		Df_lumes();
+		pixelplotter = (ofApp*)ofGetAppPtr();
+		name = "Lumes";
 		loadSettings(settings);
 	};
 

@@ -10,9 +10,14 @@ ofJson Df_lumes::getSettings() {
 }
 
 void Df_lumes::loadSettings(ofJson settings) {
-	name   = settings.value("name", name);
-	tilesX = settings.value("tilesX", 64);
-	tilesY = settings.value("tilesY", 64);
+	try {
+		name   = settings.value("name", name);
+		tilesX = settings.value("tilesX", 64);
+		tilesY = settings.value("tilesY", 64);
+	}
+	catch (...) {
+		ofLogNotice() << "Failed to load settings Df_lumes";
+	}
 	return;
 }
 

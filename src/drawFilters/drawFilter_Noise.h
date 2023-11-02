@@ -6,7 +6,7 @@ class Df_noise : public DrawFilter {
 public:
 	Df_noise();
 
-	Df_noise(ofJson settings);;
+	Df_noise(ofJson settings);
 
 	void draw(ofImage* input, float width = 0, float height = 0, float x = 0, float y = 0) override;
 	void renderImGuiSettings() override;

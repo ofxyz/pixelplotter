@@ -11,7 +11,8 @@ Df_pixelate2::Df_pixelate2()
 	InitDefaults();
 }
 
-Df_pixelate2::Df_pixelate2(ofJson settings) : Df_pixelate2()
+Df_pixelate2::Df_pixelate2(ofJson settings)
+	: Df_pixelate2()
 {
 	loadSettings(settings);
 }
@@ -116,13 +117,18 @@ void Df_pixelate2::renderImGuiSettings()
 
 void Df_pixelate2::loadSettings(ofJson settings)
 {
-	selectedPixelType = ofx2d::getIndex(drawPixels.v_DrawPixelsNames, settings.value("pixelType", "Undefined"), selectedPixelType);
-	tilesX = settings.value("tilesX", tilesX);
-	tilesY = settings.value("tilesY", tilesY);
-	pixelMirror = settings.value("pixelMirror", pixelMirror);
+	try {
+		selectedPixelType = ofx2d::getIndex(drawPixels.v_DrawPixelsNames, settings.value("pixelType", "Undefined"), selectedPixelType);
+		tilesX = settings.value("tilesX", tilesX);
+		tilesY = settings.value("tilesY", tilesY);
+		pixelMirror = settings.value("pixelMirror", pixelMirror);
 
-	ofJson pixelSettings = settings.value("pixelSettings", pixelSettings);
-	drawPixels.v_DrawPixels[selectedPixelType]->loadSettings(pixelSettings);
+		ofJson pixelSettings = settings.value("pixelSettings", pixelSettings);
+		drawPixels.v_DrawPixels[selectedPixelType]->loadSettings(pixelSettings);
+	}
+	catch (...) {
+		ofLogNotice() << "Failed to load settings Df_pixelate2";
+	}
 }
 
 ofJson Df_pixelate2::getSettings()

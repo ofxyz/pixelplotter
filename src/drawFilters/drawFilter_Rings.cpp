@@ -22,17 +22,21 @@ ofJson Df_rings::getSettings() {
 
 
 void Df_rings::loadSettings(ofJson settings) {
-	name = settings.value("name", "rings");
-	cvThresh = settings.value("cvThresh", cvThresh);
-	cvBlur = settings.value("cvBlur", cvBlur);
-	cvSteps = settings.value("cvSteps", cvSteps);
-	lineWidth = settings.value("lineWidth", lineWidth);
+	try {
+		name = settings.value("name", "rings");
+		cvThresh = settings.value("cvThresh", cvThresh);
+		cvBlur = settings.value("cvBlur", cvBlur);
+		cvSteps = settings.value("cvSteps", cvSteps);
+		lineWidth = settings.value("lineWidth", lineWidth);
 
-	c_blob.x = settings.value("colors:blob:r", c_blob.x);
-	c_blob.y = settings.value("colors:blob:g", c_blob.y);
-	c_blob.z = settings.value("colors:blob:b", c_blob.z);
-	c_blob.w = settings.value("colors:blob:a", c_blob.w);
-
+		c_blob.x = settings.value("colors:blob:r", c_blob.x);
+		c_blob.y = settings.value("colors:blob:g", c_blob.y);
+		c_blob.z = settings.value("colors:blob:b", c_blob.z);
+		c_blob.w = settings.value("colors:blob:a", c_blob.w);
+	}
+	catch (...) {
+		ofLogNotice() << "Failed to load settings Df_rings";
+	}
 	return;
 }
 

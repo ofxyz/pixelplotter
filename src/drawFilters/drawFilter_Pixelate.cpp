@@ -59,74 +59,79 @@ void Df_pixelate::InitDefaults()
 }
 
 void Df_pixelate::loadSettings(ofJson settings) {
-	name = settings.value("name", "pixelate");
-	visible = settings.value("visible", true);
-	useMask = settings.value("useMask", false);
-	maskMargin = settings.value("maskMargin", maskMargin);
-	ui_currentPixelType = ofx2d::getIndex(v_pixelType, settings.value("pixelType", "Undefined"), 1);
-	tilesX = settings.value("tilesX", 64);
-	tilesY = settings.value("tilesY", 64);
-	polka = settings.value("polka", false);
-	usePalette = settings.value("usePalette", usePalette);
-	addonx = settings.value("addonx", 0);
-	addony = settings.value("addony", 0);
-	addonx_rand = settings.value("addonx_rand", 0);
-	addony_rand = settings.value("addony_rand", 0);
-	offsetx = settings.value("offsetx", 0);
-	offsety = settings.value("offsety", 0);
-	offsetx_rand = settings.value("offsetx_rand", 0);
-	offsety_rand = settings.value("offsety_rand", 0);
+	try {
+		name = settings.value("name", "pixelate");
+		visible = settings.value("visible", true);
+		useMask = settings.value("useMask", false);
+		maskMargin = settings.value("maskMargin", maskMargin);
+		ui_currentPixelType = ofx2d::getIndex(v_pixelType, settings.value("pixelType", "Undefined"), 1);
+		tilesX = settings.value("tilesX", 64);
+		tilesY = settings.value("tilesY", 64);
+		polka = settings.value("polka", false);
+		usePalette = settings.value("usePalette", usePalette);
+		addonx = settings.value("addonx", 0);
+		addony = settings.value("addony", 0);
+		addonx_rand = settings.value("addonx_rand", 0);
+		addony_rand = settings.value("addony_rand", 0);
+		offsetx = settings.value("offsetx", 0);
+		offsety = settings.value("offsety", 0);
+		offsetx_rand = settings.value("offsetx_rand", 0);
+		offsety_rand = settings.value("offsety_rand", 0);
 
-	ui_currentIgnore = ofx2d::getIndex(v_ignoreOptions, settings.value("currentIgnore", "None"), 0);
-	ignorePercent = settings.value("ignorePercent", ignorePercent);
-	ignoreModulo = settings.value("ignoreModulo", ignoreModulo);
-	ignorePlaid = settings.value("ignorePlaid", ignorePlaid);
-	ignoreScan = settings.value("ignoreScan", ignoreScan);
-	ignoreSeed = settings.value("ignoreSeed", ignoreSeed);
-	ignoreSeedAddon = settings.value("ignoreSeedAddon", ignoreSeedAddon);
+		ui_currentIgnore = ofx2d::getIndex(v_ignoreOptions, settings.value("currentIgnore", "None"), 0);
+		ignorePercent = settings.value("ignorePercent", ignorePercent);
+		ignoreModulo = settings.value("ignoreModulo", ignoreModulo);
+		ignorePlaid = settings.value("ignorePlaid", ignorePlaid);
+		ignoreScan = settings.value("ignoreScan", ignoreScan);
+		ignoreSeed = settings.value("ignoreSeed", ignoreSeed);
+		ignoreSeedAddon = settings.value("ignoreSeedAddon", ignoreSeedAddon);
 
-	cLerp = settings.value("cLerp", cLerp);
-	rounded = settings.value("rounded", rounded);
+		cLerp = settings.value("cLerp", cLerp);
+		rounded = settings.value("rounded", rounded);
 
-	ui_currentRotationMap = ofx2d::getIndex(v_pixelDataMapOptions, settings.value("rotationMap", "None"), 0);
-	rotationMinMax[0] = settings.value("rotationMin", 0);
-	rotationMinMax[1] = settings.value("rotationMax", 0);
+		ui_currentRotationMap = ofx2d::getIndex(v_pixelDataMapOptions, settings.value("rotationMap", "None"), 0);
+		rotationMinMax[0] = settings.value("rotationMin", 0);
+		rotationMinMax[1] = settings.value("rotationMax", 0);
 
-	ui_currentWidthMap = ofx2d::getIndex(v_pixelDataMapOptions, settings.value("widthMap", "None"), 0);
-	widthMinMax[0] = settings.value("widthMin", 0);
-	widthMinMax[1] = settings.value("widthMax", 0);
+		ui_currentWidthMap = ofx2d::getIndex(v_pixelDataMapOptions, settings.value("widthMap", "None"), 0);
+		widthMinMax[0] = settings.value("widthMin", 0);
+		widthMinMax[1] = settings.value("widthMax", 0);
 
-	ui_currentHeightMap = ofx2d::getIndex(v_pixelDataMapOptions, settings.value("heightMap", "None"), 0);
-	heightMinMax[0] = settings.value("heightMin", 0);
-	heightMinMax[1] = settings.value("heightMax", 0);
+		ui_currentHeightMap = ofx2d::getIndex(v_pixelDataMapOptions, settings.value("heightMap", "None"), 0);
+		heightMinMax[0] = settings.value("heightMin", 0);
+		heightMinMax[1] = settings.value("heightMax", 0);
 
-	currentBlendModeIndex = settings.value("blendMode", 0);
+		currentBlendModeIndex = settings.value("blendMode", 0);
 
-	// Colours
-	c_black.x = settings["colors"]["black"].value("r", c_black.x);
-	c_black.y = settings["colors"]["black"].value("g", c_black.y);
-	c_black.z = settings["colors"]["black"].value("b", c_black.z);
-	c_black.w = settings["colors"]["black"].value("a", c_black.w);
+		// Colours
+		c_black.x = settings["colors"]["black"].value("r", c_black.x);
+		c_black.y = settings["colors"]["black"].value("g", c_black.y);
+		c_black.z = settings["colors"]["black"].value("b", c_black.z);
+		c_black.w = settings["colors"]["black"].value("a", c_black.w);
 
-	c_yellowGreen.x = settings["colors"]["yellowGreen"].value("r", c_yellowGreen.x);
-	c_yellowGreen.y = settings["colors"]["yellowGreen"].value("g", c_yellowGreen.y);
-	c_yellowGreen.z = settings["colors"]["yellowGreen"].value("b", c_yellowGreen.z);
-	c_yellowGreen.w = settings["colors"]["yellowGreen"].value("a", c_yellowGreen.w);
+		c_yellowGreen.x = settings["colors"]["yellowGreen"].value("r", c_yellowGreen.x);
+		c_yellowGreen.y = settings["colors"]["yellowGreen"].value("g", c_yellowGreen.y);
+		c_yellowGreen.z = settings["colors"]["yellowGreen"].value("b", c_yellowGreen.z);
+		c_yellowGreen.w = settings["colors"]["yellowGreen"].value("a", c_yellowGreen.w);
 
-	c_magentaRed.x = settings["colors"]["magentaRed"].value("r", c_magentaRed.x);
-	c_magentaRed.y = settings["colors"]["magentaRed"].value("g", c_magentaRed.y);
-	c_magentaRed.z = settings["colors"]["magentaRed"].value("b", c_magentaRed.z);
-	c_magentaRed.w = settings["colors"]["magentaRed"].value("a", c_magentaRed.w);
+		c_magentaRed.x = settings["colors"]["magentaRed"].value("r", c_magentaRed.x);
+		c_magentaRed.y = settings["colors"]["magentaRed"].value("g", c_magentaRed.y);
+		c_magentaRed.z = settings["colors"]["magentaRed"].value("b", c_magentaRed.z);
+		c_magentaRed.w = settings["colors"]["magentaRed"].value("a", c_magentaRed.w);
 
-	c_cyanBlue.x = settings["colors"]["cyanBlue"].value("r", c_cyanBlue.x);
-	c_cyanBlue.y = settings["colors"]["cyanBlue"].value("g", c_cyanBlue.y);
-	c_cyanBlue.z = settings["colors"]["cyanBlue"].value("b", c_cyanBlue.z);
-	c_cyanBlue.w = settings["colors"]["cyanBlue"].value("a", c_cyanBlue.w);
+		c_cyanBlue.x = settings["colors"]["cyanBlue"].value("r", c_cyanBlue.x);
+		c_cyanBlue.y = settings["colors"]["cyanBlue"].value("g", c_cyanBlue.y);
+		c_cyanBlue.z = settings["colors"]["cyanBlue"].value("b", c_cyanBlue.z);
+		c_cyanBlue.w = settings["colors"]["cyanBlue"].value("a", c_cyanBlue.w);
 
-	c_mask.x = settings["colors"]["mask"].value("r", c_mask.x);
-	c_mask.y = settings["colors"]["mask"].value("g", c_mask.y);
-	c_mask.z = settings["colors"]["mask"].value("b", c_mask.z);
-	c_mask.w = settings["colors"]["mask"].value("a", c_mask.w);
+		c_mask.x = settings["colors"]["mask"].value("r", c_mask.x);
+		c_mask.y = settings["colors"]["mask"].value("g", c_mask.y);
+		c_mask.z = settings["colors"]["mask"].value("b", c_mask.z);
+		c_mask.w = settings["colors"]["mask"].value("a", c_mask.w);
+	}
+	catch (...) {
+		ofLogNotice() << "Failed to load settings Df_pixelate";
+	}
 }
 
 ofJson Df_pixelate::getSettings() {

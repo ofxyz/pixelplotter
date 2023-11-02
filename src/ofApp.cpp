@@ -31,7 +31,7 @@ void ofApp::setup() {
 
 	ofGui.loadPresets();
 
-	plotCanvas.dF.addRandomFilter();
+	plotCanvas.dF.addRandom();
 
 	_bFresh = true;
 }
@@ -118,8 +118,8 @@ void ofApp::saveSettings(string& filepath) {
 		settings["imageFilters"].push_back(plotCanvas.sourceController.iF.v_ImageFilters[i]->getSettings());
 	}
 
-	for (int i = 0; i < plotCanvas.dF.v_DrawFilters.size(); i++) {
-		settings["drawFilters"].push_back(plotCanvas.dF.v_DrawFilters[i]->getSettings());
+	for (int i = 0; i < plotCanvas.dF.v_Objects.size(); i++) {
+		settings["drawFilters"].push_back(plotCanvas.dF.v_Objects[i]->getSettings());
 	}
 
 	settings["plotCanvas"] = plotCanvas.getSettings();
@@ -153,7 +153,7 @@ void ofApp::loadSettings(ofJson settings) {
 	ofJson dDilters = settings.value("drawFilters", ofJson::array());
 	if (!dDilters.empty()) {
 		for (auto& fSettings : dDilters) {
-			plotCanvas.dF.addFilter(fSettings);
+			plotCanvas.dF.add(fSettings);
 		}
 	}
 

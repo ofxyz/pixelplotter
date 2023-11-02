@@ -10,8 +10,13 @@ ofJson Df_mesh::getSettings() {
 }
 
 void Df_mesh::loadSettings(ofJson settings) {
-	name = settings.value("name", name);
-	rotationOffset = settings.value("rotationOffset", rotationOffset);
+	try{
+		name = settings.value("name", name);
+		rotationOffset = settings.value("rotationOffset", rotationOffset);
+	}
+	catch (...) {
+		ofLogNotice() << "Failed to load settings Df_mesh";
+	}
 	return;
 }
 
