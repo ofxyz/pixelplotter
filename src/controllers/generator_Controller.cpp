@@ -1,10 +1,11 @@
 #include "generator_Controller.h"
 #include "generator.h"
 #include "generator_Plaids.h"
+#include "ofx2d.h"
 
-GeneratorController::GeneratorController(ofApp* app)
+GeneratorController::GeneratorController()
 {
-	pixelplotter = app;
+	pixelplotter = (ofApp*)ofGetAppPtr();
 
 	v_GeneratorNames = {
 	"Add Generator ...",
@@ -12,9 +13,12 @@ GeneratorController::GeneratorController(ofApp* app)
 	};
 }
 
-GeneratorController::GeneratorController()
+template <typename t> void GeneratorController::move(std::vector<t>& v, size_t oldIndex, size_t newIndex)
 {
-
+	if (oldIndex > newIndex)
+		std::rotate(v.rend() - oldIndex - 1, v.rend() - oldIndex, v.rend() - newIndex);
+	else
+		std::rotate(v.begin() + oldIndex, v.begin() + oldIndex + 1, v.begin() + newIndex + 1);
 }
 
 void GeneratorController::reorder()
@@ -88,13 +92,4 @@ void GeneratorController::clearFilters()
 		v_Generators[i] = nullptr;
 	}
 	v_Generators.clear();
-}
-
-template <typename t>
-void GeneratorController::move(std::vector<t>& v, size_t oldIndex, size_t newIndex)
-{
-	if (oldIndex > newIndex)
-		std::rotate(v.rend() - oldIndex - 1, v.rend() - oldIndex, v.rend() - newIndex);
-	else
-		std::rotate(v.begin() + oldIndex, v.begin() + oldIndex + 1, v.begin() + newIndex + 1);
 }

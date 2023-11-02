@@ -1,13 +1,12 @@
 #include "ofApp.h"
-#include "soundManager.h"
-
+#include "soundDevice_Controller.h"
 #include "imgui_internal.h"
 #include "ImHelpers.h"
 #include "imgui_stdlib.h"
 #include "IconsFontAwesome5.h"
 #include "ImGui_Widget_Tooltip.h"
 
-void SoundManager::renderImGuiSettings() {
+void soundDeviceController::renderImGuiSettings() {
 	if (!soundDeviceNames.empty())
 	{
 		if (ofxImGui::VectorCombo("Sound Devices", &currentSoundDeviceIndex, soundDeviceNames))
@@ -18,16 +17,16 @@ void SoundManager::renderImGuiSettings() {
 	}
 }
 
-void SoundManager::loadSettings(ofJson settings) {
+void soundDeviceController::loadSettings(ofJson settings) {
 
 }
 
-ofJson SoundManager::getSettings() {
+ofJson soundDeviceController::getSettings() {
 	ofJson settings;
 	return settings;
 }
 
-void SoundManager::loadSoundDeviceIndex() {
+void soundDeviceController::loadSoundDeviceIndex() {
 	ofSoundStreamSettings settings;
 
 	if (!soundDevices.empty()) {
@@ -45,7 +44,7 @@ void SoundManager::loadSoundDeviceIndex() {
 	soundStream.setOutput(pixelplotter);
 }
 
-void SoundManager::setup(ofApp* app) {
+void soundDeviceController::setup(ofApp* app) {
 	pixelplotter = app;
 
 	left.assign(bufferSize, 0.0);
@@ -77,7 +76,9 @@ void SoundManager::setup(ofApp* app) {
 
 }
 
-void SoundManager::update() {
+void soundDeviceController::update() {
+	// TODO: Only do this when sound is active
+
 	//lets scale the vol up to a 0-1 range 
 	scaledVol = ofMap(smoothedVol, 0.0, 0.17, 0.0, 1.0, true);
 
@@ -91,7 +92,7 @@ void SoundManager::update() {
 }
 
 //--------------------------------------------------------------
-void SoundManager::audioIn(ofSoundBuffer& input) {
+void soundDeviceController::audioIn(ofSoundBuffer& input) {
 
 	float curVol = 0.0;
 

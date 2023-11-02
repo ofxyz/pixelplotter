@@ -181,16 +181,6 @@ void DrawFilter::setBlendMode()
 	}
 }
 
-float DrawFilter::percent(float percentage, float total)
-{
-	return (percentage / 100) * total;
-}
-
-double DrawFilter::findDiagonal(double a, double b)
-{
-	return sqrt(a * a + b * b);
-}
-
 bool DrawFilter::isFresh()
 {
 	return bFresh;

@@ -17,6 +17,7 @@ public:
 
 	ImVec4 cBg = ofColor(255, 255, 255, 255);
 
+	// TODO: Finish Color Manager
 	class sColor {
 	public:
 		sColor(ofColor c, std::string n, int p = 0);

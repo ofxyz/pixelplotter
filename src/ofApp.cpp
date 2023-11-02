@@ -32,7 +32,8 @@ void ofApp::setup() {
 	ofGui.loadPresets();
 
 	plotCanvas.dF.addRandomFilter();
-	resetImageOffset();
+
+	_bFresh = true;
 }
 
 //--------------------------------------------------------------
@@ -42,16 +43,20 @@ void ofApp::exit() {
 
 //--------------------------------------------------------------
 void ofApp::update() {
+	// TODO: Move to appropriate location
 	if (cleanImageFilters) {
 		plotCanvas.sourceController.iF.cleanFilters();
 		cleanImageFilters = false;
 	}
 
+	// Move to ImGui?
 	if (bLoadSettingsNextFrame)
 	{
 		loadSettings(ofGui.getCurrentPreset());
 		bLoadSettingsNextFrame = false;
 	}
+
+	// Move to Source Controller
 	if (plotCanvas.sourceController.loadImageNextFrame)
 	{
 		plotCanvas.sourceController.loadSourceIndex();
@@ -85,6 +90,16 @@ void ofApp::resetImageOffset() {
 void ofApp::resetZoom() {
 	zoomLevel = 1;
 	resetImageOffset();
+}
+
+bool ofApp::isFresh()
+{
+	return _bFresh;
+}
+
+void ofApp::setFresh(bool fresh)
+{
+	_bFresh = fresh;
 }
 
 void ofApp::centerImage() {

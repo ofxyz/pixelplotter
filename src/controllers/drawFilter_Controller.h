@@ -1,6 +1,7 @@
 #pragma once
 #include "drawFilter.h"
 #include "drawFilter_Pixelate.h"
+#include "drawFilter_Pixelate2.h"
 #include "drawFilter_Rings.h"
 #include "drawFilter_Noise.h"
 #include "drawFilter_Mesh.h"
@@ -17,22 +18,24 @@ public:
 		MESH,
 		NOISE,
 		PIXELATE,
+		PIXELATE2,
 		RINGS
 	};
 
 	const std::map <std::string, DrawFilterController::Filtertype> mapFilters{
-		{ "Lumes"    , Filtertype::LUMES },
-		{ "Mesh"     , Filtertype::MESH },
-		{ "Noise"    , Filtertype::NOISE },
-		{ "Pixelate" , Filtertype::PIXELATE },
-		{ "Rings"    , Filtertype::RINGS }
+		{ "Lumes"     , Filtertype::LUMES },
+		{ "Mesh"      , Filtertype::MESH },
+		{ "Noise"     , Filtertype::NOISE },
+		{ "Pixelate"  , Filtertype::PIXELATE },
+		{ "Pixelate2" , Filtertype::PIXELATE2 },
+		{ "Rings"     , Filtertype::RINGS }
 	};
 
 	std::vector<std::string> v_DrawFilterNames;
 
-	void update();
-
 	template <typename t> void move(std::vector<t>& v, size_t oldIndex, size_t newIndex);
+
+	void update();
 
 	std::vector<std::shared_ptr<DrawFilter>> v_DrawFilters;
 

@@ -47,10 +47,6 @@ public:
 
 	void setBlendMode();
 
-	float percent(float percentage, float total);
-
-	double findDiagonal(double a, double b);
-
 	float lineWidth = 8;
 
 	ImVec4 c_cyanBlue = ofColor(0, 174, 239, 255);

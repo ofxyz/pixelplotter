@@ -4,7 +4,6 @@
 
 class DrawPixel;
 
-//TODO: Should this be called DrawPixel_Controller?
 class DrawPixelController {
 public:
 	std::vector<std::string> v_DrawPixelsNames;

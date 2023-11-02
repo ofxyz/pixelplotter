@@ -4,9 +4,9 @@
 
 class Df_pixelate : public DrawFilter {
 public:
-	Df_pixelate();;
+	Df_pixelate();
 
-	Df_pixelate(ofJson settings);;
+	Df_pixelate(ofJson settings);
 
 	void InitDefaults();
 

@@ -3,7 +3,7 @@
 
 #include "ofGui.h"
 #include "canvas.h"
-#include "soundManager.h"
+#include "soundDevice_Controller.h"
 
 class ofApp : public ofBaseApp {
 
@@ -43,9 +43,9 @@ public:
 
 	OfGui ofGui;
 	Canvas plotCanvas;
-	SoundManager soundManager;
+	soundDeviceController soundManager;
 
-	bool vSync = false;
+	bool vSync = true;
 	bool cleanImageFilters = false;
 	bool bDragCanvas = false;
 	bool bLoadSettingsNextFrame;
@@ -59,4 +59,10 @@ public:
 	glm::vec2 lastDraggedPos;
 
 	ofColor c_background;
+
+	bool isFresh();
+	void setFresh(bool fresh);
+
+private:
+	bool _bFresh = false;
 };

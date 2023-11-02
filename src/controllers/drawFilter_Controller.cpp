@@ -1,5 +1,6 @@
 #pragma once
 #include "drawFilter_Controller.h"
+#include "ofx2d.h"
 
 DrawFilterController::DrawFilterController()
 {
@@ -11,6 +12,14 @@ DrawFilterController::DrawFilterController()
 	}
 }
 
+template <typename t> void DrawFilterController::move(std::vector<t>& v, size_t oldIndex, size_t newIndex)
+{
+	if (oldIndex > newIndex)
+		std::rotate(v.rend() - oldIndex - 1, v.rend() - oldIndex, v.rend() - newIndex);
+	else
+		std::rotate(v.begin() + oldIndex, v.begin() + oldIndex + 1, v.begin() + newIndex + 1);
+}
+
 void DrawFilterController::update() {
 	for (const auto& filter : v_DrawFilters) {
 		if (filter->isFresh()) {
@@ -18,14 +27,6 @@ void DrawFilterController::update() {
 			setFresh(true);
 		}
 	}
-}
-
-template <typename t> void DrawFilterController::move(std::vector<t>& v, size_t oldIndex, size_t newIndex)
-{
-	if (oldIndex > newIndex)
-		std::rotate(v.rend() - oldIndex - 1, v.rend() - oldIndex, v.rend() - newIndex);
-	else
-		std::rotate(v.begin() + oldIndex, v.begin() + oldIndex + 1, v.begin() + newIndex + 1);
 }
 
 void DrawFilterController::reorder() {
@@ -53,6 +54,10 @@ void DrawFilterController::addFilter(Filtertype filterType) {
 		{
 			v_DrawFilters.push_back(std::make_shared<Df_pixelate>());
 		}
+		else if (filterType == Filtertype::PIXELATE2)
+		{
+			v_DrawFilters.push_back(std::make_shared<Df_pixelate2>());
+		}
 		else if (filterType == Filtertype::RINGS)
 		{
 			v_DrawFilters.push_back(std::make_shared<Df_rings>());
@@ -79,6 +84,10 @@ void DrawFilterController::addFilter(ofJson filterSettings) {
 		if (filterType == Filtertype::PIXELATE)
 		{
 			v_DrawFilters.push_back(std::make_shared<Df_pixelate>(filterSettings));
+		}
+		else if (filterType == Filtertype::PIXELATE2)
+		{
+			v_DrawFilters.push_back(std::make_shared<Df_pixelate2>(filterSettings));
 		}
 		else if (filterType == Filtertype::RINGS)
 		{

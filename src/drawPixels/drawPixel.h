@@ -1,6 +1,7 @@
 #pragma once
 #include "ofApp.h"
 #include "ofxImGui.h"
+
 /*
 	A DrawPixel draws rectangular art based on a colour.
  */
@@ -26,6 +27,11 @@ public:
 	ImVec4 c_magentaRed = ofColor(236, 0, 140, 255);
 	ImVec4 c_yellowGreen = ofColor(255, 242, 0, 255);
 	ImVec4 c_black = ofColor(0, 0, 0, 255);
+
+	// TODO: Create colour palette manager... Swatches
+	// We need to be able to re-order these and save it 
+	// Need name, order, ImGui
+	// std::vector<ImVec4*> c_colors;
 
 	float rounded = 0;
 

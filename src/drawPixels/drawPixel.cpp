@@ -117,6 +117,26 @@ void DrawPixel::renderImGuiColourSettings()
 {
 	if (ImGui::CollapsingHeader("Colours ##drawFilter"))
 	{
+		/* Make it drag and Drop
+		static const char* item_names[] = { "Item One", "Item Two", "Item Three", "Item Four", "Item Five" };
+		for (int n = 0; n < IM_ARRAYSIZE(item_names); n++)
+		{
+			const char* item = item_names[n];
+			ImGui::Selectable(item);
+
+			if (ImGui::IsItemActive() && !ImGui::IsItemHovered())
+			{
+				int n_next = n + (ImGui::GetMouseDragDelta(0).y < 0.f ? -1 : 1);
+				if (n_next >= 0 && n_next < IM_ARRAYSIZE(item_names))
+				{
+					item_names[n] = item_names[n_next];
+					item_names[n_next] = item;
+					ImGui::ResetMouseDragDelta();
+				}
+			}
+		}
+		*/
+
 		if (ImGui::ColorEdit4("Cyan / Blue ##drawFilter", (float*)&c_cyanBlue, ImGuiColorEditFlags_NoInputs)) {
 			setFresh(true);
 		}

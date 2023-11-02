@@ -29,6 +29,7 @@ void Dp_separateRGB_Bars01::draw(ofColor c, glm::vec2 dim, glm::vec2 pos /*= { 0
 	rgbk[0] = ofMap(rgbk[0], 0, totalInk, 0, 255);
 	rgbk[1] = ofMap(rgbk[1], 0, totalInk, 0, 255);
 	rgbk[2] = ofMap(rgbk[2], 0, totalInk, 0, 255);
+	rgbk[3] = ofMap(rgbk[3], 0, totalInk, 0, 255);
 
 	float barCount = 3;
 	if (rgbk[0] == 0) {

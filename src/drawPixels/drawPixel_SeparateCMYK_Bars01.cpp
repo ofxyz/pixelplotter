@@ -28,6 +28,19 @@ void Dp_separateCMYK_Bars01::draw(ofColor c, glm::vec2 dim, glm::vec2 pos /*= { 
 
 	float totalInk = cmyk[0] + cmyk[1] + cmyk[2] + cmyk[3] + whiteVal;
 
+	// TODO: Make a rich black conversion
+	// Or maybe add adjustment curves?
+	/*
+	if (cmyk[3] > 0.1) {
+		cmyk[3] *= 0.5;
+		double z = cmyk[3] * 0.5;
+		// Don't add new colors just rich existing
+		if (cmyk[0] > 0) cmyk[0] += z;
+		if (cmyk[1] > 0) cmyk[1] += z;
+		if (cmyk[2] > 0) cmyk[2] += z;
+	}
+	*/
+
 	cmyk[0] = ofMap(cmyk[0], 0, totalInk, 0, 1);
 	cmyk[1] = ofMap(cmyk[1], 0, totalInk, 0, 1);
 	cmyk[2] = ofMap(cmyk[2], 0, totalInk, 0, 1);

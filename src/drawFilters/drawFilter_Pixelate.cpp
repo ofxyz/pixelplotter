@@ -816,7 +816,7 @@ void Df_pixelate::drawStarHash(float offsetX, float offsetY, float w, float h, o
 
 	if (lineCount == 0) return;
 	float strokeWidth = 1;
-	float lineLen = findDiagonal(w,h);
+	float lineLen = ofx2d::findDiagonal(w,h);
 	float angle = 360 / lineCount;
 
 	ofPushMatrix();
@@ -926,8 +926,8 @@ float Df_pixelate::getHeight(ofColor c, float x, float y, float r) {
 }
 
 void Df_pixelate::draw(ofImage* input, float width, float height, float x, float y) {
-	setFresh(false);
 	if (!visible) return;
+	setFresh(false);
 
 	int imgW = input->getWidth();
 	int imgH = input->getHeight();

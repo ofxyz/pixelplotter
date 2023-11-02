@@ -1,18 +1,26 @@
 #pragma once
 
+// Controllers are really Object Managing Factories
+// Might need a better names here, something like:
+
+// - MF_DrawFilters
+// - MF_DrawPixels
+// - MF_Generator
+// - MF_SoundDevices
+// - MF_VideoDevices
+// - MF_Images
+
 /*
 
 class ofApp;
 
-class Controller {
+class Omf {
 public:
 	ofApp* pixelplotter{ nullptr };
-	Controller();
+	Omf();
 
 	std::vector<std::string> v_factory_types;
-	std::vector<std::string> v_menu_names;
-	
-	template <typename t> void move(std::vector<t>& v, size_t oldIndex, size_t newIndex);
+	std::vector<std::string> v_human_names;
 	
 	void update();
 

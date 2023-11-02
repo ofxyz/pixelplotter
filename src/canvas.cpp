@@ -295,6 +295,8 @@ void Canvas::update() {
 	if (isFresh() || sourceController.frameBuffer.isFresh()) {
 		updateFbo(&sourceController.frameBuffer.getFrame());
 	}
+	// TODO: Update() always returns freshness?
+	// return isFresh();
 }
 
 void Canvas::updateFbo(ofImage* img) {

@@ -4,7 +4,7 @@
 
 class ofApp;
 
-class SoundManager {
+class soundDeviceController { 
 public:
 	ofApp* pixelplotter;
 	ofSoundStream soundStream;

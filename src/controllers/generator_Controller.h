@@ -5,14 +5,14 @@ class ofApp;
 
 class GeneratorController {
 public:
-	template <typename t> void move(std::vector<t>& v, size_t oldIndex, size_t newIndex);
 	ofApp* pixelplotter;
 	GeneratorController();
-	GeneratorController(ofApp* app);;
 
 	std::vector<Generator*> v_Generators;
 
 	std::vector<std::string> v_GeneratorNames;
+
+	template <typename t> void move(std::vector<t>& v, size_t oldIndex, size_t newIndex);
 
 	void reorder();
 

@@ -96,8 +96,6 @@ void If_drawPixel::apply(ofImage* img) {
 			newY = y + height;
 		}
 
-		//ofColor c, glm::vec2 dim, glm::vec2 pos = { 0,0 }, glm::vec2 posNorm = { 0,0 }
-
 		for (float x = 0; x < hCount * width; x += width) {
 			if (bMirror && (xcount % 2 == 0)) {
 				drawPixels.v_DrawPixels[selectedPixelType]->draw(c_col, { -width, newHeight }, { x + (width * 0.5), newY + (newHeight * 0.5) });
@@ -107,6 +105,7 @@ void If_drawPixel::apply(ofImage* img) {
 			}
 			xcount++;
 		}
+		xcount = 0;
 		ycount++;
 	}
 	cfbo.end();
