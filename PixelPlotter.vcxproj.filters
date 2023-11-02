@@ -217,7 +217,7 @@
     <ClCompile Include="src\imageFilters\imageFilter.cpp">
       <Filter>src\imageFilters</Filter>
     </ClCompile>
-    <ClCompile Include="src\controllers\controller.cpp">
+    <ClCompile Include="src\controllers\Managing_Factory.cpp">
       <Filter>src\controllers</Filter>
     </ClCompile>
     <ClCompile Include="src\drawFilters\drawFilter_Pixelate2.cpp">
@@ -1787,7 +1787,7 @@
     <ClInclude Include="src\imageFilters\imageFilter.h">
       <Filter>src\imageFilters</Filter>
     </ClInclude>
-    <ClInclude Include="src\controllers\controller.h">
+    <ClInclude Include="src\controllers\Managing_Factory.h">
       <Filter>src\controllers</Filter>
     </ClInclude>
     <ClInclude Include="src\drawFilters\drawFilter_Pixelate2.h">
