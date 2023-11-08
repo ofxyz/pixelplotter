@@ -229,6 +229,15 @@
     <ClCompile Include="src\plants\swatch_Controller.cpp">
       <Filter>src\plants</Filter>
     </ClCompile>
+    <ClCompile Include="src\drawPixels\drawPixel_SeparateCMYK_Rect01.cpp">
+      <Filter>src\drawPixels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\drawPixels\drawPixel_SeparateCMYK_Rect02.cpp">
+      <Filter>src\drawPixels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\drawPixels\drawPixel_SeparateCMYK_Rect03.cpp">
+      <Filter>src\drawPixels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -1798,6 +1807,15 @@
     </ClInclude>
     <ClInclude Include="src\plants\swatch_Controller.h">
       <Filter>src\plants</Filter>
+    </ClInclude>
+    <ClInclude Include="src\drawPixels\drawPixel_SeparateCMYK_Rect01.h">
+      <Filter>src\drawPixels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\drawPixels\drawPixel_SeparateCMYK_Rect02.h">
+      <Filter>src\drawPixels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\drawPixels\drawPixel_SeparateCMYK_Rect03.h">
+      <Filter>src\drawPixels</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

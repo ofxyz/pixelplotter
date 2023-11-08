@@ -21,10 +21,8 @@ DrawFilterController::DrawFilterController()
 		"Rings"
 	};
 
-	v_MenuValues.push_back("Add Plotter ...");
-	for (std::string s : v_ObjectNames) {
-		v_MenuValues.push_back(s);
-	}
+	generateMenuNames();
+
 }
 
 template <typename t> void DrawFilterController::move(std::vector<t>& v, size_t oldIndex, size_t newIndex)
@@ -127,4 +125,13 @@ bool DrawFilterController::isFresh() {
 
 void DrawFilterController::setFresh(bool fresh) {
 	_bFresh = fresh;
+}
+
+void DrawFilterController::generateMenuNames()
+{
+	v_MenuValues.clear();
+	v_MenuValues.push_back("Add Plotter ...");
+	for (std::string s : v_ObjectNames) {
+		v_MenuValues.push_back(s);
+	}
 }

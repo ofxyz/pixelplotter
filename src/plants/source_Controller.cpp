@@ -11,7 +11,7 @@ void SourceController::renderImGuiSettings() {
 	{
 		if (ofxImGui::VectorCombo("##Source Image", &currentSourceIndex, sourceNames))
 		{
-			//loadSourceIndex();
+			loadSourceIndex();
 			loadImageNextFrame = true;
 		}
 	}
@@ -104,7 +104,7 @@ void SourceController::buildSourceNames() {
 	sourceNames.clear();
 	sourceNames.insert(sourceNames.end(), videoDeviceNames.begin(), videoDeviceNames.end());
 	sourceNames.insert(sourceNames.end(), videoFileNames.begin(), videoFileNames.end());
-	sourceNames.insert(sourceNames.end(), gC.v_GeneratorNames.begin(), gC.v_GeneratorNames.end());
+	sourceNames.insert(sourceNames.end(), gC.v_ObjectNames.begin(), gC.v_ObjectNames.end());
 	sourceNames.insert(sourceNames.end(), imgFileNames.begin(), imgFileNames.end());
 }
 
@@ -130,11 +130,11 @@ void SourceController::loadSourceIndex() {
 	else if (currentSourceIndex < videoDevices.size() + videoFiles.size()) {
 		loadVideo(videoFiles[currentSourceIndex - videoDevices.size()].getAbsolutePath());
 	}
-	else if (currentSourceIndex < videoDevices.size() + videoFiles.size() + (gC.v_GeneratorNames.size())) {
+	else if (currentSourceIndex < videoDevices.size() + videoFiles.size() + (gC.v_ObjectNames.size())) {
 		//loadGenerator(currentSourceIndex - videoDevices.size() - videoFiles.size());
 	}
 	else {
-		loadImage(imgFiles[currentSourceIndex - videoDevices.size() - videoFiles.size()].getAbsolutePath());
+		loadImage(imgFiles[currentSourceIndex - videoDevices.size() - videoFiles.size() - gC.v_ObjectNames.size()].getAbsolutePath());
 	}
 
 	isResized = true;

@@ -41,14 +41,6 @@ void Df_pixelate2::draw(ofImage* input, float width /*= 0*/, float height /*= 0*
 	float tileH = (float)imgH / (float)tilesY;
 	float halfTileW = tileW * 0.5;
 	float halfTileH = tileH * 0.5;
-	
-	float fx = x + halfTileW;
-	float fy = y + halfTileH;
-
-	if (width + height != 0) {
-		fx = ofMap(fx, 0, imgW, 0, width);
-		fy = ofMap(fy, 0, imgH, 0, height);
-	}
 
 	for (int y = 0; y < tilesY; y++) {
 		ofPushMatrix();
@@ -61,7 +53,10 @@ void Df_pixelate2::draw(ofImage* input, float width /*= 0*/, float height /*= 0*
 			if (pixelMirror && (x % 2 == 0)) {
 				ofScale(-1, 1);
 			}
-			drawPixels.v_DrawPixels[selectedPixelType]->draw(c, { tileW, tileH });
+			if (pixelMirror && (y % 2 == 0)) {
+				ofScale(1, -1);
+			}
+			drawPixels.v_DrawPixels[selectedPixelType]->draw(c, { ofMap(tileW, 0, imgW, 0, width), ofMap(tileH, 0, imgH, 0, height) });
 			ofPopMatrix();
 		}
 		ofPopMatrix();

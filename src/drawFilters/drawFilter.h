@@ -20,21 +20,21 @@ public:
 
 	virtual void draw(ofImage* input, float width = 0, float height = 0, float x = 0, float y = 0) = 0;
 	virtual void renderImGuiSettings() = 0;
-	// TODO: Create pointer
+	// TODO: Create pointer?
 	virtual void loadSettings(ofJson settings) = 0;
 	virtual ofJson getSettings() = 0;
 
 	void renderUpDownButtons();
 
 	// -------------------------------------------------
-	// Delete after implementing drawPixel class ...
+	// TODO: Delete after implementing drawPixel class ...
 	glm::vec4 getCMYK(ofColor rgb);
 
 	int currentBlendModeIndex = 0;
 	std::vector<std::string> v_BlendModes;
 
 	// -------------------------------------------------
-	// Delete after implementing drawPixel class ...
+	// TODO: Delete after implementing drawPixel class ...
 	void gui_setGrey();
 
 	void gui_setRGB();
@@ -49,11 +49,12 @@ public:
 
 	float lineWidth = 8;
 
-	ImVec4 c_cyanBlue = ofColor(0, 174, 239, 255);
-	ImVec4 c_magentaRed = ofColor(236, 0, 140, 255);
+	ImVec4 c_cyanBlue    = ofColor(0, 174, 239, 255);
+	ImVec4 c_magentaRed  = ofColor(236, 0, 140, 255);
 	ImVec4 c_yellowGreen = ofColor(255, 242, 0, 255);
 	ImVec4 c_black = ofColor(0, 0, 0, 255);
-	ImVec4 c_mask = ofColor(255, 255, 255, 255);
+	ImVec4 c_white = ofColor(255, 255, 255, 255);
+	ImVec4 c_mask  = ofColor(255, 255, 255, 255);
 
 	bool isFresh();
 	void setFresh(bool fresh);

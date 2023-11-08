@@ -7,10 +7,12 @@ GeneratorController::GeneratorController()
 {
 	pixelplotter = (ofApp*)ofGetAppPtr();
 
-	v_GeneratorNames = {
-	"Add Generator ...",
+	v_ObjectNames = {
 	"Plaids"
 	};
+
+	generateMenuNames();
+
 }
 
 template <typename t> void GeneratorController::move(std::vector<t>& v, size_t oldIndex, size_t newIndex)
@@ -19,6 +21,15 @@ template <typename t> void GeneratorController::move(std::vector<t>& v, size_t o
 		std::rotate(v.rend() - oldIndex - 1, v.rend() - oldIndex, v.rend() - newIndex);
 	else
 		std::rotate(v.begin() + oldIndex, v.begin() + oldIndex + 1, v.begin() + newIndex + 1);
+}
+
+void GeneratorController::generateMenuNames()
+{
+	v_MenuValues.clear();
+	v_MenuValues.push_back("Add Generator ...");
+	for (std::string s : v_ObjectNames) {
+		v_MenuValues.push_back(s);
+	}
 }
 
 void GeneratorController::reorder()
@@ -59,7 +70,7 @@ void GeneratorController::addGenerator(string name)
 
 void GeneratorController::addGenerator(int index)
 {
-	if (v_GeneratorNames[index] == "Plaids") {
+	if (v_ObjectNames[index] == "Plaids") {
 		v_Generators.push_back(new G_plaids(pixelplotter));
 	}
 }
@@ -71,7 +82,7 @@ void GeneratorController::addGenerator(Generator* generator)
 
 void GeneratorController::addRandomGenerator()
 {
-	addGenerator(ofRandom(1, v_GeneratorNames.size() - 1));
+	addGenerator(ofRandom(1, v_ObjectNames.size() - 1));
 }
 
 void GeneratorController::cleanFilters()

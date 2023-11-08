@@ -10,8 +10,9 @@ void ofApp::setup() {
 	//ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetVerticalSync(vSync);
 	ofLog(OF_LOG_VERBOSE) << ofFbo::checkGLSupport();
-	ofEnableAlphaBlending();
 
+	ofEnableAlphaBlending();
+	ofDisableAntiAliasing(); // Add to settings?
 	/* Always disable rectangular textures by default */
 	ofDisableArbTex();
 

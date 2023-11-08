@@ -92,6 +92,7 @@ void DrawPixel::gui_setRGB()
 	c_cyanBlue = ofColor(0, 0, 255);
 	c_yellowGreen = ofColor(0, 255, 0);
 	c_black = ofColor(0, 0, 0);
+	c_white = ofColor(255, 255, 255);
 	setFresh(true);
 }
 
@@ -101,6 +102,7 @@ void DrawPixel::gui_setCMYK()
 	c_cyanBlue = ofColor(0, 174, 239);
 	c_yellowGreen = ofColor(255, 242, 0);
 	c_black = ofColor(0, 0, 0);
+	c_white = ofColor(255, 255, 255);
 	setFresh(true);
 }
 
@@ -110,6 +112,7 @@ void DrawPixel::gui_setRYB()
 	c_cyanBlue = ofColor(19, 57, 166);
 	c_yellowGreen = ofColor(255, 230, 0);
 	c_black = ofColor(0, 0, 0);
+	c_white = ofColor(255, 255, 255);
 	setFresh(true);
 }
 
@@ -147,6 +150,9 @@ void DrawPixel::renderImGuiColourSettings()
 			setFresh(true);
 		}
 		if (ImGui::ColorEdit4("Key / Black ##drawFilter", (float*)&c_black, ImGuiColorEditFlags_NoInputs)) {
+			setFresh(true);
+		}
+		if (ImGui::ColorEdit4("Paper / White ##drawFilter", (float*)&c_white, ImGuiColorEditFlags_NoInputs)) {
 			setFresh(true);
 		}
 

@@ -193,6 +193,9 @@
     <ClCompile Include="src\drawPixels\drawPixel.cpp" />
     <ClCompile Include="src\drawPixels\drawPixel_Normal.cpp" />
     <ClCompile Include="src\drawPixels\drawPixel_SeparateCMYK_Bars01.cpp" />
+    <ClCompile Include="src\drawPixels\drawPixel_SeparateCMYK_Rect01.cpp" />
+    <ClCompile Include="src\drawPixels\drawPixel_SeparateCMYK_Rect02.cpp" />
+    <ClCompile Include="src\drawPixels\drawPixel_SeparateCMYK_Rect03.cpp" />
     <ClCompile Include="src\drawPixels\drawPixel_SeparateRGB_Bars01.cpp" />
     <ClCompile Include="src\frameBuffer.cpp" />
     <ClCompile Include="src\generators\generator.cpp" />
@@ -269,6 +272,9 @@
     <ClInclude Include="src\drawPixels\drawPixel.h" />
     <ClInclude Include="src\drawPixels\drawPixel_Normal.h" />
     <ClInclude Include="src\drawPixels\drawPixel_SeparateCMYK_Bars01.h" />
+    <ClInclude Include="src\drawPixels\drawPixel_SeparateCMYK_Rect01.h" />
+    <ClInclude Include="src\drawPixels\drawPixel_SeparateCMYK_Rect02.h" />
+    <ClInclude Include="src\drawPixels\drawPixel_SeparateCMYK_Rect03.h" />
     <ClInclude Include="src\drawPixels\drawPixel_SeparateRGB_Bars01.h" />
     <ClInclude Include="src\generators\generator.h" />
     <ClInclude Include="src\generators\generator_Plaids.h" />

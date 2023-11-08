@@ -117,6 +117,9 @@ void DrawFilter::renderImGuiColourSettings(bool colors, bool mask)
 				if (ImGui::ColorEdit4("Key / Black ##drawFilter", (float*)&c_black, ImGuiColorEditFlags_NoInputs)) {
 					setFresh(true);
 				}
+				if (ImGui::ColorEdit4("Paper / White ##drawFilter", (float*)&c_white, ImGuiColorEditFlags_NoInputs)) {
+					setFresh(true);
+				}
 			}
 			if (mask) {
 				if (ImGui::ColorEdit4("Mask ##drawFilter", (float*)&c_mask, ImGuiColorEditFlags_NoInputs)) {

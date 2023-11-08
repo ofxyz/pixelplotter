@@ -27,5 +27,6 @@ public:
 
 private:
 	bool _bFresh = false;
+	void generateMenuNames();
 
 };
