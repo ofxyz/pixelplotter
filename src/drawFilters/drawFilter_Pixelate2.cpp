@@ -56,7 +56,7 @@ void Df_pixelate2::draw(ofImage* input, float width /*= 0*/, float height /*= 0*
 			if (pixelMirror && (y % 2 == 0)) {
 				ofScale(1, -1);
 			}
-			drawPixels.v_DrawPixels[selectedPixelType]->draw(c, { ofMap(tileW, 0, imgW, 0, width), ofMap(tileH, 0, imgH, 0, height) });
+			drawPixels.v_DrawPixels[selectedPixelType]->draw(c, { ofMap(tileW, 0, imgW, 0, width), ofMap(tileH, 0, imgH, 0, height) }, { 0, 0 }, { x, y });
 			ofPopMatrix();
 		}
 		ofPopMatrix();

@@ -110,8 +110,8 @@ void Df_noise::renderImGuiSettings() {
 }
 
 Df_noise::Df_noise(ofJson settings)
+	: Df_noise()
 {
-	Df_noise();
 	loadSettings(settings);
 }
 

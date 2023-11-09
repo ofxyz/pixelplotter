@@ -10,8 +10,9 @@ public:
 		name = "Rings";
 	};
 
-	Df_rings(ofJson settings) {
-		Df_rings();
+	Df_rings(ofJson settings)
+	: Df_rings()
+	{
 		loadSettings(settings);
 	};
 

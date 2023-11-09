@@ -32,6 +32,18 @@ void Df_mesh::renderImGuiSettings() {
 	}
 }
 
+Df_mesh::Df_mesh()
+{
+	pixelplotter = (ofApp*)ofGetAppPtr();
+	name = "Mesh";
+}
+
+Df_mesh::Df_mesh(ofJson settings)
+	: Df_mesh()
+{
+	loadSettings(settings);
+}
+
 void Df_mesh::draw(ofImage* input, float width, float height, float x, float y) {
 	setFresh(false);
 	if (!visible) return;
