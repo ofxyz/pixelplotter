@@ -10,7 +10,7 @@ public:
 		name = "Rings";
 	};
 
-	Df_rings(ofJson settings)
+	Df_rings(ofJson& settings)
 	: Df_rings()
 	{
 		loadSettings(settings);
@@ -18,7 +18,7 @@ public:
 
 	void draw(ofImage* input, float width = 0, float height = 0, float x = 0, float y = 0) override;
 	void renderImGuiSettings() override;
-	void loadSettings(ofJson settings) override;
+	void loadSettings(ofJson& settings) override;
 	ofJson getSettings() override;
 
 private:

@@ -52,7 +52,7 @@ void GeneratorController::reorder()
 	}
 }
 
-void GeneratorController::addGenerator(ofJson filterSettings)
+void GeneratorController::addGenerator(ofJson& filterSettings)
 {
 	string filterName = filterSettings.value("name", "not_found");
 	if (filterName == "Plaids") {

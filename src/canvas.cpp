@@ -193,9 +193,7 @@ void Canvas::renderImGuiSettings() {
 	ImGui::Separator(); // End Size 
 }
 
-void Canvas::loadSettings(ofJson settings) {
-	//settings["canvasTitle"].get_to(canvasTitle);
-	canvasTitle  = settings.value("canvasTitle", canvasTitle);
+void Canvas::loadSettings(ofJson& settings) {
 	canvasTitle  = settings.value("canvasTitle", canvasTitle);
 	canvasWidth  = settings.value("canvasWidth", canvasWidth);
 	canvasHeight = settings.value("canvasHeight", canvasHeight);
@@ -312,14 +310,7 @@ void Canvas::updateFbo(ofImage* img) {
 
 	ofClear(c_canvas);
 
-	// This needs to be a filter controller update
-	for (const auto& filter : dF.v_Objects) {
-		// update one filter per frame to keep things speeedy?
-		// Each filter draws to it's own fbo and are drawn here?
-		// filter->update(img); filter->update(settings)
-		filter->draw(img, canvasWidth, canvasHeight);
-	}
-	dF.setFresh(false); // See
+	dF.draw(img, canvasWidth, canvasHeight);
 
 	if (saveVector) {
 		ofEndSaveScreenAsPDF();

@@ -9,7 +9,7 @@ ofJson Df_mesh::getSettings() {
 	return settings;
 }
 
-void Df_mesh::loadSettings(ofJson settings) {
+void Df_mesh::loadSettings(ofJson& settings) {
 	try{
 		name = settings.value("name", name);
 		rotationOffset = settings.value("rotationOffset", rotationOffset);
@@ -38,7 +38,7 @@ Df_mesh::Df_mesh()
 	name = "Mesh";
 }
 
-Df_mesh::Df_mesh(ofJson settings)
+Df_mesh::Df_mesh(ofJson& settings)
 	: Df_mesh()
 {
 	loadSettings(settings);

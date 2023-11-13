@@ -44,7 +44,7 @@ void G_plaids::renderImGuiSettings() {
 	}
 }
 
-void G_plaids::loadSettings(ofJson settings) {
+void G_plaids::loadSettings(ofJson& settings) {
 
 }
 

@@ -31,7 +31,7 @@ public:
 	int recFrameCount = 0;
 
 	void renderImGuiSettings();
-	void loadSettings(ofJson settings);
+	void loadSettings(ofJson& settings);
 	ofJson getSettings();
 
 	std::string with_leading_zero(int value, int width)

@@ -6,7 +6,7 @@ ofJson Dp_separateCMYK_Rect03::getSettings() {
 	return settings;
 }
 
-void Dp_separateCMYK_Rect03::loadSettings(ofJson settings) {
+void Dp_separateCMYK_Rect03::loadSettings(ofJson& settings) {
 	// name = settings.value("name", name);
 	return;
 }

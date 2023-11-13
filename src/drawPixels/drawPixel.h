@@ -4,6 +4,7 @@
 
 /*
 	A DrawPixel draws rectangular art based on a colour.
+	It always draws from the center out.
  */
 
 class DrawPixel {
@@ -13,14 +14,14 @@ public:
 	/* PARAMS
 		ofColor    c        : Colour of the pixel
 		glm::vec2  dim      : (w, h): Dimension (Width, Height) of the pixel
-		glm::vec2  pos      : (x, y): Position or Offset of the pixel (Drawing happens from the center out)
+		glm::vec2  pos      : (x, y): Position of the pixel (Used for %2 changes etc)
 		glm::vec2  posNorm  : (x, y): Position Normal of the pixel. Between 0 and 1,
 		                              Used to interpolate and extrapolate position of sub pixels
 	*/
 	virtual void draw(ofColor c, glm::vec2 dim, glm::vec2 pos = { 0,0 }, glm::vec2 posNorm = { 0,0 }) = 0;
 
 	virtual void renderImGuiSettings() = 0;
-	virtual void loadSettings(ofJson settings) = 0;
+	virtual void loadSettings(ofJson& settings) = 0;
 	virtual ofJson getSettings() = 0;
 
 	ImVec4 c_cyanBlue = ofColor(0, 174, 239, 255);

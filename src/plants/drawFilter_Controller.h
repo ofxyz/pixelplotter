@@ -13,7 +13,7 @@ public:
 	template <typename t> void move(std::vector<t>& v, size_t oldIndex, size_t newIndex);
 
 	void update();
-
+	void draw(ofImage* img, int width, int height);
 	void add(std::string name, ofJson filterSettings = {});
 	void add(ofJson filterSettings);
 	void addRandom();

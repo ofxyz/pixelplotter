@@ -25,7 +25,7 @@ public:
 
 	void addGenerator(std::string name);
 
-	void addGenerator(ofJson filterSettings);
+	void addGenerator(ofJson& filterSettings);
 
 	void addRandomGenerator();
 

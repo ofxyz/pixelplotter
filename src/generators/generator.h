@@ -21,7 +21,7 @@ public:
 	virtual void update() = 0;
 	virtual void draw() = 0;
 	virtual void renderImGuiSettings() = 0;
-	virtual void loadSettings(ofJson settings) = 0;
+	virtual void loadSettings(ofJson& settings) = 0;
 	virtual ofJson getSettings() = 0;
 
 };

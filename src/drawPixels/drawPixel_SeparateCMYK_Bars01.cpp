@@ -6,7 +6,7 @@ ofJson Dp_separateCMYK_Bars01::getSettings() {
 	return settings;
 }
 
-void Dp_separateCMYK_Bars01::loadSettings(ofJson settings) {
+void Dp_separateCMYK_Bars01::loadSettings(ofJson& settings) {
 	// name = settings.value("name", name);
 	return;
 }
@@ -61,7 +61,7 @@ void Dp_separateCMYK_Bars01::draw(ofColor c, glm::vec2 dim, glm::vec2 pos /*= { 
 	}
 	if (barCount == 0) return;
 
-	float start = pos.x - (dim.x * 0.5);
+	glm::vec2 start = { -(dim.x * 0.5), 0 };
 	float barWidth = dim.x; // Space left
 
 	/* white at end ...
@@ -72,25 +72,25 @@ void Dp_separateCMYK_Bars01::draw(ofColor c, glm::vec2 dim, glm::vec2 pos /*= { 
 	*/
 	if (cmyk[0] > 0) {
 		barWidth = cmyk[0] * dim.x;
-		start += (barWidth * 0.5);
-		drawRectangle(start, pos.y, barWidth, dim.y, c_cyanBlue);
-		start += (barWidth * 0.5);
+		start.x += (barWidth * 0.5);
+		drawRectangle(start.x, start.y, barWidth, dim.y, c_cyanBlue);
+		start.x += (barWidth * 0.5);
 	}
 	if (cmyk[1] > 0) {
 		barWidth = cmyk[1] * dim.x;
-		start += (barWidth * 0.5);
-		drawRectangle(start, pos.y, barWidth, dim.y, c_magentaRed);
-		start += (barWidth * 0.5);
+		start.x += (barWidth * 0.5);
+		drawRectangle(start.x, start.y, barWidth, dim.y, c_magentaRed);
+		start.x += (barWidth * 0.5);
 	}
 	if (cmyk[2] > 0) {
 		barWidth = cmyk[2] * dim.x;
-		start += (barWidth * 0.5);
-		drawRectangle(start, pos.y, barWidth, dim.y, c_yellowGreen);
-		start += (barWidth * 0.5);
+		start.x += (barWidth * 0.5);
+		drawRectangle(start.x, start.y, barWidth, dim.y, c_yellowGreen);
+		start.x += (barWidth * 0.5);
 	}
 	if (cmyk[3] > 0) {
 		barWidth = cmyk[3] * dim.x;
-		start += (barWidth * 0.5);
-		drawRectangle(start, pos.y, barWidth, dim.y, c_black);
+		start.x += (barWidth * 0.5);
+		drawRectangle(start.x, start.y, barWidth, dim.y, c_black);
 	}
 }

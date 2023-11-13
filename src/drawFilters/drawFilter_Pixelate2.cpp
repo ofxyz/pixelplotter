@@ -11,7 +11,7 @@ Df_pixelate2::Df_pixelate2()
 	InitDefaults();
 }
 
-Df_pixelate2::Df_pixelate2(ofJson settings)
+Df_pixelate2::Df_pixelate2(ofJson& settings)
 	: Df_pixelate2()
 {
 	loadSettings(settings);
@@ -42,21 +42,21 @@ void Df_pixelate2::draw(ofImage* input, float width /*= 0*/, float height /*= 0*
 	float halfTileW = tileW * 0.5;
 	float halfTileH = tileH * 0.5;
 
-	for (int y = 0; y < tilesY; y++) {
+	for (int _y = 0; _y < tilesY; _y++) {
 		ofPushMatrix();
-		ofTranslate(0, ofMap(y * tileH, 0, imgH, 0, height));
-		for (int x = 0; x < tilesX; x++) {
+		ofTranslate(0, ofMap(_y * tileH, 0, imgH, 0, height));
+		for (int _x = 0; _x < tilesX; _x++) {
 			ofPushMatrix();
-			ofTranslate(ofMap(x * tileW, 0, imgW, 0, width), 0);
+			ofTranslate(ofMap(_x * tileW, 0, imgW, 0, width), 0);
 			ofTranslate(ofMap(halfTileW, 0, imgW, 0, width), ofMap(halfTileH, 0, imgH, 0, height));
-			ofColor c = input->getPixels().getColor(floor( (x * tileW) + halfTileW), floor((y * tileH) + halfTileH));
-			if (pixelMirror && (x % 2 == 0)) {
+			ofColor c = input->getPixels().getColor(floor( (_x * tileW) + halfTileW), floor((_y * tileH) + halfTileH));
+			if (pixelMirror && (_x % 2 == 0)) {
 				ofScale(-1, 1);
 			}
-			if (pixelMirror && (y % 2 == 0)) {
+			if (pixelMirror && (_y % 2 == 0)) {
 				ofScale(1, -1);
 			}
-			drawPixels.v_DrawPixels[selectedPixelType]->draw(c, { ofMap(tileW, 0, imgW, 0, width), ofMap(tileH, 0, imgH, 0, height) }, { 0, 0 }, { x, y });
+			drawPixels.v_DrawPixels[selectedPixelType]->draw(c, { ofMap(tileW, 0, imgW, 0, width), ofMap(tileH, 0, imgH, 0, height) }, { 0, 0 }, { ofx2d::percent(_x,tilesX), ofx2d::percent(_y,tilesY) });
 			ofPopMatrix();
 		}
 		ofPopMatrix();
@@ -110,7 +110,7 @@ void Df_pixelate2::renderImGuiSettings()
 	}
 }
 
-void Df_pixelate2::loadSettings(ofJson settings)
+void Df_pixelate2::loadSettings(ofJson& settings)
 {
 	try {
 		selectedPixelType = ofx2d::getIndex(drawPixels.v_DrawPixelsNames, settings.value("pixelType", "Undefined"), selectedPixelType);

@@ -26,7 +26,7 @@ ofJson Df_noise::getSettings() {
 }
 
 
-void Df_noise::loadSettings(ofJson settings) {
+void Df_noise::loadSettings(ofJson& settings) {
 	try {
 		name = settings.value("name", name);
 
@@ -109,7 +109,7 @@ void Df_noise::renderImGuiSettings() {
 	}
 }
 
-Df_noise::Df_noise(ofJson settings)
+Df_noise::Df_noise(ofJson& settings)
 	: Df_noise()
 {
 	loadSettings(settings);

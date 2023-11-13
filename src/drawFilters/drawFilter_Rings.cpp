@@ -21,7 +21,7 @@ ofJson Df_rings::getSettings() {
 }
 
 
-void Df_rings::loadSettings(ofJson settings) {
+void Df_rings::loadSettings(ofJson& settings) {
 	try {
 		//name = settings.value("name", "rings");
 		cvThresh = settings.value("cvThresh", cvThresh);

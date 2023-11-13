@@ -11,7 +11,7 @@ public:
 	void update() override;
 	void draw() override;
 	void renderImGuiSettings() override;
-	void loadSettings(ofJson settings) override;
+	void loadSettings(ofJson& settings) override;
 	ofJson getSettings() override;
 
 private:

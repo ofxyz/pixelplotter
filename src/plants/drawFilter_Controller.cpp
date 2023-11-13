@@ -42,6 +42,17 @@ void DrawFilterController::update() {
 	}
 }
 
+void DrawFilterController::draw(ofImage* img, int width, int height)
+{
+	for (const auto& filter : v_Objects) {
+		// TODO: update one filter per frame to keep things speeedy?
+		// Each filter draws to it's own fbo and are drawn here?
+		// filter->update(img); filter->update(settings)
+		filter->draw(img, width, height);
+	}
+	setFresh(false);
+}
+
 void DrawFilterController::reorder() {
 	for (int i = 0; i < v_Objects.size(); i++) {
 		if (v_Objects[i]->moveUp) {

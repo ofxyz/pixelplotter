@@ -10,7 +10,7 @@ Df_pixelate::Df_pixelate()
 	InitDefaults();
 }
 
-Df_pixelate::Df_pixelate(ofJson settings)
+Df_pixelate::Df_pixelate(ofJson& settings)
 	: Df_pixelate()
 {
 	loadSettings(settings);
@@ -58,7 +58,7 @@ void Df_pixelate::InitDefaults()
 	heightMinMax = glm::vec2(5, 50);
 }
 
-void Df_pixelate::loadSettings(ofJson settings) {
+void Df_pixelate::loadSettings(ofJson& settings) {
 	try {
 		name = settings.value("name", "pixelate");
 		visible = settings.value("visible", true);

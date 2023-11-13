@@ -9,7 +9,7 @@ ofJson Df_lumes::getSettings() {
 	return settings;
 }
 
-void Df_lumes::loadSettings(ofJson settings) {
+void Df_lumes::loadSettings(ofJson& settings) {
 	try {
 		name   = settings.value("name", name);
 		tilesX = settings.value("tilesX", 64);

@@ -6,7 +6,7 @@ ofJson Dp_separateRGB_Bars01::getSettings() {
 	return settings;
 }
 
-void Dp_separateRGB_Bars01::loadSettings(ofJson settings) {
+void Dp_separateRGB_Bars01::loadSettings(ofJson& settings) {
 	// name = settings.value("name", name);
 	return;
 }

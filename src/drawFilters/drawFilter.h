@@ -20,8 +20,7 @@ public:
 
 	virtual void draw(ofImage* input, float width = 0, float height = 0, float x = 0, float y = 0) = 0;
 	virtual void renderImGuiSettings() = 0;
-	// TODO: Create pointer?
-	virtual void loadSettings(ofJson settings) = 0;
+	virtual void loadSettings(ofJson& settings) = 0;
 	virtual ofJson getSettings() = 0;
 
 	void renderUpDownButtons();
