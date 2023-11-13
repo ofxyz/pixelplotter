@@ -44,17 +44,12 @@ void ofApp::exit() {
 
 //--------------------------------------------------------------
 void ofApp::update() {
+	ofGui.update();
+
 	// TODO: Move to appropriate location
 	if (cleanImageFilters) {
 		plotCanvas.sourceController.iF.cleanFilters();
 		cleanImageFilters = false;
-	}
-
-	// Move to ImGui?
-	if (bLoadSettingsNextFrame)
-	{
-		loadSettings(ofGui.getCurrentPreset());
-		bLoadSettingsNextFrame = false;
 	}
 
 	// Move to Source Controller
@@ -110,6 +105,7 @@ void ofApp::centerImage() {
 	userOffset.y += availableSpace.w;
 }
 
+// TODO: Move to ofGui ...
 void ofApp::saveSettings(string& filepath) {
 	ofJson settings;
 
@@ -129,6 +125,7 @@ void ofApp::saveSettings(string& filepath) {
 
 }
 
+// TODO: Move to ofGui ...
 void ofApp::loadSettings(ofJson settings) {
 
 	plotCanvas.dF.clearFilters();
@@ -168,6 +165,7 @@ void ofApp::keyPressed(int key) {
 	if (key == 'g' || key == 'G') {
 		ofGui.bShowGui = !ofGui.bShowGui;
 	}
+
 	// TODO:
 	// -------
 	// Zoom level and center image needs to take `ofGui.bShowGui` into account

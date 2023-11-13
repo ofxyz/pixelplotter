@@ -1,6 +1,5 @@
 #pragma once
 #include "ofMain.h"
-
 #include "ofGui.h"
 #include "canvas.h"
 #include "soundDevice_Controller.h"

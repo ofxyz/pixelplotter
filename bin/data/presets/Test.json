@@ -1,74 +1,8 @@
 {
     "drawFilters": [
         {
-            "addonx": 0.0,
-            "addonx_rand": 0.0,
-            "addony": 0.0,
-            "addony_rand": 0.0,
-            "blendMode": 0,
-            "cLerp": 0.0,
-            "colors": {
-                "black": {
-                    "a": 1.0,
-                    "b": 0.0,
-                    "g": 0.0,
-                    "r": 0.0
-                },
-                "cyanBlue": {
-                    "a": 1.0,
-                    "b": 0.9372549653053284,
-                    "g": 0.6823529601097107,
-                    "r": 0.0
-                },
-                "magentaRed": {
-                    "a": 1.0,
-                    "b": 0.5490196347236633,
-                    "g": 0.0,
-                    "r": 0.9254902601242065
-                },
-                "mask": {
-                    "a": 1.0,
-                    "b": 1.0,
-                    "g": 1.0,
-                    "r": 1.0
-                },
-                "yellowGreen": {
-                    "a": 1.0,
-                    "b": 0.0,
-                    "g": 0.9490196704864502,
-                    "r": 1.0
-                }
-            },
-            "currentIgnore": "None",
-            "heightMap": "None",
-            "heightMax": 50.0,
-            "heightMin": 5.0,
-            "ignoreModulo": 1,
-            "ignorePercent": 0,
-            "ignorePlaid": 0,
-            "ignoreScan": 0,
-            "ignoreSeed": 0,
-            "ignoreSeedAddon": 1,
-            "maskMargin": 0,
-            "name": "Pixelate",
-            "offsetx": 0.0,
-            "offsetx_rand": 0.0,
-            "offsety": 0.0,
-            "offsety_rand": 0.0,
-            "pixelType": "Rectangle",
-            "polka": false,
-            "rotationMap": "None",
-            "rotationMax": 0.0,
-            "rotationMin": 0.0,
-            "rounded": 0.0,
-            "tilesX": 64,
-            "tilesY": 64,
-            "useMask": false,
-            "usePalette": true,
-            "visible": true,
-            "widthMap": "None",
-            "widthMax": 50.0,
-            "widthMin": 5.0
+            "name": "Mesh",
+            "rotationOffset": 0.0
         }
     ],
     "plotCanvas": {

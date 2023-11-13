@@ -40,6 +40,7 @@ public:
 	bool bShowGui;
 
 private:
+	bool bLoadSettingsNextFrame;
 	bool bShowPlotCanvas;
 	bool bShowInfoPanel;
 	bool bShowToolPalette;

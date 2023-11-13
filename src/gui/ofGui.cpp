@@ -29,10 +29,7 @@ OfGui::OfGui()
 	bTryLoadSource = true;
 
 	currentPresetIndex = 0;
-
 	memset(presetSaveName, 0, sizeof(char)*128);
-
-	ofDirectory presetDirectory(ofToDataPath("presets", true));
 
 }
 
@@ -69,7 +66,11 @@ void OfGui::setup()
 
 void OfGui::update()
 {
-
+	if (bLoadSettingsNextFrame)
+	{
+		pixelplotter->loadSettings(getCurrentPreset());
+		bLoadSettingsNextFrame = false;
+	}
 }
 
 void OfGui::draw()
@@ -267,8 +268,8 @@ void OfGui::drawInfoPanel()
 	// Save and load presets ... 
 	if (ofxImGui::VectorCombo("##Presets", &currentPresetIndex, presetFileNames))
 	{
-		//TODO: This should be a function in ofApp
-		pixelplotter->bLoadSettingsNextFrame = true;
+		bLoadSettingsNextFrame = true;
+		//TODO: This should be a function in ofApp?
 		pixelplotter->plotCanvas.resizeRequest = true;
 		pixelplotter->plotCanvas.setFresh(true);
 	}
@@ -350,7 +351,7 @@ void OfGui::savePreset()
 void OfGui::loadPresets()
 {
 	presetFileNames.clear();
-	presetFiles = presetDirectory.getFiles();
+	presetFiles = ofDirectory(ofToDataPath("presets", true)).getFiles();
 	for (int i = 0; i < presetFiles.size(); i++)
 	{
 		string base_filename = presetFiles[i].getFileName();
