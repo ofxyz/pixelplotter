@@ -7,6 +7,7 @@
 #include "imgui_stdlib.h"
 #include "IconsFontAwesome5.h"
 #include "ImGui_Widget_Bezier.h"
+#include "ImGui_Widget_Tooltip.h"
 
 #include "ofApp.h"
 #include "ofx2d.h"
@@ -73,25 +74,25 @@ void OfGui::update()
 
 void OfGui::draw()
 {
-	gui.begin();
-
-	drawMenuBar();
-	drawMainDock();
 
 	if (bShowGui)
 	{
-		drawCanvas();
-		drawToolPalette();
-		drawInfoPanel();
-		drawCanvasWindow();
+		gui.begin();
+		drawMainDock();
+
+		if (bShowMenuBar) drawMenuBar();
+		if (bShowCanvas) drawCanvas();
+		if (bShowToolPalette) drawToolPalette();
+		if (bShowInfoPanel) drawInfoPanel();
+		if (bShowCanvas) drawCanvasWindow();
 
 		if (bShowImGuiMetricsDebugger) {
 			ImGui::ShowMetricsWindow();
 			ImGui::ShowStyleEditor();
 		}
-	}
 
-	gui.end();
+		gui.end();
+	}
 }
 
 void OfGui::drawMainDock()
@@ -112,14 +113,13 @@ void OfGui::drawMainDock()
 
 void OfGui::drawMenuBar()
 {
-	if (!bShowMenuBar) return;
 	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(5, 8));
 	ImGui::BeginMainMenuBar();
 	ImGui::PopStyleVar();
 
 	if (ImGui::BeginMenu("PixelPlotter", &bShowMenuBar)) {
-		ImGui::Checkbox("Show GUI", &bShowGui);
-		//ImGui::SameLine(); HelpMarker("Shows properties window...");
+		ImGui::Checkbox("Hide GUI [g]", &bShowGui);
+		ImGui::SameLine(); ImGui::HelpMarker("Hide the Graphical User Interface press [g] to show");
 
 		if (bShowGui) {
 			// Sub Menu 
@@ -245,9 +245,6 @@ void OfGui::drawCanvas()
 
 void OfGui::drawToolPalette()
 {
-	// TODO: Move all these to where they're drawn ...
-	if (!bShowToolPalette) return;
-
 	ImGui::Begin("Tool palette", &bShowToolPalette);
 	ImGui::PushID("toolPalette");
 
@@ -265,8 +262,6 @@ void OfGui::drawToolPalette()
 
 void OfGui::drawInfoPanel()
 {
-	if (!bShowInfoPanel) return;
-
 	ImGui::Begin("Presets", &bShowInfoPanel);
 
 	// Save and load presets ... 
@@ -316,8 +311,6 @@ void OfGui::drawInfoPanel()
 
 void OfGui::drawCanvasWindow()
 {
-	if (!bShowPlotCanvas) return;
-
 	ImGui::Begin("Plot Canvas", &bShowPlotCanvas);
 	ImGui::PushID("plotCanvas");
 	pixelplotter->plotCanvas.renderImGuiSettings();

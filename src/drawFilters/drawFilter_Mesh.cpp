@@ -51,7 +51,7 @@ void Df_mesh::draw(ofImage* input, float width, float height, float x, float y) 
 	mesh.setMode(OF_PRIMITIVE_POINTS);
 	//mesh.setMode(OF_PRIMITIVE_TRIANGLES);
 	// Quads are not supported any longer we can build from triangles ...
-	// Main thing is to use it as more flexible data type for transformation
+	// Main thing is fo use it as more flexible data type for transformation
 
 	mesh.enableColors();
 

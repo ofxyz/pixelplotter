@@ -37,9 +37,9 @@ public:
 	ofJson getCurrentPreset();
 
 	ImVec4 availableSpace();
+	bool bShowGui;
 
 private:
-	bool bShowGui;
 	bool bShowPlotCanvas;
 	bool bShowInfoPanel;
 	bool bShowToolPalette;

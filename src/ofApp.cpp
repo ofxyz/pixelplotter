@@ -166,8 +166,12 @@ void ofApp::loadSettings(ofJson settings) {
 void ofApp::keyPressed(int key) {
 
 	if (key == 'g' || key == 'G') {
-		ofGui.bShowMenuBar = !ofGui.bShowMenuBar;
+		ofGui.bShowGui = !ofGui.bShowGui;
 	}
+	// TODO:
+	// -------
+	// Zoom level and center image needs to take `ofGui.bShowGui` into account
+
 	else if (key == '-') {
 		zoomLevel -= 0.1;
 		//resetImageOffset();
