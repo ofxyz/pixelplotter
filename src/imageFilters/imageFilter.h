@@ -14,7 +14,7 @@ public:
 
 	virtual void apply(ofImage* img) = 0;
 	virtual void renderImGuiSettings() = 0;
-	virtual void loadSettings(ofJson settings) = 0;
+	virtual void loadSettings(ofJson& settings) = 0;
 	virtual ofJson getSettings() = 0;
 
 };

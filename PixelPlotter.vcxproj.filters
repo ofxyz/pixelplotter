@@ -238,6 +238,9 @@
     <ClCompile Include="src\drawPixels\drawPixel_SeparateCMYK_Rect03.cpp">
       <Filter>src\drawPixels</Filter>
     </ClCompile>
+    <ClCompile Include="src\drawPixels\drawPixel_SeparateCMYK_Rect04.cpp">
+      <Filter>src\drawPixels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -1815,6 +1818,9 @@
       <Filter>src\drawPixels</Filter>
     </ClInclude>
     <ClInclude Include="src\drawPixels\drawPixel_SeparateCMYK_Rect03.h">
+      <Filter>src\drawPixels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\drawPixels\drawPixel_SeparateCMYK_Rect04.h">
       <Filter>src\drawPixels</Filter>
     </ClInclude>
   </ItemGroup>

@@ -13,7 +13,7 @@ ofJson If_tint::getSettings() {
 	return settings;
 }
 
-void If_tint::loadSettings(ofJson settings) {
+void If_tint::loadSettings(ofJson& settings) {
 	//name = settings.value("name", "tint");
 	bGrey = settings.value("bGrey", bGrey);
 

@@ -11,7 +11,7 @@ public:
 
 	void apply(ofImage* img) override;
 	void renderImGuiSettings() override;
-	void loadSettings(ofJson settings) override;
+	void loadSettings(ofJson& settings) override;
 	ofJson getSettings() override;
 
 	DrawPixelController drawPixels;

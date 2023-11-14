@@ -7,7 +7,7 @@ ofJson If_blur::getSettings() {
 	return settings;
 }
 
-void If_blur::loadSettings(ofJson settings) {
+void If_blur::loadSettings(ofJson& settings) {
 	name = settings.value("name", "tint");
 	cvBlur = settings.value("cvBlur", cvBlur);
 	return;

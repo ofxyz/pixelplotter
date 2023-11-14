@@ -48,27 +48,27 @@ void Dp_separateCMYK_Rect01::draw(ofColor c, glm::vec2 dim, glm::vec2 pos /*= { 
 	}
 	if (barCount == 0) return;
 
+	glm::vec2 startPos = { 0, 0 };
 	float barWidth, barHeight;
 	
 	if (cmyk[0] > 0) {
 		barWidth  = (cmyk[0] + cmyk[1] + cmyk[2] + cmyk[3]) * dim.x;
 		barHeight = (cmyk[0] + cmyk[1] + cmyk[2] + cmyk[3]) * dim.y;
-		//start += {barWidth * 0.5, barHeight * 0.5};
-		drawRectangle(pos.x, pos.y, barWidth, barHeight, c_cyanBlue);
+		drawRectangle(startPos.x, startPos.y, barWidth, barHeight, c_cyanBlue);
 	}
 	if (cmyk[1] > 0) {
 		barWidth  = (cmyk[1] + cmyk[2] + cmyk[3]) * dim.x;
 		barHeight = (cmyk[1] + cmyk[2] + cmyk[3]) * dim.y;
-		drawRectangle(pos.x, pos.y, barWidth, barHeight, c_magentaRed);
+		drawRectangle(startPos.x, startPos.y, barWidth, barHeight, c_magentaRed);
 	}
 	if (cmyk[2] > 0) {
 		barWidth  = (cmyk[2] + cmyk[3]) * dim.x;
 		barHeight = (cmyk[2] + cmyk[3]) * dim.y;
-		drawRectangle(pos.x, pos.y, barWidth, barHeight, c_yellowGreen);
+		drawRectangle(startPos.x, startPos.y, barWidth, barHeight, c_yellowGreen);
 	}
 	if (cmyk[3] > 0) {
 		barWidth  = cmyk[3] * dim.x;
 		barHeight = cmyk[3] * dim.y;
-		drawRectangle(pos.x, pos.y, barWidth, barHeight, c_black);
+		drawRectangle(startPos.x, startPos.y, barWidth, barHeight, c_black);
 	}
 }

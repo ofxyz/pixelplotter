@@ -42,15 +42,16 @@ void Dp_separateRGB_Bars01::draw(ofColor c, glm::vec2 dim, glm::vec2 pos /*= { 0
 		barCount--;
 	}
 
-	float start = pos.x - (dim.x * 0.5);
+	glm::vec2 startPos = { -(dim.x * 0.5), 0 };
+	glm::vec2 drawPos = startPos;
 	float barWidth = dim.x; // Space left
 
 	// Do black
 	if (blackVal > 0) { // Offset for white
 		barWidth = (blackVal / 255) * dim.x;
-		start += (barWidth * 0.5);
-		drawRectangle(start, pos.y, barWidth, dim.y, c_black);
-		start += (barWidth * 0.5);
+		drawPos.x += (barWidth * 0.5);
+		drawRectangle(drawPos.x, drawPos.y, barWidth, dim.y, c_black);
+		drawPos.x += (barWidth * 0.5);
 	}
 
 	/* white at end ...
@@ -61,20 +62,20 @@ void Dp_separateRGB_Bars01::draw(ofColor c, glm::vec2 dim, glm::vec2 pos /*= { 0
 	*/
 	if (rgbk[0] > 0) {
 		barWidth = (rgbk[0] / 255) * dim.x;
-		start += (barWidth * 0.5);
-		drawRectangle(start, pos.y, barWidth, dim.y, c_magentaRed);
-		start += (barWidth * 0.5);
+		drawPos.x += (barWidth * 0.5);
+		drawRectangle(drawPos.x, drawPos.y, barWidth, dim.y, c_magentaRed);
+		drawPos.x += (barWidth * 0.5);
 	}
 	if (rgbk[1] > 0) {
 		barWidth = (rgbk[1] / 255) * dim.x;
-		start += (barWidth * 0.5);
-		drawRectangle(start, pos.y, barWidth, dim.y, c_yellowGreen);
-		start += (barWidth * 0.5);
+		drawPos.x += (barWidth * 0.5);
+		drawRectangle(drawPos.x, drawPos.y, barWidth, dim.y, c_yellowGreen);
+		drawPos.x += (barWidth * 0.5);
 	}
 	if (rgbk[2] > 0) {
 		barWidth = (rgbk[2] / 255) * dim.x;
-		start += (barWidth * 0.5);
-		drawRectangle(start, pos.y, barWidth, dim.y, c_cyanBlue);
-		start += (barWidth * 0.5);
+		drawPos.x += (barWidth * 0.5);
+		drawRectangle(drawPos.x, drawPos.y, barWidth, dim.y, c_cyanBlue);
+		drawPos.x += (barWidth * 0.5);
 	}
 }

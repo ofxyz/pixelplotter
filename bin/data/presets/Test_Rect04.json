@@ -1,0 +1,41 @@
+{
+    "imageFilters": [
+        {
+            "bMirror": false,
+            "colors": {
+                "col": {
+                    "a": 1.0,
+                    "b": 0.7771738767623901,
+                    "g": 0.7771738767623901,
+                    "r": 0.49418121576309204
+                }
+            },
+            "hCount": 5,
+            "name": "DrawPixel",
+            "pixelSettings": {
+                "name": "Separate CMYK Rect 04"
+            },
+            "pixelType": "Separate CMYK Rect 04",
+            "vCount": 5
+        }
+    ],
+    "plotCanvas": {
+        "canvasHeight": 193,
+        "canvasTitle": "Untitled",
+        "canvasWidth": 262,
+        "colors": {
+            "plotcanvas": {
+                "a": 1.0,
+                "b": 1.0,
+                "g": 1.0,
+                "r": 1.0
+            }
+        },
+        "exportWithTimeStamp": true
+    },
+    "source": [
+        {
+            "source": "download.png"
+        }
+    ]
+}

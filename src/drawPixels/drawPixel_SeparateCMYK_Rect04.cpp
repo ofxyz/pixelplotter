@@ -1,23 +1,23 @@
-#include "drawPixel_SeparateCMYK_Rect03.h"
+#include "drawPixel_SeparateCMYK_Rect04.h"
 
-ofJson Dp_separateCMYK_Rect03::getSettings() {
+ofJson Dp_separateCMYK_Rect04::getSettings() {
 	ofJson settings;
 	settings["name"] = name;
 	return settings;
 }
 
-void Dp_separateCMYK_Rect03::loadSettings(ofJson& settings) {
+void Dp_separateCMYK_Rect04::loadSettings(ofJson& settings) {
 	// name = settings.value("name", name);
 	return;
 }
 
-void Dp_separateCMYK_Rect03::renderImGuiSettings() {
+void Dp_separateCMYK_Rect04::renderImGuiSettings() {
 	// Add draw order (shuffle ofVec4f)
 	// Save settings
 	renderImGuiColourSettings();
 }
 
-void Dp_separateCMYK_Rect03::draw(ofColor c, glm::vec2 dim, glm::vec2 pos /*= { 0,0 }*/, glm::vec2 posNorm /*= { 0,0 }*/)
+void Dp_separateCMYK_Rect04::draw(ofColor c, glm::vec2 dim, glm::vec2 pos /*= { 0,0 }*/, glm::vec2 posNorm /*= { 0,0 }*/)
 {
 	glm::vec4 cmyk = getCMYK(c);
 	
@@ -58,6 +58,7 @@ void Dp_separateCMYK_Rect03::draw(ofColor c, glm::vec2 dim, glm::vec2 pos /*= { 
 		barWidth  = (cmyk[0] + cmyk[1] + cmyk[2] + cmyk[3] + whiteVal) * dim.x;
 		barHeight = (cmyk[0] + cmyk[1] + cmyk[2] + cmyk[3] + whiteVal) * dim.y;
 		drawPos += glm::vec2((barWidth * 0.5), (barHeight * 0.5));
+		drawPos += glm::vec2((dim.x - barWidth) * posNorm.x, (dim.y - barHeight) * posNorm.y);
 		drawRectangle(drawPos.x, drawPos.y, barWidth, barHeight, c_cyanBlue);
 		drawPos = startPos;
 	}
@@ -65,6 +66,7 @@ void Dp_separateCMYK_Rect03::draw(ofColor c, glm::vec2 dim, glm::vec2 pos /*= { 
 		barWidth  = (cmyk[1] + cmyk[2] + cmyk[3] + whiteVal) * dim.x;
 		barHeight = (cmyk[1] + cmyk[2] + cmyk[3] + whiteVal) * dim.y;
 		drawPos += glm::vec2((barWidth * 0.5), (barHeight * 0.5));
+		drawPos += glm::vec2((dim.x - barWidth) * posNorm.x, (dim.y - barHeight) * posNorm.y);
 		drawRectangle(drawPos.x, drawPos.y, barWidth, barHeight, c_magentaRed);
 		drawPos = startPos;
 	}
@@ -72,6 +74,7 @@ void Dp_separateCMYK_Rect03::draw(ofColor c, glm::vec2 dim, glm::vec2 pos /*= { 
 		barWidth  = (cmyk[2] + cmyk[3] + whiteVal) * dim.x;
 		barHeight = (cmyk[2] + cmyk[3] + whiteVal) * dim.y;
 		drawPos += glm::vec2((barWidth * 0.5), (barHeight * 0.5));
+		drawPos += glm::vec2((dim.x - barWidth) * posNorm.x, (dim.y - barHeight) * posNorm.y);
 		drawRectangle(drawPos.x, drawPos.y, barWidth, barHeight, c_yellowGreen);
 		drawPos = startPos;
 	}
@@ -79,6 +82,7 @@ void Dp_separateCMYK_Rect03::draw(ofColor c, glm::vec2 dim, glm::vec2 pos /*= { 
 		barWidth  = (cmyk[3] + whiteVal) * dim.x;
 		barHeight = (cmyk[3] + whiteVal) * dim.y;
 		drawPos += glm::vec2((barWidth * 0.5), (barHeight * 0.5));
+		drawPos += glm::vec2((dim.x - barWidth) * posNorm.x, (dim.y - barHeight) * posNorm.y);
 		drawRectangle(drawPos.x, drawPos.y, barWidth, barHeight, c_black);
 		drawPos = startPos;
 	}
@@ -86,6 +90,7 @@ void Dp_separateCMYK_Rect03::draw(ofColor c, glm::vec2 dim, glm::vec2 pos /*= { 
 		barWidth = whiteVal * dim.x;
 		barHeight = whiteVal * dim.y;
 		drawPos += glm::vec2((barWidth * 0.5), (barHeight * 0.5));
+		drawPos += glm::vec2((dim.x - barWidth) * posNorm.x, (dim.y - barHeight) * posNorm.y);
 		drawRectangle(drawPos.x, drawPos.y, barWidth, barHeight, c_white);
 		drawPos = startPos;
 	}

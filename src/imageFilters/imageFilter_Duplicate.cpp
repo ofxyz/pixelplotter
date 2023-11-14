@@ -11,7 +11,7 @@ ofJson If_duplicate::getSettings() {
 	return settings;
 }
 
-void If_duplicate::loadSettings(ofJson settings) {
+void If_duplicate::loadSettings(ofJson& settings) {
 	name = settings.value("name", "duplicate");
 	hCount = settings.value("hCount", hCount);
 	vCount = settings.value("vCount", vCount);

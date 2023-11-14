@@ -23,7 +23,7 @@ ofJson If_drawPixel::getSettings() {
 	return settings;
 }
 
-void If_drawPixel::loadSettings(ofJson settings) {
+void If_drawPixel::loadSettings(ofJson& settings) {
 
 	selectedPixelType = ofx2d::getIndex(drawPixels.v_DrawPixelsNames, settings.value("pixelType", "Undefined"), 1);
 	hCount = settings.value("hCount", hCount);
@@ -87,27 +87,37 @@ void If_drawPixel::apply(ofImage* img) {
 	cfbo.clearColorBuffer(ofColor(255, 255, 255));
 	int xcount = 0;
 	int ycount = 0;
-	for (float y = 0; y < vCount * height; y += height) {
-		// Reset for every line
-		float newHeight = height;
-		float newY = y;
-		if (bMirror && (ycount % 2 == 1)) {
-			newHeight = -height;
-			newY = y + height;
-		}
 
+	for (float y = 0; y < vCount * height; y += height) {
+		ofPushMatrix();
+		ofTranslate(0, height * 0.5);
+		ofTranslate(0, y);
+		
 		for (float x = 0; x < hCount * width; x += width) {
+			ofPushMatrix();
+			ofTranslate((width * 0.5), 0);
+			ofTranslate(x, 0);
+
 			if (bMirror && (xcount % 2 == 0)) {
-				drawPixels.v_DrawPixels[selectedPixelType]->draw(c_col, { -width, newHeight }, { x + (width * 0.5), newY + (newHeight * 0.5) });
+				ofScale(-1, 1);
 			}
-			else {
-				drawPixels.v_DrawPixels[selectedPixelType]->draw(c_col, { width, newHeight }, { x + (width * 0.5), newY + (newHeight * 0.5) });
+			if (bMirror && (ycount % 2 == 0)) {
+				ofScale(1, -1);
 			}
+
+			float xNorm = (float)xcount / (float)(hCount-1);
+			float yNorm = (float)ycount / (float)(vCount-1);
+
+			drawPixels.v_DrawPixels[selectedPixelType]->draw(c_col, { width, height }, { xcount, ycount }, { xNorm, yNorm });
+			
 			xcount++;
+			ofPopMatrix();
 		}
 		xcount = 0;
 		ycount++;
+		ofPopMatrix();
 	}
+
 	cfbo.end();
 
 	cfbo.readToPixels(img->getPixels());
