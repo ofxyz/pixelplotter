@@ -1,4 +1,12 @@
 #pragma once
+#include "ofx2d.h"
+
+#include "ofxImGui.h"
+#include "imgui_internal.h"
+#include "ImHelpers.h"
+#include "ImGui_Widget_Tooltip.h"
+#include "ImGui_Widget_InputTextString.h"
+
 #include "drawFilter_Controller.h"
 #include "drawFilter_Pixelate.h"
 #include "drawFilter_Pixelate2.h"
@@ -6,7 +14,6 @@
 #include "drawFilter_Noise.h"
 #include "drawFilter_Mesh.h"
 #include "drawFilter_Lumes.h"
-#include "ofx2d.h"
 
 DrawFilterController::DrawFilterController()
 {
@@ -34,6 +41,14 @@ template <typename t> void DrawFilterController::move(std::vector<t>& v, size_t 
 }
 
 void DrawFilterController::update() {
+
+	if (cleanDrawFilters) {
+		cleanFilters();
+	}
+	if (reorderDrawFilters) {
+		reorder();
+	}
+
 	for (const auto& o : v_Objects) {
 		if (o->isFresh()) {
 			o->setFresh(false);
@@ -51,6 +66,69 @@ void DrawFilterController::draw(ofImage* img, int width, int height)
 		filter->draw(img, width, height);
 	}
 	setFresh(false);
+}
+
+void DrawFilterController::renderImGuiSettings()
+{
+	string sDrawFilterCount = "DrawFilters (" + ofToString(v_Objects.size()) + ")###DrawFiltersHolder";
+	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+	if (ImGui::CollapsingHeader(sDrawFilterCount.c_str()))
+	{
+		ImGui::PushStyleColor(ImGuiCol_Header, (ImVec4)ImColor::HSV(0, 0, 0.2));
+		ImGui::PushStyleColor(ImGuiCol_HeaderActive, (ImVec4)ImColor::HSV(0, 0, 0.4));
+		ImGui::PushStyleColor(ImGuiCol_HeaderHovered, (ImVec4)ImColor::HSV(0, 0, 0.7));
+
+		ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0, 0, 0.2));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0, 0, 0.2));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0, 0, 0.7));
+
+		ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)ImColor::HSV(0, 0, 0.2));
+		ImGui::PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4)ImColor::HSV(0, 0, 0.4));
+		ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0, 0, 0.5));
+
+		ImGui::PushStyleColor(ImGuiCol_CheckMark, (ImVec4)ImColor::HSV(0, 0, 0.8));
+
+		cleanDrawFilters = false;
+		reorderDrawFilters = false;
+		for (int i = 0; i < v_Objects.size(); i++) {
+			ImGui::PushID(i);
+			if (v_Objects[i]->active) {
+				ImGui::Indent();
+				v_Objects[i]->renderImGuiSettings();
+				ImGui::Unindent();
+			}
+			else {
+				cleanDrawFilters = true;
+			}
+			if (v_Objects[i]->moveUp || v_Objects[i]->moveDown) {
+				reorderDrawFilters = true;
+			}
+			ImGui::PopID();
+		}
+
+		ImGui::PopStyleColor(10);
+
+		ImGui::Indent(); // ADD FILTERS
+		if (ofxImGui::VectorCombo("##Draw Filter Selector", &currentDrawFilterIndex, v_MenuValues))
+		{
+			add(v_MenuValues[currentDrawFilterIndex]);
+			currentDrawFilterIndex = 0;
+		}
+		ImGui::Unindent();
+
+	}
+}
+
+void DrawFilterController::loadSettings(ofJson& settings)
+{
+	setFresh(true);
+}
+
+ofJson DrawFilterController::getSettings()
+{
+	ofJson settings;
+
+	return settings;
 }
 
 void DrawFilterController::reorder() {
@@ -141,7 +219,7 @@ void DrawFilterController::setFresh(bool fresh) {
 void DrawFilterController::generateMenuNames()
 {
 	v_MenuValues.clear();
-	v_MenuValues.push_back("Add Plotter ...");
+	v_MenuValues.push_back("Add Draw Filter ...");
 	for (std::string s : v_ObjectNames) {
 		v_MenuValues.push_back(s);
 	}

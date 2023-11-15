@@ -17,7 +17,7 @@ void soundDeviceController::renderImGuiSettings() {
 	}
 }
 
-void soundDeviceController::loadSettings(ofJson settings) {
+void soundDeviceController::loadSettings(ofJson& settings) {
 
 }
 
@@ -44,8 +44,8 @@ void soundDeviceController::loadSoundDeviceIndex() {
 	soundStream.setOutput(pixelplotter);
 }
 
-void soundDeviceController::setup(ofApp* app) {
-	pixelplotter = app;
+void soundDeviceController::setup() {
+	pixelplotter = (ofApp*)ofGetAppPtr();
 
 	left.assign(bufferSize, 0.0);
 	right.assign(bufferSize, 0.0);

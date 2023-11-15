@@ -119,8 +119,8 @@ void SourceController::loadSourceIndex() {
 				}
 				videoGrabber.close();
 				videoGrabber.setDeviceID(it->id);
-				videoGrabber.initGrabber(camWidth, camHeight);
-				pixelplotter->plotCanvas.setSourceDimension(camWidth, camHeight);
+				videoGrabber.setup(camWidth, camHeight);
+				pixelplotter->plotCanvas.setDimensions(camWidth, camHeight);
 				pix = videoGrabber.getPixels();
 				prepImg();
 				return;
@@ -161,7 +161,7 @@ void SourceController::addVideo(ofFile file) {
 }
 
 void SourceController::loadImage(string& filepath) {
-	original.loadImage(filepath);
+	original.load(filepath);
 	original.setImageType(OF_IMAGE_COLOR_ALPHA);
 	original.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 
@@ -179,7 +179,7 @@ void SourceController::loadImage(string& filepath) {
 	bUseVideoDevice = false;
 	videoPlayer.stop();
 	videoPlayer.close();
-	pixelplotter->plotCanvas.setSourceDimension(pix.getWidth(), pix.getHeight());
+	pixelplotter->plotCanvas.setDimensions(pix.getWidth(), pix.getHeight());
 	prepImg();
 }
 
@@ -199,7 +199,7 @@ void SourceController::loadVideo(string& filepath) {
 	(videoPlayer.getWidth() > videoPlayer.getHeight()) ? isLandscape = true : isLandscape = false;
 	(isLandscape) ? imgRatio = videoPlayer.getHeight() / videoPlayer.getWidth() : imgRatio = videoPlayer.getWidth() / videoPlayer.getHeight();
 
-	pixelplotter->plotCanvas.setSourceDimension(videoPlayer.getWidth(), videoPlayer.getHeight());
+	pixelplotter->plotCanvas.setDimensions(videoPlayer.getWidth(), videoPlayer.getHeight());
 }
 
 void SourceController::loadGenerator(string& name) {
@@ -222,7 +222,7 @@ void SourceController::loadGenerator(string& name) {
 	//(videoPlayer.getWidth() > videoPlayer.getHeight()) ? isLandscape = true : isLandscape = false;
 	//(isLandscape) ? imgRatio = videoPlayer.getHeight() / videoPlayer.getWidth() : imgRatio = videoPlayer.getWidth() / videoPlayer.getHeight();
 
-	//pixelplotter->plotCanvas.setSourceDimension(videoPlayer.getWidth(), videoPlayer.getHeight());
+	//pixelplotter->plotCanvas.setSourceDimensions(videoPlayer.getWidth(), videoPlayer.getHeight());
 }
 
 void SourceController::prepImg() {

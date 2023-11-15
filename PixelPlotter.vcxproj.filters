@@ -1823,6 +1823,9 @@
     <ClInclude Include="src\drawPixels\drawPixel_SeparateCMYK_Rect04.h">
       <Filter>src\drawPixels</Filter>
     </ClInclude>
+    <ClInclude Include="src\gui\ImGui_Widget_InputTextString.h">
+      <Filter>src\gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />

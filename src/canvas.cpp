@@ -6,15 +6,8 @@
 #include "imgui_internal.h"
 #include "ImHelpers.h"
 #include "ImGui_Widget_Tooltip.h"
-
-namespace ImGui
-{
-	// ImGui::InputText() with std::string
-	// Because text input needs dynamic resizing, we need to setup a callback to grow the capacity
-	IMGUI_API bool  InputText(const char* label, std::string* str, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = NULL, void* user_data = NULL);
-	IMGUI_API bool  InputTextMultiline(const char* label, std::string* str, const ImVec2& size = ImVec2(0, 0), ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = NULL, void* user_data = NULL);
-	IMGUI_API bool  InputTextWithHint(const char* label, const char* hint, std::string* str, ImGuiInputTextFlags flags = 0, ImGuiInputTextCallback callback = NULL, void* user_data = NULL);
-}
+#include "ImGui_Widget_InputTextString.h"
+#include "ofx2d.h"
 
 Canvas::Canvas()
 {
@@ -42,9 +35,9 @@ void Canvas::renderImGuiSettings() {
 		resizeRequest = true;
 	}
 	ImGui::SameLine();
-	if (ImGui::Button("Reset")) {
-		canvasWidth = sourceWidth;
-		canvasHeight = sourceHeight;
+	if (ImGui::Button("Source")) {
+		canvasWidth = sourceController.frameBuffer.getWidth();
+		canvasHeight = sourceController.frameBuffer.getHeight();
 		resizeRequest = true;
 	}
 	ImGui::SameLine();
@@ -54,6 +47,12 @@ void Canvas::renderImGuiSettings() {
 		canvasHeight = as.y;
 		pixelplotter->resetZoom();
 		pixelplotter->resetImageOffset();
+		resizeRequest = true;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("x2")) {
+		canvasWidth  *= 2;
+		canvasHeight *= 2;
 		resizeRequest = true;
 	}
 	ImGui::PopItemWidth();
@@ -107,56 +106,7 @@ void Canvas::renderImGuiSettings() {
 		//-----------------------------------------------------------------------------------------------------
 	} // End Plot Source
 
-	// Start DrawFilters
-	//----------------------------------------------------------------------------------------------------------------------
-	string sDrawFilterCount = "Plotters (" + ofToString(dF.v_Objects.size()) + ")###DrawFiltersHolder";
-	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-	if (ImGui::CollapsingHeader(sDrawFilterCount.c_str()))
-	{
-		ImGui::PushStyleColor(ImGuiCol_Header, (ImVec4)ImColor::HSV(0, 0, 0.2));
-		ImGui::PushStyleColor(ImGuiCol_HeaderActive, (ImVec4)ImColor::HSV(0, 0, 0.4));
-		ImGui::PushStyleColor(ImGuiCol_HeaderHovered, (ImVec4)ImColor::HSV(0, 0, 0.7));
-
-		ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0, 0, 0.2));
-		ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0, 0, 0.2));
-		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0, 0, 0.7));
-
-		ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)ImColor::HSV(0, 0, 0.2));
-		ImGui::PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4)ImColor::HSV(0, 0, 0.4));
-		ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0, 0, 0.5));
-
-		ImGui::PushStyleColor(ImGuiCol_CheckMark, (ImVec4)ImColor::HSV(0, 0, 0.8));
-
-		cleanDrawFilters = false;
-		reorderDrawFilters = false;
-		for (int i = 0; i < dF.v_Objects.size(); i++) {
-			ImGui::PushID(i);
-			if (dF.v_Objects[i]->active) {
-				ImGui::Indent();
-				dF.v_Objects[i]->renderImGuiSettings();
-				ImGui::Unindent();
-			}
-			else {
-				cleanDrawFilters = true;
-			}
-			if (dF.v_Objects[i]->moveUp || dF.v_Objects[i]->moveDown) {
-				reorderDrawFilters = true;
-			}
-			ImGui::PopID();
-		}
-
-		ImGui::PopStyleColor(10);
-
-		ImGui::Indent(); // ADD PLOTTERS
-		if (ofxImGui::VectorCombo("##Draw Filter Selector", &currentDrawFilterIndex, dF.v_MenuValues))
-		{
-			dF.add(dF.v_MenuValues[currentDrawFilterIndex]);
-			currentDrawFilterIndex = 0;
-		}
-		ImGui::Unindent();
-
-	}// End Draw Filters
-	//----------------------------------------------------------------------------------------------------------------------
+	dF.renderImGuiSettings();
 
 	ImGui::Separator(); // End Size 
 
@@ -226,48 +176,35 @@ ofJson Canvas::getSettings() {
 	return settings;
 }
 
-void Canvas::setup(ofApp* app, string canvas_title) {
-	pixelplotter = app;
-	//dF = DrawFilterController();
+void Canvas::setup(string canvas_title) {
+	pixelplotter = (ofApp*)ofGetAppPtr();
+	canvasTitle = canvas_title;
 
 	sourceController.setup();
-	canvasTitle = canvas_title;
-	setSourceDimension(&sourceController.frameBuffer.getFrame());
-
-	//ofFboSettings fs;
-	//fs.width = canvasWidth;
-	//fs.height = canvasHeight;
-	//fs.internalformat = GL_RGBA;
-	//fs.textureTarget = GL_TEXTURE_2D;
-	//canvasFbo.allocate(fs);
-
+	canvasWidth = sourceController.frameBuffer.getWidth();
+	canvasHeight = sourceController.frameBuffer.getHeight();
 	canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGBA, 8);
 	canvasFbo.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 	update();
 	updateFbo(&sourceController.frameBuffer.getFrame());
 }
 
-void Canvas::setSourceDimension() {
-	canvasWidth = sourceWidth;
-	canvasHeight = sourceHeight;
+void Canvas::setDimensions(ofImage* img) {
+	canvasWidth = img->getWidth();
+	canvasHeight = img->getHeight();
 	resizeRequest = true;
 }
 
-void Canvas::setSourceDimension(ofImage* img) {
-	sourceWidth = img->getWidth();
-	sourceHeight = img->getHeight();
-	setSourceDimension();
+void Canvas::setDimensions(float w, float h) {
+	canvasWidth = w;
+	canvasHeight = h;
+	resizeRequest = true;
 }
 
 void Canvas::update() {
 	sourceController.update();
 	dF.update();
-	if (cleanDrawFilters) {
-		dF.cleanFilters();
-	}
-	if (reorderDrawFilters) {
-		dF.reorder();
-	}
+
 	if (dF.isFresh()) {
 		dF.setFresh(false);
 		setFresh(true);
@@ -324,7 +261,7 @@ void Canvas::updateFbo(ofImage* img) {
 	}
 
 	if (isRecording) {
-		ofSaveImage(canvasPix, "export//frames//" + canvasTitle + "_" + with_leading_zero(++recFrameCount, 8) + ".png");
+		ofSaveImage(canvasPix, "export//frames//" + canvasTitle + "_" + ofx2d::with_leading_zero(++recFrameCount, 8) + ".png");
 	}
 	if (savePixels) {
 		string stamp = to_string(++exportCount);

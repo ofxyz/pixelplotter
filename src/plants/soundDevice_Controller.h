@@ -27,11 +27,11 @@ public:
 	float smoothedVol = 0.0;
 	float scaledVol = 0.0;
 
-	void setup(ofApp* app);
+	void setup();
 	void update();
 
 	void renderImGuiSettings();
-	void loadSettings(ofJson settings);
+	void loadSettings(ofJson& settings);
 	ofJson getSettings();
 
 };

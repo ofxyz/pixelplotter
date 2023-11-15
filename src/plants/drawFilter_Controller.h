@@ -14,6 +14,11 @@ public:
 
 	void update();
 	void draw(ofImage* img, int width, int height);
+
+	void renderImGuiSettings();
+	void loadSettings(ofJson& settings);
+	ofJson getSettings();
+
 	void add(std::string name, ofJson filterSettings = {});
 	void add(ofJson filterSettings);
 	void addRandom();
@@ -29,4 +34,7 @@ private:
 	bool _bFresh = false;
 	void generateMenuNames();
 
+	bool cleanDrawFilters = false;
+	bool reorderDrawFilters = false;
+	int currentDrawFilterIndex;
 };

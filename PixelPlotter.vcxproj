@@ -281,6 +281,7 @@
     <ClInclude Include="src\generators\generator.h" />
     <ClInclude Include="src\generators\generator_Plaids.h" />
     <ClInclude Include="src\gui\ImGui_Widget_Bezier.h" />
+    <ClInclude Include="src\gui\ImGui_Widget_InputTextString.h" />
     <ClInclude Include="src\gui\ImGui_Widget_Tooltip.h" />
     <ClInclude Include="src\gui\ofGui.h" />
     <ClInclude Include="src\imageFilters\imageFilter.h" />

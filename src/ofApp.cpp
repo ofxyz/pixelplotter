@@ -23,9 +23,8 @@ void ofApp::setup() {
 
 	ofGui.setup();
 
-	soundManager.setup(this);
-
-	plotCanvas.setup(this);
+	soundManager.setup();
+	plotCanvas.setup();
 
 	userOffset.x = 0;
 	userOffset.y = 0;
