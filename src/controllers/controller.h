@@ -1,4 +1,5 @@
 #pragma once
+#include "ofJson.h"
 
 class ofApp;
 
@@ -11,10 +12,18 @@ public:
 	std::vector<std::string> v_objectNames;
 	std::vector<std::shared_ptr<t>> v_Objects;
 	std::vector<std::string> v_menuValues;
-	
+	std::map<std::string, t>;
+
+	void add(std::string name, ofJson filterSettings = {});
+	void add(ofJson filterSettings);
+	void addRandom();
+
+	void update();
 	void move(std::vector<t>& v, size_t oldIndex, size_t newIndex);
 	
 	void renderImGuiSettings();
+	void loadSettings(ofJson& settings);
+	ofJson getSettings();
 
 	void reorder();
 	void clean();
@@ -35,6 +44,65 @@ private:
 
 	void generateMenuNames();
 };
+
+template<class t>
+void Controller<t>::add(std::string name, ofJson filterSettings /*= {}*/)
+{
+	// TODO: Finish!
+}
+
+template<class t>
+void Controller<t>::add(ofJson filterSettings)
+{
+	std::string name = "---";
+	try {
+		name = filterSettings.value("name", "not_found");
+		add(name, filterSettings);
+		setFresh(true);
+	}
+	catch (...) {
+		ofLog() << "Failed to add Object with name " << name;
+		return;
+	}
+}
+
+template<class t>
+void Controller<t>::addRandom()
+{
+	add(v_ObjectNames[ofRandom(0, v_ObjectNames.size())]);
+}
+
+template<class t>
+ofJson Controller<t>::getSettings()
+{
+	ofJson settings;
+	return settings;
+}
+
+template<class t>
+void Controller<t>::loadSettings(ofJson& settings)
+{
+	// TODO: Finish
+	return;
+}
+
+template<class t>
+void Controller<t>::update()
+{
+	if (_bClean) {
+		cleanFilters();
+	}
+	if (_bReorder) {
+		reorder();
+	}
+
+	for (const auto& o : v_Objects) {
+		if (o->isFresh()) {
+			o->setFresh(false);
+			setFresh(true);
+		}
+	}
+}
 
 template<class t>
 void Controller<t>::renderImGuiSettings()
@@ -135,7 +203,7 @@ template<class t>
 void Controller<t>::clean()
 {
 	for (int i = 0; i < v_Objects.size(); i++) {
-		// TODO: isActive()
+		// TODO: Implement isActive() setActive(b);
 		if (!v_Objects[i]->active) {
 			v_Objects[i] = nullptr;
 			setFresh(true);

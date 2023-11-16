@@ -180,12 +180,14 @@ void DrawFilterController::add(std::string name, ofJson filterSettings /*= nullp
 }
 
 void DrawFilterController::add(ofJson filterSettings) {
+	std::string name = "---";
 	try {
-		std::string name = filterSettings.value("name", "not_found");
+		name = filterSettings.value("name", "not_found");
 		add(name, filterSettings);
 		setFresh(true);
 	}
 	catch (...) {
+		ofLog(OF_LOG_ERROR) << "Failed to add Object with name " << name;
 		return;
 	}
 }
