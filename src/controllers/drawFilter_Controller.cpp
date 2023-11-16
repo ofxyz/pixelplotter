@@ -18,6 +18,7 @@
 DrawFilterController::DrawFilterController()
 {
 	pixelplotter = (ofApp*)ofGetAppPtr();
+	menuValueInit = "Add Draw Filter ...";
 
 	v_ObjectNames = {
 		"Lumes",
@@ -219,7 +220,7 @@ void DrawFilterController::setFresh(bool fresh) {
 void DrawFilterController::generateMenuNames()
 {
 	v_MenuValues.clear();
-	v_MenuValues.push_back("Add Draw Filter ...");
+	v_MenuValues.push_back(menuValueInit);
 	for (std::string s : v_ObjectNames) {
 		v_MenuValues.push_back(s);
 	}

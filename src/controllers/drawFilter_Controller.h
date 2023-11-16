@@ -32,6 +32,7 @@ public:
 
 private:
 	bool _bFresh = false;
+	std::string menuValueInit;
 	void generateMenuNames();
 
 	bool cleanDrawFilters = false;

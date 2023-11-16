@@ -205,27 +205,6 @@
     <ClCompile Include="src\drawFilters\drawFilter_Pixelate2.cpp">
       <Filter>src\drawFilters</Filter>
     </ClCompile>
-    <ClCompile Include="src\plants\drawFilter_Controller.cpp">
-      <Filter>src\plants</Filter>
-    </ClCompile>
-    <ClCompile Include="src\plants\drawPixel_Controller.cpp">
-      <Filter>src\plants</Filter>
-    </ClCompile>
-    <ClCompile Include="src\plants\generator_Controller.cpp">
-      <Filter>src\plants</Filter>
-    </ClCompile>
-    <ClCompile Include="src\plants\Managing_Factory.cpp">
-      <Filter>src\plants</Filter>
-    </ClCompile>
-    <ClCompile Include="src\plants\soundDevice_Controller.cpp">
-      <Filter>src\plants</Filter>
-    </ClCompile>
-    <ClCompile Include="src\plants\source_Controller.cpp">
-      <Filter>src\plants</Filter>
-    </ClCompile>
-    <ClCompile Include="src\plants\swatch_Controller.cpp">
-      <Filter>src\plants</Filter>
-    </ClCompile>
     <ClCompile Include="src\drawPixels\drawPixel_SeparateCMYK_Rect01.cpp">
       <Filter>src\drawPixels</Filter>
     </ClCompile>
@@ -238,8 +217,26 @@
     <ClCompile Include="src\drawPixels\drawPixel_SeparateCMYK_Rect04.cpp">
       <Filter>src\drawPixels</Filter>
     </ClCompile>
-    <ClCompile Include="src\plants\imageFilter_Controller.cpp">
-      <Filter>src\plants</Filter>
+    <ClCompile Include="src\controllers\drawFilter_Controller.cpp">
+      <Filter>src\controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\controllers\drawPixel_Controller.cpp">
+      <Filter>src\controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\controllers\generator_Controller.cpp">
+      <Filter>src\controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\controllers\imageFilter_Controller.cpp">
+      <Filter>src\controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\controllers\soundDevice_Controller.cpp">
+      <Filter>src\controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\controllers\source_Controller.cpp">
+      <Filter>src\controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\controllers\swatch_Controller.cpp">
+      <Filter>src\controllers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -504,7 +501,7 @@
     <Filter Include="src\generators">
       <UniqueIdentifier>{8e8832e6-da83-439f-8e3a-c9b14dfe1248}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\plants">
+    <Filter Include="src\controllers">
       <UniqueIdentifier>{f631bd3a-098a-4878-98c0-53058ee3b3f1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -1787,27 +1784,6 @@
     <ClInclude Include="src\drawFilters\drawFilter_Pixelate2.h">
       <Filter>src\drawFilters</Filter>
     </ClInclude>
-    <ClInclude Include="src\plants\drawFilter_Controller.h">
-      <Filter>src\plants</Filter>
-    </ClInclude>
-    <ClInclude Include="src\plants\drawPixel_Controller.h">
-      <Filter>src\plants</Filter>
-    </ClInclude>
-    <ClInclude Include="src\plants\generator_Controller.h">
-      <Filter>src\plants</Filter>
-    </ClInclude>
-    <ClInclude Include="src\plants\Managing_Factory.h">
-      <Filter>src\plants</Filter>
-    </ClInclude>
-    <ClInclude Include="src\plants\soundDevice_Controller.h">
-      <Filter>src\plants</Filter>
-    </ClInclude>
-    <ClInclude Include="src\plants\source_Controller.h">
-      <Filter>src\plants</Filter>
-    </ClInclude>
-    <ClInclude Include="src\plants\swatch_Controller.h">
-      <Filter>src\plants</Filter>
-    </ClInclude>
     <ClInclude Include="src\drawPixels\drawPixel_SeparateCMYK_Rect01.h">
       <Filter>src\drawPixels</Filter>
     </ClInclude>
@@ -1823,8 +1799,29 @@
     <ClInclude Include="src\gui\ImGui_Widget_InputTextString.h">
       <Filter>src\gui</Filter>
     </ClInclude>
-    <ClInclude Include="src\plants\imageFilter_Controller.h">
-      <Filter>src\plants</Filter>
+    <ClInclude Include="src\controllers\controller.h">
+      <Filter>src\controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\controllers\drawFilter_Controller.h">
+      <Filter>src\controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\controllers\drawPixel_Controller.h">
+      <Filter>src\controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\controllers\generator_Controller.h">
+      <Filter>src\controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\controllers\imageFilter_Controller.h">
+      <Filter>src\controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\controllers\soundDevice_Controller.h">
+      <Filter>src\controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\controllers\source_Controller.h">
+      <Filter>src\controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\controllers\swatch_Controller.h">
+      <Filter>src\controllers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
