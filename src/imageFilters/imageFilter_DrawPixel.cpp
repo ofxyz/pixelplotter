@@ -62,7 +62,7 @@ void If_drawPixel::renderImGuiSettings() {
 		}
 		ImGui::SameLine();
 		if (ImGui::Checkbox("Mirror", &bMirror)) {
-			bFresh = true;
+			setFresh(true);
 		}
 
 		// Pass fresh through
@@ -122,5 +122,5 @@ void If_drawPixel::apply(ofImage* img) {
 
 	cfbo.readToPixels(img->getPixels());
 	img->update();
-	bFresh = false;
+	setFresh(false);
 }

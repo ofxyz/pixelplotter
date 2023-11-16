@@ -298,7 +298,7 @@ void OfGui::drawInfoPanel()
 		}
 		else {
 			if (presetFileNames.size() > 0) {
-				strcpy(presetSaveName, presetFileNames[currentPresetIndex].c_str());
+				strcpy_s(presetSaveName, presetFileNames[currentPresetIndex].c_str());
 			}
 			bSavePreset = true;
 		}

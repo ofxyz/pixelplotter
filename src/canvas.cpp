@@ -201,6 +201,14 @@ void Canvas::setDimensions(float w, float h) {
 	resizeRequest = true;
 }
 
+bool Canvas::isFresh() {
+	return bFresh;
+}
+
+void Canvas::setFresh(bool fresh) {
+	bFresh = fresh;
+}
+
 void Canvas::update() {
 	sourceController.update();
 	dF.update();
@@ -274,3 +282,8 @@ void Canvas::updateFbo(ofImage* img) {
 
 	setFresh(true);
 };
+
+void Canvas::draw(float x, float y, float w, float h) {
+	canvasFbo.draw(x, y, w, h);
+	setFresh(false);
+}

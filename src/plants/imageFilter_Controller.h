@@ -1,11 +1,12 @@
 #pragma once
 #include "imageFilter.h"
 
+class ofApp;
+
 class ImageFilterController {
 public:
-	bool bFresh = false;
-	bool isFresh();
-	void setFresh(bool fresh);
+	ofApp* pixelplotter{ nullptr };
+	ImageFilterController();
 
 	void update();
 
@@ -29,6 +30,11 @@ public:
 	void addRandomFilter();
 
 	void cleanFilters();
-
 	void clearFilters();
+
+	bool isFresh();
+	void setFresh(bool fresh);
+
+private:
+	bool bFresh = false;
 };

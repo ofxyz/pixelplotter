@@ -14,7 +14,7 @@ class ofApp;
 
 class SourceController {
 public:
-	ofApp* pixelplotter;
+	ofApp* pixelplotter{ nullptr };
 
 	void setup();
 	void update();
@@ -25,9 +25,9 @@ public:
 
 	void addImage(ofFile file);
 	void addVideo(ofFile file);
-	void loadImage(string& filepath);
-	void loadVideo(string& filepath);
-	void loadGenerator(string& name);
+	void loadImage(std::string& filepath);
+	void loadVideo(std::string& filepath);
+	void loadGenerator(std::string& name);
 
 	void buildSourceNames();
 
@@ -59,8 +59,6 @@ public:
 	int camWidth = 640;
 	int camHeight = 480;
 	float imgRatio = 1;
-
-	ofFbo sourceCanvas;
 
 	std::vector<std::string> sourceNames;
 

@@ -5,14 +5,9 @@
 #include "imageFilter_Blur.h"
 #include "imageFilter_DrawPixel.h"
 
-bool ImageFilterController::isFresh()
+ImageFilterController::ImageFilterController()
 {
-	return bFresh;
-}
-
-void ImageFilterController::setFresh(bool fresh)
-{
-	bFresh = fresh;
+	pixelplotter = (ofApp*)ofGetAppPtr();
 }
 
 void ImageFilterController::update()
@@ -110,4 +105,14 @@ void ImageFilterController::clearFilters()
 	}
 	v_ImageFilters.erase(std::remove(v_ImageFilters.begin(), v_ImageFilters.end(), nullptr), v_ImageFilters.end());
 	bFresh = true;
+}
+
+bool ImageFilterController::isFresh()
+{
+	return bFresh;
+}
+
+void ImageFilterController::setFresh(bool fresh)
+{
+	bFresh = fresh;
 }

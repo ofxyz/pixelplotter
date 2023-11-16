@@ -206,7 +206,6 @@
     <ClCompile Include="src\gui\ofGui.cpp" />
     <ClCompile Include="src\imageFilters\imageFilter.cpp" />
     <ClCompile Include="src\imageFilters\imageFilter_Blur.cpp" />
-    <ClCompile Include="src\imageFilters\imageFilter_Controller.cpp" />
     <ClCompile Include="src\imageFilters\imageFilter_DrawPixel.cpp" />
     <ClCompile Include="src\imageFilters\imageFilter_Duplicate.cpp" />
     <ClCompile Include="src\imageFilters\imageFilter_Mirror.cpp" />
@@ -257,6 +256,7 @@
     <ClCompile Include="src\plants\drawFilter_Controller.cpp" />
     <ClCompile Include="src\plants\drawPixel_Controller.cpp" />
     <ClCompile Include="src\plants\generator_Controller.cpp" />
+    <ClCompile Include="src\plants\imageFilter_Controller.cpp" />
     <ClCompile Include="src\plants\Managing_Factory.cpp" />
     <ClCompile Include="src\plants\soundDevice_Controller.cpp" />
     <ClCompile Include="src\plants\source_Controller.cpp" />
@@ -286,7 +286,6 @@
     <ClInclude Include="src\gui\ofGui.h" />
     <ClInclude Include="src\imageFilters\imageFilter.h" />
     <ClInclude Include="src\imageFilters\imageFilter_Blur.h" />
-    <ClInclude Include="src\imageFilters\imageFilter_Controller.h" />
     <ClInclude Include="src\imageFilters\imageFilter_DrawPixel.h" />
     <ClInclude Include="src\imageFilters\imageFilter_Duplicate.h" />
     <ClInclude Include="src\imageFilters\imageFilter_Mirror.h" />
@@ -697,6 +696,7 @@
     <ClInclude Include="src\plants\drawFilter_Controller.h" />
     <ClInclude Include="src\plants\drawPixel_Controller.h" />
     <ClInclude Include="src\plants\generator_Controller.h" />
+    <ClInclude Include="src\plants\imageFilter_Controller.h" />
     <ClInclude Include="src\plants\Managing_Factory.h" />
     <ClInclude Include="src\plants\soundDevice_Controller.h" />
     <ClInclude Include="src\plants\source_Controller.h" />

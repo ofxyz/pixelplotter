@@ -1,5 +1,6 @@
 #pragma once
- 
+#include "ofFbo.h"
+#include "ofCamera.h"
 #include "drawFilter_Controller.h"
 #include "source_Controller.h"
 
@@ -25,13 +26,10 @@ public:
 	void loadSettings(ofJson& settings);
 	ofJson getSettings();
 
-	void setup(string canvas_title = "Untitled");
+	void setup(std::string canvas_title = "Untitled");
 	void update();
 	void updateFbo(ofImage* img);
-	void draw(float x, float y, float w, float h) {
-		canvasFbo.draw(x, y, w, h);
-		setFresh(false);
-	}
+	void draw(float x, float y, float w, float h);
 
 	void setDimensions(ofImage* img);
 	void setDimensions(float w, float h);
@@ -46,12 +44,8 @@ public:
 	bool saveVector = false;
 	bool savePixels = false;
 
-	bool isFresh() {
-		return bFresh;
-	}
-	void setFresh(bool fresh) {
-		bFresh = fresh;
-	}
+	bool isFresh();
+	void setFresh(bool fresh);
 
 private:
 	bool bFresh = false;

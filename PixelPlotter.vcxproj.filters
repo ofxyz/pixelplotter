@@ -157,9 +157,6 @@
     <ClCompile Include="src\imageFilters\imageFilter_Blur.cpp">
       <Filter>src\imageFilters</Filter>
     </ClCompile>
-    <ClCompile Include="src\imageFilters\imageFilter_Controller.cpp">
-      <Filter>src\imageFilters</Filter>
-    </ClCompile>
     <ClCompile Include="src\imageFilters\imageFilter_DrawPixel.cpp">
       <Filter>src\imageFilters</Filter>
     </ClCompile>
@@ -240,6 +237,9 @@
     </ClCompile>
     <ClCompile Include="src\drawPixels\drawPixel_SeparateCMYK_Rect04.cpp">
       <Filter>src\drawPixels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\plants\imageFilter_Controller.cpp">
+      <Filter>src\plants</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1739,9 +1739,6 @@
     <ClInclude Include="src\imageFilters\imageFilter_Blur.h">
       <Filter>src\imageFilters</Filter>
     </ClInclude>
-    <ClInclude Include="src\imageFilters\imageFilter_Controller.h">
-      <Filter>src\imageFilters</Filter>
-    </ClInclude>
     <ClInclude Include="src\imageFilters\imageFilter_DrawPixel.h">
       <Filter>src\imageFilters</Filter>
     </ClInclude>
@@ -1825,6 +1822,9 @@
     </ClInclude>
     <ClInclude Include="src\gui\ImGui_Widget_InputTextString.h">
       <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\plants\imageFilter_Controller.h">
+      <Filter>src\plants</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

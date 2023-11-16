@@ -35,5 +35,5 @@ void If_blur::apply(ofImage* img) {
 	pix.setImageType(OF_IMAGE_COLOR_ALPHA);
 	img->setFromPixels(pix);
 	img->update();
-	bFresh = false;
+	setFresh(false);
 }

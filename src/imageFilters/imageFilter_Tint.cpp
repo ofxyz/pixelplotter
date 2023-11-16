@@ -1,3 +1,4 @@
+#include "ofMain.h"
 #include "imageFilter_Tint.h"
 
 ofJson If_tint::getSettings() {
@@ -30,11 +31,11 @@ void If_tint::renderImGuiSettings() {
 		ImGui::AlignTextToFramePadding();
 
 		if (ImGui::ColorEdit4("Colorize ##duplicate", (float*)&c_Tint, ImGuiColorEditFlags_NoInputs)) {
-			bFresh = true;
+			setFresh(true);
 		}
 		ImGui::SameLine();
 		if (ImGui::Checkbox("Grey", &bGrey)) {
-			bFresh = true;
+			setFresh(true);
 		}
 	}
 }
@@ -56,5 +57,5 @@ void If_tint::apply(ofImage* img) {
 		img->setImageType(OF_IMAGE_GRAYSCALE);
 	}
 	img->update();
-	bFresh = false;
+	setFresh(false);
 }

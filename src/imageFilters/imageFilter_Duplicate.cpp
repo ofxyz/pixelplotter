@@ -1,4 +1,5 @@
 #include "imageFilter_Duplicate.h"
+#include "ofFbo.h"
 
 // Add resize option?
 
@@ -26,15 +27,15 @@ void If_duplicate::renderImGuiSettings() {
 
 		ImGui::Text("Copies"); ImGui::SameLine(75);
 		if (ImGui::DragInt("Horz ##duplicate_hCount", &hCount, 1, 1, 100)) {
-			bFresh = true;
+			setFresh(true);
 		}
 		ImGui::SameLine();
 		if (ImGui::DragInt("Vert ##duplicate_vCount", &vCount, 1, 1, 100)) {
-			bFresh = true;
+			setFresh(true);
 		}
 		ImGui::SameLine();
 		if (ImGui::Checkbox("Mirror", &bMirror)) {
-			bFresh = true;
+			setFresh(true);
 		}
 
 		ImGui::PopItemWidth();
@@ -74,5 +75,5 @@ void If_duplicate::apply(ofImage* img) {
 
 	cfbo.readToPixels(img->getPixels());
 	img->update();
-	bFresh = false;
+	setFresh(false);
 }
