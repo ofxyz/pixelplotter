@@ -18,6 +18,9 @@
 DrawFilterController::DrawFilterController()
 {
 	pixelplotter = (ofApp*)ofGetAppPtr();
+	
+	// Manual Mapping ...
+
 	menuValueInit = "Add Draw Filter ...";
 
 	v_ObjectNames = {
@@ -28,6 +31,13 @@ DrawFilterController::DrawFilterController()
 		"Pixelate2",
 		"Rings"
 	};
+
+	mapObjectTypes["Lumes"]     = createInstance<Df_lumes>;
+	mapObjectTypes["Mesh"]      = createInstance<Df_mesh>;
+	mapObjectTypes["Noise"]     = createInstance<Df_noise>;
+	mapObjectTypes["Pixelate"]  = createInstance<Df_pixelate>;
+	mapObjectTypes["Pixelate2"] = createInstance<Df_pixelate2>;
+	mapObjectTypes["Rings"]     = createInstance<Df_rings>;
 
 	generateMenuNames();
 
@@ -132,7 +142,8 @@ ofJson DrawFilterController::getSettings()
 	return settings;
 }
 
-void DrawFilterController::reorder() {
+void DrawFilterController::reorder()
+{
 	for (int i = 0; i < v_Objects.size(); i++) {
 		if (v_Objects[i]->moveUp) {
 			v_Objects[i]->moveUp = false;
@@ -151,52 +162,36 @@ void DrawFilterController::reorder() {
 	}
 }
 
-void DrawFilterController::add(std::string name, ofJson filterSettings /*= nullptr*/ ) {
-	if (name == "Pixelate")
-	{
-		v_Objects.push_back(std::make_shared<Df_pixelate>(filterSettings));
+void DrawFilterController::add(std::string name, ofJson filterSettings /*={}*/)
+{
+	if (mapObjectTypes.count(name) > 0) {
+		v_Objects.push_back(mapObjectTypes[name]());
+		setFresh(true);
 	}
-	else if (name == "Pixelate2")
-	{
-		v_Objects.push_back(std::make_shared<Df_pixelate2>(filterSettings));
+	else {
+		ofLog(OF_LOG_WARNING) << "Controller: Could not find name " << name << " in mapObjectTypes";
 	}
-	else if (name == "Rings")
-	{
-		v_Objects.push_back(std::make_shared<Df_rings>(filterSettings));
-	}
-	else if (name == "Noise")
-	{
-		v_Objects.push_back(std::make_shared<Df_noise>(filterSettings));
-	}
-	else if (name == "Mesh")
-	{
-		v_Objects.push_back(std::make_shared<Df_mesh>(filterSettings));
-	}
-	else if (name == "Lumes")
-	{
-		v_Objects.push_back(std::make_shared<Df_lumes>(filterSettings));
-	}
-	setFresh(true);
 }
 
-void DrawFilterController::add(ofJson filterSettings) {
-	std::string name = "---";
+void DrawFilterController::add(ofJson filterSettings)
+{	
 	try {
-		name = filterSettings.value("name", "not_found");
-		add(name, filterSettings);
+		add(filterSettings.value("name", "not_found"), filterSettings);
 		setFresh(true);
 	}
 	catch (...) {
-		ofLog(OF_LOG_ERROR) << "Failed to add Object with name " << name;
+		ofLog(OF_LOG_ERROR) << "Failed to add Object with name " << filterSettings.value("name", "not_found");
 		return;
 	}
 }
 
-void DrawFilterController::addRandom() {
+void DrawFilterController::addRandom()
+{
 	add(v_ObjectNames[ofRandom(0, v_ObjectNames.size())]);
 }
 
-void DrawFilterController::cleanFilters() {
+void DrawFilterController::cleanFilters()
+{
 	for (int i = 0; i < v_Objects.size(); i++) {
 		if (!v_Objects[i]->active) {
 			v_Objects[i] = nullptr;
@@ -206,16 +201,19 @@ void DrawFilterController::cleanFilters() {
 	v_Objects.erase(std::remove(v_Objects.begin(), v_Objects.end(), nullptr), v_Objects.end());
 }
 
-void DrawFilterController::clearFilters() {
+void DrawFilterController::clearFilters()
+{
 	v_Objects.clear();
 	setFresh(true);
 }
 
-bool DrawFilterController::isFresh() {
+bool DrawFilterController::isFresh()
+{
 	return _bFresh;
 }
 
-void DrawFilterController::setFresh(bool fresh) {
+void DrawFilterController::setFresh(bool fresh)
+{
 	_bFresh = fresh;
 }
 

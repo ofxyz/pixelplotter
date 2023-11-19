@@ -10,7 +10,12 @@ public:
 	std::vector<std::shared_ptr<DrawFilter>> v_Objects;
 	std::vector<std::string> v_MenuValues;
 
-	template <typename t> void move(std::vector<t>& v, size_t oldIndex, size_t newIndex);
+	typedef std::map<std::string, std::shared_ptr<DrawFilter>(*)()> map_type;
+	map_type mapObjectTypes;
+
+	template<typename t> static std::shared_ptr<DrawFilter> createInstance() { return std::make_shared<t>(); };
+
+	template<typename t> void move(std::vector<t>& v, size_t oldIndex, size_t newIndex);
 
 	void update();
 	void draw(ofImage* img, int width, int height);
