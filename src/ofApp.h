@@ -64,4 +64,5 @@ public:
 
 private:
 	bool _bFresh = false;
+	int _targetFps = 66;
 };

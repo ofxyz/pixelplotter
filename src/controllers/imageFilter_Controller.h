@@ -29,8 +29,8 @@ public:
 
 	void addRandomFilter();
 
-	void cleanFilters();
-	void clearFilters();
+	void clean();
+	void clear();
 
 	bool isFresh();
 	void setFresh(bool fresh);

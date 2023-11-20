@@ -85,7 +85,7 @@ void ImageFilterController::addRandomFilter()
 	addFilter(ofRandom(1, v_ImageFilterNames.size() - 1));
 }
 
-void ImageFilterController::cleanFilters()
+void ImageFilterController::clean()
 {
 	for (int i = 0; i < v_ImageFilters.size(); i++) {
 		if (!v_ImageFilters[i]->active) {
@@ -97,7 +97,7 @@ void ImageFilterController::cleanFilters()
 	v_ImageFilters.erase(std::remove(v_ImageFilters.begin(), v_ImageFilters.end(), nullptr), v_ImageFilters.end());
 }
 
-void ImageFilterController::clearFilters()
+void ImageFilterController::clear()
 {
 	for (int i = 0; i < v_ImageFilters.size(); i++) {
 		delete v_ImageFilters[i];

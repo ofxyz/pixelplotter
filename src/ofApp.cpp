@@ -9,10 +9,11 @@ void ofApp::setup() {
 	//ofSetLogLevel(OF_LOG_ERROR);
 	//ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetVerticalSync(vSync);
-	ofLog(OF_LOG_VERBOSE) << ofFbo::checkGLSupport();
+	//ofLog(OF_LOG_VERBOSE) << ofFbo::checkGLSupport();
 
+	ofSetFrameRate(_targetFps); // TODO: Add to settings
 	ofEnableAlphaBlending();
-	ofDisableAntiAliasing(); // Add to settings?
+	ofDisableAntiAliasing(); // TODO: Add to settings
 	/* Always disable rectangular textures by default */
 	ofDisableArbTex();
 
@@ -47,7 +48,7 @@ void ofApp::update() {
 
 	// TODO: Move to appropriate location
 	if (cleanImageFilters) {
-		plotCanvas.sourceController.iF.cleanFilters();
+		plotCanvas.sourceController.iF.clean();
 		cleanImageFilters = false;
 	}
 
@@ -127,8 +128,8 @@ void ofApp::saveSettings(string& filepath) {
 // TODO: Move to ofGui ...
 void ofApp::loadSettings(ofJson settings) {
 
-	plotCanvas.dF.clearFilters();
-	plotCanvas.sourceController.iF.clearFilters();
+	plotCanvas.dF.clear();
+	plotCanvas.sourceController.iF.clear();
 	
 	if (ofGui.bTryLoadSource) {
 		ofJson sources= settings.value("source", ofJson::array());

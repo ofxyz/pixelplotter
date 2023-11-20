@@ -7,7 +7,7 @@ GeneratorController::GeneratorController()
 {
 	pixelplotter = (ofApp*)ofGetAppPtr();
 
-	v_ObjectNames = {
+	v_objectNames = {
 	"Plaids"
 	};
 
@@ -27,7 +27,7 @@ void GeneratorController::generateMenuNames()
 {
 	v_MenuValues.clear();
 	v_MenuValues.push_back("Add Generator ...");
-	for (std::string s : v_ObjectNames) {
+	for (std::string s : v_objectNames) {
 		v_MenuValues.push_back(s);
 	}
 }
@@ -70,7 +70,7 @@ void GeneratorController::addGenerator(string name)
 
 void GeneratorController::addGenerator(int index)
 {
-	if (v_ObjectNames[index] == "Plaids") {
+	if (v_objectNames[index] == "Plaids") {
 		v_Generators.push_back(new G_plaids(pixelplotter));
 	}
 }
@@ -82,10 +82,10 @@ void GeneratorController::addGenerator(Generator* generator)
 
 void GeneratorController::addRandomGenerator()
 {
-	addGenerator(ofRandom(1, v_ObjectNames.size() - 1));
+	addGenerator(ofRandom(1, v_objectNames.size() - 1));
 }
 
-void GeneratorController::cleanFilters()
+void GeneratorController::clean()
 {
 	for (int i = 0; i < v_Generators.size(); i++) {
 		if (!v_Generators[i]->active) {
@@ -96,7 +96,7 @@ void GeneratorController::cleanFilters()
 	v_Generators.erase(std::remove(v_Generators.begin(), v_Generators.end(), nullptr), v_Generators.end());
 }
 
-void GeneratorController::clearFilters()
+void GeneratorController::clear()
 {
 	for (int i = 0; i < v_Generators.size(); i++) {
 		delete v_Generators[i];

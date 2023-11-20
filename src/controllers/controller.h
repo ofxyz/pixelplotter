@@ -1,5 +1,6 @@
 #pragma once
 #include "ofJson.h"
+#include "ofx2d.h"
 
 class ofApp;
 
@@ -12,19 +13,20 @@ public:
 	std::vector<std::string> v_objectNames;
 	std::vector<std::shared_ptr<t>> v_Objects;
 	std::vector<std::string> v_menuValues;
-	std::map<std::string, t>;
+	
+	typedef std::map<std::string, std::shared_ptr<t>(*)()> map_type;
+	map_type mapObjectTypes;
 
-	void add(std::string name, ofJson filterSettings = {});
-	void add(ofJson filterSettings);
-	void addRandom();
+	template<typename o> static std::shared_ptr<t> createInstance() { return std::make_shared<o>(); };
 
 	void update();
-	void move(std::vector<t>& v, size_t oldIndex, size_t newIndex);
-	
 	void renderImGuiSettings();
 	void loadSettings(ofJson& settings);
 	ofJson getSettings();
 
+	void add(std::string name, ofJson settings = {});
+	void add(ofJson settings);
+	void addRandom();
 	void reorder();
 	void clean();
 	void clear();
@@ -32,36 +34,51 @@ public:
 	bool isFresh();
 	void setFresh(bool fresh);
 
-	std::string _objectsTypeName = "-";
-	std::string _menuValueInit = "Add " + _objectsTypeName + " ...";
+	void generateMenuNames(std::string objectName);
 
 private:
-	bool _bFresh   = false;
-	bool _bClean   = false;
-	bool _bReorder = false;
-
-	int _currAddIndex = 0;
-
-	void generateMenuNames();
+	bool _bFresh;
+	bool _bClean;
+	bool _bReorder;
+	int _currAddIndex;
+	std::string _objectName;
+	std::string _address;
 };
 
 template<class t>
-void Controller<t>::add(std::string name, ofJson filterSettings /*= {}*/)
+Controller<t>::Controller()
 {
-	// TODO: Finish!
+	pixelplotter = (ofApp*)ofGetAppPtr();
+	_bFresh = false;
+	_bClean = false;
+	_bReorder = false;
+	_currAddIndex = 0;
+	_objectName = "Undefined";
+	_address = std::to_string((unsigned long long)(void**)this);
 }
 
 template<class t>
-void Controller<t>::add(ofJson filterSettings)
+void Controller<t>::add(std::string name, ofJson settings /*= {}*/)
 {
-	std::string name = "---";
+	if (mapObjectTypes.count(name) > 0) {
+		v_Objects.push_back(mapObjectTypes[name]());
+		v_Objects[v_Objects.size()-1]->loadSettings(settings);
+		setFresh(true);
+	}
+	else {
+		ofLog(OF_LOG_WARNING) << "Controller: Could not find name " << name << " in mapObjectTypes";
+	}
+}
+
+template<class t>
+void Controller<t>::add(ofJson settings)
+{
 	try {
-		name = filterSettings.value("name", "not_found");
-		add(name, filterSettings);
+		add(settings.value("name", "not_found"), settings);
 		setFresh(true);
 	}
 	catch (...) {
-		ofLog() << "Failed to add Object with name " << name;
+		ofLog(OF_LOG_ERROR) << "Failed to add Object with name " << settings.value("name", "not_found");
 		return;
 	}
 }
@@ -69,7 +86,7 @@ void Controller<t>::add(ofJson filterSettings)
 template<class t>
 void Controller<t>::addRandom()
 {
-	add(v_ObjectNames[ofRandom(0, v_ObjectNames.size())]);
+	add(v_objectNames[ofRandom(0, v_objectNames.size())]);
 }
 
 template<class t>
@@ -90,7 +107,7 @@ template<class t>
 void Controller<t>::update()
 {
 	if (_bClean) {
-		cleanFilters();
+		clean();
 	}
 	if (_bReorder) {
 		reorder();
@@ -107,9 +124,9 @@ void Controller<t>::update()
 template<class t>
 void Controller<t>::renderImGuiSettings()
 {
-	ImGui::PushID(to_string(&this));
+	ImGui::PushID(_address.c_str());
 
-	std::string sHeaderName = _objectsTypeName + " (" + ofToString(v_Objects.size()) + ")";
+	std::string sHeaderName = _objectName + " (" + ofToString(v_Objects.size()) + ")";
 	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 	if (ImGui::CollapsingHeader(sHeaderName.c_str()))
 	{
@@ -150,7 +167,7 @@ void Controller<t>::renderImGuiSettings()
 		// ImGui::PopStyleColor(10);
 
 		ImGui::Indent();
-		if (ofxImGui::VectorCombo("##AddSelector", &_currAddIndex, v_MenuValues))
+		if (ofxImGui::VectorCombo("##AddSelector", &_currAddIndex, v_menuValues))
 		{
 			add(v_menuValues[_currAddIndex]);
 			_currAddIndex = 0;
@@ -161,22 +178,6 @@ void Controller<t>::renderImGuiSettings()
 	ImGui::PopID();
 }
 
-template<class t>
-Controller<t>::Controller()
-{
-	pixelplotter = (ofApp*)ofGetAppPtr();
-	_menuValueInit = "-";
-};
-
-template<class t>
-void Controller<t>::move(std::vector<t>& v, size_t oldIndex, size_t newIndex)
-{
-	if (oldIndex > newIndex)
-		std::rotate(v.rend() - oldIndex - 1, v.rend() - oldIndex, v.rend() - newIndex);
-	else
-		std::rotate(v.begin() + oldIndex, v.begin() + oldIndex + 1, v.begin() + newIndex + 1);
-};
-
 // TODO: This will need to change after implementing ImGui drag drop
 template<class t>
 void Controller<t>::reorder()
@@ -186,14 +187,14 @@ void Controller<t>::reorder()
 			v_Objects[i]->moveUp = false;
 			setFresh(true);
 			if (i > 0) {
-				move(v_Objects, i, i - 1);
+				ofx2d::move(v_Objects, i, i - 1);
 			}
 		}
 		else if (v_Objects[i]->moveDown) {
 			v_Objects[i]->moveDown = false;
 			setFresh(true);
 			if (i < v_Objects.size() - 1) {
-				move(v_Objects, i, i + 1);
+				ofx2d::move(v_Objects, i, i + 1);
 			}
 		}
 	}
@@ -232,11 +233,14 @@ void Controller<t>::setFresh(bool fresh)
 };
 
 template<class t>
-void Controller<t>::generateMenuNames()
+void Controller<t>::generateMenuNames(std::string objectName)
 {
 	v_menuValues.clear();
+	std::string menuValueInit = "Add " + objectName + " ...";
 	v_menuValues.push_back(menuValueInit);
 	for (std::string v : v_objectNames) {
 		v_menuValues.push_back(v);
 	}
+	_objectName = objectName;
 };
+ 
