@@ -14,27 +14,23 @@
 #include "drawFilter_Noise.h"
 #include "drawFilter_Mesh.h"
 #include "drawFilter_Lumes.h"
-#include <generator_Controller.h>
+#include "generator_Controller.h"
 
 DrawFilterController::DrawFilterController()
 	: Controller()
 {
 	// Manual Mapping ...
-	v_objectNames = {
-		"Lumes",
-		"Mesh",
-		"Noise",
-		"Pixelate",
-		"Pixelate2",
-		"Rings"
-	};
-
+	
 	mapObjectTypes["Lumes"]     = createInstance<Df_lumes>;
 	mapObjectTypes["Mesh"]      = createInstance<Df_mesh>;
 	mapObjectTypes["Noise"]     = createInstance<Df_noise>;
 	mapObjectTypes["Pixelate"]  = createInstance<Df_pixelate>;
 	mapObjectTypes["Pixelate2"] = createInstance<Df_pixelate2>;
 	mapObjectTypes["Rings"]     = createInstance<Df_rings>;
+
+	for (auto p : mapObjectTypes) {
+		v_objectNames.push_back(p.first);
+	}
 
 	generateMenuNames("DrawFilter");
 }

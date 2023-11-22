@@ -8,7 +8,9 @@
 ofJson If_drawPixel::getSettings() {
 	ofJson settings;
 	settings["name"] = name;
-	settings["pixelType"] = drawPixels.v_DrawPixelsNames[selectedPixelType];
+	// TODO: It shouldn't matter but ... isn't it better to get the actual source name
+	//settings["pixelType"] = drawPixels.v_Objects[selectedPixelType]->name;
+	settings["pixelType"] = drawPixels.v_objectNames[selectedPixelType];
 	settings["hCount"] = hCount;
 	settings["vCount"] = vCount;
 	settings["bMirror"] = bMirror;
@@ -17,15 +19,16 @@ ofJson If_drawPixel::getSettings() {
 	settings["colors"]["col"]["b"] = c_col.z;
 	settings["colors"]["col"]["a"] = c_col.w;
 
-	ofJson pixelSettings = drawPixels.v_DrawPixels[selectedPixelType]->getSettings();
+	ofJson pixelSettings = drawPixels.v_Objects[selectedPixelType]->getSettings();
 	settings["pixelSettings"] = pixelSettings;
 
 	return settings;
 }
 
 void If_drawPixel::loadSettings(ofJson& settings) {
-
-	selectedPixelType = ofx2d::getIndex(drawPixels.v_DrawPixelsNames, settings.value("pixelType", "Undefined"), 1);
+	// TODO: It shouldn't matter but ... isn't it better to get the actual source name
+	//ofx2d::getIndex(drawPixels.v_Objects*, settings.value("pixelType", "Undefined"), 1)
+	selectedPixelType = ofx2d::getIndex(drawPixels.v_objectNames, settings.value("pixelType", "Undefined"), 1);
 	hCount = settings.value("hCount", hCount);
 	vCount = settings.value("vCount", vCount);
 	bMirror = settings.value("bMirror", bMirror);
@@ -35,14 +38,14 @@ void If_drawPixel::loadSettings(ofJson& settings) {
 	c_col.w = settings["colors"]["col"].value("a", c_col.w);
 
 	ofJson pixelSettings = settings.value("pixelSettings", pixelSettings);
-	drawPixels.v_DrawPixels[selectedPixelType]->loadSettings(pixelSettings);
+	drawPixels.v_Objects[selectedPixelType]->loadSettings(pixelSettings);
 }
 
 void If_drawPixel::renderImGuiSettings() {
 	if (ImGui::CollapsingHeader(name.c_str(), &active)) {
 		ImGui::AlignTextToFramePadding();
 
-		if (ofxImGui::VectorCombo("Pixel Type ##drawPixel", &selectedPixelType, drawPixels.v_DrawPixelsNames)) {
+		if (ofxImGui::VectorCombo("Pixel Type ##drawPixel", &selectedPixelType, drawPixels.v_menuValues)) {
 			setFresh(true);
 		};
  
@@ -66,11 +69,11 @@ void If_drawPixel::renderImGuiSettings() {
 		}
 
 		// Pass fresh through
-		if (drawPixels.v_DrawPixels[selectedPixelType]->isFresh()) {
+		if (drawPixels.v_Objects[selectedPixelType]->isFresh()) {
 			setFresh(true);
 		}
 
-		drawPixels.v_DrawPixels[selectedPixelType]->renderImGuiSettings();
+		drawPixels.v_Objects[selectedPixelType]->renderImGuiSettings();
 
 		ImGui::PopItemWidth();
 	}
@@ -108,7 +111,7 @@ void If_drawPixel::apply(ofImage* img) {
 			float xNorm = (float)xcount / (float)(hCount-1);
 			float yNorm = (float)ycount / (float)(vCount-1);
 
-			drawPixels.v_DrawPixels[selectedPixelType]->draw(c_col, { width, height }, { xcount, ycount }, { xNorm, yNorm });
+			drawPixels.v_Objects[selectedPixelType]->draw(c_col, { width, height }, { xcount, ycount }, { xNorm, yNorm });
 			
 			xcount++;
 			ofPopMatrix();

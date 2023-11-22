@@ -9,16 +9,23 @@
 #include "drawPixel_SeparateCMYK_Rect04.h"
 
 DrawPixelController::DrawPixelController()
+	: Controller()
 {
-	v_DrawPixels.push_back(new Dp_normal());
-	v_DrawPixels.push_back(new Dp_separateCMYK_Bars01());
-	v_DrawPixels.push_back(new Dp_separateRGB_Bars01());
-	v_DrawPixels.push_back(new Dp_separateCMYK_Rect01());
-	v_DrawPixels.push_back(new Dp_separateCMYK_Rect02());
-	v_DrawPixels.push_back(new Dp_separateCMYK_Rect03());
-	v_DrawPixels.push_back(new Dp_separateCMYK_Rect04());
+	// Manual Mapping ...
+	
+	mapObjectTypes["Normal"] = createInstance<Dp_normal>;
+	mapObjectTypes["Separate CMYK Bars 01"] = createInstance<Dp_separateCMYK_Bars01>;
+	mapObjectTypes["Separate RGB Bars 01"]  = createInstance<Dp_separateRGB_Bars01>;
+	mapObjectTypes["Separate CMYK Rect 01"] = createInstance<Dp_separateCMYK_Rect01>;
+	mapObjectTypes["Separate CMYK Rect 02"] = createInstance<Dp_separateCMYK_Rect02>;
+	mapObjectTypes["Separate CMYK Rect 03"] = createInstance<Dp_separateCMYK_Rect03>;
+	mapObjectTypes["Separate CMYK Rect 04"] = createInstance<Dp_separateCMYK_Rect04>;
 
-	for (int i = 0; i < v_DrawPixels.size(); i++) {
-		v_DrawPixelsNames.push_back(v_DrawPixels[i]->name);
-	};
+	for (auto p : mapObjectTypes) {
+		v_objectNames.push_back(p.first);
+		add(p.first);
+	}
+
+	generateMenuNames("DrawPixel");
+
 }

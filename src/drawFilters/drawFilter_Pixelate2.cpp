@@ -56,7 +56,7 @@ void Df_pixelate2::draw(ofImage* input, float width /*= 0*/, float height /*= 0*
 			if (pixelMirror && (_y % 2 == 0)) {
 				ofScale(1, -1);
 			}
-			drawPixels.v_DrawPixels[selectedPixelType]->draw(c, { ofMap(tileW, 0, imgW, 0, width), ofMap(tileH, 0, imgH, 0, height) }, { 0, 0 }, { (float)_x/ (float)(tilesX-1), (float)_y/ (float)(tilesY-1) });
+			drawPixels.v_Objects[selectedPixelType]->draw(c, { ofMap(tileW, 0, imgW, 0, width), ofMap(tileH, 0, imgH, 0, height) }, { 0, 0 }, { (float)_x/ (float)(tilesX-1), (float)_y/ (float)(tilesY-1) });
 			ofPopMatrix();
 		}
 		ofPopMatrix();
@@ -88,17 +88,18 @@ void Df_pixelate2::renderImGuiSettings()
 		}
 		ImGui::PopItemWidth();
 
-		if (ofxImGui::VectorCombo("Pixel Type ##pixelate2", &selectedPixelType, drawPixels.v_DrawPixelsNames)) {
+		if (ofxImGui::VectorCombo("Pixel Type ##pixelate2", &selectedPixelType, drawPixels.v_objectNames)) {
 			setFresh(true);
 		};
 
+		// TODO: This should be one function call to drawPixels
 		// Pass fresh through
-		if (drawPixels.v_DrawPixels[selectedPixelType]->isFresh()) {
-			drawPixels.v_DrawPixels[selectedPixelType]->setFresh(false);
+		if (drawPixels.v_Objects[selectedPixelType]->isFresh()) {
+			drawPixels.v_Objects[selectedPixelType]->setFresh(false);
 			setFresh(true);
 		}
 
-		drawPixels.v_DrawPixels[selectedPixelType]->renderImGuiSettings();
+		drawPixels.v_Objects[selectedPixelType]->renderImGuiSettings();
 
 		ImGui::PushItemWidth(200);
 		if (ofxImGui::VectorCombo("##Blend Mode", &currentBlendModeIndex, v_BlendModes)) {
@@ -113,13 +114,13 @@ void Df_pixelate2::renderImGuiSettings()
 void Df_pixelate2::loadSettings(ofJson& settings)
 {
 	try {
-		selectedPixelType = ofx2d::getIndex(drawPixels.v_DrawPixelsNames, settings.value("pixelType", "Undefined"), selectedPixelType);
+		selectedPixelType = ofx2d::getIndex(drawPixels.v_objectNames, settings.value("pixelType", "Undefined"), selectedPixelType);
 		tilesX = settings.value("tilesX", tilesX);
 		tilesY = settings.value("tilesY", tilesY);
 		pixelMirror = settings.value("pixelMirror", pixelMirror);
 
 		ofJson pixelSettings = settings.value("pixelSettings", pixelSettings);
-		drawPixels.v_DrawPixels[selectedPixelType]->loadSettings(pixelSettings);
+		drawPixels.v_Objects[selectedPixelType]->loadSettings(pixelSettings);
 	}
 	catch (...) {
 		ofLogNotice() << "Failed to load settings Df_pixelate2";
@@ -130,12 +131,12 @@ ofJson Df_pixelate2::getSettings()
 {
 	ofJson settings;
 	settings["name"] = name;
-	settings["pixelType"] = drawPixels.v_DrawPixelsNames[selectedPixelType];
+	settings["pixelType"] = drawPixels.v_objectNames[selectedPixelType];
 	settings["tilesX"] = tilesX;
 	settings["tilesY"] = tilesY;
 	settings["pixelMirror"] = pixelMirror;
 
-	ofJson pixelSettings = drawPixels.v_DrawPixels[selectedPixelType]->getSettings();
+	ofJson pixelSettings = drawPixels.v_Objects[selectedPixelType]->getSettings();
 	settings["pixelSettings"] = pixelSettings;
 
 	return settings;

@@ -1,13 +1,9 @@
 #pragma once
-#include <string>
-#include <vector>
+#include "controller.h"
+#include "drawPixel.h"
 
-class DrawPixel;
-
-class DrawPixelController {
-public:
-	std::vector<std::string> v_DrawPixelsNames;
-	std::vector<DrawPixel*> v_DrawPixels;
-
-	DrawPixelController();
+class DrawPixelController : public Controller<DrawPixel>
+{
+	public:
+		DrawPixelController();
 };
