@@ -155,6 +155,8 @@ void Canvas::loadSettings(ofJson& settings) {
 	c_canvas.z = settings["colors"]["plotcanvas"].value("b", c_canvas.z);
 	c_canvas.w = settings["colors"]["plotcanvas"].value("a", c_canvas.w);
 
+	dF.loadSettings(settings.value("drawFilters", ofJson::array()));
+
 	resizeRequest = true;
 	setFresh(true);
 }
@@ -172,6 +174,8 @@ ofJson Canvas::getSettings() {
 	settings["colors"]["plotcanvas"]["g"] = c_canvas.y;
 	settings["colors"]["plotcanvas"]["b"] = c_canvas.z;
 	settings["colors"]["plotcanvas"]["a"] = c_canvas.w;
+
+	settings["drawFilters"] = dF.getSettings();
 
 	return settings;
 }

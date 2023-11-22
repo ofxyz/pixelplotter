@@ -36,8 +36,7 @@ DrawFilterController::DrawFilterController()
 	mapObjectTypes["Pixelate2"] = createInstance<Df_pixelate2>;
 	mapObjectTypes["Rings"]     = createInstance<Df_rings>;
 
-	generateMenuNames("Draw Filter");
-
+	generateMenuNames("DrawFilter");
 }
 
 void DrawFilterController::draw(ofImage* img, int width, int height)

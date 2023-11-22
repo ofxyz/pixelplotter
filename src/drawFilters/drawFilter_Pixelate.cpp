@@ -61,7 +61,7 @@ void Df_pixelate::InitDefaults()
 void Df_pixelate::loadSettings(ofJson& settings) {
 	try {
 		name = settings.value("name", "pixelate");
-		visible = settings.value("visible", true);
+		bVisible = settings.value("bVisible", true);
 		useMask = settings.value("useMask", false);
 		maskMargin = settings.value("maskMargin", maskMargin);
 		ui_currentPixelType = ofx2d::getIndex(v_pixelType, settings.value("pixelType", "Undefined"), 1);
@@ -137,7 +137,7 @@ void Df_pixelate::loadSettings(ofJson& settings) {
 ofJson Df_pixelate::getSettings() {
 	ofJson settings;
 	settings["name"] = name;
-	settings["visible"] = visible;
+	settings["bVisible"] = bVisible;
 	settings["useMask"] = useMask;
 	settings["maskMargin"] = maskMargin;
 	settings["pixelType"] = v_pixelType[ui_currentPixelType];
@@ -179,7 +179,6 @@ ofJson Df_pixelate::getSettings() {
 
 	settings["blendMode"] = currentBlendModeIndex;
 
-	// Colours
 	settings["colors"]["black"]["r"] = c_black.x;
 	settings["colors"]["black"]["g"] = c_black.y;
 	settings["colors"]["black"]["b"] = c_black.z;
@@ -209,7 +208,7 @@ ofJson Df_pixelate::getSettings() {
 }
 
 void Df_pixelate::renderImGuiSettings() {
-	if (ImGui::CollapsingHeader(name.c_str(), &active)) {
+	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		ImGui::PushID("Df_pixelate");
 		ImGui::AlignTextToFramePadding();
 
@@ -931,7 +930,7 @@ float Df_pixelate::getHeight(ofColor c, float x, float y, float r) {
 }
 
 void Df_pixelate::draw(ofImage* input, float width, float height, float x, float y) {
-	if (!visible) return;
+	if (!bVisible) return;
 	setFresh(false);
 
 	int imgW = input->getWidth();

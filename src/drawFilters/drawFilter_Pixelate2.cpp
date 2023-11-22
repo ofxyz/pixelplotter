@@ -29,7 +29,7 @@ void Df_pixelate2::InitDefaults()
 
 void Df_pixelate2::draw(ofImage* input, float width /*= 0*/, float height /*= 0*/, float x /*= 0*/, float y /*= 0*/)
 {
-	if (!visible) return;
+	if (!bVisible) return;
 	setFresh(false);
 	setBlendMode();
 
@@ -67,7 +67,7 @@ void Df_pixelate2::draw(ofImage* input, float width /*= 0*/, float height /*= 0*
 
 void Df_pixelate2::renderImGuiSettings()
 {
-	if (ImGui::CollapsingHeader(name.c_str(), &active)) {
+	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		ImGui::PushID("Df_pixelate2");
 		ImGui::AlignTextToFramePadding();
 

@@ -1,14 +1,16 @@
 {
-    "drawFilters": [
+    "imageFilters": [
         {
-            "name": "Mesh",
-            "rotationOffset": 0.0
+            "bMirror": true,
+            "hCount": 1,
+            "name": "Duplicate",
+            "vCount": 3
         }
     ],
     "plotCanvas": {
-        "canvasHeight": 1200,
+        "canvasHeight": 32,
         "canvasTitle": "Untitled",
-        "canvasWidth": 800,
+        "canvasWidth": 32,
         "colors": {
             "plotcanvas": {
                 "a": 1.0,
@@ -17,11 +19,25 @@
                 "r": 1.0
             }
         },
+        "drawFilters": {
+            "DrawFilter": [
+                {
+                    "name": "Pixelate2",
+                    "pixelMirror": true,
+                    "pixelSettings": {
+                        "name": "Separate CMYK Bars 01"
+                    },
+                    "pixelType": "Separate CMYK Bars 01",
+                    "tilesX": 6,
+                    "tilesY": 652
+                }
+            ]
+        },
         "exportWithTimeStamp": true
     },
     "source": [
         {
-            "source": "apollo.jpg"
+            "source": "32-32.png"
         }
     ]
 }

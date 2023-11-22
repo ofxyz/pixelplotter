@@ -33,9 +33,6 @@ public:
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
 
-	void saveSettings(string& filepath);
-	void loadSettings(ofJson settings);
-
 	void resetImageOffset();
 	void centerImage();
 	void resetZoom();

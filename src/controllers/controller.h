@@ -2,6 +2,16 @@
 #include "ofJson.h"
 #include "ofx2d.h"
 
+/*
+	The Controller class is a managing factory of class t
+	class t will contain the following functions:
+	- void loadSettings(ofJson s)
+	- ofJson getSettings()
+	- void update()   // Update will be called when:
+	- bool isFresh()  // Check if there are changes for update() to be called
+	- bool isAlive()  // If isAlive returns false object t will be deleted from object vector
+*/
+
 class ofApp;
 
 template<class t>
@@ -86,21 +96,28 @@ void Controller<t>::add(ofJson settings)
 template<class t>
 void Controller<t>::addRandom()
 {
-	add(v_objectNames[ofRandom(0, v_objectNames.size())]);
+	add(v_objectNames[ofRandom(1, v_objectNames.size())]);
 }
 
 template<class t>
 ofJson Controller<t>::getSettings()
 {
 	ofJson settings;
+	for (int i = 0; i < v_Objects.size(); i++) {
+		settings[_objectName.c_str()].push_back(v_Objects[i]->getSettings());
+	}
 	return settings;
 }
 
 template<class t>
 void Controller<t>::loadSettings(ofJson& settings)
 {
-	// TODO: Finish
-	return;
+	ofJson objectSettings = settings.value(_objectName.c_str(), ofJson::array());
+	if (!objectSettings.empty()) {
+		for (auto& objectSetting : objectSettings) {
+			add(objectSetting);
+		}
+	}
 }
 
 template<class t>
@@ -150,7 +167,7 @@ void Controller<t>::renderImGuiSettings()
 
 		for (int i = 0; i < v_Objects.size(); i++) {
 			ImGui::PushID(i);
-			if (v_Objects[i]->active) {
+			if (v_Objects[i]->isAlive()) {
 				ImGui::Indent();
 				v_Objects[i]->renderImGuiSettings();
 				ImGui::Unindent();
@@ -204,8 +221,7 @@ template<class t>
 void Controller<t>::clean()
 {
 	for (int i = 0; i < v_Objects.size(); i++) {
-		// TODO: Implement isActive() setActive(b);
-		if (!v_Objects[i]->active) {
+		if (!v_Objects[i]->isAlive()) {
 			v_Objects[i] = nullptr;
 			setFresh(true);
 		}

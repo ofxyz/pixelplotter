@@ -22,7 +22,7 @@ void Df_lumes::loadSettings(ofJson& settings) {
 }
 
 void Df_lumes::renderImGuiSettings() {
-	if (ImGui::CollapsingHeader(name.c_str(), &active)) {
+	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		ImGui::AlignTextToFramePadding();
 
 		renderUpDownButtons();
@@ -112,7 +112,7 @@ void Df_lumes::drawKite(ofColor c, float offsetX, float offsetY, float width, fl
 
 void Df_lumes::draw(ofImage* input, float width, float height, float x, float y) {
 	setFresh(false);
-	if (!visible) return;
+	if (!bVisible) return;
 
 	svgKite.load(ofToDataPath("geometry/ENESS_Kite.svg"));
 

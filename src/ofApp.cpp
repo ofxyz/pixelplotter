@@ -23,16 +23,13 @@ void ofApp::setup() {
 	//ofSetBackgroundAuto(false);
 
 	ofGui.setup();
-
 	soundManager.setup();
 	plotCanvas.setup();
 
 	userOffset.x = 0;
 	userOffset.y = 0;
 
-	ofGui.loadPresets();
-
-	plotCanvas.dF.addRandom();
+	ofGui.loadPresetDir();
 
 	_bFresh = true;
 }
@@ -103,60 +100,6 @@ void ofApp::centerImage() {
 	userOffset.x = (availableSpace.x - (plotCanvas.canvasWidth * zoomLevel)) * 0.5;
 	userOffset.y = (availableSpace.y - (plotCanvas.canvasHeight * zoomLevel)) * 0.5;
 	userOffset.y += availableSpace.w;
-}
-
-// TODO: Move to ofGui ...
-void ofApp::saveSettings(string& filepath) {
-	ofJson settings;
-
-	settings["source"].push_back(plotCanvas.sourceController.getSettings());
-
-	for (int i = 0; i < plotCanvas.sourceController.iF.v_ImageFilters.size(); i++) {
-		settings["imageFilters"].push_back(plotCanvas.sourceController.iF.v_ImageFilters[i]->getSettings());
-	}
-
-	for (int i = 0; i < plotCanvas.dF.v_Objects.size(); i++) {
-		settings["drawFilters"].push_back(plotCanvas.dF.v_Objects[i]->getSettings());
-	}
-
-	settings["plotCanvas"] = plotCanvas.getSettings();
-
-	ofSavePrettyJson(filepath, settings);
-
-}
-
-// TODO: Move to ofGui ...
-void ofApp::loadSettings(ofJson settings) {
-
-	plotCanvas.dF.clear();
-	plotCanvas.sourceController.iF.clear();
-	
-	if (ofGui.bTryLoadSource) {
-		ofJson sources= settings.value("source", ofJson::array());
-		if (!sources.empty())
-		{
-			for (auto& cSettings : sources) {
-				plotCanvas.sourceController.loadSettings(cSettings);
-			}
-		}
-	}
-
-	ofJson iFilters = settings.value("imageFilters", ofJson::array());
-	if (!iFilters.empty()) {
-		for (auto& fSettings : iFilters) {
-				plotCanvas.sourceController.iF.addFilter(fSettings);
-		}
-	}
-
-	ofJson dDilters = settings.value("drawFilters", ofJson::array());
-	if (!dDilters.empty()) {
-		for (auto& fSettings : dDilters) {
-			plotCanvas.dF.add(fSettings);
-		}
-	}
-
-	plotCanvas.loadSettings(settings.value("plotCanvas", ofJson::array()));
-
 }
 
 //-------------------------------------------------------------

@@ -9,8 +9,8 @@ class DrawFilter {
 public:
 	DrawFilter();
 	ofApp* pixelplotter{ nullptr };
-	bool active = true;
-	bool visible = true;
+	bool bAlive = true;
+	bool bVisible = true;
 	bool useMask = false;
 	bool moveUp = false;
 	bool moveDown = false;
@@ -57,6 +57,8 @@ public:
 
 	bool isFresh();
 	void setFresh(bool fresh);
+	bool isAlive();
+	void setAlive(bool alive);
 
 private:
 	bool bFresh = false;

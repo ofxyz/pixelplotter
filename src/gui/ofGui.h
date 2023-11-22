@@ -23,8 +23,9 @@ public:
 	void drawCanvasWindow();
 	void drawBezierWidget();
 	
-	void savePreset();
-	void loadPresets();
+	void loadPresetDir();
+	void savePresets();
+	void loadPresets(ofJson settings);
 
 	//TODO: Make private
 	bool bShowMenuBar;
@@ -33,8 +34,8 @@ public:
 
 	int currentPresetIndex;
 	std::string getPresetAbsolutePath(int presetIndex);
-	ofJson getPreset(int presetIndex);
-	ofJson getCurrentPreset();
+	ofJson getPresets(int presetIndex);
+	ofJson getCurrentPresets();
 
 	ImVec4 availableSpace();
 	bool bShowGui;
@@ -48,7 +49,7 @@ private:
 	bool bShowCanvas;
 
 	bool bShowFps;
-	bool bSavePreset;
+	bool bSavePresets;
 
 	char presetSaveName[128];
 

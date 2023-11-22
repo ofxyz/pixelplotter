@@ -7,7 +7,6 @@ ofJson Df_noise::getSettings() {
 	ofJson settings;
 	settings["name"] = name;
 
-	// Colours
 	settings["colors"]["background"]["r"] = cBg.x;
 	settings["colors"]["background"]["g"] = cBg.y;
 	settings["colors"]["background"]["b"] = cBg.z;
@@ -30,7 +29,6 @@ void Df_noise::loadSettings(ofJson& settings) {
 	try {
 		name = settings.value("name", name);
 
-		// Colours
 		cBg.x = settings["colors"]["background"].value("r", cBg.x);
 		cBg.y = settings["colors"]["background"].value("g", cBg.y);
 		cBg.z = settings["colors"]["background"].value("b", cBg.z);
@@ -53,7 +51,7 @@ void Df_noise::loadSettings(ofJson& settings) {
 }
 
 void Df_noise::renderImGuiSettings() {
-	if (ImGui::CollapsingHeader(name.c_str(), &active)) {
+	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		ImGui::PushID("Df_noise");
 		ImGui::AlignTextToFramePadding();
 
@@ -64,7 +62,7 @@ void Df_noise::renderImGuiSettings() {
 		if (ImGui::ColorEdit4("Background", (float*)&cBg, ImGuiColorEditFlags_NoInputs)) {
 			setFresh(true);
 		}
-		// We need a pallette manager...
+		// We need a palette manager...
 		int index = 0;
 		int deleteIndex = -1;
 		for (auto col : palette) {
@@ -123,7 +121,7 @@ Df_noise::Df_noise()
 
 void Df_noise::draw(ofImage* input, float width, float height, float x, float y) {
 	setFresh(false);
-	if (!visible) return;
+	if (!bVisible) return;
 
 	for (int y = 0; y < input->getHeight(); y += 10) {
 		for (int x = 0; x < input->getWidth(); x += 10) {

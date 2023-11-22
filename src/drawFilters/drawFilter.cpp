@@ -22,7 +22,7 @@ void DrawFilter::renderUpDownButtons()
 		moveDown = true;
 	}
 	ImGui::SameLine();
-	if (ImGui::Checkbox("Visible", &visible)) {
+	if (ImGui::Checkbox("Visible", &bVisible)) {
 		setFresh(true);
 	}
 }
@@ -192,4 +192,14 @@ bool DrawFilter::isFresh()
 void DrawFilter::setFresh(bool fresh)
 {
 	bFresh = fresh;
+}
+
+bool DrawFilter::isAlive()
+{
+	return bAlive;
+}
+
+void DrawFilter::setAlive(bool alive)
+{
+	bAlive = alive;
 }

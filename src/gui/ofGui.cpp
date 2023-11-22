@@ -25,7 +25,7 @@ OfGui::OfGui()
 
 	bRenderingPaused = false;
 	bShowFps = true;
-	bSavePreset = false;
+	bSavePresets = false;
 	bTryLoadSource = true;
 
 	currentPresetIndex = 0;
@@ -61,14 +61,14 @@ void OfGui::setup()
 	ImGuiIO IO = ImGui::GetIO();
 	IO.ConfigWindowsMoveFromTitleBarOnly = true;
 
-	loadPresets();
+	loadPresetDir();
 }
 
 void OfGui::update()
 {
 	if (bLoadSettingsNextFrame)
 	{
-		pixelplotter->loadSettings(getCurrentPreset());
+		loadPresets(getCurrentPresets());
 		bLoadSettingsNextFrame = false;
 	}
 }
@@ -279,28 +279,28 @@ void OfGui::drawInfoPanel()
 		if (ImGui::Button("Delete Preset"))
 		{
 			presetFiles[currentPresetIndex].remove();
-			loadPresets();
+			loadPresetDir();
 		}
 	}
 
-	if (bSavePreset) {
+	if (bSavePresets) {
 		ImGui::InputText("##presetname", presetSaveName, IM_ARRAYSIZE(presetSaveName));
 		ImGui::SameLine();
 	}
 
 	if (ImGui::Button("Save Preset"))
 	{
-		if (bSavePreset) {
-			savePreset();
-			loadPresets();
+		if (bSavePresets) {
+			savePresets();
+			loadPresetDir();
 			currentPresetIndex = ofx2d::getIndex(presetFileNames, string(presetSaveName), 0);
-			bSavePreset = false;
+			bSavePresets = false;
 		}
 		else {
 			if (presetFileNames.size() > 0) {
 				strcpy_s(presetSaveName, presetFileNames[currentPresetIndex].c_str());
 			}
-			bSavePreset = true;
+			bSavePresets = true;
 		}
 	}
 
@@ -327,7 +327,7 @@ void OfGui::drawBezierWidget()
 	float y = ImGui::BezierValue(0.5f, v); // x delta in [0..1] range
 }
 
-void OfGui::savePreset()
+void OfGui::savePresets()
 {
 	string savePath = "presets/" + string(presetSaveName) + ".json";
 
@@ -339,16 +339,38 @@ void OfGui::savePreset()
 		settings["imageFilters"].push_back(pixelplotter->plotCanvas.sourceController.iF.v_ImageFilters[i]->getSettings());
 	}
 
-	for (int i = 0; i < pixelplotter->plotCanvas.dF.v_Objects.size(); i++) {
-		settings["drawFilters"].push_back(pixelplotter->plotCanvas.dF.v_Objects[i]->getSettings());
-	}
-
 	settings["plotCanvas"] = pixelplotter->plotCanvas.getSettings();
 
 	ofSavePrettyJson(savePath, settings);
 }
 
-void OfGui::loadPresets()
+void OfGui::loadPresets(ofJson settings)
+{
+	pixelplotter->plotCanvas.dF.clear();
+	pixelplotter->plotCanvas.sourceController.iF.clear();
+
+	if (bTryLoadSource) {
+		ofJson sources = settings.value("source", ofJson::array());
+		if (!sources.empty())
+		{
+			for (auto& cSettings : sources) {
+				pixelplotter->plotCanvas.sourceController.loadSettings(cSettings);
+			}
+		}
+	}
+
+	ofJson iFilters = settings.value("imageFilters", ofJson::array());
+	if (!iFilters.empty()) {
+		for (auto& fSettings : iFilters) {
+			pixelplotter->plotCanvas.sourceController.iF.addFilter(fSettings);
+		}
+	}
+
+	pixelplotter->plotCanvas.loadSettings(settings.value("plotCanvas", ofJson::array()));
+
+}
+
+void OfGui::loadPresetDir()
 {
 	presetFileNames.clear();
 	presetFiles = ofDirectory(ofToDataPath("presets", true)).getFiles();
@@ -365,7 +387,7 @@ std::string OfGui::getPresetAbsolutePath(int presetIndex)
 	return presetFiles[presetIndex].getAbsolutePath();
 }
 
-ofJson OfGui::getPreset(int presetIndex)
+ofJson OfGui::getPresets(int presetIndex)
 {
 	ofJson settings;
 	ofFile file(presetFiles[presetIndex].getAbsolutePath());
@@ -375,9 +397,9 @@ ofJson OfGui::getPreset(int presetIndex)
 	return settings;
 }
 
-ofJson OfGui::getCurrentPreset()
+ofJson OfGui::getCurrentPresets()
 {
-	return getPreset(currentPresetIndex);
+	return getPresets(currentPresetIndex);
 }
 
 ImVec4 OfGui::availableSpace()

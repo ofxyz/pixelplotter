@@ -41,7 +41,7 @@ void Df_rings::loadSettings(ofJson& settings) {
 }
 
 void Df_rings::renderImGuiSettings() {
-	if (ImGui::CollapsingHeader(name.c_str(), &active)) {
+	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		ImGui::AlignTextToFramePadding();
 
 		renderUpDownButtons();
@@ -80,7 +80,7 @@ void Df_rings::renderImGuiSettings() {
 
 void Df_rings::draw(ofImage* input, float width, float height, float x, float y) {
 	setFresh(false);
-	if (!visible) return;
+	if (!bVisible) return;
 
 	// -------------------------------- Update -> MOVE TO!
 	colorCvImage.allocate(input->getWidth(), input->getHeight());

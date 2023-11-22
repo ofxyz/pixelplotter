@@ -21,7 +21,7 @@ void Df_mesh::loadSettings(ofJson& settings) {
 }
 
 void Df_mesh::renderImGuiSettings() {
-	if (ImGui::CollapsingHeader(name.c_str(), &active)) {
+	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		ImGui::AlignTextToFramePadding();
 
 		renderUpDownButtons();
@@ -46,7 +46,7 @@ Df_mesh::Df_mesh(ofJson& settings)
 
 void Df_mesh::draw(ofImage* input, float width, float height, float x, float y) {
 	setFresh(false);
-	if (!visible) return;
+	if (!bVisible) return;
 	mesh.clear();
 	mesh.setMode(OF_PRIMITIVE_POINTS);
 	//mesh.setMode(OF_PRIMITIVE_TRIANGLES);
