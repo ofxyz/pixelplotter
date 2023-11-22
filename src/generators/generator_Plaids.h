@@ -4,12 +4,21 @@
 
 class G_plaids : public Generator {
 public:
-	ofApp* pixelplotter;
-	G_plaids(ofApp* app);;
+	G_plaids() {
+		pixelplotter = (ofApp*)ofGetAppPtr();
+		name = "Plaids";
+	};
+
+	G_plaids(ofJson& settings) {
+		pixelplotter = (ofApp*)ofGetAppPtr();
+		name = "Plaids";
+		loadSettings(settings);
+	};
 
 	void setup(int width, int height) override;
 	void update() override;
 	void draw() override;
+
 	void renderImGuiSettings() override;
 	void loadSettings(ofJson& settings) override;
 	ofJson getSettings() override;

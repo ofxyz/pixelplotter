@@ -18,6 +18,7 @@ public:
 
 	void draw (ofImage* input, float width = 0, float height = 0, float x = 0, float y = 0) override;
 	void drawKite(ofColor c, float offsetX, float offsetY, float width, float height, float centerPercent, glm::ivec2 pos);
+	
 	void renderImGuiSettings() override;
 	void loadSettings(ofJson& settings) override;
 	ofJson getSettings() override;

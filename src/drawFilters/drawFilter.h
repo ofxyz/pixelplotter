@@ -11,9 +11,11 @@ public:
 	ofApp* pixelplotter{ nullptr };
 	bool bAlive = true;
 	bool bVisible = true;
-	bool useMask = false;
+
 	bool moveUp = false;
 	bool moveDown = false;
+
+	bool useMask = false;
 	int maskMargin = 0;
 
 	std::string name;

@@ -1,12 +1,4 @@
 #pragma once
-#include "ofx2d.h"
-
-#include "ofxImGui.h"
-#include "imgui_internal.h"
-#include "ImHelpers.h"
-#include "ImGui_Widget_Tooltip.h"
-#include "ImGui_Widget_InputTextString.h"
-
 #include "drawFilter_Controller.h"
 #include "drawFilter_Pixelate.h"
 #include "drawFilter_Pixelate2.h"
@@ -14,7 +6,6 @@
 #include "drawFilter_Noise.h"
 #include "drawFilter_Mesh.h"
 #include "drawFilter_Lumes.h"
-#include "generator_Controller.h"
 
 DrawFilterController::DrawFilterController()
 	: Controller()

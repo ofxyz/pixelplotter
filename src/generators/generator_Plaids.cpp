@@ -1,17 +1,10 @@
-#pragma once
-
+#include "ofApp.h"
 #include "generator_Plaids.h"
-
-G_plaids::G_plaids(ofApp* app)
-{
-	pixelplotter = app;
-	name = "Rings";
-}
 
 void G_plaids::setup(int _width, int _height) {
 	width = _width;
 	height = _height;
-	bFresh = true;
+	setFresh(true);
 }
 
 void G_plaids::update() {
@@ -28,7 +21,7 @@ void G_plaids::draw() {
 
 void G_plaids::renderImGuiSettings() {
 	if (ImGui::ColorEdit4("Background Colour", (float*)&c_bg, ImGuiColorEditFlags_NoInputs)) {
-		bFresh = true;
+		setFresh(true);
 	}
 
 	ImGui::Separator(); // Start Size
@@ -36,11 +29,11 @@ void G_plaids::renderImGuiSettings() {
 	ImGui::PushItemWidth(60);
 	ImGui::Text("Size"); ImGui::SameLine(75);
 	if (ImGui::DragInt("W ##canvas_W", &width, 1, 1, 2400)) {
-		bFresh = true;
+		setFresh(true);
 	}
 	ImGui::SameLine();
 	if (ImGui::DragInt("H ##canvas_H", &height, 1, 1, 2400)) {
-		bFresh = true;
+		setFresh(true);
 	}
 }
 
