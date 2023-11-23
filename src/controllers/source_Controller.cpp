@@ -232,7 +232,7 @@ void SourceController::prepImg() {
 		updatedFrame.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 	}
 
-	for (const auto& filter : iF.v_ImageFilters) {
+	for (const auto& filter : iF.v_Objects) {
 		updatedFrame.setFromPixels(pix);
 		filter->apply(&updatedFrame);
 		pix = updatedFrame.getPixels();

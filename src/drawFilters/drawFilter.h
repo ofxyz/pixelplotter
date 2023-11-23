@@ -15,9 +15,10 @@ public:
 	bool moveUp = false;
 	bool moveDown = false;
 
+	int currentBlendModeIndex = 0;
 	bool useMask = false;
 	int maskMargin = 0;
-
+	
 	std::string name;
 
 	virtual void draw(ofImage* input, float width = 0, float height = 0, float x = 0, float y = 0) = 0;
@@ -30,8 +31,6 @@ public:
 	// -------------------------------------------------
 	// TODO: Delete after implementing drawPixel class ...
 	glm::vec4 getCMYK(ofColor rgb);
-
-	int currentBlendModeIndex = 0;
 	std::vector<std::string> v_BlendModes;
 
 	// -------------------------------------------------

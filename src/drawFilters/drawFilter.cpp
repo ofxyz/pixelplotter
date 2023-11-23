@@ -164,6 +164,10 @@ void DrawFilter::renderImGuiColourSettings(bool colors, bool mask)
 
 void DrawFilter::setBlendMode()
 {
+	// TO DO: Make map for this and have it part of ofUtils or something
+	// We can save BlendModeIndex but this object should not set it like this
+	// Needs to be called like this: ofEnableBlendMode(BLENDMODES[BlendModeIndex]);
+	
 	if (v_BlendModes[currentBlendModeIndex] == "OF_BLENDMODE_ALPHA") {
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 	}

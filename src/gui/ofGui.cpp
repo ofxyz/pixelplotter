@@ -335,8 +335,8 @@ void OfGui::savePresets()
 
 	settings["source"].push_back(pixelplotter->plotCanvas.sourceController.getSettings());
 
-	for (int i = 0; i < pixelplotter->plotCanvas.sourceController.iF.v_ImageFilters.size(); i++) {
-		settings["imageFilters"].push_back(pixelplotter->plotCanvas.sourceController.iF.v_ImageFilters[i]->getSettings());
+	for (int i = 0; i < pixelplotter->plotCanvas.sourceController.iF.v_Objects.size(); i++) {
+		settings["imageFilters"].push_back(pixelplotter->plotCanvas.sourceController.iF.v_Objects[i]->getSettings());
 	}
 
 	settings["plotCanvas"] = pixelplotter->plotCanvas.getSettings();
@@ -362,7 +362,7 @@ void OfGui::loadPresets(ofJson settings)
 	ofJson iFilters = settings.value("imageFilters", ofJson::array());
 	if (!iFilters.empty()) {
 		for (auto& fSettings : iFilters) {
-			pixelplotter->plotCanvas.sourceController.iF.addFilter(fSettings);
+			pixelplotter->plotCanvas.sourceController.iF.add(fSettings);
 		}
 	}
 

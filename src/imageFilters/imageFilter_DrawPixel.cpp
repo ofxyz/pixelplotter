@@ -42,7 +42,7 @@ void If_drawPixel::loadSettings(ofJson& settings) {
 }
 
 void If_drawPixel::renderImGuiSettings() {
-	if (ImGui::CollapsingHeader(name.c_str(), &active)) {
+	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		ImGui::AlignTextToFramePadding();
 
 		if (ofxImGui::VectorCombo("Pixel Type ##drawPixel", &selectedPixelType, drawPixels.v_menuValues)) {

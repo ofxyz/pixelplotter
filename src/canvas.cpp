@@ -58,7 +58,7 @@ void Canvas::renderImGuiSettings() {
 	ImGui::PopItemWidth();
 	ImGui::Separator(); // End Size 
 
-	string sSourceFilterCount = "Plot Source (" + ofToString(sourceController.iF.v_ImageFilters.size() + 1) + ")###Source";
+	string sSourceFilterCount = "Plot Source (" + ofToString(sourceController.iF.v_Objects.size() + 1) + ")###Source";
 	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 	if (ImGui::CollapsingHeader(sSourceFilterCount.c_str()))
 	{
@@ -80,12 +80,12 @@ void Canvas::renderImGuiSettings() {
 
 		ImGui::PushStyleColor(ImGuiCol_CheckMark, (ImVec4)ImColor::HSV(0, 0, 0.8));
 
-		pixelplotter->cleanImageFilters = false;
-		for (int i = 0; i < sourceController.iF.v_ImageFilters.size(); i++) {
+		pixelplotter->cleanImageFilters = false; // TODO: This can be removed as it will be done by the controller
+		for (int i = 0; i < sourceController.iF.v_Objects.size(); i++) {
 			ImGui::PushID(i);
-			if (sourceController.iF.v_ImageFilters[i]->active) {
+			if (sourceController.iF.v_Objects[i]->isAlive()) {
 				ImGui::Indent();
-				sourceController.iF.v_ImageFilters[i]->renderImGuiSettings();
+				sourceController.iF.v_Objects[i]->renderImGuiSettings();
 				ImGui::Unindent();
 			}
 			else {
@@ -96,9 +96,9 @@ void Canvas::renderImGuiSettings() {
 
 		ImGui::PopStyleColor(10);
 
-		if (ofxImGui::VectorCombo("##Image Filter Selector", &currentImageFilterIndex, sourceController.iF.v_ImageFilterNames))
+		if (ofxImGui::VectorCombo("##Image Filter Selector", &currentImageFilterIndex, sourceController.iF.v_objectNames))
 		{
-			sourceController.iF.addFilter(currentImageFilterIndex);
+			sourceController.iF.add(currentImageFilterIndex);
 			currentImageFilterIndex = 0;
 		}
 

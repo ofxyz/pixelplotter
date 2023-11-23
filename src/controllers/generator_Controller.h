@@ -4,6 +4,6 @@
 
 class GeneratorController : public Controller<Generator>
 {
-public:
-	GeneratorController();
+	public:
+		GeneratorController();
 };

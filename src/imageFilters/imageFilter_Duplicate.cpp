@@ -21,7 +21,7 @@ void If_duplicate::loadSettings(ofJson& settings) {
 }
 
 void If_duplicate::renderImGuiSettings() {
-	if (ImGui::CollapsingHeader(name.c_str(), &active)) {
+	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		ImGui::AlignTextToFramePadding();
 		ImGui::PushItemWidth(60);
 
