@@ -27,7 +27,7 @@ ofJson Df_noise::getSettings() {
 
 void Df_noise::loadSettings(ofJson& settings) {
 	try {
-		name = settings.value("name", name);
+		//name = settings.value("name", name);
 
 		cBg.x = settings["colors"]["background"].value("r", cBg.x);
 		cBg.y = settings["colors"]["background"].value("g", cBg.y);

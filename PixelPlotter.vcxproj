@@ -189,7 +189,6 @@
     <ClCompile Include="src\controllers\imageFilter_Controller.cpp" />
     <ClCompile Include="src\controllers\soundDevice_Controller.cpp" />
     <ClCompile Include="src\controllers\source_Controller.cpp" />
-    <ClCompile Include="src\controllers\swatch_Controller.cpp" />
     <ClCompile Include="src\drawFilters\drawFilter.cpp" />
     <ClCompile Include="src\drawFilters\drawFilter_Lumes.cpp" />
     <ClCompile Include="src\drawFilters\drawFilter_Mesh.cpp" />
@@ -269,7 +268,6 @@
     <ClInclude Include="src\controllers\imageFilter_Controller.h" />
     <ClInclude Include="src\controllers\soundDevice_Controller.h" />
     <ClInclude Include="src\controllers\source_Controller.h" />
-    <ClInclude Include="src\controllers\swatch_Controller.h" />
     <ClInclude Include="src\drawFilters\drawFilter.h" />
     <ClInclude Include="src\drawFilters\drawFilter_Lumes.h" />
     <ClInclude Include="src\drawFilters\drawFilter_Mesh.h" />

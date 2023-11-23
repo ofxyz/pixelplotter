@@ -235,9 +235,6 @@
     <ClCompile Include="src\controllers\source_Controller.cpp">
       <Filter>src\controllers</Filter>
     </ClCompile>
-    <ClCompile Include="src\controllers\swatch_Controller.cpp">
-      <Filter>src\controllers</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -1818,9 +1815,6 @@
       <Filter>src\controllers</Filter>
     </ClInclude>
     <ClInclude Include="src\controllers\source_Controller.h">
-      <Filter>src\controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\controllers\swatch_Controller.h">
       <Filter>src\controllers</Filter>
     </ClInclude>
   </ItemGroup>

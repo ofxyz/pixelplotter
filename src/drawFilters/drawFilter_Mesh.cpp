@@ -11,7 +11,7 @@ ofJson Df_mesh::getSettings() {
 
 void Df_mesh::loadSettings(ofJson& settings) {
 	try{
-		name = settings.value("name", name);
+		//name = settings.value("name", name);
 		rotationOffset = settings.value("rotationOffset", rotationOffset);
 	}
 	catch (...) {

@@ -9,7 +9,7 @@ ofJson If_mirror::getSettings() {
 }
 
 void If_mirror::loadSettings(ofJson& settings) {
-	name = settings.value("name", "mirror");
+	//name = settings.value("name", "Mirror");
 	vMirror = settings.value("vMirror", false);
 	hMirror = settings.value("hMirror", false);
 	return;

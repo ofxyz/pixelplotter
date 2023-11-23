@@ -55,28 +55,6 @@ void DrawPixel::drawRoundedRect(float offsetX, float offsetY, float w, float h, 
 	ofPopStyle();
 }
 
-glm::vec4 DrawPixel::getCMYK(ofColor rgb)
-{	
-	// Normalize Values
-	double nr = 0, ng = 0, nb = 0;
-	if (rgb.r > 0) {
-		nr = (double)rgb.r / 255;
-	}
-	if (rgb.g > 0) {
-		ng = (double)rgb.g / 255;
-	}
-	if (rgb.b > 0) {
-		nb = (double)rgb.b / 255;
-	}
-
-	double k = 1 - max(max(nr, ng), nb);
-	double c = 1 - nr - k;
-	double m = 1 - ng - k;
-	double y = 1 - nb - k;
-
-	return glm::vec4(c, m, y, k);
-}
-
 void DrawPixel::gui_setGrey()
 {
 	c_magentaRed = ofColor(108, 108, 108);

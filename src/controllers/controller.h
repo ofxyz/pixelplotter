@@ -72,7 +72,9 @@ void Controller<t>::add(std::string name, ofJson settings /*= {}*/)
 {
 	if (mapObjectTypes.count(name) > 0) {
 		v_Objects.push_back(mapObjectTypes[name]());
-		v_Objects[v_Objects.size()-1]->loadSettings(settings);
+		if (!settings.empty()) {
+			v_Objects[v_Objects.size() - 1]->loadSettings(settings);
+		}
 		setFresh(true);
 	}
 	else {

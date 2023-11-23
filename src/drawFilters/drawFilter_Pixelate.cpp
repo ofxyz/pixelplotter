@@ -516,7 +516,7 @@ void Df_pixelate::drawRgbSeperation_Square(float offsetX, float offsetY, float w
 void Df_pixelate::drawCMYKSeperation_Fill(float offsetX, float offsetY, float w, float h, ofColor c) {
 	float cWidth;
 
-	glm::vec4 cmyk = getCMYK(c);
+	glm::vec4 cmyk = ofx2d::getCMYK(c);
 
 	float totalInk = cmyk[0] + cmyk[1] + cmyk[2] + cmyk[3];
 	if (totalInk < 0.25) return; // Show some white :)
@@ -556,7 +556,7 @@ void Df_pixelate::drawCMYKSeperation_Fill(float offsetX, float offsetY, float w,
 
 void Df_pixelate::drawCMYKSeperation_Square(float offsetX, float offsetY, float w, float h, ofColor c) {
 	float cWidth, cHeight;
-	glm::vec4 cmyk = getCMYK(c);
+	glm::vec4 cmyk = ofx2d::getCMYK(c);
 
 	cWidth = ofMap(cmyk[2], 0, 1, 0, w);
 	cHeight = ofMap(cmyk[2], 0, 1, 0, h);
@@ -578,7 +578,7 @@ void Df_pixelate::drawCMYKSeperation_Square(float offsetX, float offsetY, float 
 
 void Df_pixelate::drawCMYKSeperation_Left(float offsetX, float offsetY, float w, float h, ofColor c) {
 	float cWidth;
-	glm::vec4 cmyk = getCMYK(c);
+	glm::vec4 cmyk = ofx2d::getCMYK(c);
 
 	ofPushMatrix();
 
@@ -606,7 +606,7 @@ void Df_pixelate::drawCMYKSeperation_Left(float offsetX, float offsetY, float w,
 
 void Df_pixelate::drawCMYKSeperation_Hills(float offsetX, float offsetY, float w, float h, ofColor c) {
 	float cHeight;
-	glm::vec4 cmyk = getCMYK(c);
+	glm::vec4 cmyk = ofx2d::getCMYK(c);
 
 	float total = cmyk[0] + cmyk[1] + cmyk[2];
 	if (total == 0) return;
@@ -648,7 +648,7 @@ void Df_pixelate::drawCMYKSeperation_Bars(float offsetX, float offsetY, float w,
 	ofPushMatrix();
 	if (ofRandom(100) > 50) ofRotateDeg(90);
 
-	glm::vec4 cmyk = getCMYK(c);
+	glm::vec4 cmyk = ofx2d::getCMYK(c);
 
 	float c_w = ofMap(cmyk[0], 0, 1, 0, w * 0.75);
 	float m_w = ofMap(cmyk[1], 0, 1, 0, w * 0.75);
@@ -1041,5 +1041,101 @@ void Df_pixelate::draw(ofImage* input, float width, float height, float x, float
 		}
 		ycount++;
 		xcount = 0;
+	}
+}
+
+void Df_pixelate::gui_setGrey()
+{
+	c_magentaRed = ofColor(108, 108, 108);
+	c_cyanBlue = ofColor(139, 139, 139);
+	c_yellowGreen = ofColor(239, 239, 239);
+	c_black = ofColor(0, 0, 0);
+	setFresh(true);
+}
+void Df_pixelate::gui_setRGB()
+{
+	c_magentaRed = ofColor(255, 0, 0);
+	c_cyanBlue = ofColor(0, 0, 255);
+	c_yellowGreen = ofColor(0, 255, 0);
+	c_black = ofColor(0, 0, 0);
+	setFresh(true);
+}
+void Df_pixelate::gui_setCMYK()
+{
+	c_magentaRed = ofColor(236, 0, 140);
+	c_cyanBlue = ofColor(0, 174, 239);
+	c_yellowGreen = ofColor(255, 242, 0);
+	c_black = ofColor(0, 0, 0);
+	setFresh(true);
+}
+void Df_pixelate::gui_setRYB()
+{
+	c_magentaRed = ofColor(248, 11, 17);
+	c_cyanBlue = ofColor(19, 57, 166);
+	c_yellowGreen = ofColor(255, 230, 0);
+	c_black = ofColor(0, 0, 0);
+	setFresh(true);
+}
+
+void Df_pixelate::renderImGuiColourSettings(bool colors, bool mask)
+{
+	if (colors || mask) {
+		if (ImGui::CollapsingHeader("Colours ##drawFilter"))
+		{
+			if (colors) {
+				if (ImGui::ColorEdit4("Cyan / Blue ##drawFilter", (float*)&c_cyanBlue, ImGuiColorEditFlags_NoInputs)) {
+					setFresh(true);
+				}
+				if (ImGui::ColorEdit4("Magenta / Red ##drawFilter", (float*)&c_magentaRed, ImGuiColorEditFlags_NoInputs)) {
+					setFresh(true);
+				}
+				if (ImGui::ColorEdit4("Yellow / Green ##drawFilter", (float*)&c_yellowGreen, ImGuiColorEditFlags_NoInputs)) {
+					setFresh(true);
+				}
+				if (ImGui::ColorEdit4("Key / Black ##drawFilter", (float*)&c_black, ImGuiColorEditFlags_NoInputs)) {
+					setFresh(true);
+				}
+				if (ImGui::ColorEdit4("Paper / White ##drawFilter", (float*)&c_white, ImGuiColorEditFlags_NoInputs)) {
+					setFresh(true);
+				}
+				// TODO: REMOVE
+			}
+			if (mask) {
+				if (ImGui::ColorEdit4("Mask ##drawFilter", (float*)&c_mask, ImGuiColorEditFlags_NoInputs)) {
+					setFresh(true);
+				}
+				ImGui::SameLine();
+				if (ImGui::Checkbox("Use Mask ##drawFilter", &useMask)) {
+					setFresh(true);
+				}
+				ImGui::SameLine();
+				ImGui::PushItemWidth(60);
+				if (ImGui::DragInt("Margin ##drawFilter", &maskMargin, 1, 0, 255)) {
+					setFresh(true);
+				}
+				ImGui::PopItemWidth();
+			}
+			if (colors) {
+				if (ImGui::Button("Set Grey ##drawFilter"))
+				{
+					gui_setGrey();
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Set RGB ##drawFilter"))
+				{
+					gui_setRGB();
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Set CMYK ##drawFilter"))
+				{
+					gui_setCMYK();
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Set RYB ##drawFilter"))
+				{
+					gui_setRYB();
+				}
+			}
+		} // End Colors
 	}
 }

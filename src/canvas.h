@@ -17,10 +17,6 @@ public:
 
 	DrawFilterController dF;
 	SourceController sourceController;
-	
-	// TODO: These should be in DrawFilterController / SourceController
-	// Need ImGui Same as sourceController
-	int currentImageFilterIndex = 0;
 
 	void renderImGuiSettings();
 	void loadSettings(ofJson& settings);
@@ -34,13 +30,11 @@ public:
 	void setDimensions(ofImage* img);
 	void setDimensions(float w, float h);
 
+	// TODO: Wrap these in functions and make private?
 	int canvasWidth = 640;
 	int canvasHeight = 480;
-
 	bool isRecording = false;
 	bool resizeRequest = false;
-
-	// TODO: Wrap these in functions and make private?
 	bool saveVector = false;
 	bool savePixels = false;
 

@@ -19,7 +19,7 @@ void Dp_separateCMYK_Rect02::renderImGuiSettings() {
 
 void Dp_separateCMYK_Rect02::draw(ofColor c, glm::vec2 dim, glm::vec2 pos /*= { 0,0 }*/, glm::vec2 posNorm /*= { 0,0 }*/)
 {
-	glm::vec4 cmyk = getCMYK(c);
+	glm::vec4 cmyk = ofx2d::getCMYK(c);
 	
 	float whiteVal = min(min(c.r, c.g), c.b);
 	if (whiteVal > 0) {

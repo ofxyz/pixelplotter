@@ -46,9 +46,6 @@ public:
 
 	void drawRoundedRect(float offsetX, float offsetY, float w, float h, ofColor c);
 
-	// Standard color methods
-	glm::vec4 getCMYK(ofColor rgb);
-
 	void gui_setGrey();
 
 	void gui_setRGB();

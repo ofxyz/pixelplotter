@@ -72,4 +72,17 @@ private:
 	glm::vec2 rotationMinMax;
 	glm::vec2 widthMinMax;
 	glm::vec2 heightMinMax;
+
+	ImVec4 c_cyanBlue = ofColor(0, 174, 239, 255);
+	ImVec4 c_magentaRed = ofColor(236, 0, 140, 255);
+	ImVec4 c_yellowGreen = ofColor(255, 242, 0, 255);
+	ImVec4 c_black = ofColor(0, 0, 0, 255);
+	ImVec4 c_white = ofColor(255, 255, 255, 255);
+	ImVec4 c_mask = ofColor(255, 255, 255, 255);
+
+	void gui_setGrey();
+	void gui_setRGB();
+	void gui_setCMYK();
+	void gui_setRYB();
+	void renderImGuiColourSettings(bool colors, bool mask);
 };

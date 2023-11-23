@@ -63,47 +63,7 @@ void Canvas::renderImGuiSettings() {
 	if (ImGui::CollapsingHeader(sSourceFilterCount.c_str()))
 	{
 		sourceController.renderImGuiSettings();
-
-		// Start ImageFilters
-		//-----------------------------------------------------------------------------------------------------
-		ImGui::PushStyleColor(ImGuiCol_Header, (ImVec4)ImColor::HSV(0, 0, 0.2));
-		ImGui::PushStyleColor(ImGuiCol_HeaderActive, (ImVec4)ImColor::HSV(0, 0, 0.4));
-		ImGui::PushStyleColor(ImGuiCol_HeaderHovered, (ImVec4)ImColor::HSV(0, 0, 0.7));
-
-		ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0, 0, 0.2));
-		ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0, 0, 0.2));
-		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0, 0, 0.7));
-
-		ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)ImColor::HSV(0, 0, 0.2));
-		ImGui::PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4)ImColor::HSV(0, 0, 0.4));
-		ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0, 0, 0.5));
-
-		ImGui::PushStyleColor(ImGuiCol_CheckMark, (ImVec4)ImColor::HSV(0, 0, 0.8));
-
-		pixelplotter->cleanImageFilters = false; // TODO: This can be removed as it will be done by the controller
-		for (int i = 0; i < sourceController.iF.v_Objects.size(); i++) {
-			ImGui::PushID(i);
-			if (sourceController.iF.v_Objects[i]->isAlive()) {
-				ImGui::Indent();
-				sourceController.iF.v_Objects[i]->renderImGuiSettings();
-				ImGui::Unindent();
-			}
-			else {
-				pixelplotter->cleanImageFilters = true;
-			}
-			ImGui::PopID();
-		}
-
-		ImGui::PopStyleColor(10);
-
-		if (ofxImGui::VectorCombo("##Image Filter Selector", &currentImageFilterIndex, sourceController.iF.v_objectNames))
-		{
-			sourceController.iF.add(currentImageFilterIndex);
-			currentImageFilterIndex = 0;
-		}
-
-		// End ImageFilters
-		//-----------------------------------------------------------------------------------------------------
+		sourceController.iF.renderImGuiSettings();
 	} // End Plot Source
 
 	dF.renderImGuiSettings();
