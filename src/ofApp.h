@@ -42,7 +42,6 @@ public:
 	soundDeviceController soundManager;
 
 	bool vSync = true;
-	bool cleanImageFilters = false;
 	bool bDragCanvas = false;
 	bool bLoadSettingsNextFrame;
 

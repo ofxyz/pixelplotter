@@ -43,19 +43,6 @@ void ofApp::exit() {
 void ofApp::update() {
 	ofGui.update();
 
-	// TODO: Move to appropriate location
-	if (cleanImageFilters) {
-		plotCanvas.sourceController.iF.clean();
-		cleanImageFilters = false;
-	}
-
-	// Move to Source Controller
-	if (plotCanvas.sourceController.loadImageNextFrame)
-	{
-		plotCanvas.sourceController.loadSourceIndex();
-		plotCanvas.sourceController.loadImageNextFrame = false;
-	}
-
 	if (!ofGui.bRenderingPaused) {
 		soundManager.update();
 		plotCanvas.update();

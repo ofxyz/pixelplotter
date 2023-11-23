@@ -2,11 +2,14 @@
 
 #include "canvas.h"
 #include "ofApp.h"
+
+// B TODO: Make general ImGui Header 
 #include "ofxImGui.h"
 #include "imgui_internal.h"
 #include "ImHelpers.h"
 #include "ImGui_Widget_Tooltip.h"
 #include "ImGui_Widget_InputTextString.h"
+
 #include "ofx2d.h"
 
 Canvas::Canvas()
@@ -141,16 +144,11 @@ ofJson Canvas::getSettings() {
 }
 
 void Canvas::setup(string canvas_title) {
-	pixelplotter = (ofApp*)ofGetAppPtr();
 	canvasTitle = canvas_title;
-
 	sourceController.setup();
-	canvasWidth = sourceController.frameBuffer.getWidth();
-	canvasHeight = sourceController.frameBuffer.getHeight();
 	canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGBA, 8);
 	canvasFbo.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
-	update();
-	updateFbo(&sourceController.frameBuffer.getFrame());
+	dF.addRandom();
 }
 
 void Canvas::setDimensions(ofImage* img) {

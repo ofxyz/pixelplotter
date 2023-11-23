@@ -30,7 +30,6 @@ public:
 	void setDimensions(ofImage* img);
 	void setDimensions(float w, float h);
 
-	// TODO: Wrap these in functions and make private?
 	int canvasWidth = 640;
 	int canvasHeight = 480;
 	bool isRecording = false;

@@ -92,7 +92,6 @@ void Df_pixelate2::renderImGuiSettings()
 			setFresh(true);
 		};
 
-		// TODO: This should be one function call to drawPixels
 		// Pass fresh through
 		if (drawPixels.v_Objects[selectedPixelType]->isFresh()) {
 			drawPixels.v_Objects[selectedPixelType]->setFresh(false);

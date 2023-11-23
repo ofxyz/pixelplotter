@@ -29,13 +29,12 @@ public:
 	void renderUpDownButtons();
 
 	// -------------------------------------------------
-	// TODO: Delete after implementing drawPixel class ...
+	// TODO: Set BlendMode should be ofSetBlendMode(BLENDMODES[currBlendmodeIndex])
 	std::vector<std::string> v_BlendModes;
 	void setBlendMode();
 
 	// -------------------------------------------------
-	// TODO: Delete after implementing drawPixel class ...
-
+	// TODO: Finish implementing mask
 	ImVec4 c_mask = ofColor(255, 255, 255, 255);
 	void renderImGuiColourSettings(bool colors, bool mask);
 

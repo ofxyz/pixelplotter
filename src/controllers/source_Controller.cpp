@@ -45,6 +45,13 @@ ofJson SourceController::getSettings() {
 
 void SourceController::update() {
 
+	// Move to Source Controller
+	if (loadImageNextFrame)
+	{
+		loadSourceIndex();
+		loadImageNextFrame = false;
+	}
+
 	if (bUseVideoDevice) {
 		videoGrabber.update();
 		if (videoGrabber.isFrameNew()) {
