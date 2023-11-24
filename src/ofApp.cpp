@@ -2,8 +2,9 @@
 #include "ofx2d.h"
 
 void ofApp::setup() {
+	/* Always disable rectangular textures by default */
+	ofDisableArbTex();
 
-	bLoadSettingsNextFrame = false;
 	c_background = ofColor(50, 50, 50, 255);
 
 	//ofSetLogLevel(OF_LOG_ERROR);
@@ -14,8 +15,6 @@ void ofApp::setup() {
 	ofSetFrameRate(_targetFps); // TODO: Add to settings
 	ofEnableAlphaBlending();
 	ofDisableAntiAliasing(); // TODO: Add to settings
-	/* Always disable rectangular textures by default */
-	ofDisableArbTex();
 
 	//ofHideCursor();
 	ofAddListener(ofEvents().mouseScrolled, this, &ofApp::mouseScrolled);

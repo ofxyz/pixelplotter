@@ -10,8 +10,10 @@
 
 ## dependencies
 
+- ofx2d
 - ofxCv
 - ofxOpenCv
 - ofxImGui (Docking Branch)
 - ofxIconFontCppHeaders
+- ofxShader
 - [K-Lite Codec Pack](https://files3.codecguide.com/K-Lite_Codec_Pack_1750_Basic.exe)

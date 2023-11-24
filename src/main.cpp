@@ -6,6 +6,13 @@
 int main() {
 	ofGLFWWindowSettings settings;
 
+#ifdef TARGET_OPENGLES
+	settings.setGLESVersion(2);
+#else
+	// Programmable pipeline
+	settings.setGLVersion(3, 2); 
+#endif
+
 	settings.title = ofApp::getWindowTitle();
 	// Until we can drag main menu and can switch between full screen
 	settings.decorated = true;
@@ -14,11 +21,7 @@ int main() {
 	settings.setPosition(glm::vec2(50, 50));
 	settings.resizable = true;
 	settings.multiMonitorFullScreen = false;
-	// ofxShadertoy NEEDS the GL Programmable Renderer
-	// settings.setGLVersion(3, 2);
-	// settings.setGLVersion(4, 1); 
-	
+
 	ofCreateWindow(settings);
-	
 	ofRunApp(new ofApp());
 }

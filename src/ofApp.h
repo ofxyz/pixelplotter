@@ -43,7 +43,6 @@ public:
 
 	bool vSync = true;
 	bool bDragCanvas = false;
-	bool bLoadSettingsNextFrame;
 
 	int exportCount = 0;
 

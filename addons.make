@@ -4,4 +4,5 @@ ofxCv
 ofxIconFontCppHeaders
 ofxImGui
 ofxPosterize
+ofxShader
 ofxSvg
