@@ -4,6 +4,7 @@
 ofJson If_tint::getSettings() {
 	ofJson settings;
 	settings["name"] = name;
+	settings["_isOpen"] = _isOpen;
 	settings["bGrey"] = bGrey;
 
 	settings["colors"]["tint"]["r"] = c_Tint.x;
@@ -16,6 +17,7 @@ ofJson If_tint::getSettings() {
 
 void If_tint::loadSettings(ofJson& settings) {
 	//name = settings.value("name", "tint");
+	_isOpen = settings.value("_isOpen", _isOpen);
 	bGrey = settings.value("bGrey", bGrey);
 
 	c_Tint.x = settings.value("colors:tint:r", c_Tint.x);
@@ -27,6 +29,7 @@ void If_tint::loadSettings(ofJson& settings) {
 }
 
 void If_tint::renderImGuiSettings() {
+	ImGui::SetNextItemOpen(_isOpen);
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		ImGui::AlignTextToFramePadding();
 

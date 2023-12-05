@@ -1,4 +1,5 @@
 #include "ImGui_Widget_Bezier.h"
+#include "ofApp.h"
 
 float ImGui::BezierValue(float dt01, float P[4])
 {
@@ -11,14 +12,18 @@ float ImGui::BezierValue(float dt01, float P[4])
 
 int ImGui::Bezier(const char* label, float P[5])
 {
+	// TODO:
+	// Pause rendering when moving handles?
+	// Update on changing presets
+
 	// visuals
-	enum { SMOOTHNESS = 64 }; // curve smoothness: the higher number of segments, the smoother curve
-	enum { CURVE_WIDTH = 4 }; // main curved line width
+	enum { SMOOTHNESS = 125 }; // curve smoothness: the higher number of segments, the smoother curve
+	enum { CURVE_WIDTH = 2 }; // main curved line width
 	enum { LINE_WIDTH = 1 }; // handlers: small lines width
-	enum { GRAB_RADIUS = 8 }; // handlers: circle radius
-	enum { GRAB_BORDER = 2 }; // handlers: circle border width
-	enum { AREA_CONSTRAINED = true }; // should grabbers be constrained to grid area?
-	enum { AREA_WIDTH = 128 }; // area width in pixels. 0 for adaptive size (will use max avail width)
+	enum { GRAB_RADIUS = 4 }; // handlers: circle radius
+	enum { GRAB_BORDER = 0 }; // handlers: circle border width
+	enum { AREA_CONSTRAINED = false }; // should grabbers be constrained to grid area?
+	enum { AREA_WIDTH = 125 }; // area width in pixels. 0 for adaptive size (will use max avail width)
 
 	// curve presets
 	static struct { const char* name; float points[4]; } presets[] = {
@@ -208,15 +213,15 @@ int ImGui::Bezier(const char* label, float P[5])
 
 	// draw lines and grabbers
 	float luma = IsItemActive() || IsItemHovered() ? 0.5f : 1.0f;
-	ImVec4 pink(1.00f, 0.00f, 0.75f, luma), cyan(0.00f, 0.75f, 1.00f, luma);
+	ImVec4 grey(0.75f, 0.75f, 0.75f, luma);
 	ImVec2 p1 = ImVec2(P[0], 1 - P[1]) * (bb.Max - bb.Min) + bb.Min;
 	ImVec2 p2 = ImVec2(P[2], 1 - P[3]) * (bb.Max - bb.Min) + bb.Min;
 	DrawList->AddLine(ImVec2(bb.Min.x, bb.Max.y), p1, ImColor(white), LINE_WIDTH);
 	DrawList->AddLine(ImVec2(bb.Max.x, bb.Min.y), p2, ImColor(white), LINE_WIDTH);
 	DrawList->AddCircleFilled(p1, GRAB_RADIUS, ImColor(white));
-	DrawList->AddCircleFilled(p1, GRAB_RADIUS - GRAB_BORDER, ImColor(pink));
+	DrawList->AddCircleFilled(p1, GRAB_RADIUS - GRAB_BORDER, ImColor(grey));
 	DrawList->AddCircleFilled(p2, GRAB_RADIUS, ImColor(white));
-	DrawList->AddCircleFilled(p2, GRAB_RADIUS - GRAB_BORDER, ImColor(cyan));
+	DrawList->AddCircleFilled(p2, GRAB_RADIUS - GRAB_BORDER, ImColor(grey));
 
 	// if (hovered || changed) DrawList->PopClipRect();
 

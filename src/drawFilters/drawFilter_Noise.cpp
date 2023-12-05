@@ -6,6 +6,7 @@
 ofJson Df_noise::getSettings() {
 	ofJson settings;
 	settings["name"] = name;
+	settings["_isOpen"] = _isOpen;
 
 	settings["colors"]["background"]["r"] = cBg.x;
 	settings["colors"]["background"]["g"] = cBg.y;
@@ -28,6 +29,7 @@ ofJson Df_noise::getSettings() {
 void Df_noise::loadSettings(ofJson& settings) {
 	try {
 		//name = settings.value("name", name);
+		_isOpen = settings.value("_isOpen", _isOpen);
 
 		cBg.x = settings["colors"]["background"].value("r", cBg.x);
 		cBg.y = settings["colors"]["background"].value("g", cBg.y);
@@ -51,6 +53,7 @@ void Df_noise::loadSettings(ofJson& settings) {
 }
 
 void Df_noise::renderImGuiSettings() {
+	ImGui::SetNextItemOpen(_isOpen);
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		ImGui::PushID("Df_noise");
 		ImGui::AlignTextToFramePadding();
@@ -119,7 +122,7 @@ Df_noise::Df_noise()
 	name = "Noise";
 }
 
-void Df_noise::draw(ofImage* input, float width, float height, float x, float y) {
+void Df_noise::draw(ofImage* input, float width, float height) {
 	setFresh(false);
 	if (!bVisible) return;
 

@@ -7,6 +7,7 @@
 ofJson Df_rings::getSettings() {
 	ofJson settings;
 	settings["name"] = name;
+	settings["_isOpen"] = _isOpen;
 	settings["cvThresh"] = cvThresh;
 	settings["cvBlur"] = cvBlur;
 	settings["cvSteps"] = cvSteps;
@@ -24,6 +25,7 @@ ofJson Df_rings::getSettings() {
 void Df_rings::loadSettings(ofJson& settings) {
 	try {
 		//name = settings.value("name", "rings");
+		_isOpen = settings.value("_isOpen", _isOpen);
 		cvThresh = settings.value("cvThresh", cvThresh);
 		cvBlur = settings.value("cvBlur", cvBlur);
 		cvSteps = settings.value("cvSteps", cvSteps);
@@ -41,6 +43,7 @@ void Df_rings::loadSettings(ofJson& settings) {
 }
 
 void Df_rings::renderImGuiSettings() {
+	ImGui::SetNextItemOpen(_isOpen);
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		ImGui::AlignTextToFramePadding();
 
@@ -78,7 +81,7 @@ void Df_rings::renderImGuiSettings() {
 	}
 }
 
-void Df_rings::draw(ofImage* input, float width, float height, float x, float y) {
+void Df_rings::draw(ofImage* input, float width, float height) {
 	setFresh(false);
 	if (!bVisible) return;
 

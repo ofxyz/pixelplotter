@@ -4,6 +4,7 @@
 ofJson Df_mesh::getSettings() {
 	ofJson settings;
 	settings["name"] = name;
+	settings["_isOpen"] = _isOpen;
 	settings["rotationOffset"] = rotationOffset;
 
 	return settings;
@@ -12,6 +13,7 @@ ofJson Df_mesh::getSettings() {
 void Df_mesh::loadSettings(ofJson& settings) {
 	try{
 		//name = settings.value("name", name);
+		_isOpen = settings.value("_isOpen", _isOpen);
 		rotationOffset = settings.value("rotationOffset", rotationOffset);
 	}
 	catch (...) {
@@ -21,6 +23,7 @@ void Df_mesh::loadSettings(ofJson& settings) {
 }
 
 void Df_mesh::renderImGuiSettings() {
+	ImGui::SetNextItemOpen(_isOpen);
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		ImGui::AlignTextToFramePadding();
 
@@ -44,7 +47,7 @@ Df_mesh::Df_mesh(ofJson& settings)
 	loadSettings(settings);
 }
 
-void Df_mesh::draw(ofImage* input, float width, float height, float x, float y) {
+void Df_mesh::draw(ofImage* input, float width, float height) {
 	setFresh(false);
 	if (!bVisible) return;
 	mesh.clear();
@@ -61,10 +64,10 @@ void Df_mesh::draw(ofImage* input, float width, float height, float x, float y) 
 	float centerOffsetW = ((width - imgW) / imgW) * 0.5;
 	float centerOffsetH = ((height - imgH) / imgH) * 0.5;
 
-	for (int _x = 0; _x < imgW; _x++) {
-		for (int _y = 0; _y < imgH; _y++) {
-			ofColor c = input->getColor(_x, _y);
-			glm::vec3 pos(ofMap(_x, 0, imgW, 0, width) + centerOffsetW, ofMap(_y, 0, imgH, 0, height) + centerOffsetH, 0.0);
+	for (int x = 0; x < imgW; x++) {
+		for (int y = 0; y < imgH; y++) {
+			ofColor c = input->getColor(x, y);
+			glm::vec3 pos(ofMap(x, 0, imgW, 0, width) + centerOffsetW, ofMap(y, 0, imgH, 0, height) + centerOffsetH, 0.0);
 			mesh.addVertex(pos);
 			mesh.addColor(c);
 		}
@@ -120,7 +123,7 @@ void Df_mesh::draw(ofImage* input, float width, float height, float x, float y) 
 		ofVec3f mv = mesh.getVertex(v);
 		ofColor vc = mesh.getColor(v);
 		ofSetColor(vc);
-		ofDrawRectangle(x + mv.x - centerOffsetW, y + mv.y - centerOffsetH, 1 + centerOffsetW * 2, 1 + centerOffsetH * 2);
+		ofDrawRectangle(mv.x - centerOffsetW, mv.y - centerOffsetH, 1 + centerOffsetW * 2, 1 + centerOffsetH * 2);
 	}
 	ofPopStyle();
 

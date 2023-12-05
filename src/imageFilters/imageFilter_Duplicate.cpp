@@ -6,6 +6,7 @@
 ofJson If_duplicate::getSettings() {
 	ofJson settings;
 	settings["name"] = name;
+	settings["_isOpen"] = _isOpen;
 	settings["hCount"] = hCount;
 	settings["vCount"] = vCount;
 	settings["bMirror"] = bMirror;
@@ -13,7 +14,8 @@ ofJson If_duplicate::getSettings() {
 }
 
 void If_duplicate::loadSettings(ofJson& settings) {
-	name = settings.value("name", "duplicate");
+	//name = settings.value("name", "duplicate");
+	_isOpen = settings.value("_isOpen", _isOpen);
 	hCount = settings.value("hCount", hCount);
 	vCount = settings.value("vCount", vCount);
 	bMirror = settings.value("bMirror", bMirror);
@@ -21,6 +23,7 @@ void If_duplicate::loadSettings(ofJson& settings) {
 }
 
 void If_duplicate::renderImGuiSettings() {
+	ImGui::SetNextItemOpen(_isOpen);
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		ImGui::AlignTextToFramePadding();
 		ImGui::PushItemWidth(60);

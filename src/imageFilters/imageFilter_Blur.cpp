@@ -3,17 +3,20 @@
 ofJson If_blur::getSettings() {
 	ofJson settings;
 	settings["name"] = name;
+	settings["_isOpen"] = _isOpen;
 	settings["cvBlur"] = cvBlur;
 	return settings;
 }
 
 void If_blur::loadSettings(ofJson& settings) {
-	name = settings.value("name", "tint");
+	//name = settings.value("name", "tint");
+	_isOpen = settings.value("_isOpen", _isOpen);
 	cvBlur = settings.value("cvBlur", cvBlur);
 	return;
 }
 
 void If_blur::renderImGuiSettings() {
+	ImGui::SetNextItemOpen(_isOpen);
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		ImGui::AlignTextToFramePadding();
 

@@ -8,6 +8,7 @@
 ofJson If_drawPixel::getSettings() {
 	ofJson settings;
 	settings["name"] = name;
+	settings["_isOpen"] = _isOpen;
 	// TODO: It shouldn't matter but ... isn't it better to get the actual source name
 	//settings["pixelType"] = drawPixels.v_Objects[selectedPixelType]->name;
 	settings["pixelType"] = drawPixels.v_objectNames[selectedPixelType];
@@ -26,6 +27,7 @@ ofJson If_drawPixel::getSettings() {
 }
 
 void If_drawPixel::loadSettings(ofJson& settings) {
+	_isOpen = settings.value("_isOpen", _isOpen);
 	// TODO: It shouldn't matter but ... isn't it better to get the actual source name
 	//ofx2d::getIndex(drawPixels.v_Objects*, settings.value("pixelType", "Undefined"), 1)
 	selectedPixelType = ofx2d::getIndex(drawPixels.v_objectNames, settings.value("pixelType", "Undefined"), 1);
@@ -42,6 +44,7 @@ void If_drawPixel::loadSettings(ofJson& settings) {
 }
 
 void If_drawPixel::renderImGuiSettings() {
+	ImGui::SetNextItemOpen(_isOpen);
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		ImGui::AlignTextToFramePadding();
 

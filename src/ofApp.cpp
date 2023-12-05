@@ -29,8 +29,6 @@ void ofApp::setup() {
 	userOffset.y = 0;
 
 	ofGui.loadPresetDir();
-
-	_bFresh = true;
 }
 
 //--------------------------------------------------------------
@@ -42,7 +40,7 @@ void ofApp::exit() {
 void ofApp::update() {
 	ofGui.update();
 
-	if (!ofGui.bRenderingPaused) {
+	if (!ofGui.renderingPaused()) {
 		soundManager.update();
 		plotCanvas.update();
 	}
@@ -71,16 +69,6 @@ void ofApp::resetZoom() {
 	resetImageOffset();
 }
 
-bool ofApp::isFresh()
-{
-	return _bFresh;
-}
-
-void ofApp::setFresh(bool fresh)
-{
-	_bFresh = fresh;
-}
-
 void ofApp::centerImage() {
 	ImVec4 availableSpace = ofGui.availableSpace();
 	userOffset.x = (availableSpace.x - (plotCanvas.canvasWidth * zoomLevel)) * 0.5;
@@ -90,16 +78,22 @@ void ofApp::centerImage() {
 
 //-------------------------------------------------------------
 void ofApp::keyPressed(int key) {
+	if (ImGui::GetIO().WantCaptureKeyboard) return;
 
 	if (key == 'g' || key == 'G') {
-		ofGui.bShowGui = !ofGui.bShowGui;
+		ofGui.setGuiVisible(!ofGui.guiVisible());
 	}
-
+	else if (key == 'p' || key == 'P')
+	{
+		ofGui.setRenderingPaused(!ofGui.renderingPaused());
+	}
+	bool stsus = ofGui.guiVisible();
+	bool x = false;
 	// TODO:
 	// -------
-	// Zoom level and center image needs to take `ofGui.bShowGui` into account
+	// Zoom level and center image needs to take `ofGui._bGuiVisible` into account
 
-	else if (key == '-') {
+	if (key == '-') {
 		zoomLevel -= 0.1;
 		//resetImageOffset();
 	}
@@ -130,7 +124,7 @@ void ofApp::keyPressed(int key) {
 		plotCanvas.saveVector = true;
 	}
 	else if (key == 'x') {
-		ofGui.bRenderingPaused = !ofGui.bRenderingPaused;
+		ofGui.setRenderingPaused(!ofGui.renderingPaused());
 	}
 	else if (key == '?') {
 		//cout << x << end=l;
@@ -154,6 +148,8 @@ void ofApp::mouseMoved(int x, int y) {
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button) {
+	if (ImGui::GetIO().WantCaptureMouse) return;
+
 	if (bDragCanvas) {
 		userOffset.x += x - lastDraggedPos.x;
 		userOffset.y += y - lastDraggedPos.y;
@@ -166,8 +162,9 @@ void ofApp::mouseDragged(int x, int y, int button) {
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button) {
-	ImGuiIO& io = ImGui::GetIO();
-	if (x < ofGetWindowWidth() && x > 0 && !io.WantCaptureMouse) {
+	if (ImGui::GetIO().WantCaptureMouse) return;
+
+	if (x < ofGetWindowWidth() && x > 0) {
 		bDragCanvas = true;
 		lastDraggedPos.x = x;
 		lastDraggedPos.y = y;
@@ -191,16 +188,16 @@ void ofApp::mouseExited(int x, int y) {
 
 //--------------------------------------------------------------
 void ofApp::mouseScrolled(ofMouseEventArgs& mouse) {
-	if (!ImGui::GetIO().WantCaptureMouse) {
-		glm::vec3 position = plotCanvas.cam.getPosition();
-		if (zoomLevel > 1) {
-			zoomLevel += (mouse.scrollY * 0.1);
-		}
-		else {
-			zoomLevel += (mouse.scrollY * 0.01);
-		}
-		if (zoomLevel < 0.02) zoomLevel = 0.02;
+	if (ImGui::GetIO().WantCaptureMouse) return;
+
+	glm::vec3 position = plotCanvas.cam.getPosition();
+	if (zoomLevel > 1) {
+		zoomLevel += (mouse.scrollY * 0.1);
 	}
+	else {
+		zoomLevel += (mouse.scrollY * 0.01);
+	}
+	if (zoomLevel < 0.02) zoomLevel = 0.02;
 }
 
 //--------------------------------------------------------------

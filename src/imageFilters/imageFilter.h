@@ -10,6 +10,7 @@ public:
 	ofApp* pixelplotter{ nullptr };
 	bool bAlive = true;
 	bool bVisible = true;
+	bool _isOpen = true;
 
 	bool moveUp = false;
 	bool moveDown = false;

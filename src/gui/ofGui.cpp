@@ -15,21 +15,24 @@
 OfGui::OfGui()
 {
 	pixelplotter = (ofApp*)ofGetAppPtr();
-	bShowGui = true;
-	bShowMenuBar = true;
-	bShowPlotCanvas = true;
-	bShowInfoPanel = true;
-	bShowToolPalette = true;
-	bShowImGuiMetricsDebugger = false;
-	bShowCanvas = true;
+	_bGuiVisible = true;
+	_bMenuBarVisible = true;
 
-	bRenderingPaused = false;
-	bShowFps = true;
-	bSavePresets = false;
-	bTryLoadSource = true;
+	_bShowPlotCanvas = true;
+	_bShowInfoPanel = true;
+	_bShowToolPalette = true;
+	_bShowImGuiMetricsDebugger = false;
+	_bShowCanvas = true;
 
-	currentPresetIndex = 0;
-	memset(presetSaveName, 0, sizeof(char)*128);
+	_bShowFps = true;
+
+	_bRenderingPaused = false;
+
+	_bSavePresets = false;
+	_bLoadSourceFile = true;
+
+	_currentPresetIndex = 0;
+	memset(_presetSaveName, 0, sizeof(char)*128);
 
 }
 
@@ -66,34 +69,31 @@ void OfGui::setup()
 
 void OfGui::update()
 {
-	if (bLoadSettingsNextFrame)
+	if (_bLoadSettingsNextFrame)
 	{
 		loadPresets(getCurrentPresets());
-		bLoadSettingsNextFrame = false;
+		_bLoadSettingsNextFrame = false;
 	}
 }
 
 void OfGui::draw()
 {
+	gui.begin();
 
-	if (bShowGui)
-	{
-		gui.begin();
+	if (_bGuiVisible) {
 		drawMainDock();
-
-		if (bShowMenuBar) drawMenuBar();
-		if (bShowCanvas) drawCanvas();
-		if (bShowToolPalette) drawToolPalette();
-		if (bShowInfoPanel) drawInfoPanel();
-		if (bShowCanvas) drawCanvasWindow();
-
-		if (bShowImGuiMetricsDebugger) {
+		if (_bMenuBarVisible) drawMenuBar();
+		if (_bShowCanvas) drawCanvas();
+		if (_bShowToolPalette) drawToolPalette();
+		if (_bShowInfoPanel) drawInfoPanel();
+		if (_bShowPlotCanvas) drawCanvasWindow();
+		if (_bShowImGuiMetricsDebugger) {
 			ImGui::ShowMetricsWindow();
 			ImGui::ShowStyleEditor();
 		}
-
-		gui.end();
 	}
+ 
+	gui.end();
 }
 
 void OfGui::drawMainDock()
@@ -118,32 +118,30 @@ void OfGui::drawMenuBar()
 	ImGui::BeginMainMenuBar();
 	ImGui::PopStyleVar();
 
-	if (ImGui::BeginMenu("PixelPlotter", &bShowMenuBar)) {
-		ImGui::Checkbox("Hide GUI [g]", &bShowGui);
+	if (ImGui::BeginMenu("PixelPlotter", &_bMenuBarVisible)) {
+		ImGui::Checkbox("Hide GUI [g]", &_bGuiVisible);
 		ImGui::SameLine(); ImGui::HelpMarker("Hide the Graphical User Interface press [g] to show");
 
-		if (bShowGui) {
-			// Sub Menu 
-			//ImGui::Separator();
-			if (ImGui::BeginMenu("Windows...")) {
-				//ImGui::MenuItem("Something");
-				ImGui::Checkbox("Plot Canvas", &bShowPlotCanvas);
-				ImGui::Checkbox("Info Panel", &bShowInfoPanel);
-				ImGui::Checkbox("Tool Palette", &bShowToolPalette);
-				ImGui::Checkbox("ImGui Metrics Debugger", &bShowImGuiMetricsDebugger);
-				ImGui::EndMenu();
-			}
+		// Sub Menu 
+		//ImGui::Separator();
+		if (ImGui::BeginMenu("Windows...")) {
+			//ImGui::MenuItem("Something");
+			ImGui::Checkbox("Plot Canvas", &_bShowPlotCanvas);
+			ImGui::Checkbox("Info Panel", &_bShowInfoPanel);
+			ImGui::Checkbox("Tool Palette", &_bShowToolPalette);
+			ImGui::Checkbox("ImGui Metrics Debugger", &_bShowImGuiMetricsDebugger);
+			ImGui::EndMenu();
 		}
 
-		static std::string renderPaused = "Pause Rendering";
-		if (ImGui::MenuItem(renderPaused.c_str())) {
-			if (bRenderingPaused) {
-				bRenderingPaused = false;
-				renderPaused = "Pause Rendering";
+		static std::string sRenderStatus = "Pause Rendering [p]";
+		if (ImGui::MenuItem(sRenderStatus.c_str())) {
+			if (_bRenderingPaused) {
+				_bRenderingPaused = false;
+				sRenderStatus = "Pause Rendering [p]";
 			}
 			else {
-				bRenderingPaused = true;
-				renderPaused = "Continue Rendering";
+				_bRenderingPaused = true;
+				sRenderStatus = "Continue Rendering [p]";
 			}
 		}
 
@@ -180,12 +178,12 @@ void OfGui::drawMenuBar()
 
 		ImGui::Separator();
 
-		// Resolution changer
-		static int resolution[2];
-		resolution[0] = ofGetWidth();
-		resolution[1] = ofGetHeight();
-		std::string resString = ofToString(resolution[0]).append(" x ").append(ofToString(resolution[1]));
-		if (ImGui::BeginCombo("Resolution", resString.c_str())) {
+		// Window dimensions
+		static int winDim[2];
+		winDim[0] = ofGetWidth();
+		winDim[1] = ofGetHeight();
+		std::string resString = ofToString(winDim[0]).append(" x ").append(ofToString(winDim[1]));
+		if (ImGui::BeginCombo("Window Dimensions", resString.c_str())) {
 			if (ImGui::Selectable("800 x 600")) {
 				ofSetWindowShape(800, 600);
 			}
@@ -195,16 +193,16 @@ void OfGui::drawMenuBar()
 			if (ImGui::Selectable("1366 x 768")) {
 				ofSetWindowShape(1366, 768);
 			}
-			if (ImGui::InputInt2("Custom", resolution)) {
-				ofSetWindowShape(resolution[0], resolution[1]);
+			if (ImGui::InputInt2("Custom", winDim)) {
+				ofSetWindowShape(winDim[0], winDim[1]);
 			}
 			ImGui::EndCombo();
 		}
 
 		ImGui::Separator();
 
-		if (ImGui::Checkbox("Show FPS in Title bar", &bShowFps)) {
-			if (!bShowFps) ofSetWindowTitle(pixelplotter->getWindowTitle());
+		if (ImGui::Checkbox("Show FPS in Title bar", &_bShowFps)) {
+			if (!_bShowFps) ofSetWindowTitle(pixelplotter->getWindowTitle());
 		};
 
 		pixelplotter->soundManager.renderImGuiSettings();
@@ -213,7 +211,7 @@ void OfGui::drawMenuBar()
 
 	}
 
-	if (bShowFps) {
+	if (_bShowFps) {
 		fpsStringStream.str(std::string());
 		fpsStringStream.clear();
 		fpsStringStream << "(FPS: " << ofGetFrameRate() << ")";
@@ -229,7 +227,7 @@ void OfGui::drawMenuBar()
 // TODO: This should be a general texture viewer...
 void OfGui::drawCanvas()
 {
-	ImGui::Begin("Canvas", &bShowCanvas);
+	ImGui::Begin("Canvas", &_bShowCanvas);
 	ImGui::PushID("showCanvas");
 
 	ImTextureID textureID = (ImTextureID)(uintptr_t)pixelplotter->plotCanvas.canvasFbo.getTexture().getTextureData().textureID;
@@ -240,13 +238,15 @@ void OfGui::drawCanvas()
 	float scale = min(availableRegion.x / tw, availableRegion.y / th);
 
 	ImGui::Image(textureID, glm::vec2(tw * scale, th * scale));
+	//ImGui::SetScrollX(500);
+	//ImGui::SetScrollY(500);
 	ImGui::PopID();
 	ImGui::End();
 }
 
 void OfGui::drawToolPalette()
 {
-	ImGui::Begin("Tool palette", &bShowToolPalette);
+	ImGui::Begin("Tool palette", &_bShowToolPalette);
 	ImGui::PushID("toolPalette");
 
 	// Set bigger font, needs to be loaded first...
@@ -255,81 +255,70 @@ void OfGui::drawToolPalette()
 		cout << "Pencil Button Pressed";
 	}
 
-	drawBezierWidget();
-
 	ImGui::PopID();
 	ImGui::End();
 }
 
-void OfGui::drawInfoPanel()
+void OfGui::drawInfoPanel() // B TODO: Info Panel is Presets? Dude
 {
-	ImGui::Begin("Presets", &bShowInfoPanel);
+	ImGui::Begin("Presets", &_bShowInfoPanel);
 
 	// Save and load presets ... 
-	if (ofxImGui::VectorCombo("##Presets", &currentPresetIndex, presetFileNames))
+	if (ofxImGui::VectorCombo("##Presets", &_currentPresetIndex, presetFileNames))
 	{
-		bLoadSettingsNextFrame = true;
-		//TODO: This should be a function in ofApp?
-		pixelplotter->plotCanvas.resizeRequest = true;
-		pixelplotter->plotCanvas.setFresh(true);
+		_bLoadSettingsNextFrame = true;
 	}
 
 	if (presetFileNames.size() > 0) {
 		ImGui::SameLine();
 		if (ImGui::Button("Delete Preset"))
 		{
-			presetFiles[currentPresetIndex].remove();
+			presetFiles[_currentPresetIndex].remove();
 			loadPresetDir();
 		}
 	}
 
-	if (bSavePresets) {
-		ImGui::InputText("##presetname", presetSaveName, IM_ARRAYSIZE(presetSaveName));
+	if (_bSavePresets) {
+		ImGui::InputText("##presetname", _presetSaveName, IM_ARRAYSIZE(_presetSaveName));
 		ImGui::SameLine();
 	}
 
 	if (ImGui::Button("Save Preset"))
 	{
-		if (bSavePresets) {
+		if (_bSavePresets) {
 			savePresets();
 			loadPresetDir();
-			currentPresetIndex = ofx2d::getIndex(presetFileNames, string(presetSaveName), 0);
-			bSavePresets = false;
+			_currentPresetIndex = ofx2d::getIndex(presetFileNames, string(_presetSaveName), 0);
+			_bSavePresets = false;
 		}
 		else {
 			if (presetFileNames.size() > 0) {
-				strcpy_s(presetSaveName, presetFileNames[currentPresetIndex].c_str());
+				strcpy_s(_presetSaveName, presetFileNames[_currentPresetIndex].c_str());
 			}
-			bSavePresets = true;
+			_bSavePresets = true;
 		}
 	}
 
 	ImGui::SameLine();
-	ImGui::Checkbox("Load Source File", &bTryLoadSource);
+	ImGui::Checkbox("Load Source File", &_bLoadSourceFile);
 
 	ImGui::End();
 }
 
+// TODO: Make more general settings renderer
+// Pass in panel name, ID, and function to be called?
 void OfGui::drawCanvasWindow()
 {
-	ImGui::Begin("Plot Canvas", &bShowPlotCanvas);
+	ImGui::Begin("Plot Canvas", &_bShowPlotCanvas);
 	ImGui::PushID("plotCanvas");
 	pixelplotter->plotCanvas.renderImGuiSettings();
 	ImGui::PopID();
-
 	ImGui::End();
-}
-
-void OfGui::drawBezierWidget()
-{
-	static float v[5] = { 0.390f, 0.575f, 0.565f, 1.000f };
-	ImGui::Bezier("easeOutSine", v);       // draw
-	float y = ImGui::BezierValue(0.5f, v); // x delta in [0..1] range
 }
 
 void OfGui::savePresets()
 {
-	string savePath = "presets/" + string(presetSaveName) + ".json";
+	string savePath = "presets/" + string(_presetSaveName) + ".json";
 
 	ofJson settings;
 
@@ -349,7 +338,7 @@ void OfGui::loadPresets(ofJson settings)
 	pixelplotter->plotCanvas.dF.clear();
 	pixelplotter->plotCanvas.sourceController.iF.clear();
 
-	if (bTryLoadSource) {
+	if (_bLoadSourceFile) {
 		ofJson sources = settings.value("source", ofJson::array());
 		if (!sources.empty())
 		{
@@ -368,6 +357,36 @@ void OfGui::loadPresets(ofJson settings)
 
 	pixelplotter->plotCanvas.loadSettings(settings.value("plotCanvas", ofJson::array()));
 
+}
+
+bool OfGui::guiVisible()
+{
+	return _bGuiVisible;
+}
+
+void OfGui::setGuiVisible(bool bVisible)
+{
+	_bGuiVisible = bVisible;
+}
+
+bool OfGui::menuBarVisible()
+{
+	return _bMenuBarVisible;
+}
+
+void OfGui::setmenuBarVisible(bool bVisible)
+{
+	_bMenuBarVisible = bVisible;
+}
+
+bool OfGui::renderingPaused()
+{
+	return _bRenderingPaused;
+}
+
+void OfGui::setRenderingPaused(bool bPaused)
+{
+	_bRenderingPaused = bPaused;
 }
 
 void OfGui::loadPresetDir()
@@ -399,7 +418,7 @@ ofJson OfGui::getPresets(int presetIndex)
 
 ofJson OfGui::getCurrentPresets()
 {
-	return getPresets(currentPresetIndex);
+	return getPresets(_currentPresetIndex);
 }
 
 ImVec4 OfGui::availableSpace()

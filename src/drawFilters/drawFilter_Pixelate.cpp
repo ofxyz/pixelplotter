@@ -60,7 +60,8 @@ void Df_pixelate::InitDefaults()
 
 void Df_pixelate::loadSettings(ofJson& settings) {
 	try {
-		name = settings.value("name", "pixelate");
+		//name = settings.value("name", "pixelate");
+		_isOpen = settings.value("_isOpen", _isOpen);
 		bVisible = settings.value("bVisible", true);
 		useMask = settings.value("useMask", false);
 		maskMargin = settings.value("maskMargin", maskMargin);
@@ -137,6 +138,7 @@ void Df_pixelate::loadSettings(ofJson& settings) {
 ofJson Df_pixelate::getSettings() {
 	ofJson settings;
 	settings["name"] = name;
+	settings["_isOpen"] = _isOpen;
 	settings["bVisible"] = bVisible;
 	settings["useMask"] = useMask;
 	settings["maskMargin"] = maskMargin;
@@ -208,6 +210,7 @@ ofJson Df_pixelate::getSettings() {
 }
 
 void Df_pixelate::renderImGuiSettings() {
+	ImGui::SetNextItemOpen(_isOpen);
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		ImGui::PushID("Df_pixelate");
 		ImGui::AlignTextToFramePadding();
@@ -929,7 +932,7 @@ float Df_pixelate::getHeight(ofColor c, float x, float y, float r) {
 	return r;
 }
 
-void Df_pixelate::draw(ofImage* input, float width, float height, float x, float y) {
+void Df_pixelate::draw(ofImage* input, float width, float height) {
 	if (!bVisible) return;
 	setFresh(false);
 

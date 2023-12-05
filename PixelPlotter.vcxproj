@@ -266,6 +266,7 @@
     <ClCompile Include="..\..\addons\ofxSvg\src\ofxSvg.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\gui\ImGui_Widget_Curve.h" />
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="src\canvas.h" />
     <ClInclude Include="src\controllers\controller.h" />

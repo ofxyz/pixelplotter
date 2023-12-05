@@ -148,7 +148,7 @@ void SourceController::loadSourceIndex() {
 }
 
 int SourceController::getSourceCount() {
-	return (videoDeviceNames.size() + videoFileNames.size() + imgFileNames.size());
+	return (int)(videoDeviceNames.size() + videoFileNames.size() + imgFileNames.size());
 };
 
 void SourceController::addImage(ofFile file) {

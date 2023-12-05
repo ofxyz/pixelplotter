@@ -11,6 +11,7 @@ public:
 	ofApp* pixelplotter{ nullptr };
 	bool bAlive = true;
 	bool bVisible = true;
+	bool _isOpen = true;
 
 	bool moveUp = false;
 	bool moveDown = false;
@@ -21,7 +22,8 @@ public:
 	
 	std::string name;
 
-	virtual void draw(ofImage* input, float width = 0, float height = 0, float x = 0, float y = 0) = 0;
+	// Draw always draws from home position (0,0) 
+	virtual void draw(ofImage* input, float width = 0, float height = 0) = 0;
 	virtual void renderImGuiSettings() = 0;
 	virtual void loadSettings(ofJson& settings) = 0;
 	virtual ofJson getSettings() = 0;

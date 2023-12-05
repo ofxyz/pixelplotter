@@ -28,6 +28,7 @@ DrawFilterController::DrawFilterController()
 
 void DrawFilterController::draw(ofImage* img, int width, int height)
 {
+	if (!img->isAllocated()) return;
 	for (const auto& filter : v_Objects) {
 		// TODO: update one filter per frame to keep things speedy?
 		// Each filter draws to it's own fbo and are drawn here?

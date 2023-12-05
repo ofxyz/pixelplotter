@@ -5,6 +5,7 @@
 #include "ofxImGui.h"
 #include "imgui_internal.h"
 #include "ImHelpers.h"
+#include "ImGui_Widget_Curve.h"
 
 Df_pixelate2::Df_pixelate2()
 {
@@ -25,49 +26,83 @@ void Df_pixelate2::InitDefaults()
 	pixelMirror = false;
 	tilesX = 64;
 	tilesY = 64;
+	//curvePoints[5].x = -1;
 }
 
-void Df_pixelate2::draw(ofImage* input, float width /*= 0*/, float height /*= 0*/, float x /*= 0*/, float y /*= 0*/)
+void Df_pixelate2::draw(ofImage* input, float width /*= 0*/, float height /*= 0*/)
 {
 	if (!bVisible) return;
 	setFresh(false);
 	setBlendMode();
 
-	// Maybe this should happen with update() not draw?
-	
 	int imgW = input->getWidth();
 	int imgH = input->getHeight();
-	float tileW = (float)imgW / (float)tilesX;
-	float tileH = (float)imgH / (float)tilesY;
-	float halfTileW = tileW * 0.5;
-	float halfTileH = tileH * 0.5;
 
-	for (int _y = 0; _y < tilesY; _y++) {
+	// TODO: Should draw filters have an update()?	
+	xpos.clear();
+	ypos.clear();
+
+	int i;
+
+	for (i = 0; i < tilesX; i++) {
+		float posNorm = 0;
+		if (i > 0) posNorm = ImGui::CurveValue((float)i / (float)tilesX, 5, curvePoints);
+		xpos.push_back(posNorm * (float)imgW);
+	}
+
+	//std::sort(xpos.begin(), xpos.end());
+
+	for (i = 0; i < tilesY; i++) {
+		float posNorm = 0;
+		if (i > 0) posNorm = ImGui::CurveValue((float)i / (float)tilesY, 5, curvePoints);
+		ypos.push_back(posNorm * (float)imgH);
+	}
+	//std::sort(ypos.begin(), ypos.end());
+
+	// Update(): This is where we start drawing :)
+
+	for (int x = 0; x < xpos.size(); x++) {
 		ofPushMatrix();
-		ofTranslate(0, ofMap(_y * tileH, 0, imgH, 0, height));
-		for (int _x = 0; _x < tilesX; _x++) {
+		ofTranslate(ofMap(xpos[x], 0, imgW, 0, width), 0);
+		float w = 0;
+		if (x < xpos.size()-1) {
+			w = xpos[x + 1] - xpos[x];
+		}
+		else {
+			w = imgW - xpos[x];
+		}
+		ofTranslate(ofMap(w*0.5, 0, imgW, 0, width), 0);
+
+		for (int y = 0; y < ypos.size(); y++) {
 			ofPushMatrix();
-			ofTranslate(ofMap(_x * tileW, 0, imgW, 0, width), 0);
-			ofTranslate(ofMap(halfTileW, 0, imgW, 0, width), ofMap(halfTileH, 0, imgH, 0, height));
-			ofColor c = input->getPixels().getColor(floor( (_x * tileW) + halfTileW), floor((_y * tileH) + halfTileH));
-			if (pixelMirror && (_x % 2 == 0)) {
+			ofTranslate(0, ofMap(ypos[y], 0, imgH, 0, height));
+			float h = 0;
+			if (y < ypos.size()-1) {
+				h = ypos[y + 1] - ypos[y];
+			}
+			else {
+				h = imgH - ypos[y];
+			}
+			ofTranslate(0, ofMap(h * 0.5, 0, imgH, 0, height));
+			ofColor c = input->getPixels().getColor(floor(xpos[x] + (w * 0.5)), floor(ypos[y] + (h * 0.5)));
+			if (pixelMirror && (x % 2 == 0)) {
 				ofScale(-1, 1);
 			}
-			if (pixelMirror && (_y % 2 == 0)) {
+			if (pixelMirror && (y % 2 == 0)) {
 				ofScale(1, -1);
 			}
-			drawPixels.v_Objects[selectedPixelType]->draw(c, { ofMap(tileW, 0, imgW, 0, width), ofMap(tileH, 0, imgH, 0, height) }, { 0, 0 }, { (float)_x/ (float)(tilesX-1), (float)_y/ (float)(tilesY-1) });
+			drawPixels.v_Objects[selectedPixelType]->draw(c, { ofMap(w, 0, imgW, 0, width), ofMap(h, 0, imgH, 0, height) }, { 0, 0 }, { (float)x / (float)(tilesX - 1), (float)y / (float)(tilesY - 1) });
 			ofPopMatrix();
 		}
 		ofPopMatrix();
 	}
-	ofPopMatrix();
-
 }
 
 void Df_pixelate2::renderImGuiSettings()
 {
+	ImGui::SetNextItemOpen(_isOpen);
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
+		_isOpen = true;
 		ImGui::PushID("Df_pixelate2");
 		ImGui::AlignTextToFramePadding();
 
@@ -87,6 +122,12 @@ void Df_pixelate2::renderImGuiSettings()
 			setFresh(true);
 		}
 		ImGui::PopItemWidth();
+
+		// TODO: Add tick box for updating colour picker
+		if (ImGui::Curve("X", ImVec2(200, 200), 5, curvePoints))
+		{
+			setFresh(true);
+		}
 
 		if (ofxImGui::VectorCombo("Pixel Type ##pixelate2", &selectedPixelType, drawPixels.v_objectNames)) {
 			setFresh(true);
@@ -108,11 +149,15 @@ void Df_pixelate2::renderImGuiSettings()
 
 		ImGui::PopID();
 	}
+	else {
+		_isOpen = false;
+	}
 }
 
 void Df_pixelate2::loadSettings(ofJson& settings)
 {
 	try {
+		_isOpen = settings.value("_isOpen", _isOpen);
 		selectedPixelType = ofx2d::getIndex(drawPixels.v_objectNames, settings.value("pixelType", "Undefined"), selectedPixelType);
 		tilesX = settings.value("tilesX", tilesX);
 		tilesY = settings.value("tilesY", tilesY);
@@ -130,11 +175,11 @@ ofJson Df_pixelate2::getSettings()
 {
 	ofJson settings;
 	settings["name"] = name;
+	settings["_isOpen"] = _isOpen;
 	settings["pixelType"] = drawPixels.v_objectNames[selectedPixelType];
 	settings["tilesX"] = tilesX;
 	settings["tilesY"] = tilesY;
 	settings["pixelMirror"] = pixelMirror;
-
 	ofJson pixelSettings = drawPixels.v_Objects[selectedPixelType]->getSettings();
 	settings["pixelSettings"] = pixelSettings;
 

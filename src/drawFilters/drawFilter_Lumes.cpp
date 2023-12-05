@@ -4,6 +4,7 @@
 ofJson Df_lumes::getSettings() {
 	ofJson settings;
 	settings["name"] = name;
+	settings["_isOpen"] = _isOpen;
 	settings["tilesX"] = tilesX;
 	settings["tilesY"] = tilesY;
 	return settings;
@@ -11,7 +12,7 @@ ofJson Df_lumes::getSettings() {
 
 void Df_lumes::loadSettings(ofJson& settings) {
 	try {
-		name   = settings.value("name", name);
+		_isOpen = settings.value("_isOpen", _isOpen);
 		tilesX = settings.value("tilesX", 64);
 		tilesY = settings.value("tilesY", 64);
 	}
@@ -22,6 +23,7 @@ void Df_lumes::loadSettings(ofJson& settings) {
 }
 
 void Df_lumes::renderImGuiSettings() {
+	ImGui::SetNextItemOpen(_isOpen);
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		ImGui::AlignTextToFramePadding();
 
@@ -110,7 +112,7 @@ void Df_lumes::drawKite(ofColor c, float offsetX, float offsetY, float width, fl
 	ofPopMatrix();
 }
 
-void Df_lumes::draw(ofImage* input, float width, float height, float x, float y) {
+void Df_lumes::draw(ofImage* input, float width, float height) {
 	setFresh(false);
 	if (!bVisible) return;
 

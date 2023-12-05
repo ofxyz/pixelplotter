@@ -54,10 +54,6 @@ public:
 
 	ofColor c_background;
 
-	bool isFresh();
-	void setFresh(bool fresh);
-
 private:
-	bool _bFresh = false;
 	int _targetFps = 66;
 };

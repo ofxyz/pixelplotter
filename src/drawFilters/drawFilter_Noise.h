@@ -8,7 +8,7 @@ public:
 
 	Df_noise(ofJson& settings);
 
-	void draw(ofImage* input, float width = 0, float height = 0, float x = 0, float y = 0) override;
+	void draw(ofImage* input, float width = 0, float height = 0) override;
 	void renderImGuiSettings() override;
 	void loadSettings(ofJson& settings) override;
 	ofJson getSettings() override;
