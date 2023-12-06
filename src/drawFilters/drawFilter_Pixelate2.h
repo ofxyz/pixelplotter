@@ -23,6 +23,4 @@ private:
 	int tilesX;
 	int tilesY;
 	ImVec2 curvePoints[5];
-	vector<float> xpos;
-	vector<float> ypos;
 };

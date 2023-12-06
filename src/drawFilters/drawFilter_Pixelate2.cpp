@@ -39,25 +39,26 @@ void Df_pixelate2::draw(ofImage* input, float width /*= 0*/, float height /*= 0*
 	int imgH = input->getHeight();
 
 	// TODO: Should draw filters have an update()?	
-	xpos.clear();
-	ypos.clear();
+	vector<float> xpos;
+	vector<float> ypos;
 
 	int i;
 
 	for (i = 0; i < tilesX; i++) {
 		float posNorm = 0;
-		if (i > 0) posNorm = ImGui::CurveValue((float)i / (float)tilesX, 5, curvePoints);
+		if (i > 0) posNorm = ImGui::CurveValueSmooth((float)i / (float)tilesX, 5, curvePoints);
 		xpos.push_back(posNorm * (float)imgW);
 	}
 
-	//std::sort(xpos.begin(), xpos.end());
+	std::sort(xpos.begin(), xpos.end());
 
 	for (i = 0; i < tilesY; i++) {
 		float posNorm = 0;
-		if (i > 0) posNorm = ImGui::CurveValue((float)i / (float)tilesY, 5, curvePoints);
+		if (i > 0) posNorm = ImGui::CurveValueSmooth((float)i / (float)tilesY, 5, curvePoints);
 		ypos.push_back(posNorm * (float)imgH);
 	}
-	//std::sort(ypos.begin(), ypos.end());
+
+	std::sort(ypos.begin(), ypos.end());
 
 	// Update(): This is where we start drawing :)
 
@@ -84,7 +85,7 @@ void Df_pixelate2::draw(ofImage* input, float width /*= 0*/, float height /*= 0*
 				h = imgH - ypos[y];
 			}
 			ofTranslate(0, ofMap(h * 0.5, 0, imgH, 0, height));
-			ofColor c = input->getPixels().getColor(floor(xpos[x] + (w * 0.5)), floor(ypos[y] + (h * 0.5)));
+			ofColor c = input->getPixels().getColor(floor(ofClamp(xpos[x] + (w * 0.5),0,imgW-1)), floor(ofClamp(ypos[y] + (h * 0.5), 0, imgH-1)));
 			if (pixelMirror && (x % 2 == 0)) {
 				ofScale(-1, 1);
 			}
