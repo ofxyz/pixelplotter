@@ -8,12 +8,11 @@
   - Release -> Config Properties -> Linker -> System -> SubSystem: Windows (/SUBSYSTEM:WINDOWS)
   - Release -> Config Properties -> Linker -> Advanced -> Entry Point: mainCRTStartup
 
-## dependencies
+## External Dependencies
 
-- ofx2d
-- ofxCv
-- ofxOpenCv
-- ofxImGui (Docking Branch)
-- ofxIconFontCppHeaders
-- ofxShader
+- [ofx2d](https://github.com/ofxyz/ofx2d.git)
+- [ofxCv](https://github.com/ofxyz/ofxCv.git)
+- [ofxImGui](https://github.com/ofxyz/ofxImGui.git)
+- [ofxIconFontCppHeaders](https://github.com/ofxyz/ofxIconFontCppHeaders)
+- [ofxShader](https://github.com/ofxyz/ofxShader)
 - [K-Lite Codec Pack](https://files3.codecguide.com/K-Lite_Codec_Pack_1750_Basic.exe)
