@@ -8,7 +8,7 @@
 // [ref] http://easings.net/es#easeInSine
 //
 // Usage:
-// {  static float v[5] = { 0.390f, 0.575f, 0.565f, 1.000f }; 
+// {  static float v[8] = { 0, 0, 0.390f, 0.575f, 0.565f, 1.000f, 1, 1 }; 
 //    ImGui::Bezier( "easeOutSine", v );       // draw
 //    float y = ImGui::BezierValue( 0.5f, v ); // x delta in [0..1] range
 // }
@@ -28,10 +28,10 @@ namespace ImGui
 			K = C;
 			for (unsigned step = 0; step <= steps; ++step) {
 				float t = (float)step / (float)steps;
-				C[step * 4 + 0] = (1 - t) * (1 - t) * (1 - t);   // * P0
-				C[step * 4 + 1] = 3 * (1 - t) * (1 - t) * t;   // * P1
-				C[step * 4 + 2] = 3 * (1 - t) * t * t;         // * P2
-				C[step * 4 + 3] = t * t * t;                   // * P3
+				C[step * 4 + 0] = (1 - t) * (1 - t) * (1 - t);  // * P0
+				C[step * 4 + 1] = 3 * (1 - t) * (1 - t) * t;    // * P1
+				C[step * 4 + 2] = 3 * (1 - t) * t * t;          // * P2
+				C[step * 4 + 3] = t * t * t;                    // * P3
 			}
 		}
 		for (unsigned step = 0; step <= steps; ++step) {
@@ -43,9 +43,9 @@ namespace ImGui
 		}
 	}
 
-	float BezierValue(float dt01, float P[4]);
+	float BezierValue(float dt01, float P[8]);
 
-    int Bezier(const char *label, float P[5]);
+    int Bezier(const char *label, float P[8]);
 
     void ShowBezierDemo();
 }

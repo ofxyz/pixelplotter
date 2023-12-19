@@ -28,6 +28,7 @@ void Canvas::renderImGuiSettings() {
 
 	ImGui::Separator(); // Start Size
 
+	// TODO: Add ratio's (1:1, 1:1.25, Custom)
 	ImGui::PushItemWidth(60);
 	ImGui::Text("Size"); ImGui::SameLine(75);
 	if (ImGui::DragInt("W ##canvas_W", &canvasWidth, 1, 16, 2400)) {

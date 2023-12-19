@@ -5,7 +5,7 @@
 #include "ofxImGui.h"
 #include "imgui_internal.h"
 #include "ImHelpers.h"
-#include "ImGui_Widget_Curve.h"
+#include "ImGui_Widget_Bezier.h"
 
 Df_pixelate2::Df_pixelate2()
 {
@@ -26,7 +26,6 @@ void Df_pixelate2::InitDefaults()
 	pixelMirror = false;
 	tilesX = 64;
 	tilesY = 64;
-	//curvePoints[5].x = -1;
 }
 
 void Df_pixelate2::draw(ofImage* input, float width /*= 0*/, float height /*= 0*/)
@@ -46,7 +45,7 @@ void Df_pixelate2::draw(ofImage* input, float width /*= 0*/, float height /*= 0*
 
 	for (i = 0; i < tilesX; i++) {
 		float posNorm = 0;
-		if (i > 0) posNorm = ImGui::CurveValueSmooth((float)i / (float)tilesX, 5, curvePoints);
+		if (i > 0) posNorm = ImGui::BezierValue((float)i / (float)tilesX, xBezier);
 		xpos.push_back(posNorm * (float)imgW);
 	}
 
@@ -54,7 +53,7 @@ void Df_pixelate2::draw(ofImage* input, float width /*= 0*/, float height /*= 0*
 
 	for (i = 0; i < tilesY; i++) {
 		float posNorm = 0;
-		if (i > 0) posNorm = ImGui::CurveValueSmooth((float)i / (float)tilesY, 5, curvePoints);
+		if (i > 0) posNorm = ImGui::BezierValue((float)i / (float)tilesY, yBezier);
 		ypos.push_back(posNorm * (float)imgH);
 	}
 
@@ -124,11 +123,15 @@ void Df_pixelate2::renderImGuiSettings()
 		}
 		ImGui::PopItemWidth();
 
-		// TODO: Add tick box for updating colour picker
-		if (ImGui::Curve("X", ImVec2(200, 200), 5, curvePoints))
-		{
-			setFresh(true);
-		}
+		ImGui::Spacing();
+		if (ImGui::Bezier("X", xBezier)) setFresh(true);
+
+		ImGui::SameLine();
+		ImGui::Text("     ");
+		ImGui::SameLine();
+
+		if (ImGui::Bezier("Y", yBezier)) setFresh(true);
+		ImGui::Spacing();
 
 		if (ofxImGui::VectorCombo("Pixel Type ##pixelate2", &selectedPixelType, drawPixels.v_objectNames)) {
 			setFresh(true);
