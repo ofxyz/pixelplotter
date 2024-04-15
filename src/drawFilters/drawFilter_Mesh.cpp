@@ -1,10 +1,12 @@
 #include "ofApp.h"
 #include "drawFilter_Mesh.h"
+#include "ImGui_General.h"
 
 ofJson Df_mesh::getSettings() {
 	ofJson settings;
 	settings["name"] = name;
 	settings["_isOpen"] = _isOpen;
+	settings["pixelType"] = drawPixels.v_objectNames[selectedPixelType];
 	settings["rotationOffset"] = rotationOffset;
 
 	return settings;
@@ -14,6 +16,7 @@ void Df_mesh::loadSettings(ofJson& settings) {
 	try{
 		//name = settings.value("name", name);
 		_isOpen = settings.value("_isOpen", _isOpen);
+		selectedPixelType = ofx2d::getIndex(drawPixels.v_objectNames, settings.value("pixelType", "Undefined"), selectedPixelType);
 		rotationOffset = settings.value("rotationOffset", rotationOffset);
 	}
 	catch (...) {
@@ -24,21 +27,54 @@ void Df_mesh::loadSettings(ofJson& settings) {
 
 void Df_mesh::renderImGuiSettings() {
 	ImGui::SetNextItemOpen(_isOpen);
+	ImGui::PushID("Df_Mesh");
+
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		ImGui::AlignTextToFramePadding();
 
 		renderUpDownButtons();
 
+		ImGui::PushItemWidth(60);
+		ImGui::Text("Tiles"); ImGui::SameLine(75);
+		if (ImGui::DragInt("X ##pixelate2_tiles", &tilesX, 1, 1, 1200)) {
+			setFresh(true);
+		}
+		ImGui::SameLine();
+		if (ImGui::DragInt("Y ##pixelate2_tiles", &tilesY, 1, 1, 1200)) {
+			setFresh(true);
+		}
+		ImGui::SameLine();
+		if (ImGui::Checkbox("Mirror", &pixelMirror)) {
+			setFresh(true);
+		}
+		ImGui::PopItemWidth();
+
 		if (ImGui::DragFloat("Rotation ##Df_mesh", &rotationOffset, 0.1f, -360.0f, 360.0f, "%.3f")) {
 			setFresh(true);
 		}
+
+		if (ofxImGui::VectorCombo("Pixel Type ##pixelate2", &selectedPixelType, drawPixels.v_objectNames)) {
+			setFresh(true);
+		};
+
+		// Pass fresh through
+		if (drawPixels.v_Objects[selectedPixelType]->isFresh()) {
+			drawPixels.v_Objects[selectedPixelType]->setFresh(false);
+			setFresh(true);
+		}
+
+		drawPixels.v_Objects[selectedPixelType]->renderImGuiSettings();
 	}
+	ImGui::PopID();
 }
 
 Df_mesh::Df_mesh()
 {
 	pixelplotter = (ofApp*)ofGetAppPtr();
 	name = "Mesh";
+	selectedPixelType = 0;
+	tilesX = 64;
+	tilesY = 64;
 }
 
 Df_mesh::Df_mesh(ofJson& settings)
@@ -50,17 +86,35 @@ Df_mesh::Df_mesh(ofJson& settings)
 void Df_mesh::draw(ofImage* input, float width, float height) {
 	setFresh(false);
 	if (!bVisible) return;
+
+	// This is too slow for real time graphics.
+	// Add update()
+	// Set Mesh Division.
 	mesh.clear();
 	mesh.setMode(OF_PRIMITIVE_POINTS);
 	//mesh.setMode(OF_PRIMITIVE_TRIANGLES);
 	// Quads are not supported any longer we can build from triangles ...
-	// Main thing is fo use it as more flexible data type for transformation
 
 	mesh.enableColors();
 
 	int imgW = input->getWidth();
 	int imgH = input->getHeight();
 
+	float tileW = (float)imgW / (float)tilesX;
+	float tileH = (float)imgH / (float)tilesY;
+	float halfTileW = tileW * 0.5;
+	float halfTileH = tileH * 0.5;
+
+	for (float y = 0; y < imgH - halfTileH; y += tileH) {
+		for (float x = 0; x < imgW - halfTileW; x += tileW) {
+			ofColor c = input->getColor(floor(x+ halfTileW), floor(y+ halfTileH));
+			glm::vec3 pos(ofMap(x+ halfTileW, 0, imgW, 0, width), ofMap(y+ halfTileH, 0, imgH, 0, height), 0.0);
+			mesh.addVertex(pos);
+			mesh.addColor(c);
+		}
+	}
+
+	/*
 	float centerOffsetW = ((width - imgW) / imgW) * 0.5;
 	float centerOffsetH = ((height - imgH) / imgH) * 0.5;
 
@@ -72,8 +126,10 @@ void Df_mesh::draw(ofImage* input, float width, float height) {
 			mesh.addColor(c);
 		}
 	}
+	*/
 
 	// Transform
+	// We should make a skewed pixel implementation so we can keep the mesh right
 	size_t numVerts = mesh.getNumVertices();
 	ofVec3f meshCentroid = mesh.getCentroid();
 	ofVec3f topLeft = mesh.getVertex(0);
@@ -116,18 +172,19 @@ void Df_mesh::draw(ofImage* input, float width, float height) {
 	}
 	*/
 
-	ofPushStyle();
-	ofFill();
-
 	for (int v = 0; v < mesh.getNumVertices(); v++) {
 		ofVec3f mv = mesh.getVertex(v);
 		ofColor vc = mesh.getColor(v);
-		ofSetColor(vc);
-		ofDrawRectangle(mv.x - centerOffsetW, mv.y - centerOffsetH, 1 + centerOffsetW * 2, 1 + centerOffsetH * 2);
+		ofPushMatrix();
+		ofTranslate(mv.x, mv.y);
+
+		drawPixels.v_Objects[selectedPixelType]->draw(vc, { tileW, tileH });
+		
+		ofPopMatrix();
 	}
-	ofPopStyle();
 
 	//mesh.draw();
+	//mesh.drawFaces();
 }
 
 ofVec3f Df_mesh::getMeshBounds(const ofMesh& mesh) {

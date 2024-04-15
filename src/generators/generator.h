@@ -1,4 +1,5 @@
 #pragma once
+#include "ofMain.h"
 #include "ofJson.h"
 #include "ofxImGui.h"
 
@@ -6,9 +7,8 @@ class ofApp;
 
 class Generator {
 public:
-	Generator();
+	Generator(int width = 100, int height = 100);
 	ofApp* pixelplotter{ nullptr };
-	bool bAlive = true;
 	bool bVisible = true;
 
 	bool moveUp = false;
@@ -16,8 +16,8 @@ public:
 
 	std::string name;
 
-	int width;
-	int height;
+	int width = 100;
+	int height = 100;
 	ImVec4 c_bg;
 
 	virtual void setup(int width, int height) = 0;
@@ -29,9 +29,8 @@ public:
 
 	bool isFresh();
 	void setFresh(bool fresh);
-	bool isAlive();
-	void setAlive(bool alive);
 
 private:
 	bool bFresh = false;
+	ofFbo m_fbo;
 };

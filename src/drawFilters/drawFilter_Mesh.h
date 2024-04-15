@@ -1,6 +1,7 @@
 #pragma once
 
 #include "drawFilter.h"
+#include "drawPixel_Controller.h"
 
 class Df_mesh : public DrawFilter {
 public:
@@ -13,6 +14,11 @@ public:
 	ofJson getSettings() override;
 
 private:
+	bool pixelMirror;
+	int tilesX;
+	int tilesY;
+	int selectedPixelType;
+	DrawPixelController drawPixels;
 	ofMesh mesh;
 	float rotationOffset = 0;
 	ofVec3f getMeshBounds(const ofMesh& mesh);

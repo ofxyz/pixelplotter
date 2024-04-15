@@ -48,7 +48,7 @@ void If_drawPixel::renderImGuiSettings() {
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		ImGui::AlignTextToFramePadding();
 
-		if (ofxImGui::VectorCombo("Pixel Type ##drawPixel", &selectedPixelType, drawPixels.v_menuValues)) {
+		if (ofxImGui::VectorCombo("Pixel Type ##drawPixel", &selectedPixelType, drawPixels.v_objectNames)) {
 			setFresh(true);
 		};
  

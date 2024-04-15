@@ -17,6 +17,7 @@ public:
 	void draw();
 	void drawMainDock();
 	void drawMenuBar();
+	void drawProjectTree();
 	void drawCanvas();
 	void drawToolPalette();
 	void drawInfoPanel();
@@ -58,6 +59,7 @@ private:
 	// TODO: Palette, Window, Panel, Have some definitions? Is Canvas a Window panel or Palette?
 	// Also do we Use `Show` or `Visible`
 
+	bool _bShowProjectTree;
 	bool _bShowCanvas;
 	bool _bShowPlotCanvas;
 	bool _bShowInfoPanel;

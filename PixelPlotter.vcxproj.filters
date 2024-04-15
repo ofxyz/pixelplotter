@@ -250,6 +250,12 @@
     <ClCompile Include="..\..\addons\ofxSvg\src\ofxSvg.cpp">
       <Filter>addons\ofxSvg\src</Filter>
     </ClCompile>
+    <ClCompile Include="src\drawPixels\drawPixel_SeparateCMYK_Para01.cpp">
+      <Filter>src\drawPixels</Filter>
+    </ClCompile>
+    <ClCompile Include="src\drawPixels\drawPixel_SeparateCMY_Bars01.cpp">
+      <Filter>src\drawPixels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -1867,6 +1873,15 @@
     </ClInclude>
     <ClInclude Include="..\..\addons\ofxSvg\libs\svgtiny\include\svgtiny.h">
       <Filter>addons\ofxSvg\libs\svgtiny\include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\drawPixels\drawPixel_SeparateCMYK_Para01.h">
+      <Filter>src\drawPixels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\drawPixels\drawPixel_SeparateCMY_Bars01.h">
+      <Filter>src\drawPixels</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\ImGui_General.h">
+      <Filter>src\gui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

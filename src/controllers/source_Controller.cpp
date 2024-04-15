@@ -6,7 +6,8 @@
 #include "ImHelpers.h"
 #include "imgui_stdlib.h"
 
-void SourceController::renderImGuiSettings() {
+void SourceController::renderImGuiSettings()
+{
 	if (!sourceNames.empty())
 	{
 		if (ofxImGui::VectorCombo("##Source Image", &currentSourceIndex, sourceNames))
@@ -31,21 +32,22 @@ void SourceController::renderImGuiSettings() {
 	}
 }
 
-void SourceController::loadSettings(ofJson settings) {
+void SourceController::loadSettings(ofJson settings)
+{
 	std::string sourceString = settings.value("source", std::string());
 	currentSourceIndex = ofx2d::getIndex(sourceNames, sourceString, currentSourceIndex);
 	loadSourceIndex();
 }
 
-ofJson SourceController::getSettings() {
+ofJson SourceController::getSettings()
+{
 	ofJson settings;
 	settings["source"] = sourceNames[currentSourceIndex];
 	return settings;
 }
 
-void SourceController::update() {
-
-	// Move to Source Controller
+void SourceController::update()
+{
 	if (loadImageNextFrame)
 	{
 		loadSourceIndex();
@@ -138,7 +140,7 @@ void SourceController::loadSourceIndex() {
 		loadVideo(videoFiles[currentSourceIndex - videoDevices.size()].getAbsolutePath());
 	}
 	else if (currentSourceIndex < videoDevices.size() + videoFiles.size() + (gC.v_objectNames.size())) {
-		//loadGenerator(currentSourceIndex - videoDevices.size() - videoFiles.size());
+		loadGenerator(gC.v_objectNames[currentSourceIndex - videoDevices.size() - videoFiles.size()]);
 	}
 	else {
 		loadImage(imgFiles[currentSourceIndex - videoDevices.size() - videoFiles.size() - gC.v_objectNames.size()].getAbsolutePath());

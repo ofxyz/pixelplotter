@@ -1,13 +1,8 @@
 #pragma once
 
 #include "ofGui.h"
-#include "ofxImGui.h"
-#include "imgui_internal.h"
-#include "ImHelpers.h"
-#include "imgui_stdlib.h"
+#include "ImGui_General.h"
 #include "IconsFontAwesome5.h"
-#include "ImGui_Widget_Bezier.h"
-#include "ImGui_Widget_Tooltip.h"
 
 #include "ofApp.h"
 #include "ofx2d.h"
@@ -83,6 +78,7 @@ void OfGui::draw()
 	if (_bGuiVisible) {
 		drawMainDock();
 		if (_bMenuBarVisible) drawMenuBar();
+		if (_bShowProjectTree) drawProjectTree();
 		if (_bShowCanvas) drawCanvas();
 		if (_bShowToolPalette) drawToolPalette();
 		if (_bShowInfoPanel) drawInfoPanel();
@@ -126,6 +122,7 @@ void OfGui::drawMenuBar()
 		//ImGui::Separator();
 		if (ImGui::BeginMenu("Windows...")) {
 			//ImGui::MenuItem("Something");
+			ImGui::Checkbox("Project", &_bShowProjectTree);
 			ImGui::Checkbox("Plot Canvas", &_bShowPlotCanvas);
 			ImGui::Checkbox("Info Panel", &_bShowInfoPanel);
 			ImGui::Checkbox("Tool Palette", &_bShowToolPalette);
@@ -228,16 +225,45 @@ void OfGui::drawMenuBar()
 void OfGui::drawCanvas()
 {
 	ImGui::Begin("Canvas", &_bShowCanvas);
-	ImGui::PushID("showCanvas");
 
 	ImTextureID textureID = (ImTextureID)(uintptr_t)pixelplotter->plotCanvas.canvasFbo.getTexture().getTextureData().textureID;
 
-	float tw = pixelplotter->plotCanvas.canvasFbo.getWidth();
-	float th = pixelplotter->plotCanvas.canvasFbo.getHeight();
-	auto availableRegion = ImGui::GetContentRegionAvail();
-	float scale = min(availableRegion.x / tw, availableRegion.y / th);
+	float my_tex_w = pixelplotter->plotCanvas.canvasFbo.getWidth();
+	float my_tex_h = pixelplotter->plotCanvas.canvasFbo.getHeight();
+	ImVec2 availableRegion = ImGui::GetContentRegionAvail();
+	float scale = min(availableRegion.x / my_tex_w, availableRegion.y / my_tex_h);
 
-	ImGui::Image(textureID, glm::vec2(tw * scale, th * scale));
+	if (scale > 1) {
+		ImGui::Image(textureID, glm::vec2(my_tex_w * scale, my_tex_h * scale));
+	}
+	else {
+		/* This is not how that works
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetItemKeyOwner(ImGuiKey_MouseWheelY);
+			scale += ImGui::GetIO().MouseWheel;
+		}
+		*/
+
+		ImGuiIO io = ImGui::GetIO();
+		ImVec2 pos = ImGui::GetCursorScreenPos();
+
+		// Where is the mouse in the region
+		float mouseRelX = CLAMP(io.MousePos.x - pos.x, 0, availableRegion.x);
+		float mouseRelY = CLAMP(io.MousePos.y - pos.y, 0, availableRegion.y);
+
+		float mouseNormX = ofx2d::remap(mouseRelX, 0, availableRegion.x, 0, my_tex_w - availableRegion.x);
+		float mouseNormY = ofx2d::remap(mouseRelY, 0, availableRegion.y, 0, my_tex_h - availableRegion.y);
+
+		ImVec2 uv0 = ImVec2(mouseNormX / my_tex_w, mouseNormY / my_tex_h);
+		ImVec2 uv1 = ImVec2((mouseNormX + availableRegion.x) / (my_tex_w), (mouseNormY + availableRegion.y) / (my_tex_h));
+
+		ImVec2 size;
+		size.x = min(availableRegion.x, my_tex_w);
+		size.y = min(availableRegion.y, my_tex_h);
+		ImGui::Image(textureID, size, uv0, uv1);
+	}
+
 	//ImGui::SetScrollX(500);
 	//ImGui::SetScrollY(500);
 	ImGui::PopID();
@@ -312,6 +338,42 @@ void OfGui::drawCanvasWindow()
 	ImGui::Begin("Plot Canvas", &_bShowPlotCanvas);
 	ImGui::PushID("plotCanvas");
 	pixelplotter->plotCanvas.renderImGuiSettings();
+	ImGui::PopID();
+	ImGui::End();
+}
+
+void OfGui::drawProjectTree()
+{
+	ImGui::Begin("Project", &_bShowProjectTree);
+	ImGui::PushID("projectTree");
+
+	if (ImGui::TreeNode("Canvas"))
+	{
+		pixelplotter->plotCanvas.renderImGuiSettings();
+		/*
+		if (ImGui::TreeNode("Basic trees"))
+		{
+			for (int i = 0; i < 5; i++)
+			{
+				// Use SetNextItemOpen() so set the default state of a node to be open. We could
+				// also use TreeNodeEx() with the ImGuiTreeNodeFlags_DefaultOpen flag to achieve the same thing!
+				if (i == 0)
+					ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+
+				if (ImGui::TreeNode((void*)(intptr_t)i, "Child %d", i))
+				{
+					ImGui::Text("blah blah");
+					ImGui::SameLine();
+					if (ImGui::SmallButton("button")) {}
+					ImGui::TreePop();
+				}
+			}
+			ImGui::TreePop();
+		}
+		*/
+		ImGui::TreePop();
+	}
+
 	ImGui::PopID();
 	ImGui::End();
 }

@@ -2,10 +2,7 @@
 #include "drawPixel.h"
 #include "ofApp.h"
 #include "ofx2d.h"
-#include "ofxImGui.h"
-#include "imgui_internal.h"
-#include "ImHelpers.h"
-#include "ImGui_Widget_Bezier.h"
+#include "ImGui_General.h"
 
 Df_pixelate2::Df_pixelate2()
 {

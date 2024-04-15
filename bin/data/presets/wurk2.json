@@ -1,0 +1,43 @@
+{
+    "imageFilters": [
+        {
+            "_isOpen": true,
+            "cvBlur": 279,
+            "name": "Blur"
+        }
+    ],
+    "plotCanvas": {
+        "canvasHeight": 1080,
+        "canvasTitle": "Untitled",
+        "canvasWidth": 1080,
+        "colors": {
+            "plotcanvas": {
+                "a": 1.0,
+                "b": 1.0,
+                "g": 1.0,
+                "r": 1.0
+            }
+        },
+        "drawFilters": {
+            "DrawFilter": [
+                {
+                    "_isOpen": true,
+                    "name": "Pixelate2",
+                    "pixelMirror": false,
+                    "pixelSettings": {
+                        "name": "Separate RGB Bars 01"
+                    },
+                    "pixelType": "Separate RGB Bars 01",
+                    "tilesX": 5,
+                    "tilesY": 309
+                }
+            ]
+        },
+        "exportWithTimeStamp": true
+    },
+    "source": [
+        {
+            "source": "pexels-oleg-lehnitsky-8333185.mp4"
+        }
+    ]
+}

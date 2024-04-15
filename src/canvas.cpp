@@ -2,14 +2,7 @@
 
 #include "canvas.h"
 #include "ofApp.h"
-
-// B TODO: Make general ImGui Header 
-#include "ofxImGui.h"
-#include "imgui_internal.h"
-#include "ImHelpers.h"
-#include "ImGui_Widget_Tooltip.h"
-#include "ImGui_Widget_InputTextString.h"
-
+#include "ImGui_General.h"
 #include "ofx2d.h"
 
 Canvas::Canvas()
