@@ -231,41 +231,29 @@ void OfGui::drawCanvas()
 	float my_tex_w = pixelplotter->plotCanvas.canvasFbo.getWidth();
 	float my_tex_h = pixelplotter->plotCanvas.canvasFbo.getHeight();
 	ImVec2 availableRegion = ImGui::GetContentRegionAvail();
-	float scale = min(availableRegion.x / my_tex_w, availableRegion.y / my_tex_h);
 
-	if (scale > 1) {
-		ImGui::Image(textureID, glm::vec2(my_tex_w * scale, my_tex_h * scale));
-	}
-	else {
-		/* This is not how that works
-		if (ImGui::IsItemHovered())
-		{
-			ImGui::SetItemKeyOwner(ImGuiKey_MouseWheelY);
-			scale += ImGui::GetIO().MouseWheel;
-		}
-		*/
+	// float fitScale = min(availableRegion.x / my_tex_w, availableRegion.y / my_tex_h);
+	// ImGui::Image(textureID, glm::vec2(my_tex_w * fitScale, my_tex_h * fitScale));
 
-		ImGuiIO io = ImGui::GetIO();
-		ImVec2 pos = ImGui::GetCursorScreenPos();
+	static float scale = 1;
+	// TODO: Add scale and move lock/unlock using mouseclick?
 
-		// Where is the mouse in the region
-		float mouseRelX = CLAMP(io.MousePos.x - pos.x, 0, availableRegion.x);
-		float mouseRelY = CLAMP(io.MousePos.y - pos.y, 0, availableRegion.y);
+	ImGuiIO io = ImGui::GetIO();
+	ImVec2 pos = ImGui::GetCursorScreenPos();
 
-		float mouseNormX = ofx2d::remap(mouseRelX, 0, availableRegion.x, 0, my_tex_w - availableRegion.x);
-		float mouseNormY = ofx2d::remap(mouseRelY, 0, availableRegion.y, 0, my_tex_h - availableRegion.y);
+	// Where is the mouse in the region
+	float mouseRelX = CLAMP(io.MousePos.x - pos.x, 0, availableRegion.x);
+	float mouseRelY = CLAMP(io.MousePos.y - pos.y, 0, availableRegion.y);
 
-		ImVec2 uv0 = ImVec2(mouseNormX / my_tex_w, mouseNormY / my_tex_h);
-		ImVec2 uv1 = ImVec2((mouseNormX + availableRegion.x) / (my_tex_w), (mouseNormY + availableRegion.y) / (my_tex_h));
+	float mouseNormX = ofx2d::remap(mouseRelX, 0, availableRegion.x, 0, my_tex_w - (availableRegion.x * scale));
+	float mouseNormY = ofx2d::remap(mouseRelY, 0, availableRegion.y, 0, my_tex_h - (availableRegion.y * scale));
 
-		ImVec2 size;
-		size.x = min(availableRegion.x, my_tex_w);
-		size.y = min(availableRegion.y, my_tex_h);
-		ImGui::Image(textureID, size, uv0, uv1);
-	}
+	ImVec2 uv0 = ImVec2(mouseNormX / my_tex_w, mouseNormY / my_tex_h);
+	ImVec2 uv1 = ImVec2((mouseNormX + (availableRegion.x * scale)) / (my_tex_w), (mouseNormY + (availableRegion.y * scale)) / (my_tex_h));
 
-	//ImGui::SetScrollX(500);
-	//ImGui::SetScrollY(500);
+	ImGui::Image(textureID, availableRegion, uv0, uv1);
+	if (ImGui::IsItemHovered()) scale = std::abs(scale + (ImGui::GetIO().MouseWheel)*0.01);
+
 	ImGui::PopID();
 	ImGui::End();
 }
