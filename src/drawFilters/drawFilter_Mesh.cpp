@@ -26,7 +26,7 @@ void Df_mesh::loadSettings(ofJson& settings) {
 }
 
 void Df_mesh::renderImGuiSettings() {
-	ImGui::SetNextItemOpen(_isOpen);
+	ImGui::SetNextItemOpen(_isOpen, ImGuiCond_Once);
 	ImGui::PushID("Df_Mesh");
 
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {

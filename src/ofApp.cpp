@@ -5,8 +5,6 @@ void ofApp::setup() {
 	/* Always disable rectangular textures by default */
 	ofDisableArbTex();
 
-	c_background = ofColor(50, 50, 50, 255);
-
 	//ofSetLogLevel(OF_LOG_ERROR);
 	//ofSetLogLevel(OF_LOG_VERBOSE);
 	ofSetVerticalSync(vSync);
@@ -19,6 +17,7 @@ void ofApp::setup() {
 	//ofHideCursor();
 	ofAddListener(ofEvents().mouseScrolled, this, &ofApp::mouseScrolled);
 
+	ofSetBackgroundColor(64, 64, 64, 255);
 	//ofSetBackgroundAuto(false);
 
 	ofGui.setup();

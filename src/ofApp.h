@@ -52,8 +52,6 @@ public:
 	glm::vec2 userOffset;
 	glm::vec2 lastDraggedPos;
 
-	ofColor c_background;
-
 private:
-	int _targetFps = 66;
+	int _targetFps = 120;
 };

@@ -7,6 +7,8 @@
 #include "ofApp.h"
 #include "ofx2d.h"
 
+#define FONT_FILE_PATH "fonts/InputSans-Regular.ttf"
+
 OfGui::OfGui()
 {
 	pixelplotter = (ofApp*)ofGetAppPtr();
@@ -36,10 +38,13 @@ void OfGui::setup()
 	pixelplotter = (ofApp*)ofGetAppPtr();
 	gui.setup(nullptr, true, ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable, true, true);
 
+	ImGui::GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
+
 	// Font Setup
 	float baseFontSize = 13.0f; // 13.0f is the size of the default font. Change to the font size you use.
 	float iconFontSize = baseFontSize * 2.0f / 3.0f; // FontAwesome fonts need to have their sizes reduced by 2.0f/3.0f in order to align correctly
-	gui.setDefaultFont(baseFontSize);
+	
+	gui.addFont(FONT_FILE_PATH, baseFontSize, nullptr, nullptr, true);
 
 	ImFontConfig icons_config;
 	icons_config.MergeMode = true;
@@ -50,14 +55,55 @@ void OfGui::setup()
 
 	gui.addFont(FONT_ICON_FILE_NAME_FAS, iconFontSize, &icons_config, icons_ranges);
 	// use FONT_ICON_FILE_NAME_FAR if you want regular instead of solid
-	//---------------------------
 
 	ImGui::StyleColorsDark();
 	ImGuiStyle* style = &ImGui::GetStyle();
-	style->ItemSpacing = ImVec2(5, 5);
 
-	ImGuiIO IO = ImGui::GetIO();
-	IO.ConfigWindowsMoveFromTitleBarOnly = true;
+	// Sizes
+	style->WindowPadding = ImVec2(4, 4);
+	style->FramePadding = ImVec2(4, 4);
+	style->CellPadding = ImVec2(4, 4);
+	style->ItemSpacing = ImVec2(4, 4);
+	style->ItemInnerSpacing = ImVec2(2, 2);
+	style->TouchExtraPadding = ImVec2(0, 0);
+	style->IndentSpacing = 8.0f;
+	style->ScrollbarSize = 16.0f;
+	style->GrabMinSize = 8.0f;
+	//style->ColumnsMinSpacing = 50.0f;
+
+	// Borders
+	style->WindowBorderSize = 0.0f;
+	style->ChildBorderSize = 0.0f;
+	style->PopupBorderSize = 0.0f;
+	style->FrameBorderSize = 0.0f;
+	style->TabBorderSize = 0.0f;
+
+	// Rounding
+	style->WindowRounding = 2.0f;
+	style->ChildRounding = 0.0f;
+	style->FrameRounding = 2.0f;
+	style->PopupRounding = 0.0f;
+	style->ScrollbarRounding = 2.0f;
+	style->GrabRounding = 2.0f;
+	style->TabRounding = 2.0f;
+
+	// Widgets
+	style->WindowTitleAlign = ImVec2(0, 0.5);
+	style->WindowMenuButtonPosition = ImGuiDir_None;
+	style->ColorButtonPosition = ImGuiDir_Left;
+	style->ButtonTextAlign = ImVec2(0.5, 0.5);
+	style->SelectableTextAlign = ImVec2(0.0, 0.0);
+	style->SeparatorTextBorderSize = 8;
+	style->SeparatorTextAlign = ImVec2(0.15, 0.5);
+	style->SeparatorTextPadding = ImVec2(0, 8);
+
+	// Misc
+	style->DisplaySafeAreaPadding = ImVec2(0, 0);
+	style->Alpha = 1.0f;
+	
+	/*
+	style->Colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+	*/
 
 	loadPresetDir();
 }
@@ -88,7 +134,7 @@ void OfGui::draw()
 			ImGui::ShowStyleEditor();
 		}
 	}
- 
+
 	gui.end();
 }
 
@@ -110,6 +156,8 @@ void OfGui::drawMainDock()
 
 void OfGui::drawMenuBar()
 {
+	// TODO: Make it drag the window!
+
 	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(5, 8));
 	ImGui::BeginMainMenuBar();
 	ImGui::PopStyleVar();
@@ -224,6 +272,10 @@ void OfGui::drawMenuBar()
 // TODO: This should be a general texture viewer...
 void OfGui::drawCanvas()
 {
+	
+	// TODO: Add scale and move lock/unlock using mouse click?
+	// Rename to "Zoomed View" that follows the mouse on main canvas
+
 	ImGui::Begin("Canvas", &_bShowCanvas);
 
 	ImTextureID textureID = (ImTextureID)(uintptr_t)pixelplotter->plotCanvas.canvasFbo.getTexture().getTextureData().textureID;
@@ -236,7 +288,6 @@ void OfGui::drawCanvas()
 	// ImGui::Image(textureID, glm::vec2(my_tex_w * fitScale, my_tex_h * fitScale));
 
 	static float scale = 1;
-	// TODO: Add scale and move lock/unlock using mouseclick?
 
 	ImGuiIO io = ImGui::GetIO();
 	ImVec2 pos = ImGui::GetCursorScreenPos();
@@ -254,7 +305,6 @@ void OfGui::drawCanvas()
 	ImGui::Image(textureID, availableRegion, uv0, uv1);
 	if (ImGui::IsItemHovered()) scale = std::abs(scale + (ImGui::GetIO().MouseWheel)*0.01);
 
-	ImGui::PopID();
 	ImGui::End();
 }
 

@@ -97,7 +97,7 @@ void Df_pixelate2::draw(ofImage* input, float width /*= 0*/, float height /*= 0*
 
 void Df_pixelate2::renderImGuiSettings()
 {
-	ImGui::SetNextItemOpen(_isOpen);
+	ImGui::SetNextItemOpen(_isOpen, ImGuiCond_Once);
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		_isOpen = true;
 		ImGui::PushID("Df_pixelate2");

@@ -53,7 +53,7 @@ void Df_noise::loadSettings(ofJson& settings) {
 }
 
 void Df_noise::renderImGuiSettings() {
-	ImGui::SetNextItemOpen(_isOpen);
+	ImGui::SetNextItemOpen(_isOpen, ImGuiCond_Once);
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		ImGui::PushID("Df_noise");
 		ImGui::AlignTextToFramePadding();

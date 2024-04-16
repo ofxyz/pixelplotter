@@ -43,7 +43,7 @@ void Df_rings::loadSettings(ofJson& settings) {
 }
 
 void Df_rings::renderImGuiSettings() {
-	ImGui::SetNextItemOpen(_isOpen);
+	ImGui::SetNextItemOpen(_isOpen, ImGuiCond_Once);
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		ImGui::AlignTextToFramePadding();
 

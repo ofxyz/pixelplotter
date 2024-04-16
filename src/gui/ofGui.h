@@ -32,7 +32,6 @@ public:
 	bool renderingPaused();
 	void setRenderingPaused(bool bPaused);
 
-
 	// Presets and Settings
 	// Implement this ... work out what are settings and what are presets
 	//void loadSettings(ofJson& settings);

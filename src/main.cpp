@@ -17,7 +17,7 @@ int main() {
 	// Until we can drag main menu and can switch between full screen
 	settings.decorated = true;
 	settings.windowMode = OF_WINDOW;
-	settings.setSize(1920, 1200);
+	settings.setSize(1800, 900);
 	settings.setPosition(glm::vec2(50, 50));
 	settings.resizable = true;
 	settings.multiMonitorFullScreen = false;

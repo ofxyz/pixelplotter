@@ -143,6 +143,10 @@ int ImGui::Bezier(const char* label, float P[8])
 
 	{
 		// handle grabbers
+		// We need to do this better keep track of the dragging selection over multiple frames
+		// Points over multiple instances are affected. Pass in P points as a unique pointer?
+		// See preset selector above on how it breaks ...
+
 		ImVec2 mouse = GetIO().MousePos, pos[4];
 		float distance[4];
 
@@ -161,11 +165,10 @@ int ImGui::Bezier(const char* label, float P[8])
 			}
 		}
 
-		if (distance[selected] < (8 * GRAB_RADIUS * 8 * GRAB_RADIUS))
+		if (distance[selected] < (20 * GRAB_RADIUS))
 		{
 			SetTooltip("(%4.3f, %4.3f)", P[selected * 2 + 0], P[selected * 2 + 1]);
-
-			if (/*hovered &&*/ (IsMouseClicked(0) || IsMouseDragging(0))) {
+			if (IsMouseDown(0)) {
 				float& px = (P[selected * 2 + 0] += GetIO().MouseDelta.x / Canvas.x);
 				float& py = (P[selected * 2 + 1] -= GetIO().MouseDelta.y / Canvas.y);
 
@@ -177,6 +180,7 @@ int ImGui::Bezier(const char* label, float P[8])
 				changed = true;
 			}
 		}
+
 	}
 
 	// if (hovered || changed) DrawList->PushClipRectFullScreen();

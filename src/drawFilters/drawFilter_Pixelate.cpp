@@ -208,7 +208,7 @@ ofJson Df_pixelate::getSettings() {
 }
 
 void Df_pixelate::renderImGuiSettings() {
-	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+	ImGui::SetNextItemOpen(_isOpen, ImGuiCond_Once);
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		ImGui::PushID("Df_pixelate");
 		ImGui::AlignTextToFramePadding();
