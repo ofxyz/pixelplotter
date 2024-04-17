@@ -66,7 +66,6 @@ void Df_mesh::renderImGuiSettings() {
 	} else {
 		_isOpen = false;
 	}
-	ImGui::PopID();
 }
 
 Df_mesh::Df_mesh()

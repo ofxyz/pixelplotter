@@ -168,10 +168,11 @@ void Controller<t>::renderImGuiSettings()
 		_bReorder = false;
 
 		for (int i = 0; i < v_Objects.size(); i++) {
-			ImGui::PushID(i);
 			if (v_Objects[i]->isAlive()) {
 				ImGui::Indent();
+				ImGui::PushID(i);
 				v_Objects[i]->renderImGuiSettings();
+				ImGui::PopID();
 				ImGui::Unindent();
 			}
 			else {
@@ -180,7 +181,6 @@ void Controller<t>::renderImGuiSettings()
 			if (v_Objects[i]->moveUp || v_Objects[i]->moveDown) {
 				_bReorder = true;
 			}
-			ImGui::PopID();
 		}
 
 		// ImGui::PopStyleColor(10);

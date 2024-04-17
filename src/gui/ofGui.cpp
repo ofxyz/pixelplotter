@@ -312,7 +312,6 @@ void OfGui::drawCanvas()
 void OfGui::drawToolPalette()
 {
 	ImGui::Begin("Tool palette", &_bShowToolPalette);
-	ImGui::PushID("toolPalette");
 
 	// Set bigger font, needs to be loaded first...
 	if (ImGui::Button(ICON_FA_PEN "Pencil"))
@@ -320,7 +319,6 @@ void OfGui::drawToolPalette()
 		cout << "Pencil Button Pressed";
 	}
 
-	ImGui::PopID();
 	ImGui::End();
 }
 
@@ -375,16 +373,13 @@ void OfGui::drawInfoPanel() // B TODO: Info Panel is Presets? Dude
 void OfGui::drawCanvasWindow()
 {
 	ImGui::Begin("Plot Canvas", &_bShowPlotCanvas);
-	ImGui::PushID("plotCanvas");
 	pixelplotter->plotCanvas.renderImGuiSettings();
-	ImGui::PopID();
 	ImGui::End();
 }
 
 void OfGui::drawProjectTree()
 {
 	ImGui::Begin("Project", &_bShowProjectTree);
-	ImGui::PushID("projectTree");
 
 	if (ImGui::TreeNode("Canvas"))
 	{
@@ -413,7 +408,6 @@ void OfGui::drawProjectTree()
 		ImGui::TreePop();
 	}
 
-	ImGui::PopID();
 	ImGui::End();
 }
 

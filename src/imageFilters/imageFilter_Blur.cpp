@@ -25,6 +25,7 @@ void If_blur::renderImGuiSettings() {
 		if (ImGui::DragInt("Blur ##blur", &cvBlur, 1, 0, 500)) {
 			setFresh(true);
 		}
+		ImGui::PopItemWidth();
 	} else {
 		_isOpen = false;
 	}
