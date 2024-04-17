@@ -8,7 +8,7 @@ class ofApp : public ofBaseApp {
 
 public:
 	static std::string getWindowTitle() {
-		return "PixelPlotter v0.4";
+		return "PixelPlotter v0.5";
 	}
 
 	void setup();
