@@ -256,6 +256,9 @@
     <ClCompile Include="src\drawPixels\drawPixel_SeparateCMY_Bars01.cpp">
       <Filter>src\drawPixels</Filter>
     </ClCompile>
+    <ClCompile Include="src\imageFilters\imageFilter_Rotate.cpp">
+      <Filter>src\imageFilters</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -1882,6 +1885,9 @@
     </ClInclude>
     <ClInclude Include="src\gui\ImGui_General.h">
       <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imageFilters\imageFilter_Rotate.h">
+      <Filter>src\imageFilters</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

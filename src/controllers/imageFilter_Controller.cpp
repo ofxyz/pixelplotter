@@ -5,6 +5,7 @@
 #include "imageFilter_Tint.h"
 #include "imageFilter_Blur.h"
 #include "imageFilter_DrawPixel.h"
+#include "imageFilter_Rotate.h"
 
 ImageFilterController::ImageFilterController()
 	: Controller()
@@ -15,6 +16,7 @@ ImageFilterController::ImageFilterController()
 	mapObjectTypes["Tint"] = createInstance<If_tint>;
 	mapObjectTypes["Blur"] = createInstance<If_blur>;
 	mapObjectTypes["DrawPixel"] = createInstance<If_drawPixel>;
+	mapObjectTypes["Rotate"] = createInstance<If_rotate>;
 
 	for (auto p : mapObjectTypes) {
 		v_objectNames.push_back(p.first);

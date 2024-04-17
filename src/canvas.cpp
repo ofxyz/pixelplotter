@@ -27,6 +27,13 @@ void Canvas::renderImGuiSettings() {
 		resizeRequest = true;
 	}
 	ImGui::SameLine();
+	if (ImGui::Button("<->")) {
+		int w = canvasWidth;
+		canvasWidth = canvasHeight;
+		canvasHeight = w;
+		resizeRequest = true;
+	}
+	ImGui::SameLine();
 	if (ImGui::DragInt("H ##canvas_H", &canvasHeight, 1, 16, 2400)) {
 		resizeRequest = true;
 	}
@@ -38,7 +45,6 @@ void Canvas::renderImGuiSettings() {
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Fit")) {
-		;
 		if (pixelplotter != nullptr) {
 			ImVec4 as = pixelplotter->ofGui.availableSpace();
 			canvasWidth  = abs(as.x);
