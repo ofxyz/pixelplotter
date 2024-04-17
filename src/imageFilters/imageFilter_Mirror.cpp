@@ -18,7 +18,7 @@ void If_mirror::loadSettings(ofJson& settings) {
 }
 
 void If_mirror::renderImGuiSettings() {
-	ImGui::SetNextItemOpen(_isOpen);
+	ImGui::SetNextItemOpen(_isOpen, ImGuiCond_Once);
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		ImGui::AlignTextToFramePadding();
 		if (ImGui::Checkbox("Horizontal", &hMirror)) {

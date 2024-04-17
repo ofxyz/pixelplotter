@@ -7,7 +7,7 @@
 class Canvas {
 public:
 	Canvas();
-	ofApp* pixelplotter;
+	ofApp* pixelplotter{ nullptr };
 	
 	ofFbo canvasFbo;
 	ofPixels canvasPix;

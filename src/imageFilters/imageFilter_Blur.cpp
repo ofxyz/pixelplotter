@@ -16,7 +16,7 @@ void If_blur::loadSettings(ofJson& settings) {
 }
 
 void If_blur::renderImGuiSettings() {
-	ImGui::SetNextItemOpen(_isOpen);
+	ImGui::SetNextItemOpen(_isOpen, ImGuiCond_Once);
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		ImGui::AlignTextToFramePadding();
 

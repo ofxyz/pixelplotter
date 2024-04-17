@@ -39,12 +39,15 @@ void Canvas::renderImGuiSettings() {
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Fit")) {
-		ImVec4 as = pixelplotter->ofGui.availableSpace();
-		canvasWidth = as.x;
-		canvasHeight = as.y;
-		pixelplotter->resetZoom();
-		pixelplotter->resetImageOffset();
-		resizeRequest = true;
+		;
+		if (pixelplotter != nullptr) {
+			ImVec4 as = pixelplotter->ofGui.availableSpace();
+			canvasWidth  = abs(as.x);
+			canvasHeight = abs(as.y);
+			pixelplotter->resetZoom();
+			pixelplotter->resetImageOffset();
+			resizeRequest = true;
+		}
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("x2")) {
@@ -138,6 +141,7 @@ ofJson Canvas::getSettings() {
 }
 
 void Canvas::setup(string canvas_title) {
+	pixelplotter = (ofApp*)ofGetAppPtr();
 	canvasTitle = canvas_title;
 	sourceController.setup();
 	canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGBA, 8);

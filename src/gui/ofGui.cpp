@@ -524,21 +524,14 @@ ofJson OfGui::getCurrentPresets()
 
 ImVec4 OfGui::availableSpace()
 {
-	// Width, Height, Top, Left
+	// Return Values: Width, Height, x, y
 	ImVec4 rVal(0,0,0,0);
 
-	ImGuiDockNode* centralNode = ImGui::DockBuilderGetCentralNode(MainDockNodeID);
-	if (centralNode && centralNode->IsEmpty()) {
-		ImRect availableSpace = centralNode->Rect();
-		ImVec2 offset = availableSpace.GetTL();
-		offset.x -= ofGetWindowPositionX();
-		offset.y -= ofGetWindowPositionY();
-
-		rVal.x = availableSpace.GetWidth();
-		rVal.y = availableSpace.GetHeight();
-		rVal.z = offset.x;
-		rVal.w = offset.y;
-	}
+	auto centralNode = ImGui::DockBuilderGetCentralNode(MainDockNodeID);
+	rVal.x = centralNode->Size.x;
+	rVal.y = centralNode->Size.y;
+	rVal.z = centralNode->Pos.x - ofGetWindowPositionX();
+	rVal.w = centralNode->Pos.y - ofGetWindowPositionY();
 
 	return rVal;
 }
