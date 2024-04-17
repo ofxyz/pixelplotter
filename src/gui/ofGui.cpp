@@ -15,11 +15,13 @@ OfGui::OfGui()
 	_bGuiVisible = true;
 	_bMenuBarVisible = true;
 
+	_bShowProjectTree = false;
+	_bShowCanvas = false; // TODO: FinisRename to Zoomed Viewer
 	_bShowPlotCanvas = true;
 	_bShowInfoPanel = true;
-	_bShowToolPalette = true;
-	_bShowImGuiMetricsDebugger = false;
-	_bShowCanvas = true;
+	_bShowToolPalette = false;
+	_bShowImGuiStyleEditor = false;
+	_bShowImGuiMetricsWindow = false;
 
 	_bShowFps = true;
 
@@ -129,10 +131,8 @@ void OfGui::draw()
 		if (_bShowToolPalette) drawToolPalette();
 		if (_bShowInfoPanel) drawInfoPanel();
 		if (_bShowPlotCanvas) drawCanvasWindow();
-		if (_bShowImGuiMetricsDebugger) {
-			ImGui::ShowMetricsWindow();
-			ImGui::ShowStyleEditor();
-		}
+		if (_bShowImGuiStyleEditor) ImGui::ShowStyleEditor();
+		if (_bShowImGuiMetricsWindow) ImGui::ShowMetricsWindow();
 	}
 
 	gui.end();
@@ -156,7 +156,7 @@ void OfGui::drawMainDock()
 
 void OfGui::drawMenuBar()
 {
-	// TODO: Make it drag the window!
+	// TODO: Make it drag the window
 
 	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(5, 8));
 	ImGui::BeginMainMenuBar();
@@ -174,7 +174,8 @@ void OfGui::drawMenuBar()
 			ImGui::Checkbox("Plot Canvas", &_bShowPlotCanvas);
 			ImGui::Checkbox("Info Panel", &_bShowInfoPanel);
 			ImGui::Checkbox("Tool Palette", &_bShowToolPalette);
-			ImGui::Checkbox("ImGui Metrics Debugger", &_bShowImGuiMetricsDebugger);
+			ImGui::Checkbox("Style Editor", &_bShowImGuiStyleEditor);
+			ImGui::Checkbox("Metrics Window", &_bShowImGuiMetricsWindow);
 			ImGui::EndMenu();
 		}
 

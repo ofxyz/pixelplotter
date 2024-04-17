@@ -8,7 +8,7 @@ class ofApp : public ofBaseApp {
 
 public:
 	static std::string getWindowTitle() {
-		return "PixelPlotter v0.3";
+		return "PixelPlotter v0.4";
 	}
 
 	void setup();
@@ -52,6 +52,5 @@ public:
 	glm::vec2 userOffset;
 	glm::vec2 lastDraggedPos;
 
-private:
-	int _targetFps = 120;
+	int _targetFps = 60;
 };

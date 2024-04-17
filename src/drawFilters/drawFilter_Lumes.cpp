@@ -116,8 +116,6 @@ void Df_lumes::draw(ofImage* input, float width, float height) {
 	setFresh(false);
 	if (!bVisible) return;
 
-	svgKite.load(ofToDataPath("geometry/ENESS_Kite.svg"));
-
 	int imgW = input->getWidth();
 	int imgH = input->getHeight();
 
@@ -128,13 +126,13 @@ void Df_lumes::draw(ofImage* input, float width, float height) {
 
 	glm::ivec2 pos(0,0);
 
-	for (float y = 0; y < imgH - halfTileH; y += tileH) {
+	for (float y = 0; y <= imgH; y += tileH) {
 
-		for (float x = 0; x < imgW - halfTileW; x += tileW) {
+		for (float x = 0; x <= imgW; x += tileW) {
 			
 			float fx = x + halfTileW;
 			float fy = y + halfTileH;
-			ofColor c = input->getPixels().getColor(floor(fx), floor(fy));
+			ofColor c = input->getPixels().getColor(ofClamp(fx,0,imgW-1), ofClamp(fy,0,imgH-1));
 
 			// Draw Kite
 			ofPushMatrix();

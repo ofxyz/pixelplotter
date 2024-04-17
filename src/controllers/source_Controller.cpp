@@ -128,6 +128,7 @@ void SourceController::loadSourceIndex() {
 				}
 				videoGrabber.close();
 				videoGrabber.setDeviceID(it->id);
+				// videoGrabber.setDesiredFrameRate(pixelplotter->_targetFps);
 				videoGrabber.setup(camWidth, camHeight);
 				pixelplotter->plotCanvas.setDimensions(camWidth, camHeight);
 				pix = videoGrabber.getPixels();

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "drawFilter.h"
-#include "ofxSvg.h"
 
 class Df_lumes : public DrawFilter {
 public:
@@ -24,7 +23,6 @@ public:
 	ofJson getSettings() override;
 
 private:
-	ofxSVG svgKite;
 	int tilesX = 64;
 	int tilesY = 64;
 	float centerPercent = 0.75;

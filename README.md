@@ -14,5 +14,4 @@
 - [ofxCv](https://github.com/ofxyz/ofxCv.git)
 - [ofxImGui](https://github.com/ofxyz/ofxImGui.git)
 - [ofxIconFontCppHeaders](https://github.com/ofxyz/ofxIconFontCppHeaders)
-- [ofxShader](https://github.com/ofxyz/ofxShader)
 - [K-Lite Codec Pack](https://files3.codecguide.com/K-Lite_Codec_Pack_1750_Basic.exe)

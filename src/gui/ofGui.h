@@ -63,7 +63,8 @@ private:
 	bool _bShowPlotCanvas;
 	bool _bShowInfoPanel;
 	bool _bShowToolPalette;
-	bool _bShowImGuiMetricsDebugger;
+	bool _bShowImGuiMetricsWindow;
+	bool _bShowImGuiStyleEditor;
 
 	bool _bShowFps;
 	bool _bSavePresets;
