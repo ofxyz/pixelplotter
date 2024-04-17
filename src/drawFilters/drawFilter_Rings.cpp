@@ -45,6 +45,7 @@ void Df_rings::loadSettings(ofJson& settings) {
 void Df_rings::renderImGuiSettings() {
 	ImGui::SetNextItemOpen(_isOpen, ImGuiCond_Once);
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
+		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
 
 		renderUpDownButtons();
@@ -78,6 +79,8 @@ void Df_rings::renderImGuiSettings() {
 		if (ImGui::ColorEdit4("Blobline ##rings", (float*)&c_blob, ImGuiColorEditFlags_NoInputs)) {
 			setFresh(true);
 		}
+	} else {
+		_isOpen = false;
 	}
 }
 

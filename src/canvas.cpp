@@ -11,7 +11,6 @@ Canvas::Canvas()
 }
 
 void Canvas::renderImGuiSettings() {
-	ImGui::Indent();
 
 	ImGui::InputText("Title", &canvasTitle);
 
@@ -99,7 +98,6 @@ void Canvas::renderImGuiSettings() {
 	ImGui::SameLine();
 	ImGui::Checkbox("Add Timestamp", &bExportWithTimeStamp);
 
-	ImGui::Unindent();
 	ImGui::Separator(); // End Size 
 }
 

@@ -42,6 +42,7 @@ void If_drawPixel::loadSettings(ofJson& settings) {
 void If_drawPixel::renderImGuiSettings() {
 	ImGui::SetNextItemOpen(_isOpen, ImGuiCond_Once);
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
+		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
 
 		if (ofxImGui::VectorCombo("Pixel Type ##drawPixel", &selectedPixelType, drawPixels.v_objectNames)) {
@@ -75,6 +76,8 @@ void If_drawPixel::renderImGuiSettings() {
 		drawPixels.v_Objects[selectedPixelType]->renderImGuiSettings();
 
 		ImGui::PopItemWidth();
+	} else {
+		_isOpen = false;
 	}
 }
 

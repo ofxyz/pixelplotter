@@ -25,6 +25,7 @@ void If_duplicate::loadSettings(ofJson& settings) {
 void If_duplicate::renderImGuiSettings() {
 	ImGui::SetNextItemOpen(_isOpen, ImGuiCond_Once);
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
+		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
 		ImGui::PushItemWidth(60);
 
@@ -42,6 +43,8 @@ void If_duplicate::renderImGuiSettings() {
 		}
 
 		ImGui::PopItemWidth();
+	} else {
+		_isOpen = false;
 	}
 }
 

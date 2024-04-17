@@ -31,6 +31,7 @@ void If_tint::loadSettings(ofJson& settings) {
 void If_tint::renderImGuiSettings() {
 	ImGui::SetNextItemOpen(_isOpen, ImGuiCond_Once);
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
+		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
 
 		if (ImGui::ColorEdit4("Colorize ##duplicate", (float*)&c_Tint, ImGuiColorEditFlags_NoInputs)) {
@@ -40,6 +41,8 @@ void If_tint::renderImGuiSettings() {
 		if (ImGui::Checkbox("Grey", &bGrey)) {
 			setFresh(true);
 		}
+	} else {
+		_isOpen = false;
 	}
 }
 

@@ -55,7 +55,7 @@ void Df_noise::loadSettings(ofJson& settings) {
 void Df_noise::renderImGuiSettings() {
 	ImGui::SetNextItemOpen(_isOpen, ImGuiCond_Once);
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
-		ImGui::PushID("Df_noise");
+		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
 
 		renderUpDownButtons();
@@ -106,7 +106,9 @@ void Df_noise::renderImGuiSettings() {
 			palette.push_back(new sColor(ofColor(255, 255, 255, 255), "New " + std::to_string(palette.size())));
 			setFresh(true);
 		}
-		ImGui::PopID();
+
+	} else {
+		_isOpen = false;
 	}
 }
 

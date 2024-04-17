@@ -100,7 +100,6 @@ void Df_pixelate2::renderImGuiSettings()
 	ImGui::SetNextItemOpen(_isOpen, ImGuiCond_Once);
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		_isOpen = true;
-		ImGui::PushID("Df_pixelate2");
 		ImGui::AlignTextToFramePadding();
 
 		renderUpDownButtons();
@@ -148,9 +147,7 @@ void Df_pixelate2::renderImGuiSettings()
 		}
 		ImGui::PopItemWidth();
 
-		ImGui::PopID();
-	}
-	else {
+	} else {
 		_isOpen = false;
 	}
 }

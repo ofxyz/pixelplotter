@@ -210,7 +210,7 @@ ofJson Df_pixelate::getSettings() {
 void Df_pixelate::renderImGuiSettings() {
 	ImGui::SetNextItemOpen(_isOpen, ImGuiCond_Once);
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
-		ImGui::PushID("Df_pixelate");
+		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
 
 		renderUpDownButtons();
@@ -398,7 +398,8 @@ void Df_pixelate::renderImGuiSettings() {
 		}
 		ImGui::PopItemWidth();
 
-		ImGui::PopID();
+	}  else {
+	 _isOpen = false;
 	}
 }
 

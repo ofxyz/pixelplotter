@@ -25,8 +25,8 @@ void Df_lumes::loadSettings(ofJson& settings) {
 void Df_lumes::renderImGuiSettings() {
 	ImGui::SetNextItemOpen(_isOpen, ImGuiCond_Once);
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
+		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
-
 		renderUpDownButtons();
 
 		ImGui::PushItemWidth(60);
@@ -51,6 +51,8 @@ void Df_lumes::renderImGuiSettings() {
 		}
 		*/
 
+	} else {
+		_isOpen = false;
 	}
 }
 

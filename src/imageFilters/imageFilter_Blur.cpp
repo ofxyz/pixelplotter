@@ -18,12 +18,15 @@ void If_blur::loadSettings(ofJson& settings) {
 void If_blur::renderImGuiSettings() {
 	ImGui::SetNextItemOpen(_isOpen, ImGuiCond_Once);
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
+		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
 
 		ImGui::PushItemWidth(100);
 		if (ImGui::DragInt("Blur ##blur", &cvBlur, 1, 0, 500)) {
 			setFresh(true);
 		}
+	} else {
+		_isOpen = false;
 	}
 }
 

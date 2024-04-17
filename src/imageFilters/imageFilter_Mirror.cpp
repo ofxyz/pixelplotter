@@ -20,6 +20,7 @@ void If_mirror::loadSettings(ofJson& settings) {
 void If_mirror::renderImGuiSettings() {
 	ImGui::SetNextItemOpen(_isOpen, ImGuiCond_Once);
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
+		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
 		if (ImGui::Checkbox("Horizontal", &hMirror)) {
 			setFresh(true);
@@ -27,6 +28,8 @@ void If_mirror::renderImGuiSettings() {
 		if (ImGui::Checkbox("Vertical", &vMirror)) {
 			setFresh(true);
 		}
+	} else {
+		_isOpen = false;
 	}
 }
 

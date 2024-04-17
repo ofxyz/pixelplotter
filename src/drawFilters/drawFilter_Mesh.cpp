@@ -27,9 +27,8 @@ void Df_mesh::loadSettings(ofJson& settings) {
 
 void Df_mesh::renderImGuiSettings() {
 	ImGui::SetNextItemOpen(_isOpen, ImGuiCond_Once);
-	ImGui::PushID("Df_Mesh");
-
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
+		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
 
 		renderUpDownButtons();
@@ -64,6 +63,8 @@ void Df_mesh::renderImGuiSettings() {
 		}
 
 		drawPixels.v_Objects[selectedPixelType]->renderImGuiSettings();
+	} else {
+		_isOpen = false;
 	}
 	ImGui::PopID();
 }
