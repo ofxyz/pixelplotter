@@ -13,8 +13,8 @@ ofJson Df_lumes::getSettings() {
 void Df_lumes::loadSettings(ofJson& settings) {
 	try {
 		_isOpen = settings.value("_isOpen", _isOpen);
-		tilesX = settings.value("tilesX", 64);
-		tilesY = settings.value("tilesY", 64);
+		tilesX  = settings.value("tilesX", 64);
+		tilesY  = settings.value("tilesY", 64);
 	}
 	catch (...) {
 		ofLogNotice() << "Failed to load settings Df_lumes";
@@ -50,6 +50,7 @@ void Df_lumes::renderImGuiSettings() {
 			setFresh(true);
 		}
 		*/
+		ImGui::PopItemWidth();
 
 	} else {
 		_isOpen = false;
@@ -115,8 +116,8 @@ void Df_lumes::drawKite(ofColor c, float offsetX, float offsetY, float width, fl
 }
 
 void Df_lumes::draw(ofImage* input, float width, float height) {
-	setFresh(false);
 	if (!bVisible) return;
+	setFresh(false);
 
 	int imgW = input->getWidth();
 	int imgH = input->getHeight();
@@ -126,11 +127,14 @@ void Df_lumes::draw(ofImage* input, float width, float height) {
 	float halfTileW = tileW * 0.5;
 	float halfTileH = tileH * 0.5;
 
+	float kiteW = (float)width  / (float)tilesX;
+	float kiteH = (float)height / (float)tilesY;
+
 	glm::ivec2 pos(0,0);
 
-	for (float y = 0; y <= imgH; y += tileH) {
+	for (float y = 0; y <= imgH+1; y += tileH) {
 
-		for (float x = 0; x <= imgW; x += tileW) {
+		for (float x = 0; x <= imgW+1; x += tileW) {
 			
 			float fx = x + halfTileW;
 			float fy = y + halfTileH;
@@ -138,8 +142,8 @@ void Df_lumes::draw(ofImage* input, float width, float height) {
 
 			// Draw Kite
 			ofPushMatrix();
-			ofTranslate(fx, fy);
-			drawKite(c, 0, 0, tileW, tileH, centerPercent, pos );
+			ofTranslate(ofMap(fx, 0, imgW, 0, width), ofMap(fy, 0, imgH, 0, height));
+			drawKite(c, 0, 0, kiteW, kiteH, centerPercent, pos);
 			ofPopMatrix();
 			pos.x++;
 		}
