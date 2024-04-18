@@ -3,6 +3,7 @@
 #include "ofApp.h"
 #include "ofx2d.h"
 #include "ImGui_General.h"
+#include "ImGui_Widget_Curve.h"
 
 Df_pixelate2::Df_pixelate2()
 {
@@ -23,6 +24,9 @@ void Df_pixelate2::InitDefaults()
 	pixelMirror = false;
 	tilesX = 64;
 	tilesY = 64;
+	// init data so editor knows to take it from here
+	xCurvePoints[0].x = ImGui::CurveTerminator;
+	yCurvePoints[0].x = ImGui::CurveTerminator;
 }
 
 void Df_pixelate2::draw(ofImage* input, float width /*= 0*/, float height /*= 0*/)
@@ -42,7 +46,13 @@ void Df_pixelate2::draw(ofImage* input, float width /*= 0*/, float height /*= 0*
 
 	for (i = 0; i < tilesX; i++) {
 		float posNorm = 0;
-		if (i > 0) posNorm = ImGui::BezierValue((float)i / (float)tilesX, xBezier);
+		if (useCurve) {
+			if (i > 0) posNorm = ImGui::CurveValue((float)i / (float)tilesX, 11, xCurvePoints);
+		}
+		else {
+			if (i > 0) posNorm = (float)i / (float)tilesX;
+		}
+		
 		xpos.push_back(posNorm * (float)imgW);
 	}
 
@@ -50,7 +60,12 @@ void Df_pixelate2::draw(ofImage* input, float width /*= 0*/, float height /*= 0*
 
 	for (i = 0; i < tilesY; i++) {
 		float posNorm = 0;
-		if (i > 0) posNorm = ImGui::BezierValue((float)i / (float)tilesY, yBezier);
+		if (useCurve) {
+			if (i > 0) posNorm = ImGui::CurveValue((float)i / (float)tilesY, 11, yCurvePoints);
+		}
+		else {
+			if (i > 0) posNorm = (float)i / (float)tilesY;
+		}
 		ypos.push_back(posNorm * (float)imgH);
 	}
 
@@ -117,17 +132,23 @@ void Df_pixelate2::renderImGuiSettings()
 		if (ImGui::Checkbox("Mirror", &pixelMirror)) {
 			setFresh(true);
 		}
+		ImGui::SameLine();
+		if (ImGui::Checkbox("Curve", &useCurve)) {
+			setFresh(true);
+		}
+
 		ImGui::PopItemWidth();
 
-		ImGui::Spacing();
-		if (ImGui::Bezier("X", xBezier)) setFresh(true);
-
-		ImGui::SameLine();
-		ImGui::Text("     ");
-		ImGui::SameLine();
-
-		if (ImGui::Bezier("Y", yBezier)) setFresh(true);
-		ImGui::Spacing();
+		if (useCurve) {
+			if (ImGui::Curve("X Horizontal", ImVec2(ImGui::GetContentRegionAvail().x - 6, 100), 11, xCurvePoints, &selectionIdx))
+			{
+				setFresh(true); // curve changed
+			}
+			if (ImGui::Curve("Y Vertical", ImVec2(ImGui::GetContentRegionAvail().x - 6, 100), 11, yCurvePoints, &selectionIdy))
+			{
+				setFresh(true); // curve changed
+			}
+		}
 
 		if (ofxImGui::VectorCombo("Pixel Type ##pixelate2", &selectedPixelType, drawPixels.v_objectNames)) {
 			setFresh(true);

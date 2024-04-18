@@ -22,5 +22,5 @@ ImageFilterController::ImageFilterController()
 		v_objectNames.push_back(p.first);
 	}
 
-	generateMenuNames("ImageFilter");
+	generateMenuNames("ImageFilters");
 }

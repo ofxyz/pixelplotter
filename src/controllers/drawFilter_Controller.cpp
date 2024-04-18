@@ -23,7 +23,7 @@ DrawFilterController::DrawFilterController()
 		v_objectNames.push_back(p.first);
 	}
 
-	generateMenuNames("DrawFilter");
+	generateMenuNames("DrawFilters");
 }
 
 void DrawFilterController::draw(ofImage* img, int width, int height)

@@ -16,12 +16,15 @@ public:
 	ofJson getSettings() override;
 
 	DrawPixelController drawPixels;
-	float xBezier[8] = { 0, 0, 0.390f, 0.575f, 0.565f, 1.000f, 1, 1 };
-	float yBezier[8] = { 0, 0, 0.390f, 0.575f, 0.565f, 1.000f, 1, 1 };
 
 private:
 	bool pixelMirror;
+	bool useCurve;
 	int selectedPixelType;
 	int tilesX;
 	int tilesY;
+	ImVec2 xCurvePoints[11];
+	ImVec2 yCurvePoints[11];
+	int selectionIdx = -1;
+	int selectionIdy = -1;
 };

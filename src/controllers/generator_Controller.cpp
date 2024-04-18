@@ -12,6 +12,6 @@ GeneratorController::GeneratorController()
 		v_objectNames.push_back(p.first);
 	}
 
-	generateMenuNames("Generator");
+	generateMenuNames("Generators");
 
 }

@@ -1889,6 +1889,9 @@
     <ClInclude Include="src\imageFilters\imageFilter_Rotate.h">
       <Filter>src\imageFilters</Filter>
     </ClInclude>
+    <ClInclude Include="src\gui\ImGui_Widget_Curve.h">
+      <Filter>src\gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />

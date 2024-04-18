@@ -10,7 +10,7 @@ void SourceController::renderImGuiSettings()
 {
 	if (!sourceNames.empty())
 	{
-		if (ofxImGui::VectorCombo("##Source Image", &currentSourceIndex, sourceNames))
+		if (ofxImGui::VectorCombo("##Sources", &currentSourceIndex, sourceNames))
 		{
 			loadSourceIndex();
 			loadImageNextFrame = true;
@@ -113,7 +113,6 @@ void SourceController::buildSourceNames() {
 	sourceNames.clear();
 	sourceNames.insert(sourceNames.end(), videoDeviceNames.begin(), videoDeviceNames.end());
 	sourceNames.insert(sourceNames.end(), videoFileNames.begin(), videoFileNames.end());
-	sourceNames.insert(sourceNames.end(), gC.v_objectNames.begin(), gC.v_objectNames.end());
 	sourceNames.insert(sourceNames.end(), imgFileNames.begin(), imgFileNames.end());
 }
 
@@ -140,11 +139,8 @@ void SourceController::loadSourceIndex() {
 	else if (currentSourceIndex < videoDevices.size() + videoFiles.size()) {
 		loadVideo(videoFiles[currentSourceIndex - videoDevices.size()].getAbsolutePath());
 	}
-	else if (currentSourceIndex < videoDevices.size() + videoFiles.size() + (gC.v_objectNames.size())) {
-		loadGenerator(gC.v_objectNames[currentSourceIndex - videoDevices.size() - videoFiles.size()]);
-	}
 	else {
-		loadImage(imgFiles[currentSourceIndex - videoDevices.size() - videoFiles.size() - gC.v_objectNames.size()].getAbsolutePath());
+		loadImage(imgFiles[currentSourceIndex - videoDevices.size() - videoFiles.size()].getAbsolutePath());
 	}
 
 	isResized = true;
@@ -210,29 +206,6 @@ void SourceController::loadVideo(string& filepath) {
 	(isLandscape) ? imgRatio = videoPlayer.getHeight() / videoPlayer.getWidth() : imgRatio = videoPlayer.getWidth() / videoPlayer.getHeight();
 
 	pixelplotter->plotCanvas.setDimensions(videoPlayer.getWidth(), videoPlayer.getHeight());
-}
-
-void SourceController::loadGenerator(string& name) {
-	// This needs it's own function
-	bUseVideo = false;
-	bUseVideoDevice = false;
-	videoPlayer.stop();
-	videoPlayer.close();
-
-	src_name = name;
-
-	// Set original frame
-	//original.loadImage(filepath);
-	//original.setImageType(OF_IMAGE_COLOR);
-
-	//pix = original.getPixels();
-
-	//frameBuffer.setup(pix);
-
-	//(videoPlayer.getWidth() > videoPlayer.getHeight()) ? isLandscape = true : isLandscape = false;
-	//(isLandscape) ? imgRatio = videoPlayer.getHeight() / videoPlayer.getWidth() : imgRatio = videoPlayer.getWidth() / videoPlayer.getHeight();
-
-	//pixelplotter->plotCanvas.setSourceDimensions(videoPlayer.getWidth(), videoPlayer.getHeight());
 }
 
 void SourceController::prepImg() {

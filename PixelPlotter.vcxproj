@@ -272,6 +272,7 @@
     <ClInclude Include="src\drawPixels\drawPixel_SeparateCMYK_Para01.h" />
     <ClInclude Include="src\drawPixels\drawPixel_SeparateCMY_Bars01.h" />
     <ClInclude Include="src\gui\ImGui_General.h" />
+    <ClInclude Include="src\gui\ImGui_Widget_Curve.h" />
     <ClInclude Include="src\imageFilters\imageFilter_Rotate.h" />
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="src\canvas.h" />

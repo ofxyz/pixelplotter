@@ -247,9 +247,7 @@ void OfGui::drawMenuBar()
 
 		ImGui::Separator();
 
-		if (ImGui::Checkbox("Show FPS in Title bar", &_bShowFps)) {
-			if (!_bShowFps) ofSetWindowTitle(pixelplotter->getWindowTitle());
-		};
+		ImGui::Checkbox("Show FPS in Title bar", &_bShowFps);
 
 		pixelplotter->soundManager.renderImGuiSettings();
 
@@ -257,10 +255,12 @@ void OfGui::drawMenuBar()
 
 	}
 
+	static float fps = 0.0f;
 	if (_bShowFps) {
+		if(ofGetFrameNum()%10 == 0) fps = round(ofGetFrameRate());
 		fpsStringStream.str(std::string());
 		fpsStringStream.clear();
-		fpsStringStream << "(FPS: " << ofGetFrameRate() << ")";
+		fpsStringStream << "(FPS: " << fps << ")";
 
 		if (ImGui::BeginMenu(fpsStringStream.str().c_str())) {
 			ImGui::EndMenu();
@@ -368,11 +368,9 @@ void OfGui::drawInfoPanel() // B TODO: Info Panel is Presets? Dude
 	ImGui::End();
 }
 
-// TODO: Make more general settings renderer
-// Pass in panel name, ID, and function to be called?
 void OfGui::drawCanvasWindow()
 {
-	ImGui::Begin("Plot Canvas", &_bShowPlotCanvas);
+	ImGui::Begin("Canvas", &_bShowPlotCanvas);
 	pixelplotter->plotCanvas.renderImGuiSettings();
 	ImGui::End();
 }
@@ -381,7 +379,7 @@ void OfGui::drawProjectTree()
 {
 	ImGui::Begin("Project", &_bShowProjectTree);
 
-	if (ImGui::TreeNode("Canvas"))
+	if (ImGui::TreeNode("Layers"))
 	{
 		pixelplotter->plotCanvas.renderImGuiSettings();
 		/*

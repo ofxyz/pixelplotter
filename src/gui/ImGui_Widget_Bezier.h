@@ -45,7 +45,7 @@ namespace ImGui
 
 	float BezierValue(float dt01, float P[8]);
 
-    int Bezier(const char *label, float P[8]);
+    int Bezier(const char *label, float P[8], int& lastSelectedIndex);
 
     void ShowBezierDemo();
 }

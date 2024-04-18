@@ -30,6 +30,6 @@ DrawPixelController::DrawPixelController()
 		add(p.first);
 	}
 
-	generateMenuNames("DrawPixel");
+	generateMenuNames("DrawPixels");
 
 }

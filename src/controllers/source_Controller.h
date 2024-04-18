@@ -3,7 +3,6 @@
 #include "ofxImGui.h"
 #include "frameBuffer.h"
 #include "imageFilter_Controller.h"
-#include "generator_Controller.h"
 #include "ofVideoPlayer.h"
 #include "ofVideoGrabber.h"
 #include "ofImage.h"
@@ -27,7 +26,6 @@ public:
 	void addVideo(ofFile file);
 	void loadImage(std::string& filepath);
 	void loadVideo(std::string& filepath);
-	void loadGenerator(std::string& name);
 
 	void buildSourceNames();
 
@@ -36,7 +34,6 @@ public:
 	ofVideoGrabber videoGrabber;
 
 	ImageFilterController iF;
-	GeneratorController gC;
 
 	ofImage original;
 	ofPixels pix; // Use ofImage and turn textures off // Turn on when needed?
@@ -44,7 +41,6 @@ public:
 	std::string src_name = "PixelPlotted";
 	bool showSource = false;
 	bool bUseVideo = false;
-	bool bUseGenerator = false;
 	bool bUseVideoDevice = false;
 	bool isResized = false;
 	bool isLandscape = false;

@@ -10,7 +10,7 @@ float ImGui::BezierValue(float dt01, float P[8])
 	return results[(int)((dt01 < 0 ? 0 : dt01 > 1 ? 1 : dt01) * STEPS)].y;
 }
 
-int ImGui::Bezier(const char* label, float P[8])
+int ImGui::Bezier(const char* label, float P[8], int& lastSelectedIndex)
 {
 	// TODO:
 	// Pause rendering when moving handles?
@@ -59,9 +59,10 @@ int ImGui::Bezier(const char* label, float P[8])
 
 
 	// preset selector
-	/*
+
 	bool reload = 0;
 	ImGui::PushID(label);
+	ImGui::BeginGroup();
 	if (ImGui::ArrowButton("##lt", ImGuiDir_Left)) {
 		if (--P[8] >= 0) reload = 1; else ++P[8];
 	}
@@ -85,13 +86,12 @@ int ImGui::Bezier(const char* label, float P[8])
 	if (ImGui::ArrowButton("##rt", ImGuiDir_Right)) { 
 		if (++P[8] < IM_ARRAYSIZE(presets)) reload = 1; else --P[8];
 	}
-	ImGui::SameLine();
+	ImGui::EndGroup();
 	ImGui::PopID();
 
 	if (reload) {
 		memcpy(P, presets[(int)P[8]].points, sizeof(float) * 8);
 	}
-	*/
 
 	// bezier widget
 
@@ -157,12 +157,19 @@ int ImGui::Bezier(const char* label, float P[8])
 
 		// Assume the first element is the minimum
 		int selected = 0;
-		int minValue = distance[0];
-		for (int i = 1; i < 4; ++i) {
-			if (distance[i] < minValue) {
-				minValue = distance[i];  // Update minValue
-				selected = i;
+		if (lastSelectedIndex == -1 || !IsMouseDown(0))
+		{
+			int minValue = distance[0];
+			for (int i = 1; i < 4; ++i) {
+				if (distance[i] < minValue) {
+					minValue = distance[i];  // Update minValue
+					selected = i;				
+				}
 			}
+		}
+		else
+		{
+			selected = lastSelectedIndex;
 		}
 
 		if (distance[selected] < (20 * GRAB_RADIUS))
@@ -178,12 +185,15 @@ int ImGui::Bezier(const char* label, float P[8])
 				}
 
 				changed = true;
+				lastSelectedIndex = selected;
+			}
+			else
+			{
+				lastSelectedIndex = -1;
 			}
 		}
 
 	}
-
-	// if (hovered || changed) DrawList->PushClipRectFullScreen();
 
 	// draw curve
 	{
@@ -216,12 +226,10 @@ int ImGui::Bezier(const char* label, float P[8])
 	DrawList->AddCircleFilled(p4, GRAB_RADIUS, ImColor(white));
 	DrawList->AddCircleFilled(p4, GRAB_RADIUS - GRAB_BORDER, ImColor(grey));
 
-	// if (hovered || changed) DrawList->PopClipRect();
-
 	return changed;
 }
 
 void ImGui::ShowBezierDemo()
 {
-	{ static float v[8] = { 0, 0, 0.950f, 0.050f, 0.795f, 0.035f, 1, 1 }; Bezier("easeInExpo", v); }
+	{static int selected = -1; static float v[8] = { 0, 0, 0.950f, 0.050f, 0.795f, 0.035f, 1, 1 }; Bezier("easeInExpo", v,selected); }
 }

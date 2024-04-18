@@ -20,7 +20,7 @@ void Canvas::renderImGuiSettings() {
 
 	ImGui::Separator(); // Start Size
 
-	// TODO: Add ratio's (1:1, 1:1.25, Custom)
+	// TODO: Add ratio's dropdown (1:1, 1:1.25, Custom)
 	ImGui::PushItemWidth(60);
 	ImGui::Text("Size"); ImGui::SameLine(75);
 	if (ImGui::DragInt("W ##canvas_W", &canvasWidth, 1, 16, 2400)) {
@@ -63,7 +63,7 @@ void Canvas::renderImGuiSettings() {
 	ImGui::PopItemWidth();
 	ImGui::Separator(); // End Size 
 
-	string sSourceFilterCount = "Plot Source (" + ofToString(sourceController.iF.v_Objects.size() + 1) + ")###Source";
+	string sSourceFilterCount = "Sources (" + ofToString(sourceController.iF.v_Objects.size() + 1) + ")###Source";
 	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 	if (ImGui::CollapsingHeader(sSourceFilterCount.c_str()))
 	{
