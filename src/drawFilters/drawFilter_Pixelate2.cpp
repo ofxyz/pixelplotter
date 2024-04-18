@@ -24,6 +24,7 @@ void Df_pixelate2::InitDefaults()
 	pixelMirror = false;
 	tilesX = 64;
 	tilesY = 64;
+	useCurve = false;
 	// init data so editor knows to take it from here
 	xCurvePoints[0].x = ImGui::CurveTerminator;
 	yCurvePoints[0].x = ImGui::CurveTerminator;
@@ -181,6 +182,14 @@ void Df_pixelate2::loadSettings(ofJson& settings)
 		tilesX = settings.value("tilesX", tilesX);
 		tilesY = settings.value("tilesY", tilesY);
 		pixelMirror = settings.value("pixelMirror", pixelMirror);
+		useCurve = settings.value("useCurve", useCurve);
+
+		for (int i = 0; i < 11; i++) {
+			xCurvePoints[i].x = settings["xCurve"][i][0];
+			xCurvePoints[i].y = settings["xCurve"][i][1];
+			yCurvePoints[i].x = settings["yCurve"][i][0];
+			yCurvePoints[i].y = settings["yCurve"][i][1];
+		}
 
 		ofJson pixelSettings = settings.value("pixelSettings", pixelSettings);
 		drawPixels.v_Objects[selectedPixelType]->loadSettings(pixelSettings);
@@ -199,6 +208,15 @@ ofJson Df_pixelate2::getSettings()
 	settings["tilesX"] = tilesX;
 	settings["tilesY"] = tilesY;
 	settings["pixelMirror"] = pixelMirror;
+	settings["useCurve"] = useCurve;
+
+	for (int i = 0; i < 11; i++) {
+		settings["xCurve"][i][0] = xCurvePoints[i].x;
+		settings["xCurve"][i][1] = xCurvePoints[i].y;
+		settings["yCurve"][i][0] = yCurvePoints[i].x;
+		settings["yCurve"][i][1] = yCurvePoints[i].y;
+	}
+
 	ofJson pixelSettings = drawPixels.v_Objects[selectedPixelType]->getSettings();
 	settings["pixelSettings"] = pixelSettings;
 
