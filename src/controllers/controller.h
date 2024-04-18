@@ -149,6 +149,14 @@ void Controller<t>::renderImGuiSettings()
 	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 	if (ImGui::CollapsingHeader(sHeaderName.c_str()))
 	{
+		ImGui::Indent();
+		if (ofxImGui::VectorCombo("##AddSelector", &_currAddIndex, v_menuValues))
+		{
+			add(v_menuValues[_currAddIndex]);
+			_currAddIndex = 0;
+		}
+		ImGui::Unindent();
+
 		/* We need to make this a bit more controllable using settings ...
 		ImGui::PushStyleColor(ImGuiCol_Header, (ImVec4)ImColor::HSV(0, 0, 0.2));
 		ImGui::PushStyleColor(ImGuiCol_HeaderActive, (ImVec4)ImColor::HSV(0, 0, 0.4));
@@ -164,10 +172,13 @@ void Controller<t>::renderImGuiSettings()
 
 		ImGui::PushStyleColor(ImGuiCol_CheckMark, (ImVec4)ImColor::HSV(0, 0, 0.8));
 		*/
+
 		_bClean   = false;
 		_bReorder = false;
 
-		for (int i = 0; i < v_Objects.size(); i++) {
+		// Order Top Down to Reflect Drawing order
+		//for (int i = 0; i < v_Objects.size(); i++) {
+		for (int i = v_Objects.size()-1; i >= 0; i--) {
 			if (v_Objects[i]->isAlive()) {
 				ImGui::Indent();
 				ImGui::PushID(i);
@@ -184,14 +195,6 @@ void Controller<t>::renderImGuiSettings()
 		}
 
 		// ImGui::PopStyleColor(10);
-
-		ImGui::Indent();
-		if (ofxImGui::VectorCombo("##AddSelector", &_currAddIndex, v_menuValues))
-		{
-			add(v_menuValues[_currAddIndex]);
-			_currAddIndex = 0;
-		}
-		ImGui::Unindent();
 
 	}
 	ImGui::PopID();

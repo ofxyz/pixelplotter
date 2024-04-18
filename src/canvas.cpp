@@ -67,8 +67,10 @@ void Canvas::renderImGuiSettings() {
 	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 	if (ImGui::CollapsingHeader(sSourceFilterCount.c_str()))
 	{
+		ImGui::Indent();
 		sourceController.renderImGuiSettings();
 		sourceController.iF.renderImGuiSettings();
+		ImGui::Unindent();
 	} // End Plot Source
 
 	dF.renderImGuiSettings();

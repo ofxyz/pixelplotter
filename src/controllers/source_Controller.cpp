@@ -15,20 +15,22 @@ void SourceController::renderImGuiSettings()
 			loadSourceIndex();
 			loadImageNextFrame = true;
 		}
-	}
 
-	ImGui::SameLine();
-	if (showSource) {
-		if (ImGui::Button("Hide Source"))
-		{
-			showSource = false;
+		ImGui::SameLine();
+		if (showSource) {
+			if (ImGui::Button("Hide Source"))
+			{
+				showSource = false;
+			}
 		}
-	}
-	else {
-		if (ImGui::Button("Show Source"))
-		{
-			showSource = true;
+		else {
+			if (ImGui::Button("Show Source"))
+			{
+				showSource = true;
+			}
 		}
+
+		ImGui::Checkbox("Update Canvas Dimension When Loading Source", &bUpdateCanvasOnSourceLoad);
 	}
 }
 
@@ -36,6 +38,7 @@ void SourceController::loadSettings(ofJson settings)
 {
 	std::string sourceString = settings.value("source", std::string());
 	currentSourceIndex = ofx2d::getIndex(sourceNames, sourceString, currentSourceIndex);
+	bUpdateCanvasOnSourceLoad = settings.value("bUpdateCanvasOnSourceLoad", bUpdateCanvasOnSourceLoad);
 	loadSourceIndex();
 }
 
@@ -43,6 +46,7 @@ ofJson SourceController::getSettings()
 {
 	ofJson settings;
 	settings["source"] = sourceNames[currentSourceIndex];
+	settings["bUpdateCanvasOnSourceLoad"] = bUpdateCanvasOnSourceLoad;
 	return settings;
 }
 
@@ -129,7 +133,7 @@ void SourceController::loadSourceIndex() {
 				videoGrabber.setDeviceID(it->id);
 				// videoGrabber.setDesiredFrameRate(pixelplotter->_targetFps);
 				videoGrabber.setup(camWidth, camHeight);
-				pixelplotter->plotCanvas.setDimensions(camWidth, camHeight);
+				if(bUpdateCanvasOnSourceLoad) pixelplotter->plotCanvas.setDimensions(camWidth, camHeight);
 				pix = videoGrabber.getPixels();
 				prepImg();
 				return;
@@ -185,7 +189,7 @@ void SourceController::loadImage(string& filepath) {
 	bUseVideoDevice = false;
 	videoPlayer.stop();
 	videoPlayer.close();
-	pixelplotter->plotCanvas.setDimensions(pix.getWidth(), pix.getHeight());
+	if (bUpdateCanvasOnSourceLoad) pixelplotter->plotCanvas.setDimensions(pix.getWidth(), pix.getHeight());
 	prepImg();
 }
 
@@ -205,7 +209,7 @@ void SourceController::loadVideo(string& filepath) {
 	(videoPlayer.getWidth() > videoPlayer.getHeight()) ? isLandscape = true : isLandscape = false;
 	(isLandscape) ? imgRatio = videoPlayer.getHeight() / videoPlayer.getWidth() : imgRatio = videoPlayer.getWidth() / videoPlayer.getHeight();
 
-	pixelplotter->plotCanvas.setDimensions(videoPlayer.getWidth(), videoPlayer.getHeight());
+	if (bUpdateCanvasOnSourceLoad) pixelplotter->plotCanvas.setDimensions(videoPlayer.getWidth(), videoPlayer.getHeight());
 }
 
 void SourceController::prepImg() {
