@@ -14,7 +14,7 @@ void G_plaids::update() {
 void G_plaids::draw() {
 	ofPushStyle();
 	ofFill();
-	ofSetColor(c_base);
+	ofSetColor((ofColor)c_base);
 	ofDrawRectangle(0, 100, width, 100);
 	ofPopStyle();
 }

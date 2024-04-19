@@ -19,8 +19,8 @@ void Dp_separateRGB_Bars01::renderImGuiSettings() {
 
 void Dp_separateRGB_Bars01::draw(ofColor c, glm::vec2 dim, glm::vec2 pos /*= { 0,0 }*/, glm::vec2 posNorm /*= { 0,0 }*/)
 {
-	float whiteVal = min(min(c.r, c.g), c.b);
-	float blackVal = 255 - max(max(c.r, c.g), c.b);
+	float whiteVal = std::min(std::min(c.r, c.g), c.b);
+	float blackVal = 255 - std::max(std::max(c.r, c.g), c.b);
 
 	glm::vec4 rgbk = { (float)c.r - whiteVal, (float)c.g - whiteVal, (float)c.b - whiteVal, blackVal };
 

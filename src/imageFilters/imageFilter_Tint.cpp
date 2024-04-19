@@ -53,7 +53,7 @@ void If_tint::apply(ofImage* img) {
 	cfbo.clearColorBuffer(ofColor(0, 0, 0));
 	ofEnableAlphaBlending();
 	ofPushStyle();
-	ofSetColor(c_Tint);
+	ofSetColor((ofColor)c_Tint);
 	img->draw(0, 0, img->getWidth(), img->getHeight());
 	ofPopStyle();
 	ofDisableAlphaBlending();

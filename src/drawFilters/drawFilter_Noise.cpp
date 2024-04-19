@@ -147,12 +147,12 @@ void Df_noise::drawPixel(int x, int y) {
 
 	ofPushStyle();
 	ofEnableAlphaBlending();
-	ofSetColor(cBg);
+	ofSetColor((ofColor)cBg);
 	ofDrawRectangle(x, y, 10, 10);
 
 	for (auto col : palette) {
 		if (col->percent > 0) {
-			ofSetColor(col->color);
+			ofSetColor((ofColor)col->color);
 			for (int count = 0; count < col->percent; count++) {
 				if (subpixels.size() > 0) { // Make sure we have pixels left
 					int p = ofRandom(subpixels.size() - 1);

@@ -1,6 +1,5 @@
 ofx2d
 ofxOpenCv
 ofxCv
-ofxIconFontCppHeaders
 ofxImGui
 ofxOrnament

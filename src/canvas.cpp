@@ -218,7 +218,7 @@ void Canvas::updateFbo(ofImage* img) {
 		ofBeginSaveScreenAsPDF("export//" + canvasTitle + "_" + stamp + ".pdf", false);
 	}
 
-	ofClear(c_canvas);
+	ofClear((ofColor)c_canvas);
 
 	dF.draw(img, canvasWidth, canvasHeight);
 

@@ -21,7 +21,7 @@ void Dp_separateCMYK_Para01::draw(ofColor c, glm::vec2 dim, glm::vec2 pos /*= { 
 {
 	glm::vec4 cmyk = ofx2d::getCMYK(c);
 
-	float whiteVal = min(min(c.r, c.g), c.b);
+	float whiteVal = std::min(std::min(c.r, c.g), c.b);
 	if (whiteVal > 0) {
 		whiteVal /= 255;
 	}
@@ -50,11 +50,11 @@ void Dp_separateCMYK_Para01::draw(ofColor c, glm::vec2 dim, glm::vec2 pos /*= { 
 	// But ignore anything which isn't drawn ...
 	std::vector<std::pair<float, /*color*/ImVec4>> cmykValues;
 	
-	if (cmyk[0] > 0) cmykValues.push_back(make_pair(cmyk[0], c_cyanBlue));
-	if (cmyk[1] > 0) cmykValues.push_back(make_pair(cmyk[1], c_magentaRed));
-	if (cmyk[2] > 0) cmykValues.push_back(make_pair(cmyk[2], c_yellowGreen));
-	if (cmyk[3] > 0) cmykValues.push_back(make_pair(cmyk[3], c_black));
-	if (whiteVal > 0) cmykValues.push_back(make_pair(whiteVal, c_white));
+	if (cmyk[0] > 0)  cmykValues.push_back(std::make_pair(cmyk[0],  c_cyanBlue));
+	if (cmyk[1] > 0)  cmykValues.push_back(std::make_pair(cmyk[1],  c_magentaRed));
+	if (cmyk[2] > 0)  cmykValues.push_back(std::make_pair(cmyk[2],  c_yellowGreen));
+	if (cmyk[3] > 0)  cmykValues.push_back(std::make_pair(cmyk[3],  c_black));
+	if (whiteVal > 0) cmykValues.push_back(std::make_pair(whiteVal, c_white));
 
 	if (cmykValues.size() == 0) return;
 

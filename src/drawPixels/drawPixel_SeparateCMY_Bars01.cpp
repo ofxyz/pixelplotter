@@ -21,7 +21,7 @@ void Dp_separateCMY_Bars01::draw(ofColor c, glm::vec2 dim, glm::vec2 pos /*= { 0
 {
 	glm::vec3 cmy = ofx2d::getCMY(c);
 	
-	float whiteVal = min(min(c.r, c.g), c.b);
+	float whiteVal = std::min(std::min(c.r, c.g), c.b);
 	if (whiteVal > 0) {
 		whiteVal /= 255;
 	}

@@ -830,7 +830,7 @@ void Df_pixelate::drawStarHash(float offsetX, float offsetY, float w, float h, o
 	ofNoFill();
 	ofSetLineWidth(strokeWidth);
 	//ofSetColor(c);
-	ofSetColor(c_black);
+	ofSetColor((ofColor)c_black);
 
 	// Width should be length of diagonal
 

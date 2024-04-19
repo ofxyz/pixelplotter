@@ -106,7 +106,7 @@ void Df_rings::draw(ofImage* input, float width, float height) {
 	//---------------------------------
 
 	ofPushStyle();
-	ofSetColor(c_blob);
+	ofSetColor((ofColor)c_blob);
 	ofNoFill();
 	ofSetLineWidth(lineWidth);
 
