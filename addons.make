@@ -3,3 +3,4 @@ ofxOpenCv
 ofxCv
 ofxIconFontCppHeaders
 ofxImGui
+ofxOrnament

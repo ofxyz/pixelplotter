@@ -179,18 +179,6 @@ void OfGui::drawMenuBar()
 			ImGui::EndMenu();
 		}
 
-		static std::string sRenderStatus = "Pause Rendering [p]";
-		if (ImGui::MenuItem(sRenderStatus.c_str())) {
-			if (_bRenderingPaused) {
-				_bRenderingPaused = false;
-				sRenderStatus = "Pause Rendering [p]";
-			}
-			else {
-				_bRenderingPaused = true;
-				sRenderStatus = "Continue Rendering [p]";
-			}
-		}
-
 		ImGui::Separator();
 		if (ImGui::MenuItem("Quit")) {
 			ofExit();
@@ -256,13 +244,25 @@ void OfGui::drawMenuBar()
 	}
 
 	static float fps = 0.0f;
-	if (_bShowFps) {
+	if (_bShowFps || renderingPaused()) {
 		if(ofGetFrameNum()%10 == 0) fps = round(ofGetFrameRate());
 		fpsStringStream.str(std::string());
 		fpsStringStream.clear();
 		fpsStringStream << "(FPS: " << fps << ")";
+		if (renderingPaused()) fpsStringStream << " Rendering Paused ...";
 
 		if (ImGui::BeginMenu(fpsStringStream.str().c_str())) {
+			static std::string sRenderStatus = "Pause Rendering [p]";
+			if (ImGui::MenuItem(sRenderStatus.c_str())) {
+				if (_bRenderingPaused) {
+					_bRenderingPaused = false;
+					sRenderStatus = "Pause Rendering [p]";
+				}
+				else {
+					_bRenderingPaused = true;
+					sRenderStatus = "Continue Rendering [p]";
+				}
+			}
 			ImGui::EndMenu();
 		}
 	}
@@ -486,10 +486,24 @@ void OfGui::loadPresetDir()
 {
 	presetFileNames.clear();
 	presetFiles = ofDirectory(ofToDataPath("presets", true)).getFiles();
+	
+	/* Only load JSON files */
+	presetFiles.erase(
+		std::remove_if(
+			presetFiles.begin(),
+			presetFiles.end(),
+			[](ofFile const& f) {
+				return f.getFileName().substr(f.getFileName().find_last_of('.'), -1) != ".json";
+			}
+		),
+		presetFiles.end()
+	);
+
 	for (int i = 0; i < presetFiles.size(); i++)
 	{
 		string base_filename = presetFiles[i].getFileName();
 		string pname = base_filename.substr(0, base_filename.find_last_of('.'));
+		string ext = base_filename.substr(base_filename.find_last_of('.'),-1);
 		presetFileNames.push_back(pname);
 	}
 }

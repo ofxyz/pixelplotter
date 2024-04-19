@@ -39,7 +39,7 @@ public:
 	ofPixels pix; // Use ofImage and turn textures off // Turn on when needed?
 
 	std::string src_name = "PixelPlotted";
-	bool bUpdateCanvasOnSourceLoad = false;
+	bool bUpdateCanvasOnSourceLoad = true;
 	bool showSource = false;
 	bool bUseVideo = false;
 	bool bUseVideoDevice = false;

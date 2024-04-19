@@ -191,7 +191,6 @@ void Canvas::update() {
 
 		resizeRequest = false;
 		setFresh(true);
-
 	}
 
 	/*
