@@ -205,6 +205,7 @@
     <ClCompile Include="..\..\addons\ofxImGui\libs\imgui\backends\imgui_impl_opengl3.cpp" />
     <ClCompile Include="..\..\addons\ofxImGui\libs\imgui\extras\imgui_stdlib.cpp" />
     <ClCompile Include="..\..\addons\ofxImGui\libs\imgui\src\imgui_tables.cpp" />
+    <ClCompile Include="src\imageFilters\imageFilter_Ornament.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
     <ClCompile Include="src\canvas.cpp" />
@@ -305,6 +306,7 @@
     <ClInclude Include="..\..\addons\ofxImGui\libs\imgui\backends\imgui_impl_opengl3.h" />
     <ClInclude Include="..\..\addons\ofxImGui\libs\imgui\extras\imgui_stdlib.h" />
     <ClInclude Include="src\gui\IconsFontAwesome5.h" />
+    <ClInclude Include="src\imageFilters\imageFilter_Ornament.h" />
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="src\canvas.h" />
     <ClInclude Include="src\controllers\controller.h" />

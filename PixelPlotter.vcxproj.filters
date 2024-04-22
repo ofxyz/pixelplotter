@@ -301,6 +301,9 @@
     <ClCompile Include="..\..\addons\ofxImGui\libs\imgui\src\imgui_tables.cpp">
       <Filter>addons\ofxImGui\libs\imgui\src</Filter>
     </ClCompile>
+    <ClCompile Include="src\imageFilters\imageFilter_Ornament.cpp">
+      <Filter>src\imageFilters</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -1579,6 +1582,9 @@
     </ClInclude>
     <ClInclude Include="..\..\addons\ofxImGui\libs\imgui\backends\imgui_impl_glfw_context_support.h">
       <Filter>addons\ofxImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imageFilters\imageFilter_Ornament.h">
+      <Filter>src\imageFilters</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
