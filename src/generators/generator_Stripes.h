@@ -2,16 +2,17 @@
 
 #include "generator.h"
 
-class G_plaids : public Generator {
+class G_stripes : public Generator {
 public:
-	G_plaids() {
+	G_stripes() {
 		pixelplotter = (ofApp*)ofGetAppPtr();
-		name = "Plaids";
+		name = "Stripes";
+		setup(100, 100);
 	};
 
-	G_plaids(ofJson& settings) {
+	G_stripes(ofJson& settings) {
 		pixelplotter = (ofApp*)ofGetAppPtr();
-		name = "Plaids";
+		name = "Stripes";
 		loadSettings(settings);
 	};
 
@@ -25,8 +26,6 @@ public:
 
 private:
 	void drawPattern();
-	int width = 100;
-	int height = 100;
 	int xcount = 1;
 	int ycount = 1;
 	ImVec4 c_base = ofColor(0, 255, 255, 155);

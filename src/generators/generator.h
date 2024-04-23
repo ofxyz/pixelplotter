@@ -20,7 +20,7 @@ public:
 
 	std::string name;
 
-	int width = 100;
+	int width  = 100;
 	int height = 100;
 
 	ImVec4 c_bg;

@@ -85,9 +85,6 @@
     <ClCompile Include="src\generators\generator.cpp">
       <Filter>src\generators</Filter>
     </ClCompile>
-    <ClCompile Include="src\generators\generator_Plaids.cpp">
-      <Filter>src\generators</Filter>
-    </ClCompile>
     <ClCompile Include="src\gui\ImGui_Widget_Bezier.cpp">
       <Filter>src\gui</Filter>
     </ClCompile>
@@ -306,6 +303,12 @@
     </ClCompile>
     <ClCompile Include="..\..\addons\ofxColorGradient\src\ofxColorGradient.cpp">
       <Filter>addons\ofxColorGradient\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\generators\generator_Gradient.cpp">
+      <Filter>src\generators</Filter>
+    </ClCompile>
+    <ClCompile Include="src\generators\generator_Stripes.cpp">
+      <Filter>src\generators</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -597,9 +600,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\generators\generator.h">
-      <Filter>src\generators</Filter>
-    </ClInclude>
-    <ClInclude Include="src\generators\generator_Plaids.h">
       <Filter>src\generators</Filter>
     </ClInclude>
     <ClInclude Include="src\gui\ImGui_General.h">
@@ -1597,6 +1597,12 @@
     </ClInclude>
     <ClInclude Include="..\..\addons\ofxColorGradient\src\ofxColorGradient.h">
       <Filter>addons\ofxColorGradient\src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\generators\generator_Gradient.h">
+      <Filter>src\generators</Filter>
+    </ClInclude>
+    <ClInclude Include="src\generators\generator_Stripes.h">
+      <Filter>src\generators</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

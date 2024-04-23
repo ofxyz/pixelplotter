@@ -121,7 +121,7 @@ void SourceController::setup() {
 
 	buildSourceNames();
 
-	currentSourceIndex = ofRandom(videoDeviceNames.size() + videoFileNames.size(), sourceNames.size() - 1);
+	currentSourceIndex = ofRandom(videoDeviceNames.size() + videoFileNames.size() + gC.v_Objects.size(), sourceNames.size() - 1);
 
 	loadSourceIndex();
 }

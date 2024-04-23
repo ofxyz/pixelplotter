@@ -1,12 +1,14 @@
 #include "generator_Controller.h"
-#include "generator_Plaids.h"
+#include "generator_Stripes.h"
+#include "generator_Gradient.h"
 
 GeneratorController::GeneratorController()
 	: Controller()
 {
 	// Manual Mapping ...
 
-	mapObjectTypes["Plaids"] = createInstance<G_plaids>;
+	mapObjectTypes["Stripes"]  = createInstance<G_stripes>;
+	mapObjectTypes["Gradient"] = createInstance<G_gradient>;
 
 	for (auto p : mapObjectTypes) {
 		v_objectNames.push_back(p.first);

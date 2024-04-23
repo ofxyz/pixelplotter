@@ -57,7 +57,7 @@ void Df_pixelate2::draw(ofImage* input, float width /*= 0*/, float height /*= 0*
 		xpos.push_back(posNorm * (float)imgW);
 	}
 
-	std::sort(xpos.begin(), xpos.end());
+	//std::sort(xpos.begin(), xpos.end());
 
 	for (i = 0; i < tilesY; i++) {
 		float posNorm = 0;
@@ -70,7 +70,7 @@ void Df_pixelate2::draw(ofImage* input, float width /*= 0*/, float height /*= 0*
 		ypos.push_back(posNorm * (float)imgH);
 	}
 
-	std::sort(ypos.begin(), ypos.end());
+	//std::sort(ypos.begin(), ypos.end());
 
 	// Update(): This is where we start drawing :)
 
