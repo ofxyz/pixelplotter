@@ -72,6 +72,14 @@ void SourceController::update()
 			prepImg();
 		}
 	}
+	else if (bUseGenerator) {
+		gC.v_Objects[currentGeneratorIndex]->update();
+		if (gC.isFresh()) {
+			gC.v_Objects[currentGeneratorIndex]->m_fbo.readToPixels(pix);
+			prepImg();
+			gC.setFresh(false);
+		}
+	}
 	else { // Static Image
 		if (iF.isFresh()) {
 			pix = original.getPixels();
@@ -117,6 +125,7 @@ void SourceController::buildSourceNames() {
 	sourceNames.clear();
 	sourceNames.insert(sourceNames.end(), videoDeviceNames.begin(), videoDeviceNames.end());
 	sourceNames.insert(sourceNames.end(), videoFileNames.begin(), videoFileNames.end());
+	sourceNames.insert(sourceNames.end(), gC.v_objectNames.begin(), gC.v_objectNames.end());
 	sourceNames.insert(sourceNames.end(), imgFileNames.begin(), imgFileNames.end());
 }
 
@@ -143,15 +152,18 @@ void SourceController::loadSourceIndex() {
 	else if (currentSourceIndex < videoDevices.size() + videoFiles.size()) {
 		loadVideo(videoFiles[currentSourceIndex - videoDevices.size()].getAbsolutePath());
 	}
+	else if (currentSourceIndex < videoDevices.size() + videoFiles.size() + gC.v_objectNames.size()) {
+		loadGenerator(gC.v_objectNames[currentSourceIndex - videoDevices.size() - videoFiles.size()]);
+	}
 	else {
-		loadImage(imgFiles[currentSourceIndex - videoDevices.size() - videoFiles.size()].getAbsolutePath());
+		loadImage(imgFiles[currentSourceIndex - videoDevices.size() - videoFiles.size() - gC.v_objectNames.size()].getAbsolutePath());
 	}
 
 	isResized = true;
 }
 
 int SourceController::getSourceCount() {
-	return (int)(videoDeviceNames.size() + videoFileNames.size() + imgFileNames.size());
+	return (int)(videoDeviceNames.size() + videoFileNames.size() + gC.v_objectNames.size() + imgFileNames.size());
 };
 
 void SourceController::addImage(ofFile file) {
@@ -187,6 +199,7 @@ void SourceController::loadImage(string& filepath) {
 
 	bUseVideo = false;
 	bUseVideoDevice = false;
+	bUseGenerator = false;
 	videoPlayer.stop();
 	videoPlayer.close();
 	if (bUpdateCanvasOnSourceLoad) pixelplotter->plotCanvas.setDimensions(pix.getWidth(), pix.getHeight());
@@ -196,6 +209,7 @@ void SourceController::loadImage(string& filepath) {
 void SourceController::loadVideo(string& filepath) {
 	bUseVideo = true;
 	bUseVideoDevice = false;
+	bUseGenerator = false;
 
 	videoPlayer.load(filepath);
 	//videoPlayer.setUseTexture(false);
@@ -212,6 +226,27 @@ void SourceController::loadVideo(string& filepath) {
 	if (bUpdateCanvasOnSourceLoad) pixelplotter->plotCanvas.setDimensions(videoPlayer.getWidth(), videoPlayer.getHeight());
 }
 
+void SourceController::loadGenerator(string & name) {
+	// This needs it's own function
+	bUseVideo = false;
+	bUseVideoDevice = false;
+	bUseGenerator = true;
+	videoPlayer.stop();
+	videoPlayer.close();
+
+	src_name = name;
+
+	currentGeneratorIndex = ofx2d::getIndex(gC.v_objectNames, name, -1);
+
+	if (currentGeneratorIndex >= 0) {
+		gC.v_Objects[currentGeneratorIndex]->setup(frameBuffer.getWidth(), frameBuffer.getHeight());
+	}
+
+	gC.v_Objects[currentGeneratorIndex]->m_fbo.readToPixels(pix);
+	prepImg();
+	gC.setFresh(false);
+}
+
 void SourceController::prepImg() {
 	static ofImage updatedFrame;
 	if (updatedFrame.isAllocated() == false) {
@@ -224,6 +259,9 @@ void SourceController::prepImg() {
 		filter->apply(&updatedFrame);
 		pix = updatedFrame.getPixels();
 	}
+
 	iF.setFresh(false);
+	gC.setFresh(false);
+
 	frameBuffer.addFrame(pix);
 }

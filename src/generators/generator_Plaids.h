@@ -4,7 +4,6 @@
 
 class G_plaids : public Generator {
 public:
-	// TODO: Finish
 	G_plaids() {
 		pixelplotter = (ofApp*)ofGetAppPtr();
 		name = "Plaids";

@@ -4,6 +4,11 @@
 void G_plaids::setup(int _width, int _height) {
 	width = _width;
 	height = _height;
+	m_fbo.allocate(width, height);
+	
+	m_fbo.begin();
+	draw();
+	m_fbo.end();
 	setFresh(true);
 }
 

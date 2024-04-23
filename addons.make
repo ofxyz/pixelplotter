@@ -3,3 +3,5 @@ ofxOpenCv
 ofxCv
 ofxImGui
 ofxOrnament
+ofxColorGradient
+

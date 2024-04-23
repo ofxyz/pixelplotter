@@ -6,4 +6,5 @@ class GeneratorController : public Controller<Generator>
 {
 	public:
 		GeneratorController();
+		void draw(int width, int height);
 };

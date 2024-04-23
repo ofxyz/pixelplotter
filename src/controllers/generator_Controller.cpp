@@ -10,8 +10,16 @@ GeneratorController::GeneratorController()
 
 	for (auto p : mapObjectTypes) {
 		v_objectNames.push_back(p.first);
+		add(p.first);
 	}
 
 	generateMenuNames("Generators");
 
+}
+
+void GeneratorController::draw(int width, int height) {
+	for (const auto & g : v_Objects) {
+		g->draw();
+	}
+	setFresh(false);
 }
