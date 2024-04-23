@@ -310,6 +310,9 @@
     <ClCompile Include="src\generators\generator_Stripes.cpp">
       <Filter>src\generators</Filter>
     </ClCompile>
+    <ClCompile Include="src\imageFilters\imageFilter_8Bit.cpp">
+      <Filter>src\imageFilters</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -1603,6 +1606,9 @@
     </ClInclude>
     <ClInclude Include="src\generators\generator_Stripes.h">
       <Filter>src\generators</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imageFilters\imageFilter_8Bit.h">
+      <Filter>src\imageFilters</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

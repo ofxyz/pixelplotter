@@ -7,6 +7,7 @@
 #include "imageFilter_DrawPixel.h"
 #include "imageFilter_Rotate.h"
 #include "imageFilter_Ornament.h"
+#include "imageFilter_8Bit.h"
 
 ImageFilterController::ImageFilterController()
 	: Controller()
@@ -19,6 +20,7 @@ ImageFilterController::ImageFilterController()
 	mapObjectTypes["DrawPixel"] = createInstance<If_drawPixel>;
 	mapObjectTypes["Rotate"] = createInstance<If_rotate>;
 	mapObjectTypes["Ornament"] = createInstance<If_ornament>;
+	mapObjectTypes["8Bit"] = createInstance<If_8bit>;
 
 	for (auto p : mapObjectTypes) {
 		v_objectNames.push_back(p.first);
