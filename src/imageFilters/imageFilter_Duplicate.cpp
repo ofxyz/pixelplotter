@@ -1,5 +1,6 @@
 #include "imageFilter_Duplicate.h"
 #include "ofFbo.h"
+#include "ofApp.h"
 
 // Add resize option?
 
@@ -56,26 +57,26 @@ void If_duplicate::apply(ofImage* img) {
 	float height = img->getHeight() / vCount;
 
 	cfbo.begin();
-	cfbo.clearColorBuffer(ofColor(0, 0, 0));
-	int xcount = 0;
-	int ycount = 0;
-	for (float y = 0; y < vCount * height; y += height) {
-		float newHeight = height;
-		float newY = y;
-		if (bMirror && (ycount % 2 == 1)) {
-			newHeight = -height;
-			newY = y + height;
-		}
-		for (float x = 0; x < hCount * width; x += width) {
-			if (bMirror && (xcount % 2 == 0)) {
-				img->draw(x + width, newY, -width, newHeight);
+	cfbo.clearColorBuffer(ofColor(0, 0, 0, 0));
+
+	for (int y = 0; y < vCount; y++) {
+		ofPushMatrix();
+		ofTranslate(0, y*height);
+		for (int x = 0; x < hCount; x++) {
+			ofPushMatrix();
+			ofTranslate(x*width, 0);
+			// Center for scale
+			ofTranslate(width * 0.5, height * 0.5);
+			if (bMirror && (x % 2 == 1)) {
+				ofScale(-1, 1);
 			}
-			else {
-				img->draw(x, newY, width, newHeight);
+			if (bMirror && (y % 2 == 1)) {
+				ofScale(1, -1);
 			}
-			xcount++;
+			img->draw(-(width * 0.5), -(height * 0.5), width, height);
+			ofPopMatrix();
 		}
-		ycount++;
+		ofPopMatrix();
 	}
 	cfbo.end();
 

@@ -30,6 +30,11 @@ void SourceController::renderImGuiSettings()
 		}
 
 		ImGui::Checkbox("Update Canvas Dimension When Loading Source", &bUpdateCanvasOnSourceLoad);
+		ImGui::Separator(); // Start Source Settings
+
+		if (bUseGenerator) {
+			gC.v_Objects[currentGeneratorIndex]->renderImGuiSettings();
+		}
 	}
 }
 

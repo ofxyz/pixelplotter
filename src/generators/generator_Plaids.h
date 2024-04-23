@@ -15,7 +15,7 @@ public:
 		loadSettings(settings);
 	};
 
-	void setup(int width = 100, int height = 100) override;
+	void setup(int width, int height) override;
 	void update() override;
 	void draw() override;
 
@@ -25,8 +25,10 @@ public:
 
 private:
 	void drawPattern();
-	int width, height;
+	int width = 100;
+	int height = 100;
 	int xcount = 1;
 	int ycount = 1;
-	ImVec4 c_base = ofColor(0, 255, 255, 255);
+	ImVec4 c_base = ofColor(0, 255, 255, 155);
+	ImVec4 c_base2 = ofColor(255, 0, 255, 155);
 };
