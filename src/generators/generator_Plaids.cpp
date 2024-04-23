@@ -4,24 +4,25 @@
 void G_plaids::setup(int _width, int _height) {
 	width = _width;
 	height = _height;
+	bVisible = true;
 	m_fbo.allocate(width, height);
-	
-	m_fbo.begin();
-	draw();
-	m_fbo.end();
 	setFresh(true);
+	update();
 }
 
 void G_plaids::update() {
-
+	if (isFresh()) {
+		m_fbo.begin();
+		m_fbo.clearColorBuffer(ofColor(255, 255, 255, 0));
+		drawPattern();
+		m_fbo.end();
+		setFresh(false);
+	}
 }
 
 void G_plaids::draw() {
-	ofPushStyle();
-	ofFill();
-	ofSetColor((ofColor)c_base);
-	ofDrawRectangle(0, 100, width, 100);
-	ofPopStyle();
+	if (!bVisible) return;
+	drawPattern();
 }
 
 void G_plaids::renderImGuiSettings() {
@@ -49,4 +50,12 @@ void G_plaids::loadSettings(ofJson& settings) {
 ofJson G_plaids::getSettings() {
 	ofJson settings;
 	return settings;
+}
+
+void G_plaids::drawPattern() {
+	ofPushStyle();
+	ofFill();
+	ofSetColor((ofColor)c_base);
+	ofDrawRectangle(0, 0, width, height * 0.25);
+	ofPopStyle();
 }

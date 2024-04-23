@@ -15,7 +15,7 @@ public:
 		loadSettings(settings);
 	};
 
-	void setup(int width, int height) override;
+	void setup(int width = 100, int height = 100) override;
 	void update() override;
 	void draw() override;
 
@@ -24,6 +24,7 @@ public:
 	ofJson getSettings() override;
 
 private:
+	void drawPattern();
 	int width, height;
 	int xcount = 1;
 	int ycount = 1;

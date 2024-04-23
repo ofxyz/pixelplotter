@@ -12,7 +12,6 @@ void SourceController::renderImGuiSettings()
 	{
 		if (ofxImGui::VectorCombo("##Sources", &currentSourceIndex, sourceNames))
 		{
-			loadSourceIndex();
 			loadImageNextFrame = true;
 		}
 
@@ -54,8 +53,8 @@ void SourceController::update()
 {
 	if (loadImageNextFrame)
 	{
-		loadSourceIndex();
 		loadImageNextFrame = false;
+		loadSourceIndex();
 	}
 
 	if (bUseVideoDevice) {
@@ -73,18 +72,19 @@ void SourceController::update()
 		}
 	}
 	else if (bUseGenerator) {
-		gC.v_Objects[currentGeneratorIndex]->update();
-		if (gC.isFresh()) {
+		bool genIsFresh = gC.v_Objects[currentGeneratorIndex]->isFresh();
+		bool filterIsFresh = iF.isFresh();
+
+		if (gC.v_Objects[currentGeneratorIndex]->isFresh() || iF.isFresh()) {
+			gC.v_Objects[currentGeneratorIndex]->update();
 			gC.v_Objects[currentGeneratorIndex]->m_fbo.readToPixels(pix);
 			prepImg();
-			gC.setFresh(false);
 		}
 	}
 	else { // Static Image
 		if (iF.isFresh()) {
 			pix = original.getPixels();
 			prepImg();
-			iF.setFresh(false);
 		}
 	}
 
@@ -132,6 +132,8 @@ void SourceController::buildSourceNames() {
 void SourceController::loadSourceIndex() {
 	if (currentSourceIndex < videoDevices.size()) {
 		bUseVideoDevice = true;
+		bUseGenerator = false;
+
 		for (vector<ofVideoDevice>::iterator it = videoDevices.begin(); it != videoDevices.end(); ++it) {
 			if (it->deviceName == sourceNames[currentSourceIndex]) {
 				if (bUseVideo) {
@@ -240,11 +242,9 @@ void SourceController::loadGenerator(string & name) {
 
 	if (currentGeneratorIndex >= 0) {
 		gC.v_Objects[currentGeneratorIndex]->setup(frameBuffer.getWidth(), frameBuffer.getHeight());
+		gC.v_Objects[currentGeneratorIndex]->m_fbo.readToPixels(pix);
+		prepImg();
 	}
-
-	gC.v_Objects[currentGeneratorIndex]->m_fbo.readToPixels(pix);
-	prepImg();
-	gC.setFresh(false);
 }
 
 void SourceController::prepImg() {
@@ -261,7 +261,6 @@ void SourceController::prepImg() {
 	}
 
 	iF.setFresh(false);
-	gC.setFresh(false);
 
 	frameBuffer.addFrame(pix);
 }
