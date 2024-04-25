@@ -58,7 +58,8 @@ void OfGui::setup()
 	gui.addFont(FONT_ICON_FILE_NAME_FAS, iconFontSize, &icons_config, icons_ranges);
 	// use FONT_ICON_FILE_NAME_FAR if you want regular instead of solid
 
-	ImGui::StyleColorsDark();
+	//ImGui::StyleColorsDark();
+	ImGui::StyleColorsLight();
 	ImGuiStyle* style = &ImGui::GetStyle();
 
 	// Sizes
@@ -102,11 +103,11 @@ void OfGui::setup()
 	// Misc
 	style->DisplaySafeAreaPadding = ImVec2(0, 0);
 	style->Alpha = 1.0f;
-	
-	/*
-	style->Colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
-	*/
 
+	// Colour fixes, works for all colour style modes
+	style->Colors[ImGuiCol_PopupBg] = style->Colors[ImGuiCol_WindowBg];
+	//style->Colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+	
 	loadPresetDir();
 }
 

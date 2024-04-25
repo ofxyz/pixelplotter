@@ -1,0 +1,89 @@
+// https://github.com/effekseer/ImGradientHDR
+
+/*
+MIT License
+
+Copyright (c) 2022 Effekseer
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
+#pragma once
+
+#include <array>
+#include <stdint.h>
+
+const int32_t MarkerMax = 8;
+
+struct ImGradientHDRState
+{
+	struct ColorMarker
+	{
+		float Position;
+		std::array<float, 3> Color;
+		float Intensity;
+	};
+
+	struct AlphaMarker
+	{
+		float Position;
+		float Alpha;
+	};
+
+	int ColorCount = 0;
+	int AlphaCount = 0;
+	std::array<ColorMarker, MarkerMax> Colors;
+	std::array<AlphaMarker, MarkerMax> Alphas;
+
+	ColorMarker* GetColorMarker(int32_t index);
+
+	AlphaMarker* GetAlphaMarker(int32_t index);
+
+	bool AddColorMarker(float x, std::array<float, 3> color, float intensity);
+
+	bool AddAlphaMarker(float x, float alpha);
+
+	bool RemoveColorMarker(int32_t index);
+
+	bool RemoveAlphaMarker(int32_t index);
+
+	std::array<float, 4> GetCombinedColor(float x) const;
+
+	std::array<float, 4> GetColorAndIntensity(float x) const;
+
+	float GetAlpha(float x) const;
+};
+
+enum class ImGradientHDRMarkerType
+{
+	Color,
+	Alpha,
+	Unknown,
+};
+
+struct ImGradientHDRTemporaryState
+{
+	ImGradientHDRMarkerType selectedMarkerType = ImGradientHDRMarkerType::Unknown;
+	int selectedIndex = -1;
+
+	ImGradientHDRMarkerType draggingMarkerType = ImGradientHDRMarkerType::Unknown;
+	int draggingIndex = -1;
+};
+
+bool ImGradientHDR(int32_t gradientID, ImGradientHDRState& state, ImGradientHDRTemporaryState& temporaryState, bool isMarkerShown = true);

@@ -208,6 +208,7 @@
     <ClCompile Include="..\..\addons\ofxImGui\libs\imgui\src\imgui_tables.cpp" />
     <ClCompile Include="src\generators\generator_Gradient.cpp" />
     <ClCompile Include="src\generators\generator_Stripes.cpp" />
+    <ClCompile Include="src\gui\ImGradientHDR.cpp" />
     <ClCompile Include="src\imageFilters\imageFilter_8Bit.cpp" />
     <ClCompile Include="src\imageFilters\imageFilter_Ornament.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -312,6 +313,7 @@
     <ClInclude Include="src\generators\generator_Gradient.h" />
     <ClInclude Include="src\generators\generator_Stripes.h" />
     <ClInclude Include="src\gui\IconsFontAwesome5.h" />
+    <ClInclude Include="src\gui\ImGradientHDR.h" />
     <ClInclude Include="src\imageFilters\imageFilter_8Bit.h" />
     <ClInclude Include="src\imageFilters\imageFilter_Ornament.h" />
     <ClInclude Include="src\ofApp.h" />

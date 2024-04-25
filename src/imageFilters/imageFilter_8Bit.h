@@ -14,5 +14,8 @@ public:
 	ofJson getSettings() override;
 
 private:
+	void addError(ofImage * img, float factor, glm::vec2 pos, glm::vec3 err);
+	void distributeError(ofImage * img, glm::vec2 pos, glm::vec3 err);
+	bool bDither = false;
 	int factor = 0;
 };

@@ -176,9 +176,10 @@ void Canvas::setFresh(bool fresh) {
 }
 
 void Canvas::update() {
+	setFresh(false);
 	sourceController.update();
-	dF.update();
 
+	dF.update();
 	if (dF.isFresh()) {
 		dF.setFresh(false);
 		setFresh(true);

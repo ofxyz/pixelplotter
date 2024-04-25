@@ -42,6 +42,7 @@ public:
 	ofPixels pix; // Use ofImage and turn textures off // Turn on when needed?
 
 	std::string src_name = "PixelPlotted";
+	bool _bFresh = false;
 	bool bUpdateCanvasOnSourceLoad = true;
 	bool showSource = false;
 	bool bUseVideo = false;
@@ -77,6 +78,9 @@ public:
 	void prepImg();
 
 	int getSourceCount();
+
+	bool isFresh();
+	void setFresh(bool fresh);
 
 	const std::vector<std::string> img_ext {
 				".jpg",

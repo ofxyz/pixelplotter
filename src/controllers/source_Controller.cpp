@@ -56,10 +56,13 @@ ofJson SourceController::getSettings()
 
 void SourceController::update()
 {
+	setFresh(false);
+
 	if (loadImageNextFrame)
 	{
 		loadImageNextFrame = false;
 		loadSourceIndex();
+		setFresh(true);
 	}
 
 	if (bUseVideoDevice) {
@@ -77,9 +80,6 @@ void SourceController::update()
 		}
 	}
 	else if (bUseGenerator) {
-		bool genIsFresh = gC.v_Objects[currentGeneratorIndex]->isFresh();
-		bool filterIsFresh = iF.isFresh();
-
 		if (gC.v_Objects[currentGeneratorIndex]->isFresh() || iF.isFresh()) {
 			gC.v_Objects[currentGeneratorIndex]->update();
 			gC.v_Objects[currentGeneratorIndex]->m_fbo.readToPixels(pix);
@@ -172,6 +172,14 @@ void SourceController::loadSourceIndex() {
 int SourceController::getSourceCount() {
 	return (int)(videoDeviceNames.size() + videoFileNames.size() + gC.v_objectNames.size() + imgFileNames.size());
 };
+
+bool SourceController::isFresh() {
+	return _bFresh;
+}
+
+void SourceController::setFresh(bool fresh) {
+	_bFresh = fresh;
+}
 
 void SourceController::addImage(ofFile file) {
 	imgFiles.push_back(file);
@@ -266,6 +274,6 @@ void SourceController::prepImg() {
 	}
 
 	iF.setFresh(false);
-
+	setFresh(true);
 	frameBuffer.addFrame(pix);
 }

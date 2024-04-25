@@ -10,7 +10,8 @@ int main() {
 	settings.setGLESVersion(2);
 #else
 	// Programmable pipeline
-	settings.setGLVersion(3, 2); 
+	//settings.setGLVersion(3, 2); 
+	settings.setGLVersion(4, 6);
 #endif
 
 	settings.title = ofApp::getWindowTitle();

@@ -313,6 +313,9 @@
     <ClCompile Include="src\imageFilters\imageFilter_8Bit.cpp">
       <Filter>src\imageFilters</Filter>
     </ClCompile>
+    <ClCompile Include="src\gui\ImGradientHDR.cpp">
+      <Filter>src\gui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -1609,6 +1612,9 @@
     </ClInclude>
     <ClInclude Include="src\imageFilters\imageFilter_8Bit.h">
       <Filter>src\imageFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\ImGradientHDR.h">
+      <Filter>src\gui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
