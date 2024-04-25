@@ -8,6 +8,7 @@
 #include "imageFilter_Rotate.h"
 #include "imageFilter_Ornament.h"
 #include "imageFilter_8Bit.h"
+#include "imageFilter_Invert.h"
 
 ImageFilterController::ImageFilterController()
 	: Controller()
@@ -21,6 +22,7 @@ ImageFilterController::ImageFilterController()
 	mapObjectTypes["Rotate"] = createInstance<If_rotate>;
 	mapObjectTypes["Ornament"] = createInstance<If_ornament>;
 	mapObjectTypes["8Bit"] = createInstance<If_8bit>;
+	mapObjectTypes["Invert"] = createInstance<If_invert>;
 
 	for (auto p : mapObjectTypes) {
 		v_objectNames.push_back(p.first);

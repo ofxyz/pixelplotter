@@ -6,6 +6,11 @@ class If_8bit : public ImageFilter {
 public:
 	If_8bit() {
 		name = "8Bit";
+		FloydSteinberg = {
+			7.0f / 16.0f,
+			3.0f / 16.0f,
+			5.0f / 16.0f,
+			1.0f / 16.0f };
 	};
 
 	void apply(ofImage* img) override;
@@ -17,5 +22,8 @@ private:
 	void addError(ofImage * img, float factor, glm::vec2 pos, glm::vec3 err);
 	void distributeError(ofImage * img, glm::vec2 pos, glm::vec3 err);
 	bool bDither = false;
-	int factor = 0;
+	int factor = 1;
+	glm::vec4 FloydSteinberg;
+	int currColourOption = 0;
+	std::vector<std::string> colourOptions { "Colour", "Grey", "Bitmap" };
 };

@@ -21,10 +21,10 @@ void If_8bit::addError(ofImage * img, float factor, glm::vec2 pos, glm::vec3 err
 
 void If_8bit::distributeError(ofImage * img, glm::vec2 pos, glm::vec3 err) {
 	// Add your own variable float besides the Floyd-Steinberg Dither?
-	addError(img, (7.0f / 16.0f), glm::vec2(pos.x + 1, pos.y    ), err);
-	addError(img, (3.0f / 16.0f), glm::vec2(pos.x - 1, pos.y + 1), err);
-	addError(img, (5.0f / 16.0f), glm::vec2(pos.x,     pos.y + 1), err);
-	addError(img, (1.0f / 16.0f), glm::vec2(pos.x + 1, pos.y + 1), err);
+	addError(img, FloydSteinberg[0], glm::vec2(pos.x + 1, pos.y), err);
+	addError(img, FloydSteinberg[1], glm::vec2(pos.x - 1, pos.y + 1), err);
+	addError(img, FloydSteinberg[2], glm::vec2(pos.x, pos.y + 1), err);
+	addError(img, FloydSteinberg[3], glm::vec2(pos.x + 1, pos.y + 1), err);
 }
 
 void If_8bit::loadSettings(ofJson& settings) {
@@ -39,24 +39,26 @@ void If_8bit::renderImGuiSettings() {
 		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
 
-		ImGui::PushItemWidth(60);
-		if (ImGui::DragInt("Factor ##8bit", &factor, 1, 0, 255)) {
-			setFresh(true);
-		}
+		if (ImGui::SliderInt("Factor ##8bit", &factor, 0, 255)) setFresh(true);
 		ImGui::SameLine();
-		ImGui::HelpMarker("Above 0 will index colour based on factor.");
+		ImGui::HelpMarker("Above 0 will index colors. 0 creates a hard 8bit effect");
 
-		if (ImGui::Checkbox("Dither", &bDither)) {
-			setFresh(true);
-		}
+		if (ImGui::Checkbox("Dither", &bDither)) setFresh(true);
+		ImGui::SameLine();
 
+		ImGui::PushItemWidth(120);
+		if (ofxImGui::VectorCombo("##Presets", &currColourOption, colourOptions)) setFresh(true);
 		ImGui::PopItemWidth();
+
 	} else {
 		_isOpen = false;
 	}
 }
 
 void If_8bit::apply(ofImage* img) {
+	if (currColourOption > 0) {
+		img->setImageType(OF_IMAGE_GRAYSCALE);
+	}
 	ofPushStyle();
 	for (int y = 0; y < img->getHeight(); y++) {
 		for (int x = 0; x < img->getWidth(); x++) {
@@ -71,6 +73,10 @@ void If_8bit::apply(ofImage* img) {
 				(c.g > 127) ? c.g = 255 : c.g = 0;
 				(c.b > 127) ? c.b = 255 : c.g = 0;
 			}
+			if (currColourOption == 2) {
+				(c.r + c.g + c.b > 381) ? c = ofColor(255,255,255) : c = ofColor(0,0,0);
+			}
+
 			img->setColor(x, y, c);
 
 			if (bDither) {
@@ -79,7 +85,6 @@ void If_8bit::apply(ofImage* img) {
 		}
 	}
 	ofPopStyle();
-
 	img->update();
 	setFresh(false);
 }

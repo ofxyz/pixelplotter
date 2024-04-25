@@ -316,6 +316,9 @@
     <ClCompile Include="src\gui\ImGradientHDR.cpp">
       <Filter>src\gui</Filter>
     </ClCompile>
+    <ClCompile Include="src\imageFilters\imageFilter_Invert.cpp">
+      <Filter>src\imageFilters</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -1615,6 +1618,9 @@
     </ClInclude>
     <ClInclude Include="src\gui\ImGradientHDR.h">
       <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imageFilters\imageFilter_Invert.h">
+      <Filter>src\imageFilters</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
