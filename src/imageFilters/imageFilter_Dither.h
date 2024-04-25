@@ -2,10 +2,10 @@
 
 #include "imageFilter.h"
 
-class If_8bit : public ImageFilter {
+class If_dither : public ImageFilter {
 public:
-	If_8bit() {
-		name = "8Bit";
+	If_dither() {
+		name = "Dither";
 		FloydSteinberg = {
 			7.0f / 16.0f,
 			3.0f / 16.0f,

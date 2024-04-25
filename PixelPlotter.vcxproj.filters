@@ -310,13 +310,13 @@
     <ClCompile Include="src\generators\generator_Stripes.cpp">
       <Filter>src\generators</Filter>
     </ClCompile>
-    <ClCompile Include="src\imageFilters\imageFilter_8Bit.cpp">
-      <Filter>src\imageFilters</Filter>
-    </ClCompile>
     <ClCompile Include="src\gui\ImGradientHDR.cpp">
       <Filter>src\gui</Filter>
     </ClCompile>
     <ClCompile Include="src\imageFilters\imageFilter_Invert.cpp">
+      <Filter>src\imageFilters</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imageFilters\imageFilter_Dither.cpp">
       <Filter>src\imageFilters</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1613,13 +1613,13 @@
     <ClInclude Include="src\generators\generator_Stripes.h">
       <Filter>src\generators</Filter>
     </ClInclude>
-    <ClInclude Include="src\imageFilters\imageFilter_8Bit.h">
-      <Filter>src\imageFilters</Filter>
-    </ClInclude>
     <ClInclude Include="src\gui\ImGradientHDR.h">
       <Filter>src\gui</Filter>
     </ClInclude>
     <ClInclude Include="src\imageFilters\imageFilter_Invert.h">
+      <Filter>src\imageFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\imageFilters\imageFilter_Dither.h">
       <Filter>src\imageFilters</Filter>
     </ClInclude>
   </ItemGroup>

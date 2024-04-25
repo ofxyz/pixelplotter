@@ -1,16 +1,15 @@
-#include "imageFilter_8Bit.h"
+#include "imageFilter_Dither.h"
 #include "ofMain.h"
 #include "ImGui_General.h"
 
-ofJson If_8bit::getSettings() {
+ofJson If_dither::getSettings() {
 	ofJson settings;
 	settings["name"] = name;
 	settings["_isOpen"] = _isOpen;
 	return settings;
 }
 
-
-void If_8bit::addError(ofImage * img, float factor, glm::vec2 pos, glm::vec3 err) {
+void If_dither::addError(ofImage * img, float factor, glm::vec2 pos, glm::vec3 err) {
 	if (pos.x < 0 || pos.x >= img->getWidth() || pos.y < 0 || pos.y >= img->getHeight()) return;
 	ofColor c = img->getColor(pos.x,pos.y);
 	c.r = ofClamp(c.r + err.x * factor, 0, 255);
@@ -19,7 +18,7 @@ void If_8bit::addError(ofImage * img, float factor, glm::vec2 pos, glm::vec3 err
 	img->setColor(pos.x, pos.y, c);
 }
 
-void If_8bit::distributeError(ofImage * img, glm::vec2 pos, glm::vec3 err) {
+void If_dither::distributeError(ofImage * img, glm::vec2 pos, glm::vec3 err) {
 	// Add your own variable float besides the Floyd-Steinberg Dither?
 	addError(img, FloydSteinberg[0], glm::vec2(pos.x + 1, pos.y), err);
 	addError(img, FloydSteinberg[1], glm::vec2(pos.x - 1, pos.y + 1), err);
@@ -27,35 +26,33 @@ void If_8bit::distributeError(ofImage * img, glm::vec2 pos, glm::vec3 err) {
 	addError(img, FloydSteinberg[3], glm::vec2(pos.x + 1, pos.y + 1), err);
 }
 
-void If_8bit::loadSettings(ofJson& settings) {
-	//name = settings.value("name", "duplicate");
+void If_dither::loadSettings(ofJson& settings) {
 	_isOpen = settings.value("_isOpen", _isOpen);
 	return;
 }
 
-void If_8bit::renderImGuiSettings() {
+void If_dither::renderImGuiSettings() {
 	ImGui::SetNextItemOpen(_isOpen, ImGuiCond_Once);
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
 
-		if (ImGui::SliderInt("Factor ##8bit", &factor, 0, 255)) setFresh(true);
+		if (ImGui::SliderInt("Factor ##iF_dither", &factor, 0, 255)) setFresh(true);
 		ImGui::SameLine();
 		ImGui::HelpMarker("Above 0 will index colors. 0 creates a hard 8bit effect");
 
-		if (ImGui::Checkbox("Dither", &bDither)) setFresh(true);
+		if (ImGui::Checkbox("Dither ##iF_dither", &bDither)) {
+			setFresh(true);
+		}
 		ImGui::SameLine();
-
-		ImGui::PushItemWidth(120);
 		if (ofxImGui::VectorCombo("##Presets", &currColourOption, colourOptions)) setFresh(true);
-		ImGui::PopItemWidth();
 
 	} else {
 		_isOpen = false;
 	}
 }
 
-void If_8bit::apply(ofImage* img) {
+void If_dither::apply(ofImage* img) {
 	if (currColourOption > 0) {
 		img->setImageType(OF_IMAGE_GRAYSCALE);
 	}

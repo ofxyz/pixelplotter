@@ -7,7 +7,7 @@
 #include "imageFilter_DrawPixel.h"
 #include "imageFilter_Rotate.h"
 #include "imageFilter_Ornament.h"
-#include "imageFilter_8Bit.h"
+#include "imageFilter_Dither.h"
 #include "imageFilter_Invert.h"
 
 ImageFilterController::ImageFilterController()
@@ -21,7 +21,7 @@ ImageFilterController::ImageFilterController()
 	mapObjectTypes["DrawPixel"] = createInstance<If_drawPixel>;
 	mapObjectTypes["Rotate"] = createInstance<If_rotate>;
 	mapObjectTypes["Ornament"] = createInstance<If_ornament>;
-	mapObjectTypes["8Bit"] = createInstance<If_8bit>;
+	mapObjectTypes["Dither"] = createInstance<If_dither>;
 	mapObjectTypes["Invert"] = createInstance<If_invert>;
 
 	for (auto p : mapObjectTypes) {
