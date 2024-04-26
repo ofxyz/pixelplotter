@@ -7,16 +7,16 @@ void G_gradient::setup(int _width /*= 100*/, int _height /*= 100*/) {
 	if (_height != 0) height = _height;
 	bVisible = true;
 	m_fbo.allocate(width, height);
-	gradient.setupAsTurbo(10);
-	setFresh(true);
-	update();
 
 	//---------------------
-	state.AddColorMarker(0.0f, { 0.5f, 1.0f, 1.0f }, 1.0f);
-	state.AddColorMarker(1.0f, { 1.0f, 1.0f, 0.5f }, 1.0f);
-	state.AddAlphaMarker(0.5f, 1.0f);
+	state.AddColorMarker(0.0f, { 0.0f, 0.0f, 0.0f }, 1.0f);
+	state.AddColorMarker(1.0f, { 1.0f, 1.0f, 1.0f }, 1.0f);
+	state.AddAlphaMarker(0.0f, 1.0f);
 	state.AddAlphaMarker(1.0f, 1.0f);
 	//---------------------
+
+	setFresh(true);
+	update();
 }
 
 void G_gradient::update() {
@@ -25,8 +25,7 @@ void G_gradient::update() {
 			if (width != 0 && height != 0) m_fbo.allocate(width, height);
 		}
 		m_fbo.begin();
-		m_fbo.clearColorBuffer(ofColor(255,255,255,255));
-		//gradient.drawDebug(0, 0, m_fbo.getWidth(), m_fbo.getHeight(), numSteps, bDirFlip, bDrawVertical);
+		m_fbo.clearColorBuffer(ofColor(255,255,255,0));
 		drawPattern();
 		m_fbo.end();
 		setFresh(false);
@@ -39,27 +38,48 @@ void G_gradient::draw() {
 }
 
 void G_gradient::renderImGuiSettings() {
-	
+	ImGui::Indent();
+	ImGui::Separator();
+	ImGui::AlignTextToFramePadding();
+	// TODO: Add ratio's dropdown (1:1, 1:1.25, Custom)
+	ImGui::PushItemWidth(60);
+	ImGui::Text("Size");
+	ImGui::SameLine(75);
+	if (ImGui::DragInt("W ##Gradient", &width, 1, 3, 2400)) {
+		setFresh(true);
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("<-> ##Gradient")) {
+		int w = width;
+		width = height;
+		height = w;
+		setFresh(true);
+	}
+	ImGui::SameLine();
+	if (ImGui::DragInt("H ##Gradient", &height, 1, 3, 2400)) {
+		setFresh(true);
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("x2 ##Gradient")) {
+		width *= 2;
+		height *= 2;
+		setFresh(true);
+	}
+	ImGui::PopItemWidth();
+
 	ImGui::PushItemWidth(60);
 	if (ImGui::DragInt("Steps ##gradient_W", &numSteps, 1, 1, 2400)) {
 		setFresh(true);
 	}
-	ImGui::SameLine();
-	if (ImGui::Checkbox("Hard Mode", &bHardMode)) {
-		gradient.setHardMode(bHardMode);
-		setFresh(true);
-	}
 
-	if (ImGui::Checkbox("Flip Direction", &bDirFlip)) {
+	if (ImGui::Checkbox("Flip Direction ##Gradient", &bDirFlip)) {
 		setFresh(true);
 	}
-	if (ImGui::Checkbox("Vertical", &bDrawVertical)) {
+	if (ImGui::Checkbox("Vertical ##Gradient", &bDrawVertical)) {
 		setFresh(true);
 	}
 
 	ImGui::PopItemWidth();
-	
-	
 
 	bool isMarkerShown = true;
 	if (ImGradientHDR(stateID, state, tempState, isMarkerShown)) {
@@ -99,7 +119,7 @@ void G_gradient::renderImGuiSettings() {
 			setFresh(true);
 		}
 	}
-
+	ImGui::Unindent();
 }
 
 void G_gradient::loadSettings(ofJson& settings) {

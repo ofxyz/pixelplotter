@@ -301,9 +301,6 @@
     <ClCompile Include="src\imageFilters\imageFilter_Ornament.cpp">
       <Filter>src\imageFilters</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\addons\ofxColorGradient\src\ofxColorGradient.cpp">
-      <Filter>addons\ofxColorGradient\src</Filter>
-    </ClCompile>
     <ClCompile Include="src\generators\generator_Gradient.cpp">
       <Filter>src\generators</Filter>
     </ClCompile>
@@ -518,12 +515,6 @@
     </Filter>
     <Filter Include="addons\ofxOrnament\src\types">
       <UniqueIdentifier>{F7D04D99--7CD-A-4A-65-9-22D-9E12C87BB2D2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxColorGradient">
-      <UniqueIdentifier>{fcf9437e-ca2a-44a8-8c5a-fef37640ccba}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="addons\ofxColorGradient\src">
-      <UniqueIdentifier>{a956c2ca-0ba1-424e-a7b1-4ff2d2a11d24}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1603,9 +1594,6 @@
     </ClInclude>
     <ClInclude Include="src\imageFilters\imageFilter_Ornament.h">
       <Filter>src\imageFilters</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\addons\ofxColorGradient\src\ofxColorGradient.h">
-      <Filter>addons\ofxColorGradient\src</Filter>
     </ClInclude>
     <ClInclude Include="src\generators\generator_Gradient.h">
       <Filter>src\generators</Filter>

@@ -199,7 +199,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\addons\ofxColorGradient\src\ofxColorGradient.cpp" />
     <ClCompile Include="..\..\addons\ofxImGui\libs\imgui\backends\imgui_impl_glfw.cpp" />
     <ClCompile Include="..\..\addons\ofxImGui\libs\imgui\backends\imgui_impl_glfw_context_support.cpp" />
     <ClCompile Include="..\..\addons\ofxImGui\libs\imgui\backends\imgui_impl_opengl2.cpp" />
@@ -305,7 +304,6 @@
     <ClCompile Include="..\..\addons\ofxOrnament\src\types\Tile_PMM.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\addons\ofxColorGradient\src\ofxColorGradient.h" />
     <ClInclude Include="..\..\addons\ofxImGui\libs\imgui\backends\imgui_impl_glfw.h" />
     <ClInclude Include="..\..\addons\ofxImGui\libs\imgui\backends\imgui_impl_glfw_context_support.h" />
     <ClInclude Include="..\..\addons\ofxImGui\libs\imgui\backends\imgui_impl_opengl2.h" />

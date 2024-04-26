@@ -1,7 +1,6 @@
 #pragma once
 
 #include "generator.h"
-#include "ofxColorGradient.h"
 #include "ImGradientHDR.h"
 
 class G_gradient : public Generator {
@@ -25,20 +24,13 @@ public:
 	void loadSettings(ofJson& settings) override;
 	ofJson getSettings() override;
 
-	ofxColorGradient<ofColor> gradient;
-
 private:
 	void drawPattern();
 	int numSteps = 25;
 	bool bDirFlip = false;
 	bool bDrawVertical = false;
-	bool bHardMode = false;
 
-	ImVec4 c_base = ofColor(0, 255, 255, 155);
-	ImVec4 c_base2 = ofColor(255, 0, 255, 155);
-
-	int32_t stateID = 10;
-
+	int32_t stateID = 1;
 	ImGradientHDRState state;
 	ImGradientHDRTemporaryState tempState;
 

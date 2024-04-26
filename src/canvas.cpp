@@ -11,7 +11,7 @@ Canvas::Canvas()
 }
 
 void Canvas::renderImGuiSettings() {
-
+	ImGui::AlignTextToFramePadding();
 	ImGui::InputText("Title", &canvasTitle);
 
 	if (ImGui::ColorEdit4("Canvas Colour", (float*)&c_canvas, ImGuiColorEditFlags_NoInputs)) {
@@ -75,7 +75,7 @@ void Canvas::renderImGuiSettings() {
 
 	dF.renderImGuiSettings();
 
-	ImGui::Separator(); // End Size 
+	ImGui::Separator(); 
 
 	/* // Start Rec
 	if (isRecording) {
