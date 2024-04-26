@@ -94,8 +94,14 @@ void Df_rings::draw(ofImage* input, float width, float height) {
 	greyCvBlur.allocate(input->getWidth(), input->getHeight());
 	greyCvThresh.allocate(input->getWidth(), input->getHeight());
 
-	colorCvImage.setFromPixels(input->getPixels());
+	ofImage nonalpha;
+	nonalpha.allocate(input->getWidth(), input->getHeight(), OF_IMAGE_COLOR_ALPHA);
+	nonalpha.setFromPixels(input->getPixels());
+	nonalpha.setImageType(OF_IMAGE_COLOR);
+	colorCvImage.setFromPixels(nonalpha.getPixels());
+
 	greyCvImage = colorCvImage; // Convert to Grey
+	
 	greyCvBlur = greyCvImage;
 	//greyCvBlur.blur(cvBlur);
 	int greySoundBlur = cvBlur - (ofMap(pixelplotter->soundManager.scaledVol, 0, 1, 0, sBlurMapTo));

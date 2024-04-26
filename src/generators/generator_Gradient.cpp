@@ -12,9 +12,9 @@ void G_gradient::setup(int _width /*= 100*/, int _height /*= 100*/) {
 	update();
 
 	//---------------------
-	state.AddColorMarker(0.0f, { 1.0f, 1.0f, 1.0f }, 1.0f);
-	state.AddColorMarker(1.0f, { 1.0f, 1.0f, 1.0f }, 1.0f);
-	state.AddAlphaMarker(0.0f, 1.0f);
+	state.AddColorMarker(0.0f, { 0.5f, 1.0f, 1.0f }, 1.0f);
+	state.AddColorMarker(1.0f, { 1.0f, 1.0f, 0.5f }, 1.0f);
+	state.AddAlphaMarker(0.5f, 1.0f);
 	state.AddAlphaMarker(1.0f, 1.0f);
 	//---------------------
 }
@@ -62,24 +62,28 @@ void G_gradient::renderImGuiSettings() {
 	
 
 	bool isMarkerShown = true;
-	ImGradientHDR(stateID, state, tempState, isMarkerShown);
-
-	if (ImGui::IsItemHovered()) {
-		ImGui::SetTooltip("Gradient");
+	if (ImGradientHDR(stateID, state, tempState, isMarkerShown)) {
+		setFresh(true);
 	}
 
 	if (tempState.selectedMarkerType == ImGradientHDRMarkerType::Color) {
 		auto selectedColorMarker = state.GetColorMarker(tempState.selectedIndex);
 		if (selectedColorMarker != nullptr) {
-			ImGui::ColorEdit3("Color", selectedColorMarker->Color.data(), ImGuiColorEditFlags_Float);
-			ImGui::DragFloat("Intensity", &selectedColorMarker->Intensity, 0.1f, 0.0f, 100.0f, "%f", 1.0f);
+			if (ImGui::ColorEdit3("Color", selectedColorMarker->Color.data(), ImGuiColorEditFlags_Float)) {
+				setFresh(true);
+			}
+			if (ImGui::DragFloat("Intensity", &selectedColorMarker->Intensity, 0.1f, 0.0f, 100.0f, "%f", 1.0f)) {
+				setFresh(true);
+			}
 		}
 	}
 
 	if (tempState.selectedMarkerType == ImGradientHDRMarkerType::Alpha) {
 		auto selectedAlphaMarker = state.GetAlphaMarker(tempState.selectedIndex);
 		if (selectedAlphaMarker != nullptr) {
-			ImGui::DragFloat("Alpha", &selectedAlphaMarker->Alpha, 0.1f, 0.0f, 1.0f, "%f", 1.0f);
+			if (ImGui::DragFloat("Alpha", &selectedAlphaMarker->Alpha, 0.1f, 0.0f, 1.0f, "%f", 1.0f)) {
+				setFresh(true);
+			}
 		}
 	}
 
@@ -92,6 +96,7 @@ void G_gradient::renderImGuiSettings() {
 				state.RemoveAlphaMarker(tempState.selectedIndex);
 				tempState = ImGradientHDRTemporaryState {};
 			}
+			setFresh(true);
 		}
 	}
 
@@ -110,9 +115,9 @@ void G_gradient::drawPattern()
 {
 		float step;
 		if (!bDrawVertical) {
-			step = width / numSteps;
+			step = (float)width / (float)numSteps;
 		} else {
-			step = height / numSteps;
+			step = (float)height / (float)numSteps;
 		}
 
 		ofMesh m;
@@ -123,6 +128,7 @@ void G_gradient::drawPattern()
 		for (float i = 0; i <= numSteps; i++) {
 			std::array<float, 4> color;
 			float pct = i / (float)numSteps;
+			ofLog() << "PCT: " << pct << endl;
 
 			if (!bDirFlip) {
 				color = state.GetCombinedColor(pct);
@@ -130,8 +136,8 @@ void G_gradient::drawPattern()
 				color = state.GetCombinedColor(1.0f - pct);
 			}
 
-			ofColor ofC = ofColor(color[0], color[1], color[2], color[3]);
-			ofColor ofD = ofColor(255, 0, 0, 255);
+			ofColor ofC = ofColor(color[0] * 255.f, color[1] * 255.f, color[2] * 255.f, color[3] * 255.f);
+
 			if (!bDrawVertical) {
 				m.addColor(ofC);
 				m.addVertex(ofVec3f(i * step, 0));
