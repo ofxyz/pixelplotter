@@ -8,12 +8,14 @@ void G_gradient::setup(int _width /*= 100*/, int _height /*= 100*/) {
 	bVisible = true;
 	m_fbo.allocate(width, height);
 
-	//---------------------
-	state.AddColorMarker(0.0f, { 0.0f, 0.0f, 0.0f }, 1.0f);
-	state.AddColorMarker(1.0f, { 1.0f, 1.0f, 1.0f }, 1.0f);
-	state.AddAlphaMarker(0.0f, 1.0f);
-	state.AddAlphaMarker(1.0f, 1.0f);
-	//---------------------
+	if(state.ColorCount == 0) {
+		state.AddColorMarker(0.0f, { 0.0f, 0.0f, 0.0f }, 1.0f);
+		state.AddColorMarker(1.0f, { 1.0f, 1.0f, 1.0f }, 1.0f);
+	}
+	if (state.AlphaCount == 0) {
+		state.AddAlphaMarker(0.0f, 1.0f);
+		state.AddAlphaMarker(1.0f, 1.0f);
+	}
 
 	setFresh(true);
 	update();
@@ -35,6 +37,7 @@ void G_gradient::update() {
 void G_gradient::draw() {
 	if (!bVisible) return;
 	drawPattern();
+	setFresh(false);
 }
 
 void G_gradient::renderImGuiSettings() {
@@ -123,11 +126,75 @@ void G_gradient::renderImGuiSettings() {
 }
 
 void G_gradient::loadSettings(ofJson& settings) {
+	try {
+		_isOpen = settings.value("_isOpen", _isOpen);
+		width = settings.value("width", width);
+		height = settings.value("height", height);
+		numSteps = settings.value("numSteps", numSteps);
+		bDirFlip = settings.value("bDirFlip", bDirFlip);
+		bDrawVertical = settings.value("bDrawVertical", bDrawVertical);
 
+		// First clear previous markers
+		while (state.ColorCount > 0) {
+			state.RemoveColorMarker(0);
+		}
+		while (state.AlphaCount > 0) {
+			state.RemoveAlphaMarker(0);
+		}
+
+		// Now Load Gradient Data
+		int colorCount = 0;
+		colorCount = settings.value("colorCount", colorCount);
+		for (int i = 0; i < colorCount; i++) {
+			state.AddColorMarker(settings["colorMarkers"][i][0],
+				{ settings["colorMarkers"][i][1],
+				  settings["colorMarkers"][i][2],
+				  settings["colorMarkers"][i][3] },
+			settings["colorMarkers"][i][4]);
+		}
+		int alphaCount = 0;
+		alphaCount = settings.value("alphaCount", alphaCount);
+		for (int i = 0; i < alphaCount; i++) {
+			state.AddAlphaMarker(settings["alphaMarkers"][i][0], settings["alphaMarkers"][i][1]);
+		}
+	} catch (...) {
+		ofLogNotice() << "Failed to load settings G_gradient";
+	}
 }
 
 ofJson G_gradient::getSettings() {
 	ofJson settings;
+	settings["name"] = name;
+	settings["_isOpen"] = _isOpen;
+	settings["width"] = width;
+	settings["height"] = height;
+	settings["numSteps"] = numSteps;
+	settings["bDirFlip"] = bDirFlip;
+	settings["bDrawVertical"] = bDrawVertical;
+	// Save Gradient Data
+	settings["colorCount"] = state.ColorCount;
+	for (int i = 0; i < state.ColorCount; i++) {
+		auto selectedColorMarker = state.GetColorMarker(i);
+		if (selectedColorMarker != nullptr) {
+			// Position
+			settings["colorMarkers"][i][0] = selectedColorMarker->Position;
+			// RGB Color
+			settings["colorMarkers"][i][1] = selectedColorMarker->Color[0];
+			settings["colorMarkers"][i][2] = selectedColorMarker->Color[1];
+			settings["colorMarkers"][i][3] = selectedColorMarker->Color[2];
+			// Intensity
+			settings["colorMarkers"][i][4] = selectedColorMarker->Intensity;
+		}
+	}
+	settings["alphaCount"] = state.AlphaCount;
+	for (int i = 0; i < state.AlphaCount; i++) {
+		auto selectedAlphaMarker = state.GetAlphaMarker(i);
+		if (selectedAlphaMarker != nullptr) {
+			settings["alphaMarkers"][i][0] = selectedAlphaMarker->Position;
+			settings["alphaMarkers"][i][1] = selectedAlphaMarker->Alpha;
+		}
+	}
+
 	return settings;
 }
 
@@ -148,7 +215,6 @@ void G_gradient::drawPattern()
 		for (float i = 0; i <= numSteps; i++) {
 			std::array<float, 4> color;
 			float pct = i / (float)numSteps;
-			ofLog() << "PCT: " << pct << endl;
 
 			if (!bDirFlip) {
 				color = state.GetCombinedColor(pct);

@@ -44,6 +44,16 @@ void SourceController::loadSettings(ofJson settings)
 	currentSourceIndex = ofx2d::getIndex(sourceNames, sourceString, currentSourceIndex);
 	bUpdateCanvasOnSourceLoad = settings.value("bUpdateCanvasOnSourceLoad", bUpdateCanvasOnSourceLoad);
 	loadSourceIndex();
+	// Loaded in GUI needs refactor TODO
+	if (bUseGenerator) {
+		for (int i = 0; i < gC.v_Objects.size(); i++) {
+			if (gC.v_Objects[i]->name == settings["Generator"]["name"]) {
+				gC.v_Objects[i]->loadSettings(settings["Generator"]);
+				gC.setFresh(true);
+				loadImageNextFrame = true;
+			}
+		}
+	}
 }
 
 ofJson SourceController::getSettings()
@@ -51,6 +61,10 @@ ofJson SourceController::getSettings()
 	ofJson settings;
 	settings["source"] = sourceNames[currentSourceIndex];
 	settings["bUpdateCanvasOnSourceLoad"] = bUpdateCanvasOnSourceLoad;
+	// Loaded in GUI needs refactor TODO
+	if (bUseGenerator) {
+		settings["Generator"] = gC.v_Objects[currentGeneratorIndex]->getSettings();
+	}
 	return settings;
 }
 

@@ -21,9 +21,8 @@ public:
 private:
 	void addError(ofImage * img, float factor, glm::vec2 pos, glm::vec3 err);
 	void distributeError(ofImage * img, glm::vec2 pos, glm::vec3 err);
-	bool bDither = false;
-	int factor = 1;
+	bool _bDither = false;
+	bool _bGrey = false;
+	int _iFactor = 1;
 	glm::vec4 FloydSteinberg;
-	int currColourOption = 0;
-	std::vector<std::string> colourOptions { "Colour", "Grey", "Bitmap" };
 };

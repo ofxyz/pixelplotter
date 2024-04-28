@@ -421,6 +421,12 @@ void OfGui::savePresets()
 	for (int i = 0; i < pixelplotter->plotCanvas.sourceController.iF.v_Objects.size(); i++) {
 		settings["imageFilters"].push_back(pixelplotter->plotCanvas.sourceController.iF.v_Objects[i]->getSettings());
 	}
+	
+	/* Not done here. Refactor TODO
+	for (int i = 0; i < pixelplotter->plotCanvas.sourceController.gC.v_Objects.size(); i++) {
+		settings["generators"].push_back(pixelplotter->plotCanvas.sourceController.gC.v_Objects[i]->getSettings());
+	}
+	*/
 
 	settings["plotCanvas"] = pixelplotter->plotCanvas.getSettings();
 

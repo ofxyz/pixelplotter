@@ -16,7 +16,7 @@ public:
 		loadSettings(settings);
 	};
 
-	void setup(int width = 100, int height = 100) override;
+	void setup(int width = 255, int height = 255) override;
 	void update() override;
 	void draw() override;
 
