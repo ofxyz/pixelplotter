@@ -5,13 +5,21 @@ ofJson If_ornament::getSettings() {
 	ofJson settings;
 	settings["name"] = name;
 	settings["_isOpen"] = _isOpen;
-	settings["hCount"] = hCount;
-	settings["vCount"] = vCount;
-	settings["bMirror"] = bMirror;
+	settings["tileSize"] = tileSize;
+	settings["wallpaperGroup"] = wallpaperGroup;
+	settings["angle"] = angle;
 	
 	return settings;
 }
 
+void If_ornament::loadSettings(ofJson & settings) {
+	//name = settings.value("name", "duplicate");
+	_isOpen = settings.value("_isOpen", _isOpen);
+	tileSize = settings.value("tileSize", tileSize);
+	wallpaperGroup = settings.value("wallpaperGroup", wallpaperGroup);
+	angle = settings.value("angle", angle);
+	return;
+}
 
 void If_ornament::onTileSizeChanged(int & t) {
 }
@@ -22,15 +30,6 @@ void If_ornament::onWallpaperGroupChanged(int & t) {
 
 
 void If_ornament::onAngleChanged(float & t) {
-}
-
-void If_ornament::loadSettings(ofJson& settings) {
-	//name = settings.value("name", "duplicate");
-	_isOpen = settings.value("_isOpen", _isOpen);
-	hCount = settings.value("hCount", hCount);
-	vCount = settings.value("vCount", vCount);
-	bMirror = settings.value("bMirror", bMirror);
-	return;
 }
 
 void If_ornament::renderImGuiSettings() {
@@ -51,12 +50,16 @@ void If_ornament::renderImGuiSettings() {
 			setFresh(true);
 		}
 
-		if (ImGui::SliderFloat("Angle ##ornament_Angle", &angle, -180, 180, "%.1f")) {
+		if (ImGui::DragFloat("Angle ##ornament_Angle", &angle, 1, -180, 180, "%.3f")) {
 			ornament.setAngle(angle);
 			setFresh(true);
 		}
 
 		//ImGui::PopItemWidth();
+
+		// Move to GUI
+		//ornament.drawDebug(5, 5, 100, 100);
+
 	} else {
 		_isOpen = false;
 	}
@@ -74,9 +77,7 @@ void If_ornament::apply(ofImage* img) {
 	cfbo.clearColorBuffer(ofColor(0, 0, 0, 0));
 
 	ornament.draw(0, 0);
-	// Move to GUI
-	//ornament.drawDebug(5, 5, 100, 100);
-	
+
 	cfbo.end();
 	cfbo.readToPixels(img->getPixels());
 	img->update();

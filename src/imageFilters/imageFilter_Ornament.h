@@ -24,7 +24,4 @@ private:
 	int tileSize = 150;
 	int wallpaperGroup = 12;
 	float angle = 0;
-	int hCount = 1;
-	int vCount = 1;
-	bool bMirror = true;
 };

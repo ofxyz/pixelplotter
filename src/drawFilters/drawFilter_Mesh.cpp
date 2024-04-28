@@ -6,6 +6,9 @@ ofJson Df_mesh::getSettings() {
 	ofJson settings;
 	settings["name"] = name;
 	settings["_isOpen"] = _isOpen;
+	settings["pixelMirror"] = pixelMirror;
+	settings["tilesX"] = tilesX;
+	settings["tilesY"] = tilesY;
 	settings["pixelType"] = drawPixels.v_objectNames[selectedPixelType];
 	settings["rotationOffset"] = rotationOffset;
 
@@ -16,6 +19,9 @@ void Df_mesh::loadSettings(ofJson& settings) {
 	try{
 		//name = settings.value("name", name);
 		_isOpen = settings.value("_isOpen", _isOpen);
+		pixelMirror = settings.value("pixelMirror", pixelMirror);
+		tilesX = settings.value("tilesX", tilesX);
+		tilesY = settings.value("tilesY", tilesY);
 		selectedPixelType = ofx2d::getIndex(drawPixels.v_objectNames, settings.value("pixelType", "Undefined"), selectedPixelType);
 		rotationOffset = settings.value("rotationOffset", rotationOffset);
 	}
