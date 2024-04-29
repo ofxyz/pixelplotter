@@ -26,6 +26,8 @@ void If_dither::renderImGuiSettings() {
 		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
 
+		renderUpDownButtons();
+
 		if (ImGui::SliderInt("Factor ##iF_dither", &_iFactor, 0, 255)) setFresh(true);
 		ImGui::SameLine();
 		ImGui::HelpMarker("Above 0 will index colors. 0 creates a hard 8bit effect");
@@ -61,6 +63,7 @@ void If_dither::distributeError(ofImage * img, glm::vec2 pos, glm::vec3 err) {
 }
 
 void If_dither::apply(ofImage* img) {
+	if (!bVisible) return;
 	if (_bGrey) img->setImageType(OF_IMAGE_GRAYSCALE);
 
 	ofPushStyle();

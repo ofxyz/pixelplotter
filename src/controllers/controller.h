@@ -166,6 +166,8 @@ void Controller<t>::renderImGuiSettings()
 			if (v_Objects[i]->isAlive()) {
 				ImGui::Indent();
 				ImGui::PushID(i);
+				// Receive Payload // Class t needs name or type attribute?
+				//const ImGuiPayload * drawFilterPayloadPre = ImGui::AcceptDragDropPayload("drawFilter");
 				v_Objects[i]->renderImGuiSettings();
 				ImGui::PopID();
 				ImGui::Unindent();
@@ -190,15 +192,15 @@ void Controller<t>::reorder()
 		if (v_Objects[i]->moveUp) {
 			v_Objects[i]->moveUp = false;
 			setFresh(true);
-			if (i > 0) {
-				ofx2d::move(v_Objects, i, i - 1);
+			if (i < v_Objects.size() - 1) {
+				ofx2d::move(v_Objects, i, i + 1);
 			}
 		}
 		else if (v_Objects[i]->moveDown) {
 			v_Objects[i]->moveDown = false;
 			setFresh(true);
-			if (i < v_Objects.size() - 1) {
-				ofx2d::move(v_Objects, i, i + 1);
+			if (i > 0) {
+				ofx2d::move(v_Objects, i, i - 1);
 			}
 		}
 	}

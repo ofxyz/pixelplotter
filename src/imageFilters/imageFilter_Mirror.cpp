@@ -22,6 +22,9 @@ void If_mirror::renderImGuiSettings() {
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
+
+		renderUpDownButtons();
+
 		if (ImGui::Checkbox("Horizontal", &hMirror)) {
 			setFresh(true);
 		}
@@ -34,6 +37,7 @@ void If_mirror::renderImGuiSettings() {
 }
 
 void If_mirror::apply(ofImage* img) {
+	if (!bVisible) return;
 	img->mirror(vMirror, hMirror);
 	setFresh(false);
 }

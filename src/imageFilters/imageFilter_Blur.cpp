@@ -21,6 +21,8 @@ void If_blur::renderImGuiSettings() {
 		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
 
+		renderUpDownButtons();
+
 		ImGui::PushItemWidth(100);
 		if (ImGui::DragInt("Blur ##blur", &cvBlur, 1, 0, 500)) {
 			setFresh(true);
@@ -32,6 +34,7 @@ void If_blur::renderImGuiSettings() {
 }
 
 void If_blur::apply(ofImage* img) {
+	if (!bVisible) return;
 	ofPixels pix = img->getPixels();
 	pix.setImageType(OF_IMAGE_COLOR);
 	colorCvImage.allocate(img->getWidth(), img->getHeight());

@@ -28,6 +28,9 @@ void If_rotate::renderImGuiSettings() {
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
+
+		renderUpDownButtons();
+
 		if (ImGui::SliderInt("Rotations", &rCount, 0, 3)) {
 			setFresh(true);
 		}
@@ -46,6 +49,7 @@ void If_rotate::renderImGuiSettings() {
 }
 
 void If_rotate::apply(ofImage* img) {
+	if (!bVisible) return;
 	img->rotate90(rCount);
 	img->mirror(vMirror, hMirror);
 	if (pixelplotter != nullptr && bRotateCanvas) {

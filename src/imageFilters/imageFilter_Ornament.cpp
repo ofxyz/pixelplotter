@@ -37,6 +37,9 @@ void If_ornament::renderImGuiSettings() {
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
+
+		renderUpDownButtons();
+
 		//ImGui::PushItemWidth(60);
 
 		if (ImGui::SliderInt("WPG ##ornament_TileSize", &wallpaperGroup, 9, 16)) {
@@ -66,6 +69,7 @@ void If_ornament::renderImGuiSettings() {
 }
 
 void If_ornament::apply(ofImage* img) {
+	if (!bVisible) return;
 	ofEnableArbTex();
 	ornament.loadTexture(img->getTexture());
 	ofDisableArbTex();

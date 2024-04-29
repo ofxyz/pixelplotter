@@ -34,6 +34,8 @@ void If_tint::renderImGuiSettings() {
 		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
 
+		renderUpDownButtons();
+
 		if (ImGui::ColorEdit4("Colorize ##duplicate", (float*)&c_Tint, ImGuiColorEditFlags_NoInputs)) {
 			setFresh(true);
 		}
@@ -47,6 +49,7 @@ void If_tint::renderImGuiSettings() {
 }
 
 void If_tint::apply(ofImage* img) {
+	if (!bVisible) return;
 	ofFbo cfbo;
 	cfbo.allocate(img->getWidth(), img->getHeight(), GL_RGBA);
 	cfbo.begin();

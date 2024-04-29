@@ -28,6 +28,9 @@ void If_duplicate::renderImGuiSettings() {
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
+
+		renderUpDownButtons();
+
 		ImGui::PushItemWidth(60);
 
 		ImGui::Text("Copies"); ImGui::SameLine(75);
@@ -50,6 +53,7 @@ void If_duplicate::renderImGuiSettings() {
 }
 
 void If_duplicate::apply(ofImage* img) {
+	if (!bVisible) return;
 	ofFbo cfbo;
 	cfbo.allocate(img->getWidth(), img->getHeight(), GL_RGBA);
 
