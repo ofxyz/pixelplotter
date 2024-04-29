@@ -9,7 +9,7 @@
 	- ofJson getSettings()
 	- void update()   // Update will be called when:
 	- bool isFresh()  // Check if there are changes for update() to be called
-	- bool isAlive()  // If isAlive returns false object t will be deleted from object vector
+	- bool isAlive()  // If isAlive returns false object t will be deleted from object vector 
 */
 
 class ofApp;
@@ -38,6 +38,7 @@ public:
 	void add(ofJson settings);
 	void addRandom();
 	void reorder();
+	void duplicate();
 	void clean();
 	void clear();
 
@@ -50,6 +51,8 @@ private:
 	bool _bFresh;
 	bool _bClean;
 	bool _bReorder;
+	bool _bDuplicate;
+
 	int _currAddIndex;
 	std::string _objectName;
 	std::string _address;
@@ -131,6 +134,9 @@ void Controller<t>::update()
 	if (_bReorder) {
 		reorder();
 	}
+	if (_bDuplicate) {
+		duplicate();
+	}
 
 	for (const auto& o : v_Objects) {
 		if (o->isFresh()) {
@@ -157,8 +163,9 @@ void Controller<t>::renderImGuiSettings()
 		}
 		ImGui::Unindent();
 
-		_bClean   = false;
-		_bReorder = false;
+		_bClean     = false;
+		_bReorder   = false;
+		_bDuplicate = false;
 
 		// Order Top Down to Reflect Drawing order
 		//for (int i = 0; i < v_Objects.size(); i++) {
@@ -177,6 +184,9 @@ void Controller<t>::renderImGuiSettings()
 			}
 			if (v_Objects[i]->moveUp || v_Objects[i]->moveDown) {
 				_bReorder = true;
+			}
+			if (v_Objects[i]->duplicate) {
+				_bDuplicate = true;
 			}
 		}
 
@@ -205,6 +215,18 @@ void Controller<t>::reorder()
 		}
 	}
 };
+
+template <class t>
+void Controller<t>::duplicate()
+{
+	for (int i = 0; i < v_Objects.size(); i++) {
+		if (v_Objects[i]->duplicate) {
+			v_Objects[i]->duplicate = false;
+			add(v_Objects[i]->getSettings());
+			setFresh(true);
+		}
+	}
+}
 
 template<class t>
 void Controller<t>::clean()

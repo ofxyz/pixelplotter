@@ -15,6 +15,7 @@ public:
 
 	bool moveUp = false;
 	bool moveDown = false;
+	bool duplicate = false;
 
 	int currentBlendModeIndex = 0;
 

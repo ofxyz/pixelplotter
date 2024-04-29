@@ -22,6 +22,10 @@ void DrawFilter::renderUpDownButtons()
 		moveDown = true;
 	}
 	ImGui::SameLine();
+	if (ImGui::Button("Duplicate")) {
+		duplicate = true;
+	}
+	ImGui::SameLine();
 	if (ImGui::Checkbox("Visible", &bVisible)) {
 		setFresh(true);
 	}
