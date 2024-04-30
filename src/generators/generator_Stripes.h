@@ -26,8 +26,9 @@ public:
 
 private:
 	void drawPattern();
-	int xcount = 1;
-	int ycount = 1;
-	ImVec4 c_x = ofColor(0, 255, 255, 155);
-	ImVec4 c_y = ofColor(255, 0, 255, 155);
+	bool bHorizontal = false;
+	int count = 1;
+	float offset = 0;
+	float offsetBounds = 100;
+	ImVec4 c_x = ofColor(0, 0, 0, 255);
 };
