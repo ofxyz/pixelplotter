@@ -28,6 +28,6 @@ private:
 	void drawPattern();
 	int xcount = 1;
 	int ycount = 1;
-	ImVec4 c_base = ofColor(0, 255, 255, 155);
-	ImVec4 c_base2 = ofColor(255, 0, 255, 155);
+	ImVec4 c_x = ofColor(0, 255, 255, 155);
+	ImVec4 c_y = ofColor(255, 0, 255, 155);
 };
