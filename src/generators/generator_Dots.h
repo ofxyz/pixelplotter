@@ -26,8 +26,10 @@ public:
 
 private:
 	void drawPattern();
-	int count = 6;
+	int circleRes = 6;
 	float diameter = 50;
 	float rotation = 0;
+	int countX = 1;
+	int countY = 1;
 	ImVec4 c_Dots = ofColor(0, 0, 0, 255);
 };

@@ -45,6 +45,14 @@ void G_dots::renderImGuiSettings() {
 		setFresh(true);
 	}
 
+	if (ImGui::DragInt("countX ##G_Dots", &countX, 1, 1, width)) {
+		setFresh(true);
+	}
+	ImGui::SameLine();
+	if (ImGui::DragInt("countY ##G_Dots", &countY, 1, 1, width)) {
+		setFresh(true);
+	}
+
 	if (ImGui::ColorEdit4("Dot Color ##G_Dots", (float *)&c_Dots, ImGuiColorEditFlags_NoInputs)) {
 		setFresh(true);
 	}
@@ -53,7 +61,7 @@ void G_dots::renderImGuiSettings() {
 		setFresh(true);
 	}
 
-	if (ImGui::DragInt("Sides ##G_Dots", &count, 1, 3, 600)) {
+	if (ImGui::DragInt("Resolution ##G_Dots", &circleRes, 1, 3, 600)) {
 		setFresh(true);
 	}
 
@@ -70,9 +78,11 @@ ofJson G_dots::getSettings() {
 	settings["name"] = name;
 	settings["_isOpen"] = _isOpen;
 	settings["bVisible"] = bVisible;
-	settings["count"] = count;
+	settings["circleRes"] = circleRes;
 	settings["diameter"] = diameter;
 	settings["rotation"] = rotation;
+	settings["countX"] = countX;
+	settings["countY"] = countY;
 
 	settings["colors"]["c_bg"]["r"] = c_bg.x;
 	settings["colors"]["c_bg"]["g"] = c_bg.y;
@@ -88,11 +98,13 @@ ofJson G_dots::getSettings() {
 }
 
 void G_dots::loadSettings(ofJson & settings) {
-	_isOpen  = settings.value("_isOpen", _isOpen);
-	bVisible = settings.value("bVisible", bVisible);
-	count  = settings.value("count", count);
-	diameter = settings.value("diameter", diameter);
-	rotation = settings.value("rotation", rotation);
+	_isOpen   = settings.value("_isOpen", _isOpen);
+	bVisible  = settings.value("bVisible", bVisible);
+	circleRes = settings.value("circleRes", circleRes);
+	diameter  = settings.value("diameter", diameter);
+	rotation  = settings.value("rotation", rotation);
+	countX    = settings.value("countX", countX);
+	countY    = settings.value("countY", countY);
 
 	// Colours
 	c_bg.x = settings["colors"]["c_bg"].value("r", c_bg.x);
@@ -107,16 +119,33 @@ void G_dots::loadSettings(ofJson & settings) {
 }
 
 void G_dots::drawPattern() {
+	float yStep = (float)height / (float)countY; 
+	float xStep = (float)width / (float)countX; 
+
+	float yDiff = (yStep - (diameter * 2))*0.5;
+	float xDiff = (xStep - (diameter * 2))*0.5;
 
 	ofPushStyle();
+	
+	ofSetCircleResolution(circleRes);
 	ofFill();
 	ofSetColor((ofColor)c_Dots);
-	ofSetCircleResolution(count);
-	ofPushMatrix();
-	ofTranslate(width * 0.5, height * 0.5);
-	ofRotate(rotation);
-	ofDrawCircle(0, 0, 0, diameter);
-	ofPopMatrix();
+	
+	for (int y = 0; y < countY; y++) {
+		ofPushMatrix();
+		ofTranslate(0, y * yStep);	
+		for (int x = 0; x < countX; x++) {
+			ofPushMatrix();
+			ofTranslate(x*xStep, 0);
+			ofTranslate(xDiff, yDiff);
+			ofTranslate(diameter, diameter);
+			ofRotate(rotation);
+			ofDrawCircle(0, 0, 0, diameter);
+			ofPopMatrix();
+		}
+		ofPopMatrix();
+	}
+	
 	ofPopStyle();
 
 }
