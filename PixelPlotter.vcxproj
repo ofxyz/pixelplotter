@@ -205,6 +205,7 @@
     <ClCompile Include="..\..\addons\ofxImGui\libs\imgui\backends\imgui_impl_opengl3.cpp" />
     <ClCompile Include="..\..\addons\ofxImGui\libs\imgui\extras\imgui_stdlib.cpp" />
     <ClCompile Include="..\..\addons\ofxImGui\libs\imgui\src\imgui_tables.cpp" />
+    <ClCompile Include="src\generators\generator_Dots.cpp" />
     <ClCompile Include="src\generators\generator_Gradient.cpp" />
     <ClCompile Include="src\generators\generator_Stripes.cpp" />
     <ClCompile Include="src\gui\ImGradientHDR.cpp" />
@@ -309,6 +310,7 @@
     <ClInclude Include="..\..\addons\ofxImGui\libs\imgui\backends\imgui_impl_opengl2.h" />
     <ClInclude Include="..\..\addons\ofxImGui\libs\imgui\backends\imgui_impl_opengl3.h" />
     <ClInclude Include="..\..\addons\ofxImGui\libs\imgui\extras\imgui_stdlib.h" />
+    <ClInclude Include="src\generators\generator_Dots.h" />
     <ClInclude Include="src\generators\generator_Gradient.h" />
     <ClInclude Include="src\generators\generator_Stripes.h" />
     <ClInclude Include="src\gui\IconsFontAwesome5.h" />

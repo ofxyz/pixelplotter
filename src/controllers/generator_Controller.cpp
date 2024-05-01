@@ -1,6 +1,7 @@
 #include "generator_Controller.h"
 #include "generator_Stripes.h"
 #include "generator_Gradient.h"
+#include "generator_Dots.h"
 
 GeneratorController::GeneratorController()
 	: Controller()
@@ -9,6 +10,7 @@ GeneratorController::GeneratorController()
 
 	mapObjectTypes["Stripes"]  = createInstance<G_stripes>;
 	mapObjectTypes["Gradient"] = createInstance<G_gradient>;
+	mapObjectTypes["Dots"] = createInstance<G_dots>;
 
 	for (auto p : mapObjectTypes) {
 		v_objectNames.push_back(p.first);

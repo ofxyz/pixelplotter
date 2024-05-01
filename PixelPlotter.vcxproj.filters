@@ -316,6 +316,9 @@
     <ClCompile Include="src\imageFilters\imageFilter_Dither.cpp">
       <Filter>src\imageFilters</Filter>
     </ClCompile>
+    <ClCompile Include="src\generators\generator_Dots.cpp">
+      <Filter>src\generators</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -1609,6 +1612,9 @@
     </ClInclude>
     <ClInclude Include="src\imageFilters\imageFilter_Dither.h">
       <Filter>src\imageFilters</Filter>
+    </ClInclude>
+    <ClInclude Include="src\generators\generator_Dots.h">
+      <Filter>src\generators</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
