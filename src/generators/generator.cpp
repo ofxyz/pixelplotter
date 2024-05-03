@@ -9,17 +9,8 @@ Generator::Generator(int _width /* = 100*/, int _height /* = 100*/)
 	m_fbo.allocate(width, height);
 }
 
-void Generator::renderUpDownButtons() {
-	if (ImGui::Button("Move Up")) {
-		moveUp = true;
-		moveDown = false;
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("Move Down")) {
-		moveUp = false;
-		moveDown = true;
-	}
-	ImGui::SameLine();
+void Generator::renderUpDownButtons()
+{
 	if (ImGui::Button("Duplicate")) {
 		duplicate = true;
 	}

@@ -10,18 +10,6 @@ DrawFilter::DrawFilter()
 
 void DrawFilter::renderUpDownButtons()
 {
-	if (ImGui::Button("Move Up"))
-	{
-		moveUp = true;
-		moveDown = false;
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("Move Down"))
-	{
-		moveUp = false;
-		moveDown = true;
-	}
-	ImGui::SameLine();
 	if (ImGui::Button("Duplicate")) {
 		duplicate = true;
 	}

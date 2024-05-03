@@ -1,6 +1,8 @@
 #pragma once
 #include "ofJson.h"
 #include "ofx2d.h"
+#include <imgui.h>
+#include <imgui_internal.h>
 
 /*
 	The Controller class is a managing factory of class t
@@ -168,27 +170,52 @@ void Controller<t>::renderImGuiSettings()
 		_bDuplicate = false;
 
 		// Order Top Down to Reflect Drawing order
-		//for (int i = 0; i < v_Objects.size(); i++) {
-		for (int i = v_Objects.size()-1; i >= 0; i--) {
+		for (int i = v_Objects.size() - 1; i >= 0; i--) {
 			if (v_Objects[i]->isAlive()) {
 				ImGui::Indent();
 				ImGui::PushID(i);
-				// Receive Payload // Class t needs name or type attribute?
-				//const ImGuiPayload * drawFilterPayloadPre = ImGui::AcceptDragDropPayload("drawFilter");
+
 				v_Objects[i]->renderImGuiSettings();
+				// We will need to refactor this at some point
+				// collapsing headers are not the best for drag and drop
+				// And we should be more free with ->renderImGuiSettings()?
+	
+				// BeginDragDropSource() allows dragging an item
+				if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None)) {
+					// Set payload to contain the index of the object being dragged
+					int index = i; // Using i directly since it's already in reverse order
+					ImGui::SetDragDropPayload("OBJECT_INDEX", &index, sizeof(int));
+					ImGui::Text("Drag to reorder");
+					ImGui::EndDragDropSource();
+				}
+
+				// BeginDragDropTarget() allows dropping onto this item
+				if (ImGui::BeginDragDropTarget()) {
+					// Accept payload of type "OBJECT_INDEX" and reorder objects accordingly
+					if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("OBJECT_INDEX")) {
+						IM_ASSERT(payload->DataSize == sizeof(int));
+						int payloadIndex = *(const int *)payload->Data;
+						int currentPos = i;
+
+						if (payloadIndex != currentPos) {
+							ofx2d::move(v_Objects, payloadIndex, currentPos);
+							setFresh(true);
+							ofLog() << "Moving " << payloadIndex << " to " << currentPos;
+						}
+					}
+					ImGui::EndDragDropTarget();
+				}
+
 				ImGui::PopID();
 				ImGui::Unindent();
-			}
-			else {
+			} else {
 				_bClean = true;
-			}
-			if (v_Objects[i]->moveUp || v_Objects[i]->moveDown) {
-				_bReorder = true;
 			}
 			if (v_Objects[i]->duplicate) {
 				_bDuplicate = true;
 			}
 		}
+
 
 	}
 	ImGui::PopID();
@@ -198,6 +225,7 @@ void Controller<t>::renderImGuiSettings()
 template<class t>
 void Controller<t>::reorder()
 {
+	return;
 	for (int i = 0; i < v_Objects.size(); i++) {
 		if (v_Objects[i]->moveUp) {
 			v_Objects[i]->moveUp = false;
