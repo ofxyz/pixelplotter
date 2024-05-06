@@ -16,20 +16,12 @@ void If_ornament::loadSettings(ofJson & settings) {
 	//name = settings.value("name", "duplicate");
 	_isOpen = settings.value("_isOpen", _isOpen);
 	tileSize = settings.value("tileSize", tileSize);
+	ornament.setTileSize(tileSize);
 	wallpaperGroup = settings.value("wallpaperGroup", wallpaperGroup);
+	ornament.setWallpaperGroup(wallpaperGroup);
 	angle = settings.value("angle", angle);
+	ornament.setAngle(angle);
 	return;
-}
-
-void If_ornament::onTileSizeChanged(int & t) {
-}
-
-
-void If_ornament::onWallpaperGroupChanged(int & t) {
-}
-
-
-void If_ornament::onAngleChanged(float & t) {
 }
 
 void If_ornament::renderImGuiSettings() {
@@ -48,6 +40,7 @@ void If_ornament::renderImGuiSettings() {
 		}
 
 		// TODO: Division type of control?
+		// tileSize should be devision of source width. Might need an offset control a well
 		if (ImGui::DragInt("TileSize ##ornament_TileSize", &tileSize, 1, 1, 2000)) {
 			ornament.setTileSize(tileSize);
 			setFresh(true);
@@ -72,17 +65,20 @@ void If_ornament::apply(ofImage* img) {
 	if (!bVisible) return;
 	ofEnableArbTex();
 	ornament.loadTexture(img->getTexture());
-	ofDisableArbTex();
 	ornament.update();
+	ofDisableArbTex();
 
 	ofFbo cfbo;
-	cfbo.allocate(ornament.getTexture().getWidth(), ornament.getTexture().getHeight(), ornament.getTexture().getTextureData().glInternalFormat);
+	cfbo.allocate(img->getWidth(), img->getHeight(), img->getTexture().getTextureData().glInternalFormat);
+	cfbo.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
+
 	cfbo.begin();
 	cfbo.clearColorBuffer(ofColor(0, 0, 0, 0));
 
 	ornament.draw(0, 0);
 
 	cfbo.end();
+
 	cfbo.readToPixels(img->getPixels());
 	img->update();
 	

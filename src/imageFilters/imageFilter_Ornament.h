@@ -7,7 +7,7 @@ class If_ornament : public ImageFilter {
 public:
 	If_ornament() {
 		name = "Ornament";
-		ornament.setup(800, 600);
+		ornament.setup();
 	};
 
 	void apply(ofImage* img) override;
@@ -16,10 +16,6 @@ public:
 	ofJson getSettings() override;
 
 private:
-	void onTileSizeChanged(int & t);
-	void onWallpaperGroupChanged(int & t);
-	void onAngleChanged(float & t);
-
 	Ornament ornament;
 	int tileSize = 150;
 	int wallpaperGroup = 12;

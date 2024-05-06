@@ -119,11 +119,16 @@ ofJson Controller<t>::getSettings()
 template<class t>
 void Controller<t>::loadSettings(ofJson& settings)
 {
-	ofJson objectSettings = settings.value(_objectName.c_str(), ofJson::array());
-	if (!objectSettings.empty()) {
-		for (auto& objectSetting : objectSettings) {
-			add(objectSetting);
+	try {
+		ofJson objectSettings = settings.value(_objectName.c_str(), ofJson::array());
+		if (!objectSettings.empty()) {
+			for (auto & objectSetting : objectSettings) {
+				add(objectSetting);
+			}
 		}
+	}
+	catch (...) {
+		ofLog(OF_LOG_WARNING) << "Could not load presets for Object Name: " << _objectName.c_str() << std::endl;
 	}
 }
 
@@ -181,7 +186,7 @@ void Controller<t>::renderImGuiSettings()
 				// And we should be more free with ->renderImGuiSettings()?
 	
 				// BeginDragDropSource() allows dragging an item
-				if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None)) {
+				if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
 					// Set payload to contain the index of the object being dragged
 					int index = i; // Using i directly since it's already in reverse order
 					ImGui::SetDragDropPayload("OBJECT_INDEX", &index, sizeof(int));
@@ -200,7 +205,6 @@ void Controller<t>::renderImGuiSettings()
 						if (payloadIndex != currentPos) {
 							ofx2d::move(v_Objects, payloadIndex, currentPos);
 							setFresh(true);
-							ofLog() << "Moving " << payloadIndex << " to " << currentPos;
 						}
 					}
 					ImGui::EndDragDropTarget();
