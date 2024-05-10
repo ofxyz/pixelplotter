@@ -1,6 +1,6 @@
 # PixelPlotter
 
-![Implementation Overview](img/overview.png)
+![Implementation Overview](img/overview.jpg)
 
 ## Notes on setting up VS2022
 
