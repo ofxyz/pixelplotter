@@ -7,9 +7,6 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\canvas.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\controllers\drawFilter_Controller.cpp">
       <Filter>src\controllers</Filter>
     </ClCompile>
@@ -78,9 +75,6 @@
     </ClCompile>
     <ClCompile Include="src\drawPixels\drawPixel_SeparateRGB_Bars01.cpp">
       <Filter>src\drawPixels</Filter>
-    </ClCompile>
-    <ClCompile Include="src\frameBuffer.cpp">
-      <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\generators\generator.cpp">
       <Filter>src\generators</Filter>
@@ -319,6 +313,24 @@
     <ClCompile Include="src\generators\generator_Dots.cpp">
       <Filter>src\generators</Filter>
     </ClCompile>
+    <ClCompile Include="src\ppBase\canvas.cpp">
+      <Filter>src\ppBase</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ppBase\frameBuffer.cpp">
+      <Filter>src\ppBase</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ppBase\ppBase.cpp">
+      <Filter>src\ppBase</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ppBase\ppDrawObject.cpp">
+      <Filter>src\ppBase</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ppBase\ppResource.cpp">
+      <Filter>src\ppBase</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ppBase\ppTexture.cpp">
+      <Filter>src\ppBase</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -519,12 +531,12 @@
     <Filter Include="addons\ofxOrnament\src\types">
       <UniqueIdentifier>{F7D04D99--7CD-A-4A-65-9-22D-9E12C87BB2D2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\ppBase">
+      <UniqueIdentifier>{bb55d997-3047-452b-94d7-9d50b1f1baf9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ofApp.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\canvas.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\controllers\controller.h">
@@ -598,9 +610,6 @@
     </ClInclude>
     <ClInclude Include="src\drawPixels\drawPixel_SeparateRGB_Bars01.h">
       <Filter>src\drawPixels</Filter>
-    </ClInclude>
-    <ClInclude Include="src\frameBuffer.h">
-      <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\generators\generator.h">
       <Filter>src\generators</Filter>
@@ -1615,6 +1624,24 @@
     </ClInclude>
     <ClInclude Include="src\generators\generator_Dots.h">
       <Filter>src\generators</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ppBase\canvas.h">
+      <Filter>src\ppBase</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ppBase\frameBuffer.h">
+      <Filter>src\ppBase</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ppBase\ppBase.h">
+      <Filter>src\ppBase</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ppBase\ppDrawObject.h">
+      <Filter>src\ppBase</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ppBase\ppResource.h">
+      <Filter>src\ppBase</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ppBase\ppTexture.h">
+      <Filter>src\ppBase</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
