@@ -331,6 +331,9 @@
     <ClCompile Include="src\ppBase\ppTexture.cpp">
       <Filter>src\ppBase</Filter>
     </ClCompile>
+    <ClCompile Include="src\controllers\vc_Texture.cpp">
+      <Filter>src\controllers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -1642,6 +1645,9 @@
     </ClInclude>
     <ClInclude Include="src\ppBase\ppVectorController.h">
       <Filter>src\ppBase</Filter>
+    </ClInclude>
+    <ClInclude Include="src\controllers\vc_Texture.h">
+      <Filter>src\controllers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

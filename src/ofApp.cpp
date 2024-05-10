@@ -48,7 +48,10 @@ void ofApp::update() {
 //--------------------------------------------------------------
 void ofApp::draw() {
 
-	if (plotCanvas.sourceController.showSource) {
+	if (ofGui._drawTexture != nullptr) {
+		ofGui._drawTexture->draw(offset.x + userOffset.x, offset.y + userOffset.y, ofGui._drawTexture->getWidth() * zoomLevel, ofGui._drawTexture->getHeight() * zoomLevel);
+	}
+	else if (plotCanvas.sourceController.showSource) {
 		plotCanvas.sourceController.frameBuffer.getFrame().draw(offset.x + userOffset.x, offset.y + userOffset.y, plotCanvas.canvasWidth * zoomLevel, plotCanvas.canvasHeight * zoomLevel);
 	}
 	else {

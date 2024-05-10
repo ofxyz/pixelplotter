@@ -37,7 +37,7 @@ public:
 	ofJson getSettings();
 
 	void add(std::string name, ofJson settings = {});
-	void add(ofJson settings);
+	void add(ofJson settings); // TODO refactor. ofJson is also a string :(
 	void addRandom();
 	void reorder();
 	void duplicate();
@@ -160,6 +160,7 @@ void ppVectorController<t>::renderImGuiSettings()
 
 	std::string sHeaderName = _objectName + " (" + ofToString(v_Objects.size()) + ")";
 	ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+
 	if (ImGui::CollapsingHeader(sHeaderName.c_str()))
 	{
 		ImGui::Indent();

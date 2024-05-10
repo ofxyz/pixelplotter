@@ -19,3 +19,23 @@ bool ppResource::hasSound() {
 void ppResource::setSound(bool hasSound) {
 	_hasSound = hasSound;
 }
+
+bool ppResource::isAlive()
+{
+	return _alive;
+}
+
+void ppResource::setAlive(bool alive)
+{
+	_alive = alive;
+}
+
+bool ppResource::isOpen()
+{
+	return _isOpen;
+}
+
+void ppResource::setOpen(bool isOpen)
+{
+	_isOpen = isOpen;
+}

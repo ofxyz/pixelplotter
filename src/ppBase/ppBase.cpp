@@ -9,3 +9,19 @@ ppBase::ppBase() {
 unsigned int ppBase::getID() {
 	return uiID;
 }
+
+std::vector<sProp>& ppBase::getProperties()
+{
+	return vProps;
+}
+
+void ppBase::addProperty(std::string name, pTypes type, void* pdata)
+{
+	sProp prop;
+	prop.ID = ++uiID_Counter;
+	prop.name = name;
+	prop.type = type;
+	prop.pData = pdata;
+	vProps.emplace_back(prop);
+
+}

@@ -3,6 +3,7 @@
 #include "ofGui.h"
 #include "canvas.h"
 #include "vc_SoundDevice.h"
+#include "vc_Texture.h"
 
 class ofApp : public ofBaseApp {
 
@@ -40,6 +41,8 @@ public:
 	OfGui ofGui;
 	Canvas plotCanvas;
 	soundDeviceController soundManager;
+
+	TextureController textureController;
 
 	bool vSync = true;
 	bool bDragCanvas = false;

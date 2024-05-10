@@ -23,6 +23,7 @@ OfGui::OfGui()
 	_bShowToolPalette = false;
 	_bShowImGuiStyleEditor = false;
 	_bShowImGuiMetricsWindow = false;
+	_bShowPropertiesWindow = true;
 
 	_bShowFps = true;
 
@@ -136,6 +137,7 @@ void OfGui::draw()
 		if (_bShowPlotCanvas) drawCanvasWindow();
 		if (_bShowImGuiStyleEditor) ImGui::ShowStyleEditor();
 		if (_bShowImGuiMetricsWindow) ImGui::ShowMetricsWindow();
+		if (_bShowPropertiesWindow) drawPropertiesWindow();
 	}
 
 	gui.end();
@@ -174,6 +176,7 @@ void OfGui::drawMenuBar()
 		if (ImGui::BeginMenu("Windows...")) {
 			//ImGui::MenuItem("Something");
 			ImGui::Checkbox("Project", &_bShowProjectTree);
+			ImGui::Checkbox("Properties", &_bShowPropertiesWindow);
 			ImGui::Checkbox("Plot Canvas", &_bShowPlotCanvas);
 			ImGui::Checkbox("Info Panel", &_bShowInfoPanel);
 			ImGui::Checkbox("Tool Palette", &_bShowToolPalette);
@@ -379,11 +382,66 @@ void OfGui::drawCanvasWindow()
 	ImGui::End();
 }
 
+void OfGui::drawPropertiesWindow()
+{
+	ImGui::Begin("Properties", &_bShowPropertiesWindow);
+
+	if (_selectedItem) {
+		auto props = _selectedItem->getProperties();
+		for (auto& p : props) {
+			//p.Render();
+			std::string sItemName;
+			ImGui::PushID(p.ID);
+			switch (p.type)
+			{
+			case EPT_UINT:
+			{
+				uint32_t* data = (uint32_t*)p.pData;
+				uint32_t dMin = 1;
+				uint32_t dMax = 1200;
+				if (ImGui::DragScalar(p.name.c_str(), ImGuiDataType_U32, p.pData, 1, &dMin, &dMax)) {
+					//setFresh(true);
+				}
+				break;
+			}
+			default:
+				break;
+
+
+			}
+			ImGui::PopID();
+		}
+	}
+
+	ImGui::End();
+}
+
 void OfGui::drawTextureBrowser()
 {
-	ImGui::Begin("Textures", &_bShowTextureTree);
-	
-	ImGui::Text("Show list of textures here");
+	ImGui::Begin("Textures", &_bShowTextureTree, ImGuiWindowFlags_MenuBar);
+
+	if (ImGui::BeginMenuBar()) {
+		if (ImGui::BeginMenu("Add")) {
+			if (ImGui::MenuItem("New Texture")) {
+				pixelplotter->textureController.add((std::string)"Texture");
+			}
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
+
+	for (auto obj : pixelplotter->textureController.v_Objects) {
+		if (obj->isOpen())
+			ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+
+		if (ImGui::TreeNode(obj->getName().c_str()))
+		{
+			if (ImGui::SmallButton("View")) {
+				_drawTexture = obj;
+			}
+			ImGui::TreePop();
+		}
+	}
 
 	ImGui::End();
 }

@@ -18,7 +18,18 @@ public:
 	virtual void loadSettings(ofJson & settings) = 0;
 	virtual ofJson getSettings() = 0;
 
+	bool isAlive();
+	void setAlive(bool alive);
+
+	bool isOpen();
+	void setOpen(bool isOpen);
+
+	// TODO Refactor ...
+	bool duplicate = false;
+	bool _alive = true;
+
 private:
 	bool _hasSound = false;
+	bool _isOpen = false;
 	std::string _sName = "Untitled Resource";
 };

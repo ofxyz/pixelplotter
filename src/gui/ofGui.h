@@ -2,6 +2,7 @@
 
 #include "ofxImGui.h"
 #include "ofJson.h"
+#include "ppDrawObject.h"
 
 class ofApp;
 
@@ -22,6 +23,7 @@ public:
 	void drawToolPalette();
 	void drawInfoPanel();
 	void drawCanvasWindow();
+	void drawPropertiesWindow();
 	void drawTextureBrowser();
 	
 	// Visibility
@@ -48,6 +50,7 @@ public:
 
 	ImVec4 availableSpace();
 	
+	std::shared_ptr<ppDrawObject> _drawTexture;
 
 private:
 	bool _bGuiVisible;
@@ -66,6 +69,7 @@ private:
 	bool _bShowInfoPanel;
 	bool _bShowToolPalette;
 	bool _bShowImGuiMetricsWindow;
+	bool _bShowPropertiesWindow;
 	bool _bShowImGuiStyleEditor;
 
 	bool _bShowFps;
@@ -84,4 +88,8 @@ private:
 	std::vector<ofFile> presetFiles;
 
 	ofDirectory presetDirectory;
+
+	ppBase* _selectedItem;
+	
+
 };
