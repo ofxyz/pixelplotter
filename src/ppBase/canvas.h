@@ -1,8 +1,8 @@
 #pragma once
 #include "ofFbo.h"
 #include "ofCamera.h"
-#include "drawFilter_Controller.h"
-#include "source_Controller.h"
+#include "vc_drawFilter.h"
+#include "vc_source.h"
 
 class Canvas {
 public:

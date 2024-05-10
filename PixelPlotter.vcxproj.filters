@@ -7,22 +7,22 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\controllers\drawFilter_Controller.cpp">
+    <ClCompile Include="src\controllers\vc_DrawFilter.cpp">
       <Filter>src\controllers</Filter>
     </ClCompile>
-    <ClCompile Include="src\controllers\drawPixel_Controller.cpp">
+    <ClCompile Include="src\controllers\vc_DrawPixel.cpp">
       <Filter>src\controllers</Filter>
     </ClCompile>
-    <ClCompile Include="src\controllers\generator_Controller.cpp">
+    <ClCompile Include="src\controllers\vc_Generator.cpp">
       <Filter>src\controllers</Filter>
     </ClCompile>
-    <ClCompile Include="src\controllers\imageFilter_Controller.cpp">
+    <ClCompile Include="src\controllers\vc_ImageFilter.cpp">
       <Filter>src\controllers</Filter>
     </ClCompile>
-    <ClCompile Include="src\controllers\soundDevice_Controller.cpp">
+    <ClCompile Include="src\controllers\vc_SoundDevice.cpp">
       <Filter>src\controllers</Filter>
     </ClCompile>
-    <ClCompile Include="src\controllers\source_Controller.cpp">
+    <ClCompile Include="src\controllers\vc_Source.cpp">
       <Filter>src\controllers</Filter>
     </ClCompile>
     <ClCompile Include="src\drawFilters\drawFilter.cpp">
@@ -539,25 +539,22 @@
     <ClInclude Include="src\ofApp.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\controllers\controller.h">
+    <ClInclude Include="src\controllers\vc_DrawFilter.h">
       <Filter>src\controllers</Filter>
     </ClInclude>
-    <ClInclude Include="src\controllers\drawFilter_Controller.h">
+    <ClInclude Include="src\controllers\vc_DrawPixel.h">
       <Filter>src\controllers</Filter>
     </ClInclude>
-    <ClInclude Include="src\controllers\drawPixel_Controller.h">
+    <ClInclude Include="src\controllers\vc_Generator.h">
       <Filter>src\controllers</Filter>
     </ClInclude>
-    <ClInclude Include="src\controllers\generator_Controller.h">
+    <ClInclude Include="src\controllers\vc_ImageFilter.h">
       <Filter>src\controllers</Filter>
     </ClInclude>
-    <ClInclude Include="src\controllers\imageFilter_Controller.h">
+    <ClInclude Include="src\controllers\vc_SoundDevice.h">
       <Filter>src\controllers</Filter>
     </ClInclude>
-    <ClInclude Include="src\controllers\soundDevice_Controller.h">
-      <Filter>src\controllers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\controllers\source_Controller.h">
+    <ClInclude Include="src\controllers\vc_Source.h">
       <Filter>src\controllers</Filter>
     </ClInclude>
     <ClInclude Include="src\drawFilters\drawFilter.h">
@@ -1641,6 +1638,9 @@
       <Filter>src\ppBase</Filter>
     </ClInclude>
     <ClInclude Include="src\ppBase\ppTexture.h">
+      <Filter>src\ppBase</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ppBase\ppVectorController.h">
       <Filter>src\ppBase</Filter>
     </ClInclude>
   </ItemGroup>

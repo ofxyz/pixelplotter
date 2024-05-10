@@ -16,6 +16,7 @@ OfGui::OfGui()
 	_bMenuBarVisible = true;
 
 	_bShowProjectTree = false;
+	_bShowTextureTree = true;
 	_bShowCanvas = false; // TODO: FinisRename to Zoomed Viewer
 	_bShowPlotCanvas = true;
 	_bShowInfoPanel = true;
@@ -128,6 +129,7 @@ void OfGui::draw()
 		drawMainDock();
 		if (_bMenuBarVisible) drawMenuBar();
 		if (_bShowProjectTree) drawProjectTree();
+		if (_bShowTextureTree) drawTextureBrowser();
 		if (_bShowCanvas) drawCanvas();
 		if (_bShowToolPalette) drawToolPalette();
 		if (_bShowInfoPanel) drawInfoPanel();
@@ -177,6 +179,7 @@ void OfGui::drawMenuBar()
 			ImGui::Checkbox("Tool Palette", &_bShowToolPalette);
 			ImGui::Checkbox("Style Editor", &_bShowImGuiStyleEditor);
 			ImGui::Checkbox("Metrics Window", &_bShowImGuiMetricsWindow);
+			ImGui::Checkbox("Texture Window", &_bShowTextureTree);
 			ImGui::EndMenu();
 		}
 
@@ -373,6 +376,15 @@ void OfGui::drawCanvasWindow()
 {
 	ImGui::Begin("Canvas", &_bShowPlotCanvas);
 	pixelplotter->plotCanvas.renderImGuiSettings();
+	ImGui::End();
+}
+
+void OfGui::drawTextureBrowser()
+{
+	ImGui::Begin("Textures", &_bShowTextureTree);
+	
+	ImGui::Text("Show list of textures here");
+
 	ImGui::End();
 }
 

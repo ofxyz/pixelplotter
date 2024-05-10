@@ -1,8 +1,8 @@
 #pragma once
-#include "controller.h"
+#include "ppVectorController.h"
 #include "generator.h"
 
-class GeneratorController : public Controller<Generator>
+class GeneratorController : public ppVectorController<Generator>
 {
 	public:
 		GeneratorController();

@@ -1,4 +1,4 @@
-#include "imageFilter_Controller.h"
+#include "vc_ImageFilter.h"
 #include "imageFilter.h"
 #include "imageFilter_Mirror.h"
 #include "imageFilter_Duplicate.h"
@@ -11,7 +11,7 @@
 #include "imageFilter_Invert.h"
 
 ImageFilterController::ImageFilterController()
-	: Controller()
+	: ppVectorController()
 {
 	// Manual Mapping ...
 	mapObjectTypes["Mirror"] = createInstance<If_mirror>;

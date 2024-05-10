@@ -22,6 +22,7 @@ public:
 	void drawToolPalette();
 	void drawInfoPanel();
 	void drawCanvasWindow();
+	void drawTextureBrowser();
 	
 	// Visibility
 	bool guiVisible();
@@ -59,6 +60,7 @@ private:
 	// Also do we Use `Show` or `Visible`
 
 	bool _bShowProjectTree;
+	bool _bShowTextureTree;
 	bool _bShowCanvas;
 	bool _bShowPlotCanvas;
 	bool _bShowInfoPanel;

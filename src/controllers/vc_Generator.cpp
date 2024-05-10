@@ -1,10 +1,10 @@
-#include "generator_Controller.h"
+#include "vc_Generator.h"
 #include "generator_Stripes.h"
 #include "generator_Gradient.h"
 #include "generator_Dots.h"
 
 GeneratorController::GeneratorController()
-	: Controller()
+	: ppVectorController()
 {
 	// Manual Mapping ...
 

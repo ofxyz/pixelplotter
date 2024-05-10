@@ -2,8 +2,8 @@
 
 #include "ofxImGui.h"
 #include "frameBuffer.h"
-#include "imageFilter_Controller.h"
-#include "generator_Controller.h"
+#include "vc_ImageFilter.h"
+#include "vc_Generator.h"
 #include "ofVideoPlayer.h"
 #include "ofVideoGrabber.h"
 #include "ofImage.h"

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "imageFilter.h"
-#include "drawPixel_Controller.h"
+#include "vc_drawPixel.h"
 
 class If_drawPixel : public ImageFilter {
 public:

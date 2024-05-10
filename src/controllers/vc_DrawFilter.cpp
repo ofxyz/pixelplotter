@@ -1,5 +1,5 @@
 #pragma once
-#include "drawFilter_Controller.h"
+#include "vc_DrawFilter.h"
 #include "drawFilter_Pixelate.h"
 #include "drawFilter_Pixelate2.h"
 #include "drawFilter_Rings.h"
@@ -8,7 +8,7 @@
 #include "drawFilter_Lumes.h"
 
 DrawFilterController::DrawFilterController()
-	: Controller()
+	: ppVectorController()
 {
 	// Manual Mapping ...
 	

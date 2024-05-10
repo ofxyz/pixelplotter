@@ -1,5 +1,5 @@
 #include "ofApp.h"
-#include "soundDevice_Controller.h"
+#include "vc_SoundDevice.h"
 #include "imgui_internal.h"
 #include "ImHelpers.h"
 #include "imgui_stdlib.h"

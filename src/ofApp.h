@@ -2,7 +2,7 @@
 #include "ofMain.h"
 #include "ofGui.h"
 #include "canvas.h"
-#include "soundDevice_Controller.h"
+#include "vc_SoundDevice.h"
 
 class ofApp : public ofBaseApp {
 

@@ -214,12 +214,12 @@
     <ClCompile Include="src\imageFilters\imageFilter_Ornament.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
-    <ClCompile Include="src\controllers\drawFilter_Controller.cpp" />
-    <ClCompile Include="src\controllers\drawPixel_Controller.cpp" />
-    <ClCompile Include="src\controllers\generator_Controller.cpp" />
-    <ClCompile Include="src\controllers\imageFilter_Controller.cpp" />
-    <ClCompile Include="src\controllers\soundDevice_Controller.cpp" />
-    <ClCompile Include="src\controllers\source_Controller.cpp" />
+    <ClCompile Include="src\controllers\vc_DrawFilter.cpp" />
+    <ClCompile Include="src\controllers\vc_DrawPixel.cpp" />
+    <ClCompile Include="src\controllers\vc_Generator.cpp" />
+    <ClCompile Include="src\controllers\vc_ImageFilter.cpp" />
+    <ClCompile Include="src\controllers\vc_SoundDevice.cpp" />
+    <ClCompile Include="src\controllers\vc_Source.cpp" />
     <ClCompile Include="src\drawFilters\drawFilter.cpp" />
     <ClCompile Include="src\drawFilters\drawFilter_Lumes.cpp" />
     <ClCompile Include="src\drawFilters\drawFilter_Mesh.cpp" />
@@ -323,13 +323,12 @@
     <ClInclude Include="src\imageFilters\imageFilter_Invert.h" />
     <ClInclude Include="src\imageFilters\imageFilter_Ornament.h" />
     <ClInclude Include="src\ofApp.h" />
-    <ClInclude Include="src\controllers\controller.h" />
-    <ClInclude Include="src\controllers\drawFilter_Controller.h" />
-    <ClInclude Include="src\controllers\drawPixel_Controller.h" />
-    <ClInclude Include="src\controllers\generator_Controller.h" />
-    <ClInclude Include="src\controllers\imageFilter_Controller.h" />
-    <ClInclude Include="src\controllers\soundDevice_Controller.h" />
-    <ClInclude Include="src\controllers\source_Controller.h" />
+    <ClInclude Include="src\controllers\vc_DrawFilter.h" />
+    <ClInclude Include="src\controllers\vc_DrawPixel.h" />
+    <ClInclude Include="src\controllers\vc_Generator.h" />
+    <ClInclude Include="src\controllers\vc_ImageFilter.h" />
+    <ClInclude Include="src\controllers\vc_SoundDevice.h" />
+    <ClInclude Include="src\controllers\vc_Source.h" />
     <ClInclude Include="src\drawFilters\drawFilter.h" />
     <ClInclude Include="src\drawFilters\drawFilter_Lumes.h" />
     <ClInclude Include="src\drawFilters\drawFilter_Mesh.h" />
@@ -677,6 +676,7 @@
     <ClInclude Include="src\ppBase\ppDrawObject.h" />
     <ClInclude Include="src\ppBase\ppResource.h" />
     <ClInclude Include="src\ppBase\ppTexture.h" />
+    <ClInclude Include="src\ppBase\ppVectorController.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(OF_ROOT)\libs\openFrameworksCompiled\project\vs\openframeworksLib.vcxproj">

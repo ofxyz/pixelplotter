@@ -17,10 +17,10 @@
 class ofApp;
 
 template<class t>
-class Controller {
+class ppVectorController {
 public:
 	ofApp* pixelplotter{ nullptr };
-	Controller();
+	ppVectorController();
 
 	std::vector<std::string> v_objectNames;
 	std::vector<std::shared_ptr<t>> v_Objects;
@@ -61,7 +61,7 @@ private:
 };
 
 template<class t>
-Controller<t>::Controller()
+ppVectorController<t>::ppVectorController()
 {
 	pixelplotter = (ofApp*)ofGetAppPtr();
 	_bFresh = false;
@@ -73,7 +73,7 @@ Controller<t>::Controller()
 }
 
 template<class t>
-void Controller<t>::add(std::string name, ofJson settings /*= {}*/)
+void ppVectorController<t>::add(std::string name, ofJson settings /*= {}*/)
 {
 	if (mapObjectTypes.count(name) > 0) {
 		v_Objects.push_back(mapObjectTypes[name]());
@@ -88,7 +88,7 @@ void Controller<t>::add(std::string name, ofJson settings /*= {}*/)
 }
 
 template<class t>
-void Controller<t>::add(ofJson settings)
+void ppVectorController<t>::add(ofJson settings)
 {
 	try {
 		add(settings.value("name", "not_found"), settings);
@@ -101,13 +101,13 @@ void Controller<t>::add(ofJson settings)
 }
 
 template<class t>
-void Controller<t>::addRandom()
+void ppVectorController<t>::addRandom()
 {
 	add(v_objectNames[ofRandom(1, v_objectNames.size())]);
 }
 
 template<class t>
-ofJson Controller<t>::getSettings()
+ofJson ppVectorController<t>::getSettings()
 {
 	ofJson settings;
 	for (int i = 0; i < v_Objects.size(); i++) {
@@ -117,7 +117,7 @@ ofJson Controller<t>::getSettings()
 }
 
 template<class t>
-void Controller<t>::loadSettings(ofJson& settings)
+void ppVectorController<t>::loadSettings(ofJson& settings)
 {
 	try {
 		ofJson objectSettings = settings.value(_objectName.c_str(), ofJson::array());
@@ -133,7 +133,7 @@ void Controller<t>::loadSettings(ofJson& settings)
 }
 
 template<class t>
-void Controller<t>::update()
+void ppVectorController<t>::update()
 {
 	if (_bClean) {
 		clean();
@@ -154,7 +154,7 @@ void Controller<t>::update()
 }
 
 template<class t>
-void Controller<t>::renderImGuiSettings()
+void ppVectorController<t>::renderImGuiSettings()
 {
 	ImGui::PushID(_address.c_str());
 
@@ -227,7 +227,7 @@ void Controller<t>::renderImGuiSettings()
 
 // TODO: This will need to change after implementing ImGui drag drop
 template<class t>
-void Controller<t>::reorder()
+void ppVectorController<t>::reorder()
 {
 	return;
 	for (int i = 0; i < v_Objects.size(); i++) {
@@ -249,7 +249,7 @@ void Controller<t>::reorder()
 };
 
 template <class t>
-void Controller<t>::duplicate()
+void ppVectorController<t>::duplicate()
 {
 	for (int i = 0; i < v_Objects.size(); i++) {
 		if (v_Objects[i]->duplicate) {
@@ -261,7 +261,7 @@ void Controller<t>::duplicate()
 }
 
 template<class t>
-void Controller<t>::clean()
+void ppVectorController<t>::clean()
 {
 	for (int i = 0; i < v_Objects.size(); i++) {
 		if (!v_Objects[i]->isAlive()) {
@@ -273,26 +273,26 @@ void Controller<t>::clean()
 };
 
 template<class t>
-void Controller<t>::clear()
+void ppVectorController<t>::clear()
 {
 	v_Objects.clear();
 	setFresh(true);
 };
 
 template<class t>
-bool Controller<t>::isFresh()
+bool ppVectorController<t>::isFresh()
 {
 	return _bFresh;
 };
 
 template<class t>
-void Controller<t>::setFresh(bool fresh)
+void ppVectorController<t>::setFresh(bool fresh)
 {
 	_bFresh = fresh;
 };
 
 template<class t>
-void Controller<t>::generateMenuNames(std::string objectName)
+void ppVectorController<t>::generateMenuNames(std::string objectName)
 {
 	v_menuValues.clear();
 	std::string menuValueInit = "Add " + objectName + " ...";

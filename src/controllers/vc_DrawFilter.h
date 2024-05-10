@@ -1,8 +1,8 @@
 #pragma once
-#include "controller.h"
+#include "ppVectorController.h"
 #include "drawFilter.h"
 
-class DrawFilterController : public Controller<DrawFilter>
+class DrawFilterController : public ppVectorController<DrawFilter>
 {
 	public:
 		DrawFilterController();

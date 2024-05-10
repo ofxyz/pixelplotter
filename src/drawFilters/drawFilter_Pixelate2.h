@@ -1,7 +1,7 @@
 #pragma once
 
 #include "drawFilter.h"
-#include "drawPixel_Controller.h"
+#include "vc_drawPixel.h"
 
 class Df_pixelate2 : public DrawFilter {
 public:

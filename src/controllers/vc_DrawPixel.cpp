@@ -1,4 +1,4 @@
-#include "DrawPixel_Controller.h"
+#include "vc_DrawPixel.h"
 #include "drawPixel.h"
 #include "drawPixel_Normal.h"
 #include "drawPixel_SeparateCMY_Bars01.h"
@@ -11,7 +11,7 @@
 #include "drawPixel_SeparateCMYK_Rect04.h"
 
 DrawPixelController::DrawPixelController()
-	: Controller()
+	: ppVectorController()
 {
 	// Manual Mapping ...
 	
