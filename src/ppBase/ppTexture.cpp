@@ -6,8 +6,7 @@ ppTexture::ppTexture() {
 	setName("Untitled Texture");
 	addProperty("Width", EPT_UINT, &_width);
 	addProperty("Height", EPT_UINT, &_height);
-	// TOD
-	//addProperty("cBG", EPT_COLOUR, &_cBG);
+	addProperty("Background", EPT_VEC4, &cBG);
 	cBG = ofColor(255, 0, 0, 255);
 	_tFbo.allocate(_width, _height, GL_RGBA);
 	
@@ -22,34 +21,35 @@ bool ppTexture::update() {
 	return false;
 }
 
-void ppTexture::renderImGuiSettings() {
-	ImGui::SetNextItemOpen(_isOpen, ImGuiCond_Once);
-	if (ImGui::CollapsingHeader(getName().c_str(), &_alive)) {
-		_isOpen = true;
-		//ImGui::AlignTextToFramePadding();
+void ppTexture::renderImGuiSettings(bool bWrapped /* 1 */) {
 
-		
+	if (bWrapped) {
+		ImGui::SetNextItemOpen(_bIsOpen, ImGuiCond_Once);
+		if (ImGui::CollapsingHeader(getName().c_str(), &_bAlive)) {
+			_bIsOpen = true;
 
-		ImGui::Text("Dimensions"); ImGui::SameLine(60);
-		const unsigned int dmin = 1;
-		const unsigned int dmax = 1200;
-
-		ImGui::PushItemWidth(80);
-		if (ImGui::DragScalar("W ###wtexture" + getID(), ImGuiDataType_U32, &_width, 1, &dmin, &dmax)) {
-			setFresh(true);
+			renderImGuiSettings(!bWrapped /* false */);
 		}
-		ImGui::PopItemWidth();
-		ImGui::SameLine();
-		ImGui::PushItemWidth(80);
-		if (ImGui::DragScalar("H ###htexture" + getID(), ImGuiDataType_U32, &_height, 1, &dmin, &dmax)) {
-			setFresh(true);
+		else {
+			_bIsOpen = false;
 		}
-		ImGui::PopItemWidth();
+	}
 
+	ImGui::Text("Dimensions"); ImGui::SameLine(60);
+	const unsigned int dmin = 1;
+	const unsigned int dmax = 1200;
+
+	ImGui::PushItemWidth(80);
+	if (ImGui::DragScalar("W ###wtexture" + getID(), ImGuiDataType_U32, &_width, 1, &dmin, &dmax)) {
+		setFresh(true);
 	}
-	else {
-		_isOpen = false;
+	ImGui::PopItemWidth();
+	ImGui::SameLine();
+	ImGui::PushItemWidth(80);
+	if (ImGui::DragScalar("H ###htexture" + getID(), ImGuiDataType_U32, &_height, 1, &dmin, &dmax)) {
+		setFresh(true);
 	}
+	ImGui::PopItemWidth();
 }
 
 ofJson ppTexture::getSettings() {

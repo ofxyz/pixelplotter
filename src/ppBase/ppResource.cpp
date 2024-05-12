@@ -13,29 +13,29 @@ std::string ppResource::getName() {
 }
 
 bool ppResource::hasSound() {
-	return _hasSound;
+	return _bHasSound;
 }
 
 void ppResource::setSound(bool hasSound) {
-	_hasSound = hasSound;
+	_bHasSound = hasSound;
 }
 
 bool ppResource::isAlive()
 {
-	return _alive;
+	return _bAlive;
 }
 
 void ppResource::setAlive(bool alive)
 {
-	_alive = alive;
+	_bAlive = alive;
 }
 
 bool ppResource::isOpen()
 {
-	return _isOpen;
+	return _bIsOpen;
 }
 
 void ppResource::setOpen(bool isOpen)
 {
-	_isOpen = isOpen;
+	_bIsOpen = isOpen;
 }

@@ -4,12 +4,14 @@
 #include <vector>
 
 typedef enum pTypes {
-	EPT_BOOL,
+	EPT_BOOL = 1,
 	EPT_INT,
 	EPT_UINT,
 	EPT_FLOAT,
 	EPT_DOUBLE,
-	EPT_STRING
+	EPT_STRING,
+	EPT_VEC4,
+	EPT_COUNT
 };
 
 struct sProp {

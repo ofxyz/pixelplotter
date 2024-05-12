@@ -14,7 +14,7 @@ public:
 
 	virtual void setup()  = 0;
 	virtual bool update() = 0; // Returns freshness on change
-	virtual void renderImGuiSettings() = 0;
+	virtual void renderImGuiSettings(bool wrapped = 0) = 0;
 	virtual void loadSettings(ofJson & settings) = 0;
 	virtual ofJson getSettings() = 0;
 
@@ -24,12 +24,13 @@ public:
 	bool isOpen();
 	void setOpen(bool isOpen);
 
-	// TODO Refactor ...
-	bool duplicate = false;
-	bool _alive = true;
+protected:
+	// TODO REFACTOR
+	bool _bDuplicate = false;
+	bool _bAlive = true;
 
 private:
-	bool _hasSound = false;
-	bool _isOpen = false;
+	bool _bHasSound = false;
+	bool _bIsOpen = false;
 	std::string _sName = "Untitled Resource";
 };

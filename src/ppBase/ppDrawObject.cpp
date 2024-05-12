@@ -35,7 +35,7 @@ bool ppDrawObject::isAnimated() {
 }
 
 bool ppDrawObject::hasSound() {
-	return _hasSound;
+	return _bHasSound;
 }
 
 bool ppDrawObject::isFresh()

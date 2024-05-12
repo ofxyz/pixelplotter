@@ -37,6 +37,6 @@ protected:
 private:
 	bool _isInteractive = false;
 	bool _isAnimated = false;
-	bool _hasSound = false;
+	bool _bHasSound = false;
 	bool _isFresh = false;
 };

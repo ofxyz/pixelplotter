@@ -431,6 +431,7 @@ void OfGui::drawTextureBrowser()
 	}
 
 	for (auto obj : pixelplotter->textureController.v_Objects) {
+		ImGui::PushID("drawTextureBrowser"+obj->getID());
 		if (obj->isOpen())
 			ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 
@@ -438,9 +439,14 @@ void OfGui::drawTextureBrowser()
 		{
 			if (ImGui::SmallButton("View")) {
 				_drawTexture = obj;
+			
 			}
+
+			obj->renderImGuiSettings(0);
+
 			ImGui::TreePop();
 		}
+		ImGui::PopID();
 	}
 
 	ImGui::End();

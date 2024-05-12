@@ -9,7 +9,8 @@ public:
 
 	void setup() override;
 	bool update() override;
-	void renderImGuiSettings() override;
+	void renderImGuiSettings(bool bWrapped = 1) override;
+
 	ofJson getSettings() override;
 	void loadSettings(ofJson & settings) override;
 
@@ -24,7 +25,7 @@ public:
 	void resize(unsigned int width, unsigned int height);
 
 private:
-	bool _isOpen = false;
+	bool _bIsOpen = false;
 	ofFbo _tFbo;
 	ofTexture _texture;
 	ofColor cBG;
