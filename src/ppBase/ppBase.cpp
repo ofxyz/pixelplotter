@@ -25,3 +25,13 @@ void ppBase::addProperty(std::string name, pTypes type, void* pdata)
 	vProps.emplace_back(prop);
 
 }
+
+bool ppBase::isFresh()
+{
+	return _isFresh;
+}
+
+void ppBase::setFresh(bool fresh)
+{
+	_isFresh = fresh;
+}

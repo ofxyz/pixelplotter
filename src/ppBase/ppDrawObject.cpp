@@ -38,16 +38,6 @@ bool ppDrawObject::hasSound() {
 	return _bHasSound;
 }
 
-bool ppDrawObject::isFresh()
-{
-	return _isFresh;
-}
-
-void ppDrawObject::setFresh(bool fresh)
-{
-	_isFresh = fresh;
-}
-
 unsigned int ppDrawObject::getWidth()
 {
 	return _width;

@@ -3,14 +3,13 @@
 
 ppTexture::ppTexture() {
 	//allocate(getWidth(), getHeight(), GL_RGBA);
-	setName("Untitled Texture");
+	setName("Untitled");
+	addProperty("Name", EPT_STRING, &_sName);
 	addProperty("Width", EPT_UINT, &_width);
 	addProperty("Height", EPT_UINT, &_height);
-	addProperty("Background", EPT_VEC4, &cBG);
-	cBG = ofColor(255, 0, 0, 255);
+	addProperty("Background", EPT_IMVEC4, &cBG);
+	cBG = ImVec4(1, 0, 0, 1);
 	_tFbo.allocate(_width, _height, GL_RGBA);
-	
-
 }
 
 void ppTexture::setup() {
@@ -35,21 +34,29 @@ void ppTexture::renderImGuiSettings(bool bWrapped /* 1 */) {
 		}
 	}
 
-	ImGui::Text("Dimensions"); ImGui::SameLine(60);
+	ImGui::AlignTextToFramePadding();
+	ImGui::InputText("Name", &_sName);
+
+	ImGui::AlignTextToFramePadding();
+	ImGui::Text("Size"); ImGui::SameLine(60);
 	const unsigned int dmin = 1;
 	const unsigned int dmax = 1200;
 
 	ImGui::PushItemWidth(80);
-	if (ImGui::DragScalar("W ###wtexture" + getID(), ImGuiDataType_U32, &_width, 1, &dmin, &dmax)) {
+	if (ImGui::DragScalar("W", ImGuiDataType_U32, &_width, 1, &dmin, &dmax)) {
 		setFresh(true);
 	}
 	ImGui::PopItemWidth();
 	ImGui::SameLine();
 	ImGui::PushItemWidth(80);
-	if (ImGui::DragScalar("H ###htexture" + getID(), ImGuiDataType_U32, &_height, 1, &dmin, &dmax)) {
+	if (ImGui::DragScalar("H", ImGuiDataType_U32, &_height, 1, &dmin, &dmax)) {
 		setFresh(true);
 	}
 	ImGui::PopItemWidth();
+
+	if (ImGui::ColorEdit4("Background", (float*)&cBG, ImGuiColorEditFlags_NoInputs)) {
+		setFresh(true);
+	}
 }
 
 ofJson ppTexture::getSettings() {
@@ -67,7 +74,7 @@ void ppTexture::draw() {
 void ppTexture::draw(float x, float y, float w, float h) {
 	_tFbo.begin();
 	ofClear(255, 255, 255, 0);
-	ofSetColor(255, 0, 0, 255);
+	ofSetColor(ofColor(cBG));
 	ofDrawRectangle(0, 0, _width, _height);
 	_tFbo.end();
 	_tFbo.draw(x, y, w, h);

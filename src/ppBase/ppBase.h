@@ -10,7 +10,7 @@ typedef enum pTypes {
 	EPT_FLOAT,
 	EPT_DOUBLE,
 	EPT_STRING,
-	EPT_VEC4,
+	EPT_IMVEC4,
 	EPT_COUNT
 };
 
@@ -26,10 +26,15 @@ public:
     ppBase();
 
     unsigned int getID();
+
 	std::vector<sProp>& getProperties();
 	void addProperty(std::string name, pTypes type, void* pdata);
 
+	bool isFresh();
+	void setFresh(bool fresh);
+
 private:
+	bool _isFresh;
 	std::vector<sProp> vProps;
 	static unsigned int uiID_Counter;
 	unsigned int uiID;

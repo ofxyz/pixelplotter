@@ -2,6 +2,7 @@
 #include "ppDrawObject.h"
 #include "ofFbo.h"
 #include "ofImage.h"
+#include "ImGui_General.h"
 
 class ppTexture : public virtual ppDrawObject {
 public:
@@ -28,5 +29,5 @@ private:
 	bool _bIsOpen = false;
 	ofFbo _tFbo;
 	ofTexture _texture;
-	ofColor cBG;
+	ImVec4 cBG;
 };

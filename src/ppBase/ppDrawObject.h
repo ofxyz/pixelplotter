@@ -16,9 +16,6 @@ public:
 	bool isAnimated();
 	bool hasSound();
 
-	bool isFresh();
-	void setFresh(bool fresh);
-
 	unsigned int getWidth();
 	unsigned int getHeight();
 	void setWidth(unsigned int width);
@@ -38,5 +35,4 @@ private:
 	bool _isInteractive = false;
 	bool _isAnimated = false;
 	bool _bHasSound = false;
-	bool _isFresh = false;
 };

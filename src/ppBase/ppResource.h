@@ -21,15 +21,17 @@ public:
 	bool isAlive();
 	void setAlive(bool alive);
 
+	bool isSelected();
+	void setSelected(bool selected);
+
 	bool isOpen();
 	void setOpen(bool isOpen);
 
 protected:
+	bool _isSelected = false;
 	// TODO REFACTOR
 	bool _bDuplicate = false;
 	bool _bAlive = true;
-
-private:
 	bool _bHasSound = false;
 	bool _bIsOpen = false;
 	std::string _sName = "Untitled Resource";

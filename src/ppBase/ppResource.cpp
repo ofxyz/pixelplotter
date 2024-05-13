@@ -30,6 +30,16 @@ void ppResource::setAlive(bool alive)
 	_bAlive = alive;
 }
 
+bool ppResource::isSelected()
+{
+	return _isSelected;
+}
+
+void ppResource::setSelected(bool selected)
+{
+	_isSelected = selected;
+}
+
 bool ppResource::isOpen()
 {
 	return _bIsOpen;

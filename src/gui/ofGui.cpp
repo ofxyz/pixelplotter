@@ -69,7 +69,7 @@ void OfGui::setup()
 	style->FramePadding = ImVec2(4, 4);
 	style->CellPadding = ImVec2(4, 4);
 	style->ItemSpacing = ImVec2(4, 4);
-	style->ItemInnerSpacing = ImVec2(2, 2);
+	style->ItemInnerSpacing = ImVec2(4, 4);
 	style->TouchExtraPadding = ImVec2(0, 0);
 	style->IndentSpacing = 8.0f;
 	style->ScrollbarSize = 16.0f;
@@ -107,9 +107,9 @@ void OfGui::setup()
 	style->Alpha = 1.0f;
 
 	// Colour fixes, works for all colour style modes
-	style->Colors[ImGuiCol_PopupBg] = style->Colors[ImGuiCol_WindowBg];
-	//style->Colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
-	
+	//style->Colors[ImGuiCol_PopupBg] = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
+	style->Colors[ImGuiCol_PopupBg] = style->Colors[ImGuiCol_MenuBarBg];
+
 	loadPresetDir();
 }
 
@@ -391,23 +391,63 @@ void OfGui::drawPropertiesWindow()
 		for (auto& p : props) {
 			//p.Render();
 			std::string sItemName;
-			ImGui::PushID(p.ID);
+			ImGui::PushID("PROPWIN"+p.ID);
+
 			switch (p.type)
 			{
-			case EPT_UINT:
-			{
-				uint32_t* data = (uint32_t*)p.pData;
-				uint32_t dMin = 1;
-				uint32_t dMax = 1200;
-				if (ImGui::DragScalar(p.name.c_str(), ImGuiDataType_U32, p.pData, 1, &dMin, &dMax)) {
-					//setFresh(true);
+				case EPT_BOOL:
+				{
+					if (ImGui::Checkbox(p.name.c_str(), (bool*)p.pData)) {
+						_selectedItem->setFresh(true);
+					}
+					break;
 				}
-				break;
-			}
-			default:
-				break;
-
-
+				case EPT_INT:
+				{
+					if (ImGui::DragScalar(p.name.c_str(), ImGuiDataType_S32, (int32_t*)p.pData)) {
+						_selectedItem->setFresh(true);
+					}
+					break;
+				}
+				case EPT_UINT:
+				{
+					if (ImGui::DragScalar(p.name.c_str(), ImGuiDataType_U32, (uint32_t*)p.pData)) {
+						_selectedItem->setFresh(true);
+					}
+					break;
+				}
+				case EPT_FLOAT:
+				{
+					if (ImGui::DragScalar(p.name.c_str(), ImGuiDataType_Float, (float*)p.pData)) {
+						_selectedItem->setFresh(true);
+					}
+					break;
+				}
+				case EPT_DOUBLE:
+				{
+					if (ImGui::DragScalar(p.name.c_str(), ImGuiDataType_Double, (double*)p.pData)) {
+						_selectedItem->setFresh(true);
+					}
+					break;
+				}
+				case EPT_STRING:
+				{
+					if (ImGui::InputText(p.name.c_str(), (std::string*)p.pData)) {
+						_selectedItem->setFresh(true);
+					}
+					break;
+				}
+				case EPT_IMVEC4:
+				{
+					if (ImGui::ColorEdit4(p.name.c_str(), (float*)p.pData, ImGuiColorEditFlags_NoInputs)) {
+						_selectedItem->setFresh(true);
+					}
+					break;
+				}
+				default:
+				{
+					break;
+				}
 			}
 			ImGui::PopID();
 		}
@@ -418,7 +458,7 @@ void OfGui::drawPropertiesWindow()
 
 void OfGui::drawTextureBrowser()
 {
-	ImGui::Begin("Textures", &_bShowTextureTree, ImGuiWindowFlags_MenuBar);
+	ImGui::Begin("Texture Browser", &_bShowTextureTree, ImGuiWindowFlags_MenuBar);
 
 	if (ImGui::BeginMenuBar()) {
 		if (ImGui::BeginMenu("Add")) {
@@ -430,23 +470,29 @@ void OfGui::drawTextureBrowser()
 		ImGui::EndMenuBar();
 	}
 
+	// TODO Viewing Mode ... List or Tiles
+
 	for (auto obj : pixelplotter->textureController.v_Objects) {
 		ImGui::PushID("drawTextureBrowser"+obj->getID());
-		if (obj->isOpen())
-			ImGui::SetNextItemOpen(true, ImGuiCond_Once);
 
-		if (ImGui::TreeNode(obj->getName().c_str()))
+		ImGui::BeginGroup();
+		std::string ns = "Texture " + obj->getName() + "###DTB" + std::to_string(obj->getID());
+		if (ImGui::TreeNodeEx(ns.c_str()))
 		{
-			if (ImGui::SmallButton("View")) {
-				_drawTexture = obj;
-			
-			}
-
 			obj->renderImGuiSettings(0);
-
 			ImGui::TreePop();
 		}
+		ImGui::EndGroup();
+
+		if (ImGui::IsItemClicked())
+		{
+			obj->setSelected(true);
+			_drawTexture = obj;
+			_selectedItem = obj;
+		}
+
 		ImGui::PopID();
+		ImGui::Separator();
 	}
 
 	ImGui::End();
@@ -454,8 +500,19 @@ void OfGui::drawTextureBrowser()
 
 void OfGui::drawProjectTree()
 {
-	ImGui::Begin("Project", &_bShowProjectTree);
+	ImGui::Begin("Project", &_bShowProjectTree, ImGuiWindowFlags_MenuBar);
 
+	if (ImGui::BeginMenuBar()) {
+		if (ImGui::BeginMenu("Add")) {
+			if (ImGui::MenuItem("New Canvas")) {
+				//pixelplotter->canvasController.add((std::string)"Texture");
+			}
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
+
+	// TODO: Layers move to Canvas
 	if (ImGui::TreeNode("Layers"))
 	{
 		pixelplotter->plotCanvas.renderImGuiSettings();

@@ -89,7 +89,6 @@ private:
 
 	ofDirectory presetDirectory;
 
-	ppBase* _selectedItem;
-	
+	std::shared_ptr<ppBase> _selectedItem;
 
 };
