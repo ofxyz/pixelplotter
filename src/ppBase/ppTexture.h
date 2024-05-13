@@ -25,9 +25,9 @@ public:
 	void allocate(unsigned int width, unsigned int height, ofImageType imageType = OF_IMAGE_COLOR_ALPHA);
 	void resize(unsigned int width, unsigned int height);
 
-private:
-	bool _bIsOpen = false;
+protected:
 	ofFbo _tFbo;
 	ofTexture _texture;
 	ImVec4 cBG;
+
 };

@@ -79,9 +79,6 @@
     <ClCompile Include="src\generators\generator.cpp">
       <Filter>src\generators</Filter>
     </ClCompile>
-    <ClCompile Include="src\gui\ImGui_Widget_Bezier.cpp">
-      <Filter>src\gui</Filter>
-    </ClCompile>
     <ClCompile Include="src\gui\ImGui_Widget_Tooltip.cpp">
       <Filter>src\gui</Filter>
     </ClCompile>
@@ -333,6 +330,15 @@
     </ClCompile>
     <ClCompile Include="src\controllers\vc_Texture.cpp">
       <Filter>src\controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ppBase\ppCanvas.cpp">
+      <Filter>src\ppBase</Filter>
+    </ClCompile>
+    <ClCompile Include="src\controllers\vc_Canvas.cpp">
+      <Filter>src\controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ppBase\ppSurface.cpp">
+      <Filter>src\ppBase</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -615,9 +621,6 @@
       <Filter>src\generators</Filter>
     </ClInclude>
     <ClInclude Include="src\gui\ImGui_General.h">
-      <Filter>src\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\gui\ImGui_Widget_Bezier.h">
       <Filter>src\gui</Filter>
     </ClInclude>
     <ClInclude Include="src\gui\ImGui_Widget_Curve.h">
@@ -1648,6 +1651,15 @@
     </ClInclude>
     <ClInclude Include="src\controllers\vc_Texture.h">
       <Filter>src\controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ppBase\ppCanvas.h">
+      <Filter>src\ppBase</Filter>
+    </ClInclude>
+    <ClInclude Include="src\controllers\vc_Canvas.h">
+      <Filter>src\controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ppBase\ppSurface.h">
+      <Filter>src\ppBase</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

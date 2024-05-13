@@ -2,9 +2,6 @@
 #include "ofx2d.h"
 #include "vc_Source.h"
 #include "ofxImGui.h"
-#include "imgui_internal.h"
-#include "ImHelpers.h"
-#include "imgui_stdlib.h"
 
 void SourceController::renderImGuiSettings()
 {
@@ -199,7 +196,7 @@ void SourceController::addImage(ofFile file) {
 	imgFiles.push_back(file);
 	imgFileNames.push_back(file.getFileName());
 	buildSourceNames();
-	currentSourceIndex = sourceNames.size() - 1;
+	currentSourceIndex = (int)sourceNames.size() - 1;
 	loadSourceIndex();
 }
 
@@ -207,7 +204,7 @@ void SourceController::addVideo(ofFile file) {
 	videoFiles.push_back(file);
 	videoFileNames.push_back(file.getFileName());
 	buildSourceNames();
-	currentSourceIndex = videoDeviceNames.size() + videoFileNames.size() - 1;
+	currentSourceIndex = (int)videoDeviceNames.size() + (int)videoFileNames.size() - 1;
 	loadSourceIndex();
 }
 

@@ -467,10 +467,11 @@ void OfGui::drawTextureBrowser()
 			}
 			ImGui::EndMenu();
 		}
+		
+		// TODO Viewing Mode ... List or Tiles
+
 		ImGui::EndMenuBar();
 	}
-
-	// TODO Viewing Mode ... List or Tiles
 
 	for (auto obj : pixelplotter->textureController.v_Objects) {
 		ImGui::PushID("drawTextureBrowser"+obj->getID());
@@ -505,40 +506,43 @@ void OfGui::drawProjectTree()
 	if (ImGui::BeginMenuBar()) {
 		if (ImGui::BeginMenu("Add")) {
 			if (ImGui::MenuItem("New Canvas")) {
-				//pixelplotter->canvasController.add((std::string)"Texture");
+				pixelplotter->canvasController.add((std::string)"Canvas");
 			}
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenuBar();
 	}
 
-	// TODO: Layers move to Canvas
-	if (ImGui::TreeNode("Layers"))
-	{
-		pixelplotter->plotCanvas.renderImGuiSettings();
-		/*
-		if (ImGui::TreeNode("Basic trees"))
-		{
-			for (int i = 0; i < 5; i++)
-			{
-				// Use SetNextItemOpen() so set the default state of a node to be open. We could
-				// also use TreeNodeEx() with the ImGuiTreeNodeFlags_DefaultOpen flag to achieve the same thing!
-				if (i == 0)
-					ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+	for (auto obj : pixelplotter->canvasController.v_Objects) {
+		ImGui::PushID("projectTree_canvas" + obj->getID());
 
-				if (ImGui::TreeNode((void*)(intptr_t)i, "Child %d", i))
-				{
-					ImGui::Text("blah blah");
-					ImGui::SameLine();
-					if (ImGui::SmallButton("button")) {}
-					ImGui::TreePop();
-				}
-			}
+		ImGui::BeginGroup();
+		std::string ns = "Canvas " + obj->getName() + "###PTC" + std::to_string(obj->getID());
+		if (ImGui::TreeNodeEx(ns.c_str()))
+		{
+			obj->renderImGuiSettings(0);
 			ImGui::TreePop();
 		}
-		*/
-		ImGui::TreePop();
+		ImGui::EndGroup();
+
+		if (ImGui::IsItemClicked())
+		{
+			obj->setSelected(true);
+			_drawTexture = obj;
+			_selectedItem = obj;
+		}
+
+		ImGui::PopID();
+		ImGui::Separator();
 	}
+
+	// TODO: Layers move to Canvas
+	/*
+	if (ImGui::TreeNode("Layers"))
+	{
+			ImGui::TreePop();
+		}
+	*/
 
 	ImGui::End();
 }

@@ -1,10 +1,6 @@
 #include "ofApp.h"
 #include "vc_SoundDevice.h"
-#include "imgui_internal.h"
-#include "ImHelpers.h"
-#include "imgui_stdlib.h"
 #include "IconsFontAwesome5.h"
-#include "ImGui_Widget_Tooltip.h"
 
 void soundDeviceController::renderImGuiSettings() {
 	if (!soundDeviceNames.empty())

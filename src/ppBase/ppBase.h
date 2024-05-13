@@ -12,7 +12,7 @@ typedef enum pTypes {
 	EPT_STRING,
 	EPT_IMVEC4,
 	EPT_COUNT
-};
+} pTypes;
 
 struct sProp {
 	uint32_t ID;

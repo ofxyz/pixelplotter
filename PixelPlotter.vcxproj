@@ -205,6 +205,7 @@
     <ClCompile Include="..\..\addons\ofxImGui\libs\imgui\backends\imgui_impl_opengl3.cpp" />
     <ClCompile Include="..\..\addons\ofxImGui\libs\imgui\extras\imgui_stdlib.cpp" />
     <ClCompile Include="..\..\addons\ofxImGui\libs\imgui\src\imgui_tables.cpp" />
+    <ClCompile Include="src\controllers\vc_Canvas.cpp" />
     <ClCompile Include="src\controllers\vc_Texture.cpp" />
     <ClCompile Include="src\generators\generator_Dots.cpp" />
     <ClCompile Include="src\generators\generator_Gradient.cpp" />
@@ -239,7 +240,6 @@
     <ClCompile Include="src\drawPixels\drawPixel_SeparateCMY_Bars01.cpp" />
     <ClCompile Include="src\drawPixels\drawPixel_SeparateRGB_Bars01.cpp" />
     <ClCompile Include="src\generators\generator.cpp" />
-    <ClCompile Include="src\gui\ImGui_Widget_Bezier.cpp" />
     <ClCompile Include="src\gui\ImGui_Widget_Tooltip.cpp" />
     <ClCompile Include="src\gui\ofGui.cpp" />
     <ClCompile Include="src\imageFilters\imageFilter.cpp" />
@@ -305,8 +305,10 @@
     <ClCompile Include="src\ppBase\canvas.cpp" />
     <ClCompile Include="src\ppBase\frameBuffer.cpp" />
     <ClCompile Include="src\ppBase\ppBase.cpp" />
+    <ClCompile Include="src\ppBase\ppCanvas.cpp" />
     <ClCompile Include="src\ppBase\ppDrawObject.cpp" />
     <ClCompile Include="src\ppBase\ppResource.cpp" />
+    <ClCompile Include="src\ppBase\ppSurface.cpp" />
     <ClCompile Include="src\ppBase\ppTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -315,6 +317,7 @@
     <ClInclude Include="..\..\addons\ofxImGui\libs\imgui\backends\imgui_impl_opengl2.h" />
     <ClInclude Include="..\..\addons\ofxImGui\libs\imgui\backends\imgui_impl_opengl3.h" />
     <ClInclude Include="..\..\addons\ofxImGui\libs\imgui\extras\imgui_stdlib.h" />
+    <ClInclude Include="src\controllers\vc_Canvas.h" />
     <ClInclude Include="src\controllers\vc_Texture.h" />
     <ClInclude Include="src\generators\generator_Dots.h" />
     <ClInclude Include="src\generators\generator_Gradient.h" />
@@ -350,7 +353,6 @@
     <ClInclude Include="src\drawPixels\drawPixel_SeparateRGB_Bars01.h" />
     <ClInclude Include="src\generators\generator.h" />
     <ClInclude Include="src\gui\ImGui_General.h" />
-    <ClInclude Include="src\gui\ImGui_Widget_Bezier.h" />
     <ClInclude Include="src\gui\ImGui_Widget_Curve.h" />
     <ClInclude Include="src\gui\ImGui_Widget_InputTextString.h" />
     <ClInclude Include="src\gui\ImGui_Widget_Tooltip.h" />
@@ -675,8 +677,10 @@
     <ClInclude Include="src\ppBase\canvas.h" />
     <ClInclude Include="src\ppBase\frameBuffer.h" />
     <ClInclude Include="src\ppBase\ppBase.h" />
+    <ClInclude Include="src\ppBase\ppCanvas.h" />
     <ClInclude Include="src\ppBase\ppDrawObject.h" />
     <ClInclude Include="src\ppBase\ppResource.h" />
+    <ClInclude Include="src\ppBase\ppSurface.h" />
     <ClInclude Include="src\ppBase\ppTexture.h" />
     <ClInclude Include="src\ppBase\ppVectorController.h" />
   </ItemGroup>

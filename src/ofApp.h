@@ -4,6 +4,7 @@
 #include "canvas.h"
 #include "vc_SoundDevice.h"
 #include "vc_Texture.h"
+#include "vc_Canvas.h"
 
 class ofApp : public ofBaseApp {
 
@@ -43,6 +44,7 @@ public:
 	soundDeviceController soundManager;
 
 	TextureController textureController;
+	CanvasController canvasController;
 
 	bool vSync = true;
 	bool bDragCanvas = false;
