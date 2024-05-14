@@ -25,8 +25,6 @@ public:
 	virtual void loadSettings(ofJson& settings) = 0;
 	virtual ofJson getSettings() = 0;
 
-	void renderUpDownButtons();
-
 	bool isFresh();
 	void setFresh(bool fresh);
 	bool isAlive();

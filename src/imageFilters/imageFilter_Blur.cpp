@@ -21,8 +21,6 @@ void If_blur::renderImGuiSettings() {
 		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
 
-		renderUpDownButtons();
-
 		ImGui::PushItemWidth(100);
 		if (ImGui::DragInt("Blur ##blur", &cvBlur, 1, 0, 500)) {
 			setFresh(true);

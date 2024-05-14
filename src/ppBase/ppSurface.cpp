@@ -1,6 +1,7 @@
 #include "ppSurface.h"
 
-ppSurface::ppSurface() {
+ppSurface::ppSurface():
+	ppDrawObject(){
 
 }
 
@@ -16,6 +17,11 @@ void ppSurface::setup(ppTexture* texture)
 {
 	assignTexture(texture);
 	setDimensions(texture->getWidth(), texture->getHeight());
+}
+
+void ppSurface::setup()
+{
+  // 0
 }
 
 void ppSurface::assignTexture(ppTexture* texture)
@@ -38,6 +44,13 @@ void ppSurface::draw()
 {
 	if (_texture != nullptr) {
 		_texture->draw();
+	}
+}
+
+void ppSurface::draw(float x, float y, float w, float h)
+{
+	if (_texture != nullptr) {
+		_texture->draw(x, y, w, h);
 	}
 }
 

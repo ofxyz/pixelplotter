@@ -58,8 +58,6 @@ void Df_noise::renderImGuiSettings() {
 		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
 
-		renderUpDownButtons();
-
 		ImGui::PushItemWidth(60);
 
 		if (ImGui::ColorEdit4("Background", (float*)&cBg, ImGuiColorEditFlags_NoInputs)) {

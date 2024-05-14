@@ -2,7 +2,10 @@
 
 unsigned int ppBase::uiID_Counter = 0;
 
-ppBase::ppBase() {
+ppBase::ppBase()
+	: m_pEntityManager(std::shared_ptr<ppEntityManager>(nullptr))
+{
+	
 	uiID = ++uiID_Counter;
 }
 

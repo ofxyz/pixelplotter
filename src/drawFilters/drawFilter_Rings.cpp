@@ -48,8 +48,6 @@ void Df_rings::renderImGuiSettings() {
 		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
 
-		renderUpDownButtons();
-
 		ImGui::PushItemWidth(100);
 		if (ImGui::DragInt("Blur ##rings", &cvBlur, 1, 0, 500)) {
 			setFresh(true);

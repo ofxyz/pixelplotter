@@ -20,8 +20,6 @@ void If_invert::renderImGuiSettings() {
 		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
 
-		renderUpDownButtons();
-
 	} else {
 		_isOpen = false;
 	}

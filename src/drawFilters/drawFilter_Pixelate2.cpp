@@ -118,8 +118,6 @@ void Df_pixelate2::renderImGuiSettings()
 		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
 
-		renderUpDownButtons();
-
 		ImGui::PushItemWidth(60);
 		ImGui::Text("Tiles"); ImGui::SameLine(75);
 		if (ImGui::DragInt("X ##pixelate2_tiles", &tilesX, 1, 1, 1200)) {

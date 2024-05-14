@@ -39,7 +39,6 @@ public:
 	void add(std::string name, ofJson settings = {});
 	void add(ofJson settings); // TODO refactor. ofJson is also a string :(
 	void addRandom();
-	void reorder();
 	void duplicate();
 	void clean();
 	void clear();
@@ -52,7 +51,6 @@ public:
 private:
 	bool _bFresh;
 	bool _bClean;
-	bool _bReorder;
 	bool _bDuplicate;
 
 	int _currAddIndex;
@@ -66,7 +64,6 @@ ppVectorController<t>::ppVectorController()
 	pixelplotter = (ofApp*)ofGetAppPtr();
 	_bFresh = false;
 	_bClean = false;
-	_bReorder = false;
 	_currAddIndex = 0;
 	_objectName = "Undefined";
 	_address = std::to_string((unsigned long long)(void**)this);
@@ -138,9 +135,7 @@ void ppVectorController<t>::update()
 	if (_bClean) {
 		clean();
 	}
-	if (_bReorder) {
-		reorder();
-	}
+
 	if (_bDuplicate) {
 		duplicate();
 	}
@@ -172,7 +167,6 @@ void ppVectorController<t>::renderImGuiSettings()
 		ImGui::Unindent();
 
 		_bClean     = false;
-		_bReorder   = false;
 		_bDuplicate = false;
 
 		// Order Top Down to Reflect Drawing order
@@ -225,29 +219,6 @@ void ppVectorController<t>::renderImGuiSettings()
 	}
 	ImGui::PopID();
 }
-
-// TODO: This will need to change after implementing ImGui drag drop
-template<class t>
-void ppVectorController<t>::reorder()
-{
-	return;
-	for (int i = 0; i < v_Objects.size(); i++) {
-		if (v_Objects[i]->moveUp) {
-			v_Objects[i]->moveUp = false;
-			setFresh(true);
-			if (i < v_Objects.size() - 1) {
-				ofx2d::move(v_Objects, i, i + 1);
-			}
-		}
-		else if (v_Objects[i]->moveDown) {
-			v_Objects[i]->moveDown = false;
-			setFresh(true);
-			if (i > 0) {
-				ofx2d::move(v_Objects, i, i - 1);
-			}
-		}
-	}
-};
 
 template <class t>
 void ppVectorController<t>::duplicate()

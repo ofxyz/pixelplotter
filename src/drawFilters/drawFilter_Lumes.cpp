@@ -27,7 +27,6 @@ void Df_lumes::renderImGuiSettings() {
 	if (ImGui::CollapsingHeader(name.c_str(), &bAlive)) {
 		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
-		renderUpDownButtons();
 
 		ImGui::PushItemWidth(60);
 

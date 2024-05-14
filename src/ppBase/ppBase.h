@@ -2,6 +2,9 @@
 
 #include <string>
 #include <vector>
+#include <memory>
+
+class ppEntityManager;
 
 typedef enum propTypes {
 	EPT_BOOL = 1,
@@ -33,9 +36,14 @@ public:
 	bool isFresh();
 	void setFresh(bool fresh);
 
+	std::shared_ptr<ppEntityManager> GetEntityManager() const { return m_pEntityManager; }
+	void SetEntityManager(std::shared_ptr<ppEntityManager> sp) { m_pEntityManager = sp; }
+
 private:
 	bool _isFresh = true;
 	std::vector<sProp> vProps;
 	static unsigned int uiID_Counter;
 	unsigned int uiID;
+
+	std::shared_ptr<ppEntityManager> m_pEntityManager;
 };

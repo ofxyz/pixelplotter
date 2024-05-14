@@ -2,15 +2,15 @@
 #include "ofx2d.h"
 
 void ofApp::setup() {
-	/* Always disable rectangular textures by default */
+	/* Always disable rectangular textures */
 	ofDisableArbTex();
 
 	//ofSetLogLevel(OF_LOG_ERROR);
 	//ofSetLogLevel(OF_LOG_VERBOSE);
-	ofSetVerticalSync(vSync);
 	//ofLog(OF_LOG_VERBOSE) << ofFbo::checkGLSupport();
 
-	ofSetFrameRate(_targetFps); // TODO: Add to settings
+	ofSetVerticalSync(bVsync);
+	ofSetFrameRate(iTargetFps); // TODO: Add to settings
 	ofEnableAlphaBlending();
 	ofDisableAntiAliasing(); // TODO: Add to settings
 
@@ -20,14 +20,14 @@ void ofApp::setup() {
 	ofSetBackgroundColor(64, 64, 64, 255);
 	//ofSetBackgroundAuto(false);
 
-	ofGui.setup();
+	myGui.setup();
 	soundManager.setup();
 	plotCanvas.setup();
 
 	userOffset.x = 0;
 	userOffset.y = 0;
 
-	ofGui.loadPresetDir();
+	myGui.loadPresetDir();
 }
 
 //--------------------------------------------------------------
@@ -37,9 +37,9 @@ void ofApp::exit() {
 
 //--------------------------------------------------------------
 void ofApp::update() {
-	ofGui.update();
+	myGui.update();
 
-	if (!ofGui.renderingPaused()) {
+	if (!myGui.renderingPaused()) {
 		soundManager.update();
 		plotCanvas.update();
 	}
@@ -48,8 +48,8 @@ void ofApp::update() {
 //--------------------------------------------------------------
 void ofApp::draw() {
 
-	if (ofGui._drawTexture != nullptr) {
-		ofGui._drawTexture->draw(offset.x + userOffset.x, offset.y + userOffset.y, ofGui._drawTexture->getWidth() * zoomLevel, ofGui._drawTexture->getHeight() * zoomLevel);
+	if (myGui._drawTexture != nullptr) {
+		myGui._drawTexture->draw(offset.x + userOffset.x, offset.y + userOffset.y, myGui._drawTexture->getWidth() * zoomLevel, myGui._drawTexture->getHeight() * zoomLevel);
 	}
 	else if (plotCanvas.sourceController.showSource) {
 		plotCanvas.sourceController.frameBuffer.getFrame().draw(offset.x + userOffset.x, offset.y + userOffset.y, plotCanvas.canvasWidth * zoomLevel, plotCanvas.canvasHeight * zoomLevel);
@@ -58,7 +58,7 @@ void ofApp::draw() {
 		plotCanvas.draw(offset.x + userOffset.x, offset.y + userOffset.y, plotCanvas.canvasWidth * zoomLevel, plotCanvas.canvasHeight * zoomLevel);
 	}
 
-	ofGui.draw();
+	myGui.draw();
 }
 
 void ofApp::resetImageOffset() {
@@ -72,7 +72,7 @@ void ofApp::resetZoom() {
 }
 
 void ofApp::centerImage() {
-	ImVec4 availableSpace = ofGui.availableSpace();
+	ImVec4 availableSpace = myGui.availableSpace();
 	userOffset.x = (availableSpace.x - (plotCanvas.canvasWidth * zoomLevel)) * 0.5;
 	userOffset.y = (availableSpace.y - (plotCanvas.canvasHeight * zoomLevel)) * 0.5;
 	userOffset.y += availableSpace.w;
@@ -83,13 +83,13 @@ void ofApp::keyPressed(int key) {
 	if (ImGui::GetIO().WantCaptureKeyboard) return;
 
 	if (key == 'g' || key == 'G') {
-		ofGui.setGuiVisible(!ofGui.guiVisible());
+		myGui.setGuiVisible(!myGui.guiVisible());
 	}
 	else if (key == 'p' || key == 'P')
 	{
-		ofGui.setRenderingPaused(!ofGui.renderingPaused());
+		myGui.setRenderingPaused(!myGui.renderingPaused());
 	}
-	bool stsus = ofGui.guiVisible();
+	bool stsus = myGui.guiVisible();
 	bool x = false;
 	// TODO:
 	// -------
@@ -113,7 +113,7 @@ void ofApp::keyPressed(int key) {
 	}
 	else if (key == '=') {
 		// fit to screen
-		ImVec4 availableSpace =  ofGui.availableSpace();
+		ImVec4 availableSpace =  myGui.availableSpace();
 		if (plotCanvas.sourceController.isLandscape) {
 			zoomLevel = availableSpace.x / plotCanvas.canvasWidth;
 		}
@@ -126,7 +126,7 @@ void ofApp::keyPressed(int key) {
 		plotCanvas.saveVector = true;
 	}
 	else if (key == 'x') {
-		ofGui.setRenderingPaused(!ofGui.renderingPaused());
+		myGui.setRenderingPaused(!myGui.renderingPaused());
 	}
 	else if (key == '?') {
 		//cout << x << end=l;

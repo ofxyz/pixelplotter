@@ -30,8 +30,6 @@ void If_ornament::renderImGuiSettings() {
 		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
 
-		renderUpDownButtons();
-
 		//ImGui::PushItemWidth(60);
 
 		if (ImGui::SliderInt("WPG ##ornament_TileSize", &wallpaperGroup, 9, 16)) {

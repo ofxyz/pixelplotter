@@ -213,8 +213,6 @@ void Df_pixelate::renderImGuiSettings() {
 		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
 
-		renderUpDownButtons();
-
 		if (ofxImGui::VectorCombo("Pixel Type ##pixelate", &ui_currentPixelType, v_pixelType)) {
 			//if (ui_currentPixelType > 1) {
 			//	gui_setRGB();

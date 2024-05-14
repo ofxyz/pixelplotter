@@ -206,6 +206,7 @@
     <ClCompile Include="..\..\addons\ofxImGui\libs\imgui\extras\imgui_stdlib.cpp" />
     <ClCompile Include="..\..\addons\ofxImGui\libs\imgui\src\imgui_tables.cpp" />
     <ClCompile Include="src\controllers\vc_Canvas.cpp" />
+    <ClCompile Include="src\controllers\vc_Surface.cpp" />
     <ClCompile Include="src\controllers\vc_Texture.cpp" />
     <ClCompile Include="src\generators\generator_Dots.cpp" />
     <ClCompile Include="src\generators\generator_Gradient.cpp" />
@@ -319,6 +320,7 @@
     <ClInclude Include="..\..\addons\ofxImGui\libs\imgui\backends\imgui_impl_opengl3.h" />
     <ClInclude Include="..\..\addons\ofxImGui\libs\imgui\extras\imgui_stdlib.h" />
     <ClInclude Include="src\controllers\vc_Canvas.h" />
+    <ClInclude Include="src\controllers\vc_Surface.h" />
     <ClInclude Include="src\controllers\vc_Texture.h" />
     <ClInclude Include="src\generators\generator_Dots.h" />
     <ClInclude Include="src\generators\generator_Gradient.h" />

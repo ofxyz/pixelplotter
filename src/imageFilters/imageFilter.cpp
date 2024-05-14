@@ -7,18 +7,6 @@ ImageFilter::ImageFilter()
 	// TODO: Add blend mode for Image Filter Drawing
 }
 
-
-void ImageFilter::renderUpDownButtons()
-{
-	if (ImGui::Button("Duplicate")) {
-		duplicate = true;
-	}
-	ImGui::SameLine();
-	if (ImGui::Checkbox("Visible", &bVisible)) {
-		setFresh(true);
-	}
-}
-
 bool ImageFilter::isFresh()
 {
 	return bFresh;

@@ -29,8 +29,6 @@ void If_rotate::renderImGuiSettings() {
 		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
 
-		renderUpDownButtons();
-
 		if (ImGui::SliderInt("Rotations", &rCount, 0, 3)) {
 			setFresh(true);
 		}

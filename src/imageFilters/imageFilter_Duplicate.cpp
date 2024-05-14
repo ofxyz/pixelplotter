@@ -29,8 +29,6 @@ void If_duplicate::renderImGuiSettings() {
 		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
 
-		renderUpDownButtons();
-
 		ImGui::PushItemWidth(60);
 
 		ImGui::Text("Copies"); ImGui::SameLine(75);

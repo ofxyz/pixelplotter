@@ -1,6 +1,7 @@
 #include "ppDrawObject.h"
 
-ppDrawObject::ppDrawObject() {
+ppDrawObject::ppDrawObject():
+	ppBase(){
 
 }
 

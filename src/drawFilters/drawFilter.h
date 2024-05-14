@@ -29,8 +29,6 @@ public:
 	virtual void loadSettings(ofJson& settings) = 0;
 	virtual ofJson getSettings() = 0;
 
-	void renderUpDownButtons();
-
 	// -------------------------------------------------
 	// TODO: Set BlendMode should be ofSetBlendMode(BLENDMODES[currBlendmodeIndex])
 	std::vector<std::string> v_BlendModes;

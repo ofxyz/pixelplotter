@@ -26,8 +26,6 @@ void If_dither::renderImGuiSettings() {
 		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
 
-		renderUpDownButtons();
-
 		if (ImGui::SliderInt("Factor ##iF_dither", &_iFactor, 0, 255)) setFresh(true);
 		ImGui::SameLine();
 		ImGui::HelpMarker("Above 0 will index colors. 0 creates a hard 8bit effect");

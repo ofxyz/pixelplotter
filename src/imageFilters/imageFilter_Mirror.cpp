@@ -23,8 +23,6 @@ void If_mirror::renderImGuiSettings() {
 		_isOpen = true;
 		ImGui::AlignTextToFramePadding();
 
-		renderUpDownButtons();
-
 		if (ImGui::Checkbox("Horizontal", &hMirror)) {
 			setFresh(true);
 		}

@@ -46,7 +46,7 @@ void Canvas::renderImGuiSettings() {
 	ImGui::SameLine();
 	if (ImGui::Button("Fit")) {
 		if (pixelplotter != nullptr) {
-			ImVec4 as = pixelplotter->ofGui.availableSpace();
+			ImVec4 as = pixelplotter->myGui.availableSpace();
 			canvasWidth  = abs(as.x);
 			canvasHeight = abs(as.y);
 			pixelplotter->resetZoom();

@@ -39,7 +39,7 @@ ppGui::ppGui()
 void ppGui::setup()
 {
 	pixelplotter = (ofApp*)ofGetAppPtr();
-	gui.setup(nullptr, true, ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable, true, true);
+	ofxGui.setup(nullptr, true, ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable, true, true);
 
 	ImGui::GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
 
@@ -47,7 +47,7 @@ void ppGui::setup()
 	float baseFontSize = 13.0f; // 13.0f is the size of the default font. Change to the font size you use.
 	float iconFontSize = baseFontSize * 2.0f / 3.0f; // FontAwesome fonts need to have their sizes reduced by 2.0f/3.0f in order to align correctly
 	
-	gui.addFont(FONT_FILE_PATH, baseFontSize, nullptr, nullptr, true);
+	ofxGui.addFont(FONT_FILE_PATH, baseFontSize, nullptr, nullptr, true);
 
 	ImFontConfig icons_config;
 	icons_config.MergeMode = true;
@@ -56,7 +56,7 @@ void ppGui::setup()
 
 	static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
 
-	gui.addFont(FONT_ICON_FILE_NAME_FAS, iconFontSize, &icons_config, icons_ranges);
+	ofxGui.addFont(FONT_ICON_FILE_NAME_FAS, iconFontSize, &icons_config, icons_ranges);
 	// use FONT_ICON_FILE_NAME_FAR if you want regular instead of solid
 
 	//ImGui::StyleColorsDark();
@@ -123,7 +123,7 @@ void ppGui::update()
 
 void ppGui::draw()
 {
-	gui.begin();
+	ofxGui.begin();
 
 	if (_bShowGui) {
 		showMainDock();
@@ -140,7 +140,7 @@ void ppGui::draw()
 		if (_bShowMetricsWindow)    ImGui::ShowMetricsWindow();
 	}
 
-	gui.end();
+	ofxGui.end();
 }
 
 void ppGui::showMainDock()
@@ -209,8 +209,8 @@ void ppGui::showMainMenuBar()
 		}
 
 		// Vertical Sync
-		if (ImGui::Checkbox("Vertical Sync", &pixelplotter->vSync)) {
-			ofSetVerticalSync(pixelplotter->vSync);
+		if (ImGui::Checkbox("Vertical Sync", &pixelplotter->bVsync)) {
+			ofSetVerticalSync(pixelplotter->bVsync);
 		}
 
 		ImGui::Separator();

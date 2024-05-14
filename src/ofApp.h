@@ -2,6 +2,7 @@
 #include "ofMain.h"
 #include "ppGui.h"
 #include "canvas.h"
+#include "ppEntityManager.h"
 #include "vc_SoundDevice.h"
 #include "vc_Texture.h"
 #include "vc_Canvas.h"
@@ -39,16 +40,19 @@ public:
 	void centerImage();
 	void resetZoom();
 
-	ppGui ofGui;
+	ppGui myGui;
+	ppEntityManager EntityManager;
+
+	// These need to register at Entity Manager:
 	Canvas plotCanvas;
 	soundDeviceController soundManager;
-
 	TextureController textureController;
 	CanvasController canvasController;
 
-	bool vSync = true;
+	bool bVsync = true;
 	bool bDragCanvas = false;
 
+	int iTargetFps = 60;
 	int exportCount = 0;
 
 	float zoomLevel = 1;
@@ -56,6 +60,4 @@ public:
 	glm::vec2 offset;
 	glm::vec2 userOffset;
 	glm::vec2 lastDraggedPos;
-
-	int _targetFps = 60;
 };

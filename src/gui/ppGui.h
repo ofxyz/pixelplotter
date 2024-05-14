@@ -10,7 +10,7 @@ class ppGui {
 public:
 	ppGui();
 	ofApp* pixelplotter{ nullptr };
-	ofxImGui::Gui gui;
+	ofxImGui::Gui ofxGui;
 
 	void setup();
 	void update();
