@@ -13,16 +13,16 @@
 ImageFilterController::ImageFilterController()
 	: ppVectorController()
 {
-	// Manual Mapping ...
-	mapObjectTypes["Mirror"] = createInstance<If_mirror>;
+	// Manual Mapping
+	mapObjectTypes["Mirror"]    = createInstance<If_mirror>;
 	mapObjectTypes["Duplicate"] = createInstance<If_duplicate>;
-	mapObjectTypes["Tint"] = createInstance<If_tint>;
-	mapObjectTypes["Blur"] = createInstance<If_blur>;
+	mapObjectTypes["Tint"]      = createInstance<If_tint>;
+	mapObjectTypes["Blur"]      = createInstance<If_blur>;
 	mapObjectTypes["DrawPixel"] = createInstance<If_drawPixel>;
-	mapObjectTypes["Rotate"] = createInstance<If_rotate>;
-	mapObjectTypes["Ornament"] = createInstance<If_ornament>;
-	mapObjectTypes["Dither"] = createInstance<If_dither>;
-	mapObjectTypes["Invert"] = createInstance<If_invert>;
+	mapObjectTypes["Rotate"]    = createInstance<If_rotate>;
+	mapObjectTypes["Ornament"]  = createInstance<If_ornament>;
+	mapObjectTypes["Dither"]    = createInstance<If_dither>;
+	mapObjectTypes["Invert"]    = createInstance<If_invert>;
 
 	for (auto p : mapObjectTypes) {
 		v_objectNames.push_back(p.first);

@@ -15,15 +15,14 @@ std::vector<sProp>& ppBase::getProperties()
 	return vProps;
 }
 
-void ppBase::addProperty(std::string name, pTypes type, void* pdata)
+void ppBase::addProperty(std::string name, propTypes type, void* data)
 {
 	sProp prop;
-	prop.ID = ++uiID_Counter;
+	prop.id   = ++uiID_Counter;
 	prop.name = name;
 	prop.type = type;
-	prop.pData = pdata;
+	prop.data = data;
 	vProps.emplace_back(prop);
-
 }
 
 bool ppBase::isFresh()

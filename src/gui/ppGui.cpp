@@ -1,29 +1,28 @@
 #pragma once
 
-#include "ofGui.h"
+#include "ofApp.h"
+#include "ofx2d.h"
+#include "ppGui.h"
 #include "ImGui_General.h"
 #include "IconsFontAwesome5.h"
 
-#include "ofApp.h"
-#include "ofx2d.h"
-
 #define FONT_FILE_PATH "fonts/InputSans-Regular.ttf"
 
-OfGui::OfGui()
+ppGui::ppGui()
 {
 	pixelplotter = (ofApp*)ofGetAppPtr();
-	_bGuiVisible = true;
-	_bMenuBarVisible = true;
+	_bShowGui = true;
+	_bShowMainMenuBar = true;
 
 	_bShowProjectTree = false;
-	_bShowTextureTree = true;
-	_bShowCanvas = false; // TODO: FinisRename to Zoomed Viewer
-	_bShowPlotCanvas = true;
-	_bShowInfoPanel = true;
-	_bShowToolPalette = false;
-	_bShowImGuiStyleEditor = false;
-	_bShowImGuiMetricsWindow = false;
+	_bShowTextureBrowser = true;
+	_bShowZoomViewer = false;
+	_bShowCanvasWindow = true;
 	_bShowPropertiesWindow = true;
+	_bShowPresetPanel = true;
+	_bShowToolPalette = false;
+	_bShowStyleEditor = false;
+	_bShowMetricsWindow = false;
 
 	_bShowFps = true;
 
@@ -37,7 +36,7 @@ OfGui::OfGui()
 
 }
 
-void OfGui::setup()
+void ppGui::setup()
 {
 	pixelplotter = (ofApp*)ofGetAppPtr();
 	gui.setup(nullptr, true, ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable, true, true);
@@ -113,7 +112,7 @@ void OfGui::setup()
 	loadPresetDir();
 }
 
-void OfGui::update()
+void ppGui::update()
 {
 	if (_bLoadSettingsNextFrame)
 	{
@@ -122,44 +121,41 @@ void OfGui::update()
 	}
 }
 
-void OfGui::draw()
+void ppGui::draw()
 {
 	gui.begin();
 
-	if (_bGuiVisible) {
-		drawMainDock();
-		if (_bMenuBarVisible) drawMenuBar();
-		if (_bShowProjectTree) drawProjectTree();
-		if (_bShowTextureTree) drawTextureBrowser();
-		if (_bShowCanvas) drawCanvas();
-		if (_bShowToolPalette) drawToolPalette();
-		if (_bShowInfoPanel) drawInfoPanel();
-		if (_bShowPlotCanvas) drawCanvasWindow();
-		if (_bShowImGuiStyleEditor) ImGui::ShowStyleEditor();
-		if (_bShowImGuiMetricsWindow) ImGui::ShowMetricsWindow();
-		if (_bShowPropertiesWindow) drawPropertiesWindow();
+	if (_bShowGui) {
+		showMainDock();
+		if (_bShowMainMenuBar)      showMainMenuBar();
+		if (_bShowToolPalette)      showToolPalette();
+		if (_bShowPresetPanel)      showPresetPanel();
+		if (_bShowProjectTree)      showProjectTree();
+		if (_bShowTextureBrowser)   showTextureBrowser();
+		if (_bShowZoomViewer)       showZoomViewer();
+		if (_bShowCanvasWindow)     showCanvasWindow();
+		if (_bShowPropertiesWindow) showPropertiesWindow();
+
+		if (_bShowStyleEditor)      ImGui::ShowStyleEditor();
+		if (_bShowMetricsWindow)    ImGui::ShowMetricsWindow();
 	}
 
 	gui.end();
 }
 
-void OfGui::drawMainDock()
+void ppGui::showMainDock()
 {
-	// Make main docking space transparent
+	// Main docking space transparent
 	ImGuiDockNodeFlags dockingFlags = ImGuiDockNodeFlags_PassthruCentralNode;
 
-	// Alternative: Otherwise add in ImGui::DockSpace() [±line 14505] : if (flags & ImGuiDockNodeFlags_PassthruCentralNode) window_flags |= ImGuiWindowFlags_NoBackground;
-	//ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(0, 0, 0, 0));
-
-	dockingFlags |= ImGuiDockNodeFlags_NoDockingInCentralNode; // Uncomment to always keep an empty "central node" (a visible oF space)
-	//dockingFlags |= ImGuiDockNodeFlags_NoTabBar; // Uncomment to disable creating tabs in the main view
+	// Always keep an empty "central node" (a visible oF space)
+	dockingFlags |= ImGuiDockNodeFlags_NoDockingInCentralNode;
 
 	// Define the ofWindow as a docking space
 	MainDockNodeID = ImGui::DockSpaceOverViewport(NULL, dockingFlags); // Also draws the docked windows
-
 }
 
-void OfGui::drawMenuBar()
+void ppGui::showMainMenuBar()
 {
 	// TODO: Make it drag the window
 
@@ -167,8 +163,8 @@ void OfGui::drawMenuBar()
 	ImGui::BeginMainMenuBar();
 	ImGui::PopStyleVar();
 
-	if (ImGui::BeginMenu("PixelPlotter", &_bMenuBarVisible)) {
-		ImGui::Checkbox("Hide GUI [g]", &_bGuiVisible);
+	if (ImGui::BeginMenu("PixelPlotter", &_bShowMainMenuBar)) {
+		ImGui::Checkbox("Hide GUI [g]", &_bShowGui);
 		ImGui::SameLine(); ImGui::HelpMarker("Hide the Graphical User Interface press [g] to show");
 
 		// Sub Menu 
@@ -177,12 +173,12 @@ void OfGui::drawMenuBar()
 			//ImGui::MenuItem("Something");
 			ImGui::Checkbox("Project", &_bShowProjectTree);
 			ImGui::Checkbox("Properties", &_bShowPropertiesWindow);
-			ImGui::Checkbox("Plot Canvas", &_bShowPlotCanvas);
-			ImGui::Checkbox("Info Panel", &_bShowInfoPanel);
+			ImGui::Checkbox("Plot Canvas", &_bShowCanvasWindow);
+			ImGui::Checkbox("Info Panel", &_bShowPresetPanel);
 			ImGui::Checkbox("Tool Palette", &_bShowToolPalette);
-			ImGui::Checkbox("Style Editor", &_bShowImGuiStyleEditor);
-			ImGui::Checkbox("Metrics Window", &_bShowImGuiMetricsWindow);
-			ImGui::Checkbox("Texture Window", &_bShowTextureTree);
+			ImGui::Checkbox("Style Editor", &_bShowStyleEditor);
+			ImGui::Checkbox("Metrics Window", &_bShowMetricsWindow);
+			ImGui::Checkbox("Texture Window", &_bShowTextureBrowser);
 			ImGui::EndMenu();
 		}
 
@@ -277,14 +273,13 @@ void OfGui::drawMenuBar()
 	ImGui::EndMainMenuBar();
 }
 
-// TODO: This should be a general texture viewer...
-void OfGui::drawCanvas()
+void ppGui::showZoomViewer()
 {
 	
 	// TODO: Add scale and move lock/unlock using mouse click?
 	// Rename to "Zoomed View" that follows the mouse on main canvas
 
-	ImGui::Begin("Canvas", &_bShowCanvas);
+	ImGui::Begin("Canvas", &_bShowZoomViewer);
 
 	ImTextureID textureID = (ImTextureID)(uintptr_t)pixelplotter->plotCanvas.canvasFbo.getTexture().getTextureData().textureID;
 
@@ -316,7 +311,7 @@ void OfGui::drawCanvas()
 	ImGui::End();
 }
 
-void OfGui::drawToolPalette()
+void ppGui::showToolPalette()
 {
 	ImGui::Begin("Tool palette", &_bShowToolPalette);
 
@@ -329,9 +324,9 @@ void OfGui::drawToolPalette()
 	ImGui::End();
 }
 
-void OfGui::drawInfoPanel() // B TODO: Info Panel is Presets? Dude
+void ppGui::showPresetPanel()
 {
-	ImGui::Begin("Presets", &_bShowInfoPanel);
+	ImGui::Begin("Presets", &_bShowPresetPanel);
 
 	// Save and load presets ... 
 	if (ofxImGui::VectorCombo("##Presets", &_currentPresetIndex, presetFileNames))
@@ -375,14 +370,14 @@ void OfGui::drawInfoPanel() // B TODO: Info Panel is Presets? Dude
 	ImGui::End();
 }
 
-void OfGui::drawCanvasWindow()
+void ppGui::showCanvasWindow()
 {
-	ImGui::Begin("Canvas", &_bShowPlotCanvas);
+	ImGui::Begin("Canvas", &_bShowCanvasWindow);
 	pixelplotter->plotCanvas.renderImGuiSettings();
 	ImGui::End();
 }
 
-void OfGui::drawPropertiesWindow()
+void ppGui::showPropertiesWindow()
 {
 	ImGui::Begin("Properties", &_bShowPropertiesWindow);
 
@@ -391,55 +386,55 @@ void OfGui::drawPropertiesWindow()
 		for (auto& p : props) {
 			//p.Render();
 			std::string sItemName;
-			ImGui::PushID("PROPWIN"+p.ID);
+			ImGui::PushID("PROPWIN"+p.id);
 
 			switch (p.type)
 			{
 				case EPT_BOOL:
 				{
-					if (ImGui::Checkbox(p.name.c_str(), (bool*)p.pData)) {
+					if (ImGui::Checkbox(p.name.c_str(), (bool*)p.data)) {
 						_selectedItem->setFresh(true);
 					}
 					break;
 				}
 				case EPT_INT:
 				{
-					if (ImGui::DragScalar(p.name.c_str(), ImGuiDataType_S32, (int32_t*)p.pData)) {
+					if (ImGui::DragScalar(p.name.c_str(), ImGuiDataType_S32, (int32_t*)p.data)) {
 						_selectedItem->setFresh(true);
 					}
 					break;
 				}
 				case EPT_UINT:
 				{
-					if (ImGui::DragScalar(p.name.c_str(), ImGuiDataType_U32, (uint32_t*)p.pData)) {
+					if (ImGui::DragScalar(p.name.c_str(), ImGuiDataType_U32, (uint32_t*)p.data)) {
 						_selectedItem->setFresh(true);
 					}
 					break;
 				}
 				case EPT_FLOAT:
 				{
-					if (ImGui::DragScalar(p.name.c_str(), ImGuiDataType_Float, (float*)p.pData)) {
+					if (ImGui::DragScalar(p.name.c_str(), ImGuiDataType_Float, (float*)p.data)) {
 						_selectedItem->setFresh(true);
 					}
 					break;
 				}
 				case EPT_DOUBLE:
 				{
-					if (ImGui::DragScalar(p.name.c_str(), ImGuiDataType_Double, (double*)p.pData)) {
+					if (ImGui::DragScalar(p.name.c_str(), ImGuiDataType_Double, (double*)p.data)) {
 						_selectedItem->setFresh(true);
 					}
 					break;
 				}
 				case EPT_STRING:
 				{
-					if (ImGui::InputText(p.name.c_str(), (std::string*)p.pData)) {
+					if (ImGui::InputText(p.name.c_str(), (std::string*)p.data)) {
 						_selectedItem->setFresh(true);
 					}
 					break;
 				}
 				case EPT_IMVEC4:
 				{
-					if (ImGui::ColorEdit4(p.name.c_str(), (float*)p.pData, ImGuiColorEditFlags_NoInputs)) {
+					if (ImGui::ColorEdit4(p.name.c_str(), (float*)p.data, ImGuiColorEditFlags_NoInputs)) {
 						_selectedItem->setFresh(true);
 					}
 					break;
@@ -456,9 +451,9 @@ void OfGui::drawPropertiesWindow()
 	ImGui::End();
 }
 
-void OfGui::drawTextureBrowser()
+void ppGui::showTextureBrowser()
 {
-	ImGui::Begin("Texture Browser", &_bShowTextureTree, ImGuiWindowFlags_MenuBar);
+	ImGui::Begin("Texture Browser", &_bShowTextureBrowser, ImGuiWindowFlags_MenuBar);
 
 	if (ImGui::BeginMenuBar()) {
 		if (ImGui::BeginMenu("Add")) {
@@ -499,7 +494,7 @@ void OfGui::drawTextureBrowser()
 	ImGui::End();
 }
 
-void OfGui::drawProjectTree()
+void ppGui::showProjectTree()
 {
 	ImGui::Begin("Project", &_bShowProjectTree, ImGuiWindowFlags_MenuBar);
 
@@ -547,7 +542,7 @@ void OfGui::drawProjectTree()
 	ImGui::End();
 }
 
-void OfGui::savePresets()
+void ppGui::savePresets()
 {
 	string savePath = "presets/" + string(_presetSaveName) + ".json";
 
@@ -570,7 +565,7 @@ void OfGui::savePresets()
 	ofSavePrettyJson(savePath, settings);
 }
 
-void OfGui::loadPresets(ofJson settings)
+void ppGui::loadPresets(ofJson settings)
 {
 	pixelplotter->plotCanvas.dF.clear();
 	pixelplotter->plotCanvas.sourceController.iF.clear();
@@ -596,37 +591,37 @@ void OfGui::loadPresets(ofJson settings)
 
 }
 
-bool OfGui::guiVisible()
+bool ppGui::guiVisible()
 {
-	return _bGuiVisible;
+	return _bShowGui;
 }
 
-void OfGui::setGuiVisible(bool bVisible)
+void ppGui::setGuiVisible(bool bVisible)
 {
-	_bGuiVisible = bVisible;
+	_bShowGui = bVisible;
 }
 
-bool OfGui::menuBarVisible()
+bool ppGui::menuBarVisible()
 {
-	return _bMenuBarVisible;
+	return _bShowMainMenuBar;
 }
 
-void OfGui::setmenuBarVisible(bool bVisible)
+void ppGui::setmenuBarVisible(bool bVisible)
 {
-	_bMenuBarVisible = bVisible;
+	_bShowMainMenuBar = bVisible;
 }
 
-bool OfGui::renderingPaused()
+bool ppGui::renderingPaused()
 {
 	return _bRenderingPaused;
 }
 
-void OfGui::setRenderingPaused(bool bPaused)
+void ppGui::setRenderingPaused(bool bPaused)
 {
 	_bRenderingPaused = bPaused;
 }
 
-void OfGui::loadPresetDir()
+void ppGui::loadPresetDir()
 {
 	presetFileNames.clear();
 	presetFiles = ofDirectory(ofToDataPath("presets", true)).getFiles();
@@ -652,12 +647,12 @@ void OfGui::loadPresetDir()
 	}
 }
 
-std::string OfGui::getPresetAbsolutePath(int presetIndex)
+std::string ppGui::getPresetAbsolutePath(int presetIndex)
 {
 	return presetFiles[presetIndex].getAbsolutePath();
 }
 
-ofJson OfGui::getPresets(int presetIndex)
+ofJson ppGui::getPresets(int presetIndex)
 {
 	ofJson settings;
 	ofFile file(presetFiles[presetIndex].getAbsolutePath());
@@ -667,12 +662,12 @@ ofJson OfGui::getPresets(int presetIndex)
 	return settings;
 }
 
-ofJson OfGui::getCurrentPresets()
+ofJson ppGui::getCurrentPresets()
 {
 	return getPresets(_currentPresetIndex);
 }
 
-ImVec4 OfGui::availableSpace()
+ImVec4 ppGui::availableSpace()
 {
 	// Return Values: Width, Height, x, y
 	ImVec4 rVal(0,0,0,0);

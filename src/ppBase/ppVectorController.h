@@ -176,7 +176,7 @@ void ppVectorController<t>::renderImGuiSettings()
 		_bDuplicate = false;
 
 		// Order Top Down to Reflect Drawing order
-		for (int i = v_Objects.size() - 1; i >= 0; i--) {
+		for (int i = (int)v_Objects.size() - 1; i >= 0; i--) {
 			if (v_Objects[i]->isAlive()) {
 				ImGui::Indent();
 				ImGui::PushID(i);

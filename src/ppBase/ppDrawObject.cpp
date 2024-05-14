@@ -4,20 +4,6 @@ ppDrawObject::ppDrawObject() {
 
 }
 
-void ppDrawObject::draw()
-{
-	// Nothing to draw yet ...
-	// Any derived class should implement this
-	// This is here so we can call it
-}
-
-void ppDrawObject::draw(float x, float y, float w, float h)
-{
-	// Nothing to draw yet ...
-	// Any derived class should implement this
-	// This is here so we can call it
-}
-
 void ppDrawObject::setBlendMode(ofBlendMode blendmode) {
 	_blendmode = blendmode;
 }

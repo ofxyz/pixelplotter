@@ -274,7 +274,7 @@ void SourceController::loadGenerator(string & name) {
 void SourceController::prepImg() {
 	static ofImage updatedFrame;
 	if (updatedFrame.isAllocated() == false) {
-		updatedFrame.allocate(pix.getWidth(), pix.getHeight(), OF_IMAGE_COLOR_ALPHA);
+		updatedFrame.allocate((int)pix.getWidth(), (int)pix.getHeight(), OF_IMAGE_COLOR_ALPHA);
 		updatedFrame.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 	}
 

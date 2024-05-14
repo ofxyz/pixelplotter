@@ -1,6 +1,6 @@
 #pragma once
 #include "ofMain.h"
-#include "ofGui.h"
+#include "ppGui.h"
 #include "canvas.h"
 #include "vc_SoundDevice.h"
 #include "vc_Texture.h"
@@ -39,7 +39,7 @@ public:
 	void centerImage();
 	void resetZoom();
 
-	OfGui ofGui;
+	ppGui ofGui;
 	Canvas plotCanvas;
 	soundDeviceController soundManager;
 

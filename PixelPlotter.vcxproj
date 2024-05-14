@@ -241,7 +241,7 @@
     <ClCompile Include="src\drawPixels\drawPixel_SeparateRGB_Bars01.cpp" />
     <ClCompile Include="src\generators\generator.cpp" />
     <ClCompile Include="src\gui\ImGui_Widget_Tooltip.cpp" />
-    <ClCompile Include="src\gui\ofGui.cpp" />
+    <ClCompile Include="src\gui\ppGui.cpp" />
     <ClCompile Include="src\imageFilters\imageFilter.cpp" />
     <ClCompile Include="src\imageFilters\imageFilter_Blur.cpp" />
     <ClCompile Include="src\imageFilters\imageFilter_DrawPixel.cpp" />
@@ -307,6 +307,7 @@
     <ClCompile Include="src\ppBase\ppBase.cpp" />
     <ClCompile Include="src\ppBase\ppCanvas.cpp" />
     <ClCompile Include="src\ppBase\ppDrawObject.cpp" />
+    <ClCompile Include="src\ppBase\ppEntityManager.cpp" />
     <ClCompile Include="src\ppBase\ppResource.cpp" />
     <ClCompile Include="src\ppBase\ppSurface.cpp" />
     <ClCompile Include="src\ppBase\ppTexture.cpp" />
@@ -356,7 +357,7 @@
     <ClInclude Include="src\gui\ImGui_Widget_Curve.h" />
     <ClInclude Include="src\gui\ImGui_Widget_InputTextString.h" />
     <ClInclude Include="src\gui\ImGui_Widget_Tooltip.h" />
-    <ClInclude Include="src\gui\ofGui.h" />
+    <ClInclude Include="src\gui\ppGui.h" />
     <ClInclude Include="src\imageFilters\imageFilter.h" />
     <ClInclude Include="src\imageFilters\imageFilter_Blur.h" />
     <ClInclude Include="src\imageFilters\imageFilter_DrawPixel.h" />
@@ -679,6 +680,7 @@
     <ClInclude Include="src\ppBase\ppBase.h" />
     <ClInclude Include="src\ppBase\ppCanvas.h" />
     <ClInclude Include="src\ppBase\ppDrawObject.h" />
+    <ClInclude Include="src\ppBase\ppEntityManager.h" />
     <ClInclude Include="src\ppBase\ppResource.h" />
     <ClInclude Include="src\ppBase\ppSurface.h" />
     <ClInclude Include="src\ppBase\ppTexture.h" />

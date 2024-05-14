@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-typedef enum pTypes {
+typedef enum propTypes {
 	EPT_BOOL = 1,
 	EPT_INT,
 	EPT_UINT,
@@ -12,13 +12,13 @@ typedef enum pTypes {
 	EPT_STRING,
 	EPT_IMVEC4,
 	EPT_COUNT
-} pTypes;
+} propTypes;
 
 struct sProp {
-	uint32_t ID;
+	uint32_t id;
 	std::string name;
-	pTypes type;
-	void* pData;
+	propTypes type;
+	void* data;
 };
 
 class ppBase {
@@ -28,13 +28,13 @@ public:
     unsigned int getID();
 
 	std::vector<sProp>& getProperties();
-	void addProperty(std::string name, pTypes type, void* pdata);
+	void addProperty(std::string name, propTypes type, void* data);
 
 	bool isFresh();
 	void setFresh(bool fresh);
 
 private:
-	bool _isFresh;
+	bool _isFresh = true;
 	std::vector<sProp> vProps;
 	static unsigned int uiID_Counter;
 	unsigned int uiID;

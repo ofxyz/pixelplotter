@@ -82,7 +82,7 @@
     <ClCompile Include="src\gui\ImGui_Widget_Tooltip.cpp">
       <Filter>src\gui</Filter>
     </ClCompile>
-    <ClCompile Include="src\gui\ofGui.cpp">
+    <ClCompile Include="src\gui\ppGui.cpp">
       <Filter>src\gui</Filter>
     </ClCompile>
     <ClCompile Include="src\imageFilters\imageFilter.cpp">
@@ -338,6 +338,9 @@
       <Filter>src\controllers</Filter>
     </ClCompile>
     <ClCompile Include="src\ppBase\ppSurface.cpp">
+      <Filter>src\ppBase</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ppBase\ppEntityManager.cpp">
       <Filter>src\ppBase</Filter>
     </ClCompile>
   </ItemGroup>
@@ -632,7 +635,7 @@
     <ClInclude Include="src\gui\ImGui_Widget_Tooltip.h">
       <Filter>src\gui</Filter>
     </ClInclude>
-    <ClInclude Include="src\gui\ofGui.h">
+    <ClInclude Include="src\gui\ppGui.h">
       <Filter>src\gui</Filter>
     </ClInclude>
     <ClInclude Include="src\imageFilters\imageFilter.h">
@@ -1659,6 +1662,9 @@
       <Filter>src\controllers</Filter>
     </ClInclude>
     <ClInclude Include="src\ppBase\ppSurface.h">
+      <Filter>src\ppBase</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ppBase\ppEntityManager.h">
       <Filter>src\ppBase</Filter>
     </ClInclude>
   </ItemGroup>

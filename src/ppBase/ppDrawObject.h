@@ -6,8 +6,8 @@ class ppDrawObject : public virtual ppResource {
 public:
 	ppDrawObject();
 
-	virtual void draw();
-	virtual void draw(float x, float y, float w, float h);
+	virtual void draw() = 0;
+	virtual void draw(float x, float y, float w, float h) = 0;
 
 	void setBlendMode(ofBlendMode blendmode);
 	ofBlendMode getBlendMode();

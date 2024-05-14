@@ -6,25 +6,25 @@
 
 class ofApp;
 
-class OfGui {
+class ppGui {
 public:
-	OfGui();
-	ofApp* pixelplotter;
+	ppGui();
+	ofApp* pixelplotter{ nullptr };
 	ofxImGui::Gui gui;
 
 	void setup();
 	void update();
 	
 	void draw();
-	void drawMainDock();
-	void drawMenuBar();
-	void drawProjectTree();
-	void drawCanvas();
-	void drawToolPalette();
-	void drawInfoPanel();
-	void drawCanvasWindow();
-	void drawPropertiesWindow();
-	void drawTextureBrowser();
+	void showMainDock();
+	void showMainMenuBar();
+	void showProjectTree();
+	void showZoomViewer();
+	void showToolPalette();
+	void showPresetPanel();
+	void showCanvasWindow();
+	void showPropertiesWindow();
+	void showTextureBrowser();
 	
 	// Visibility
 	bool guiVisible();
@@ -35,15 +35,13 @@ public:
 	bool renderingPaused();
 	void setRenderingPaused(bool bPaused);
 
-	// Presets and Settings
-	// Implement this ... work out what are settings and what are presets
+	//TODO Implement Global Presets and Settings collection
 	//void loadSettings(ofJson& settings);
 	//ofJson getSettings();
 
 	void loadPresetDir();
 	void savePresets();
 	void loadPresets(ofJson settings);
-
 	std::string getPresetAbsolutePath(int presetIndex);
 	ofJson getPresets(int presetIndex);
 	ofJson getCurrentPresets();
@@ -53,42 +51,39 @@ public:
 	std::shared_ptr<ppDrawObject> _drawTexture;
 
 private:
-	bool _bGuiVisible;
-	bool _bMenuBarVisible;
+	
+	// TODO: Palette, Window, Panel, Have some definitions? Is Canvas a Window panel or Palette?
 
+	// GUI TRACKERS
+	ImGuiID MainDockNodeID;
+	std::stringstream fpsStringStream;
+	std::shared_ptr<ppBase> _selectedItem;
 	bool _bRenderingPaused;
+
+	// GUI Visibility Trackers
+	bool _bShowGui;
+	bool _bShowMainMenuBar;
+	bool _bShowProjectTree;
+	bool _bShowTextureBrowser;
+	bool _bShowZoomViewer;
+	bool _bShowCanvasWindow;
+	bool _bShowPresetPanel;
+	bool _bShowToolPalette;
+	bool _bShowMetricsWindow;
+	bool _bShowPropertiesWindow;
+	bool _bShowStyleEditor;
+	bool _bShowFps;
+
+	// GUI Next Frame Action Tracker
+	bool _bSavePresets;
+	bool _bLoadSettingsNextFrame;
 	bool _bLoadSourceFile;
 
-	// TODO: Palette, Window, Panel, Have some definitions? Is Canvas a Window panel or Palette?
-	// Also do we Use `Show` or `Visible`
-
-	bool _bShowProjectTree;
-	bool _bShowTextureTree;
-	bool _bShowCanvas;
-	bool _bShowPlotCanvas;
-	bool _bShowInfoPanel;
-	bool _bShowToolPalette;
-	bool _bShowImGuiMetricsWindow;
-	bool _bShowPropertiesWindow;
-	bool _bShowImGuiStyleEditor;
-
-	bool _bShowFps;
-	bool _bSavePresets;
-
-	bool _bLoadSettingsNextFrame;
+	// This should be closer to the preset manager
 	int _currentPresetIndex;
-
 	char _presetSaveName[128];
-
-	ImGuiID MainDockNodeID;
-
-	std::stringstream fpsStringStream;
-
 	std::vector<std::string> presetFileNames;
 	std::vector<ofFile> presetFiles;
-
 	ofDirectory presetDirectory;
-
-	std::shared_ptr<ppBase> _selectedItem;
 
 };

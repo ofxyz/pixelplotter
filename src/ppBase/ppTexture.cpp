@@ -39,17 +39,15 @@ void ppTexture::renderImGuiSettings(bool bWrapped /* 1 */) {
 
 	ImGui::AlignTextToFramePadding();
 	ImGui::Text("Size"); ImGui::SameLine(60);
-	const unsigned int dmin = 1;
-	const unsigned int dmax = 1200;
 
 	ImGui::PushItemWidth(80);
-	if (ImGui::DragScalar("W", ImGuiDataType_U32, &_width, 1, &dmin, &dmax)) {
+	if (ImGui::DragScalar("W", ImGuiDataType_U32, &_width)) {
 		setFresh(true);
 	}
 	ImGui::PopItemWidth();
 	ImGui::SameLine();
 	ImGui::PushItemWidth(80);
-	if (ImGui::DragScalar("H", ImGuiDataType_U32, &_height, 1, &dmin, &dmax)) {
+	if (ImGui::DragScalar("H", ImGuiDataType_U32, &_height)) {
 		setFresh(true);
 	}
 	ImGui::PopItemWidth();
