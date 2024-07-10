@@ -163,7 +163,7 @@ void Controller<t>::renderImGuiSettings()
 	if (ImGui::CollapsingHeader(sHeaderName.c_str()))
 	{
 		ImGui::Indent();
-		if (ofxImGui::VectorCombo("##AddSelector", &_currAddIndex, v_menuValues))
+		if (ofxImGui::VectorCombo("###AddSelector", &_currAddIndex, v_menuValues))
 		{
 			add(v_menuValues[_currAddIndex]);
 			_currAddIndex = 0;
