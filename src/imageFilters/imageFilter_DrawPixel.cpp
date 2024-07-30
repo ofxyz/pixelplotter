@@ -92,7 +92,7 @@ void If_drawPixel::apply(ofImage* img) {
 	float height = img->getHeight() / vCount;
 
 	cfbo.begin();
-	cfbo.clearColorBuffer(ofColor(255, 255, 255));
+	ofClear(ofColor(255, 255, 255));
 	int xcount = 0;
 	int ycount = 0;
 

@@ -25,8 +25,8 @@ public:
 
 	void addImage(ofFile file);
 	void addVideo(ofFile file);
-	void loadImage(std::string& filepath);
-	void loadVideo(std::string& filepath);
+	void loadImage(std::string filepath);
+	void loadVideo(std::string filepath);
 	void loadGenerator(std::string & name);
 
 	void buildSourceNames();

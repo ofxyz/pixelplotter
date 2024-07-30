@@ -17,7 +17,8 @@ void G_dots::update() {
 			if (width != 0 && height != 0) m_fbo.allocate(width, height);
 		}
 		m_fbo.begin();
-		m_fbo.clearColorBuffer((ofColor)c_bg);
+		//m_fbo.clearColorBuffer((ofColor)c_bg);
+		ofClear((ofColor)c_bg);
 		drawPattern();
 		m_fbo.end();
 		setFresh(false);

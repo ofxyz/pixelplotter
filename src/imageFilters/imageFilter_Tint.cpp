@@ -53,9 +53,9 @@ void If_tint::apply(ofImage* img) {
 	ofFbo cfbo;
 	cfbo.allocate(img->getWidth(), img->getHeight(), GL_RGBA);
 	cfbo.begin();
-	cfbo.clearColorBuffer(ofColor(0, 0, 0));
-	ofEnableAlphaBlending();
 	ofPushStyle();
+	ofClear(ofColor(0, 0, 0, 0));
+	ofEnableAlphaBlending();
 	ofSetColor((ofColor)c_Tint);
 	img->draw(0, 0, img->getWidth(), img->getHeight());
 	ofPopStyle();

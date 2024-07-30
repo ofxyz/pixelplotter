@@ -211,7 +211,7 @@ void SourceController::addVideo(ofFile file) {
 	loadSourceIndex();
 }
 
-void SourceController::loadImage(string& filepath) {
+void SourceController::loadImage(std::string filepath) {
 	original.load(filepath);
 	original.setImageType(OF_IMAGE_COLOR_ALPHA);
 	original.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
@@ -235,7 +235,7 @@ void SourceController::loadImage(string& filepath) {
 	prepImg();
 }
 
-void SourceController::loadVideo(string& filepath) {
+void SourceController::loadVideo(std::string filepath) {
 	bUseVideo = true;
 	bUseVideoDevice = false;
 	bUseGenerator = false;
@@ -255,7 +255,7 @@ void SourceController::loadVideo(string& filepath) {
 	if (bUpdateCanvasOnSourceLoad) pixelplotter->plotCanvas.setDimensions(videoPlayer.getWidth(), videoPlayer.getHeight());
 }
 
-void SourceController::loadGenerator(string & name) {
+void SourceController::loadGenerator(std::string & name) {
 	// This needs it's own function
 	bUseVideo = false;
 	bUseVideoDevice = false;

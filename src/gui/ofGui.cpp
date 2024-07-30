@@ -357,7 +357,8 @@ void OfGui::drawInfoPanel() // B TODO: Info Panel is Presets? Dude
 		}
 		else {
 			if (presetFileNames.size() > 0) {
-				strcpy_s(_presetSaveName, presetFileNames[_currentPresetIndex].c_str());
+				auto sCpy = presetFileNames[_currentPresetIndex].c_str();
+				strcpy(_presetSaveName, sCpy);
 			}
 			_bSavePresets = true;
 		}
@@ -455,7 +456,7 @@ void OfGui::loadPresets(ofJson settings)
 		}
 	}
 
-	pixelplotter->plotCanvas.loadSettings(settings.value("plotCanvas", ofJson::array()));
+	//pixelplotter->plotCanvas.loadSettings(settings.value("plotCanvas"));
 
 }
 

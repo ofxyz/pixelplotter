@@ -27,7 +27,8 @@ void G_gradient::update() {
 			if (width != 0 && height != 0) m_fbo.allocate(width, height);
 		}
 		m_fbo.begin();
-		m_fbo.clearColorBuffer(ofColor(255,255,255,0));
+		//m_fbo.clearColorBuffer(ofColor(255,255,255,0));
+		ofClear(ofColor(255,255,255,0));
 		drawPattern();
 		m_fbo.end();
 		setFresh(false);

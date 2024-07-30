@@ -1,4 +1,4 @@
-#include "DrawPixel_Controller.h"
+#include "drawPixel_Controller.h"
 #include "drawPixel.h"
 #include "drawPixel_Normal.h"
 #include "drawPixel_SeparateCMY_Bars01.h"

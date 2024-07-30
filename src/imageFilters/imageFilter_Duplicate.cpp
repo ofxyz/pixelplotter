@@ -61,7 +61,7 @@ void If_duplicate::apply(ofImage* img) {
 	float height = img->getHeight() / vCount;
 
 	cfbo.begin();
-	cfbo.clearColorBuffer(ofColor(0, 0, 0, 0));
+	ofClear(ofColor(0, 0, 0, 0));
 
 	for (int y = 0; y < vCount; y++) {
 		ofPushMatrix();

@@ -120,8 +120,8 @@ void Canvas::loadSettings(ofJson& settings) {
 	c_canvas.y = settings["colors"]["plotcanvas"].value("g", c_canvas.y);
 	c_canvas.z = settings["colors"]["plotcanvas"].value("b", c_canvas.z);
 	c_canvas.w = settings["colors"]["plotcanvas"].value("a", c_canvas.w);
-
-	dF.loadSettings(settings.value("drawFilters", ofJson::array()));
+	ofJson dFSettings = settings.value("drawFilters", ofJson::array({}));
+	dF.loadSettings(dFSettings);
 
 	resizeRequest = true;
 	setFresh(true);
@@ -150,7 +150,7 @@ void Canvas::setup(string canvas_title) {
 	pixelplotter = (ofApp*)ofGetAppPtr();
 	canvasTitle = canvas_title;
 	sourceController.setup();
-	canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGBA, 8);
+	canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGBA);
 	canvasFbo.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 	dF.addRandom();
 }
@@ -187,7 +187,7 @@ void Canvas::update() {
 
 	if (resizeRequest) {
 
-		canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGBA, 8);
+		canvasFbo.allocate(canvasWidth, canvasHeight, GL_RGBA);
 		canvasFbo.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 
 		resizeRequest = false;

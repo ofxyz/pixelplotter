@@ -73,7 +73,7 @@ void If_ornament::apply(ofImage* img) {
 	cfbo.getTexture().setTextureMinMagFilter(GL_NEAREST, GL_NEAREST);
 
 	cfbo.begin();
-	cfbo.clearColorBuffer(ofColor(0, 0, 0, 0));
+	ofClear(ofColor(0, 0, 0, 0));
 
 	ornament.draw(0, 0);
 

@@ -1,6 +1,7 @@
 #pragma once
 #include "ofJson.h"
 #include "ofx2d.h"
+#include "ofxImGui.h"
 #include <imgui.h>
 #include <imgui_internal.h>
 
