@@ -213,18 +213,18 @@ void ofApp::gotMessage(ofMessage msg) {
 void ofApp::dragEvent(ofDragInfo dragInfo) {
 	if (dragInfo.files.size() > 0) {
 		for (int i = 0; i < dragInfo.files.size(); i++) {
-			if (std::find(plotCanvas.sourceController.img_ext.begin(), plotCanvas.sourceController.img_ext.end(), ofx2d::to_lower(dragInfo.files[i].substr(dragInfo.files[i].find_last_of(".") + 1))) != plotCanvas.sourceController.img_ext.end())
+			if (std::find(plotCanvas.sourceController.img_ext.begin(), plotCanvas.sourceController.img_ext.end(), ofx2d::to_lower(dragInfo.files[i].generic_string().substr(dragInfo.files[i].generic_string().find_last_of(".") + 1))) != plotCanvas.sourceController.img_ext.end())
 			{
 				plotCanvas.sourceController.addImage(ofFile(dragInfo.files[i]));
 				resetZoom();
 			}
-			else if (std::find(plotCanvas.sourceController.vid_ext.begin(), plotCanvas.sourceController.vid_ext.end(), ofx2d::to_lower(dragInfo.files[i].substr(dragInfo.files[i].find_last_of(".") + 1))) != plotCanvas.sourceController.vid_ext.end())
+			else if (std::find(plotCanvas.sourceController.vid_ext.begin(), plotCanvas.sourceController.vid_ext.end(), ofx2d::to_lower(dragInfo.files[i].generic_string().substr(dragInfo.files[i].generic_string().find_last_of(".") + 1))) != plotCanvas.sourceController.vid_ext.end())
 			{
 				plotCanvas.sourceController.addVideo(ofFile(dragInfo.files[i]));
 				resetZoom();
 			}
 			else {
-				ofLog(OF_LOG_ERROR) << "No support for file format " << ofx2d::to_lower(dragInfo.files[i].substr(dragInfo.files[i].find_last_of(".") + 1));
+				ofLog(OF_LOG_ERROR) << "No support for file format " << ofx2d::to_lower(dragInfo.files[i].generic_string().substr(dragInfo.files[i].generic_string().find_last_of(".") + 1));
 			}
 		}
 	}
