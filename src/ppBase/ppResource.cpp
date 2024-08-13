@@ -20,16 +20,6 @@ void ppResource::setSound(bool hasSound) {
 	_bHasSound = hasSound;
 }
 
-bool ppResource::isAlive()
-{
-	return _bAlive;
-}
-
-void ppResource::setAlive(bool alive)
-{
-	_bAlive = alive;
-}
-
 bool ppResource::isSelected()
 {
 	return _isSelected;

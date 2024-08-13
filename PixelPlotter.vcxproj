@@ -308,7 +308,7 @@
     <ClCompile Include="src\ppBase\ppBase.cpp" />
     <ClCompile Include="src\ppBase\ppCanvas.cpp" />
     <ClCompile Include="src\ppBase\ppDrawObject.cpp" />
-    <ClCompile Include="src\ppBase\ppEntityManager.cpp" />
+    <ClCompile Include="src\ppBase\ppBaseManager.cpp" />
     <ClCompile Include="src\ppBase\ppResource.cpp" />
     <ClCompile Include="src\ppBase\ppSurface.cpp" />
     <ClCompile Include="src\ppBase\ppTexture.cpp" />
@@ -682,7 +682,7 @@
     <ClInclude Include="src\ppBase\ppBase.h" />
     <ClInclude Include="src\ppBase\ppCanvas.h" />
     <ClInclude Include="src\ppBase\ppDrawObject.h" />
-    <ClInclude Include="src\ppBase\ppEntityManager.h" />
+    <ClInclude Include="src\ppBase\ppBaseManager.h" />
     <ClInclude Include="src\ppBase\ppResource.h" />
     <ClInclude Include="src\ppBase\ppSurface.h" />
     <ClInclude Include="src\ppBase\ppTexture.h" />

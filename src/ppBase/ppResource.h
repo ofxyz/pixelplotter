@@ -18,9 +18,6 @@ public:
 	virtual void loadSettings(ofJson & settings) = 0;
 	virtual ofJson getSettings() = 0;
 
-	bool isAlive();
-	void setAlive(bool alive);
-
 	bool isSelected();
 	void setSelected(bool selected);
 

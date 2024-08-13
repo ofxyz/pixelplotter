@@ -1,19 +1,19 @@
 #pragma once
 
-#include "ppEntityManager.h"
+#include "ppBaseManager.h"
 
 
-ppEntityManager::ppEntityManager()
+ppBaseManager::ppBaseManager()
 {
 	// 0
 }
 
-std::shared_ptr<ppEntityManager> ppEntityManager::getEntityManager()
+std::shared_ptr<ppBaseManager> ppBaseManager::getEntityManager()
 {
 	return shared_from_this();
 }
 
-std::vector<std::shared_ptr<ppBase>>& ppEntityManager::getEntities(eEntityTypes type)
+std::vector<std::shared_ptr<ppBase>>& ppBaseManager::getEntities(eBaseTypes type)
 {
 	static std::vector<std::shared_ptr<ppBase>> vReturnEmpty;
 
@@ -31,7 +31,7 @@ std::vector<std::shared_ptr<ppBase>>& ppEntityManager::getEntities(eEntityTypes 
 	}
 }
 
-std::shared_ptr<ppBase>& ppEntityManager::createEntity(eEntityTypes type)
+std::shared_ptr<ppBase>& ppBaseManager::createEntity(eBaseTypes type)
 {
 	
 	auto pNewObject = std::shared_ptr<ppBase>(nullptr);

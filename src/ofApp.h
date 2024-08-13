@@ -2,7 +2,7 @@
 #include "ofMain.h"
 #include "ppGui.h"
 #include "canvas.h"
-#include "ppEntityManager.h"
+#include "ppBaseManager.h"
 #include "vc_SoundDevice.h"
 #include "vc_Texture.h"
 #include "vc_Canvas.h"
@@ -41,7 +41,7 @@ public:
 	void resetZoom();
 
 	ppGui myGui;
-	ppEntityManager EntityManager;
+	ppBaseManager EntityManager;
 
 	// These need to register at Entity Manager:
 	Canvas plotCanvas;

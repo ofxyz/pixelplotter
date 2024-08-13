@@ -469,10 +469,10 @@ void ppGui::showTextureBrowser()
 	}
 
 	for (auto obj : pixelplotter->textureController.v_Objects) {
-		ImGui::PushID("drawTextureBrowser"+obj->getID());
+		ImGui::PushID("drawTextureBrowser"+obj->getId());
 
 		ImGui::BeginGroup();
-		std::string ns = "Texture " + obj->getName() + "###DTB" + std::to_string(obj->getID());
+		std::string ns = "Texture " + obj->getName() + "###DTB" + std::to_string(obj->getId());
 		if (ImGui::TreeNodeEx(ns.c_str()))
 		{
 			obj->renderImGuiSettings(0);
@@ -509,10 +509,10 @@ void ppGui::showProjectTree()
 	}
 
 	for (auto obj : pixelplotter->canvasController.v_Objects) {
-		ImGui::PushID("projectTree_canvas" + obj->getID());
+		ImGui::PushID("projectTree_canvas" + obj->getId());
 
 		ImGui::BeginGroup();
-		std::string ns = "Canvas " + obj->getName() + "###PTC" + std::to_string(obj->getID());
+		std::string ns = "Canvas " + obj->getName() + "###PTC" + std::to_string(obj->getId());
 		if (ImGui::TreeNodeEx(ns.c_str()))
 		{
 			obj->renderImGuiSettings(0);

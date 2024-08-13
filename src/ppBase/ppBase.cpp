@@ -1,39 +1,49 @@
 #include "ppBase.h"
 
-unsigned int ppBase::uiID_Counter = 0;
+unsigned int ppBase::m_uiIdCounter = 0;
 
 ppBase::ppBase()
-	: m_pEntityManager(std::shared_ptr<ppEntityManager>(nullptr))
+	: m_pBaseManager(std::shared_ptr<ppBaseManager>(nullptr))
 {
 	
-	uiID = ++uiID_Counter;
+	m_uiId = ++m_uiIdCounter;
 }
 
-unsigned int ppBase::getID() {
-	return uiID;
+unsigned int ppBase::getId() {
+	return m_uiId;
 }
 
 std::vector<sProp>& ppBase::getProperties()
 {
-	return vProps;
+	return m_vProps;
 }
 
 void ppBase::addProperty(std::string name, propTypes type, void* data)
 {
 	sProp prop;
-	prop.id   = ++uiID_Counter;
+	prop.id   = ++m_uiIdCounter;
 	prop.name = name;
 	prop.type = type;
 	prop.data = data;
-	vProps.emplace_back(prop);
+	m_vProps.emplace_back(prop);
 }
 
 bool ppBase::isFresh()
 {
-	return _isFresh;
+	return m_isFresh;
 }
 
 void ppBase::setFresh(bool fresh)
 {
-	_isFresh = fresh;
+	m_isFresh = fresh;
+}
+
+bool ppBase::isAlive()
+{
+	return m_isAlive;
+}
+
+void ppBase::setAlive(bool alive)
+{
+	m_isAlive = alive;
 }

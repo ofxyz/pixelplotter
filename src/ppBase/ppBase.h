@@ -3,8 +3,9 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include "ofJson.h"
 
-class ppEntityManager;
+class ppBaseManager;
 
 typedef enum propTypes {
 	EPT_BOOL = 1,
@@ -28,7 +29,7 @@ class ppBase {
 public:
     ppBase();
 
-    unsigned int getID();
+    unsigned int getId();
 
 	std::vector<sProp>& getProperties();
 	void addProperty(std::string name, propTypes type, void* data);
@@ -36,14 +37,18 @@ public:
 	bool isFresh();
 	void setFresh(bool fresh);
 
-	std::shared_ptr<ppEntityManager> GetEntityManager() const { return m_pEntityManager; }
-	void SetEntityManager(std::shared_ptr<ppEntityManager> sp) { m_pEntityManager = sp; }
+	bool isAlive();
+	void setAlive(bool alive);
+
+	std::shared_ptr<ppBaseManager> GetEntityManager() const { return m_pBaseManager; }
+	void SetEntityManager(std::shared_ptr<ppBaseManager> sp) { m_pBaseManager = sp; }
 
 private:
-	bool _isFresh = true;
-	std::vector<sProp> vProps;
-	static unsigned int uiID_Counter;
-	unsigned int uiID;
+	bool m_isFresh = true;
+	bool m_isAlive = true;
+	std::vector<sProp> m_vProps;
+	static unsigned int m_uiIdCounter;
+	unsigned int m_uiId;
 
-	std::shared_ptr<ppEntityManager> m_pEntityManager;
+	std::shared_ptr<ppBaseManager> m_pBaseManager;
 };

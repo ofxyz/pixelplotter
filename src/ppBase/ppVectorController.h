@@ -5,27 +5,26 @@
 #include <imgui_internal.h>
 
 /*
+
 	The Controller class is a managing factory of class t
-	class t will contain the following functions:
+	class t will be derived from the ppBase class which contains the following functions:
 	- void loadSettings(ofJson s)
 	- ofJson getSettings()
-	- void update()   // Update will be called when:
+	- void update()   // Update will be called when
 	- bool isFresh()  // Check if there are changes for update() to be called
 	- bool isAlive()  // If isAlive returns false object t will be deleted from object vector 
-*/
 
-class ofApp;
+*/
 
 template<class t>
 class ppVectorController {
 public:
-	ofApp* pixelplotter{ nullptr };
 	ppVectorController();
 
 	std::vector<std::string> v_objectNames;
 	std::vector<std::shared_ptr<t>> v_Objects;
 	std::vector<std::string> v_menuValues;
-	
+
 	typedef std::map<std::string, std::shared_ptr<t>(*)()> map_type;
 	map_type mapObjectTypes;
 
@@ -37,7 +36,6 @@ public:
 	ofJson getSettings();
 
 	void add(std::string name, ofJson settings = {});
-	void add(ofJson settings); // TODO refactor. ofJson is also a string :(
 	void addRandom();
 	void duplicate();
 	void clean();
@@ -61,7 +59,6 @@ private:
 template<class t>
 ppVectorController<t>::ppVectorController()
 {
-	pixelplotter = (ofApp*)ofGetAppPtr();
 	_bFresh = false;
 	_bClean = false;
 	_currAddIndex = 0;
@@ -69,6 +66,7 @@ ppVectorController<t>::ppVectorController()
 	_address = std::to_string((unsigned long long)(void**)this);
 }
 
+// add(settings.value("name", "not_found"), settings);
 template<class t>
 void ppVectorController<t>::add(std::string name, ofJson settings /*= {}*/)
 {
@@ -81,19 +79,6 @@ void ppVectorController<t>::add(std::string name, ofJson settings /*= {}*/)
 	}
 	else {
 		ofLog(OF_LOG_WARNING) << "Controller: Could not find name " << name << " in mapObjectTypes";
-	}
-}
-
-template<class t>
-void ppVectorController<t>::add(ofJson settings)
-{
-	try {
-		add(settings.value("name", "not_found"), settings);
-		setFresh(true);
-	}
-	catch (...) {
-		ofLog(OF_LOG_ERROR) << "Failed to add Object with name " << settings.value("name", "not_found");
-		return;
 	}
 }
 
@@ -169,29 +154,23 @@ void ppVectorController<t>::renderImGuiSettings()
 		_bClean     = false;
 		_bDuplicate = false;
 
-		// Order Top Down to Reflect Drawing order
+		// Render top down to reflect drawing order
 		for (int i = (int)v_Objects.size() - 1; i >= 0; i--) {
 			if (v_Objects[i]->isAlive()) {
 				ImGui::Indent();
 				ImGui::PushID(i);
+				ImGui::BeginGroup();
 
 				v_Objects[i]->renderImGuiSettings();
-				// We will need to refactor this at some point
-				// collapsing headers are not the best for drag and drop
-				// And we should be more free with ->renderImGuiSettings()?
-	
-				// BeginDragDropSource() allows dragging an item
+
+				ImGui::EndGroup();
 				if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_SourceAllowNullID)) {
-					// Set payload to contain the index of the object being dragged
-					int index = i; // Using i directly since it's already in reverse order
-					ImGui::SetDragDropPayload("OBJECT_INDEX", &index, sizeof(int));
+					ImGui::SetDragDropPayload("OBJECT_INDEX", &i, sizeof(i));
 					ImGui::Text("Drag to reorder");
 					ImGui::EndDragDropSource();
 				}
 
-				// BeginDragDropTarget() allows dropping onto this item
 				if (ImGui::BeginDragDropTarget()) {
-					// Accept payload of type "OBJECT_INDEX" and reorder objects accordingly
 					if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("OBJECT_INDEX")) {
 						IM_ASSERT(payload->DataSize == sizeof(int));
 						int payloadIndex = *(const int *)payload->Data;
@@ -214,8 +193,6 @@ void ppVectorController<t>::renderImGuiSettings()
 				_bDuplicate = true;
 			}
 		}
-
-
 	}
 	ImGui::PopID();
 }

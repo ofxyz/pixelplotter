@@ -1,0 +1,160 @@
+{
+    "plotCanvas": {
+        "canvasHeight": 474,
+        "canvasTitle": "We need another future!",
+        "canvasWidth": 474,
+        "colors": {
+            "plotcanvas": {
+                "a": 1.0,
+                "b": 0.0,
+                "g": 0.0,
+                "r": 1.0
+            }
+        },
+        "drawFilters": {
+            "DrawFilters": [
+                {
+                    "_isOpen": false,
+                    "name": "Pixelate2",
+                    "pixelMirror": false,
+                    "pixelSettings": {
+                        "name": "Separate CMYK Rect 01"
+                    },
+                    "pixelType": "Separate CMYK Rect 01",
+                    "tilesX": 66,
+                    "tilesY": 72,
+                    "useCurve": false,
+                    "xCurve": [
+                        [
+                            -10000.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.0
+                        ]
+                    ],
+                    "yCurve": [
+                        [
+                            -10000.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.0
+                        ],
+                        [
+                            0.0,
+                            0.0
+                        ]
+                    ]
+                },
+                {
+                    "_isOpen": false,
+                    "name": "Mesh",
+                    "pixelMirror": true,
+                    "pixelType": "Normal",
+                    "rotationOffset": 5.800000190734863,
+                    "tilesX": 115,
+                    "tilesY": 124
+                }
+            ]
+        },
+        "exportWithTimeStamp": true
+    },
+    "source": [
+        {
+            "Generator": {
+                "_isOpen": true,
+                "bVisible": true,
+                "colors": {
+                    "c_bg": {
+                        "a": 0.0,
+                        "b": 1.0,
+                        "g": 1.0,
+                        "r": 1.0
+                    },
+                    "c_x": {
+                        "a": 1.0,
+                        "b": 1.0,
+                        "g": 1.0,
+                        "r": 1.0
+                    }
+                },
+                "count": 101,
+                "name": "Stripes",
+                "offset": -0.2529999911785126
+            },
+            "bUpdateCanvasOnSourceLoad": true,
+            "source": "Stripes"
+        }
+    ]
+}

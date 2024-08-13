@@ -340,7 +340,7 @@
     <ClCompile Include="src\ppBase\ppSurface.cpp">
       <Filter>src\ppBase</Filter>
     </ClCompile>
-    <ClCompile Include="src\ppBase\ppEntityManager.cpp">
+    <ClCompile Include="src\ppBase\ppBaseManager.cpp">
       <Filter>src\ppBase</Filter>
     </ClCompile>
     <ClCompile Include="src\controllers\vc_Surface.cpp">
@@ -1667,7 +1667,7 @@
     <ClInclude Include="src\ppBase\ppSurface.h">
       <Filter>src\ppBase</Filter>
     </ClInclude>
-    <ClInclude Include="src\ppBase\ppEntityManager.h">
+    <ClInclude Include="src\ppBase\ppBaseManager.h">
       <Filter>src\ppBase</Filter>
     </ClInclude>
     <ClInclude Include="src\controllers\vc_Surface.h">

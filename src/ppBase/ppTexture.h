@@ -29,5 +29,4 @@ protected:
 	ofFbo _tFbo;
 	ofTexture _texture;
 	ImVec4 cBG;
-
 };

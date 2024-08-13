@@ -9,13 +9,11 @@ int main() {
 #ifdef TARGET_OPENGLES
 	settings.setGLESVersion(2);
 #else
-	// Programmable pipeline
-	//settings.setGLVersion(3, 2); 
+	// Programmable pipeline (3, 2)
 	settings.setGLVersion(4, 6);
 #endif
 
-	settings.title = ofApp::getWindowTitle();
-	// Until we can drag main menu and can switch between full screen
+	settings.title = "PixelPlotter v0.610";
 	settings.decorated = true;
 	settings.windowMode = OF_WINDOW;
 	settings.setSize(1600, 900);
