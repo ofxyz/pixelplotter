@@ -649,7 +649,7 @@ void ppGui::loadPresetDir()
 
 std::string ppGui::getPresetAbsolutePath(int presetIndex)
 {
-	return presetFiles[presetIndex].getAbsolutePath();
+	return presetFiles[presetIndex].getAbsolutePath().generic_string();
 }
 
 ofJson ppGui::getPresets(int presetIndex)

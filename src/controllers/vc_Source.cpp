@@ -168,13 +168,13 @@ void SourceController::loadSourceIndex() {
 		}
 	}
 	else if (currentSourceIndex < videoDevices.size() + videoFiles.size()) {
-		loadVideo(videoFiles[currentSourceIndex - videoDevices.size()].getAbsolutePath());
+		loadVideo(videoFiles[currentSourceIndex - videoDevices.size()].getAbsolutePath().generic_string());
 	}
 	else if (currentSourceIndex < videoDevices.size() + videoFiles.size() + gC.v_objectNames.size()) {
 		loadGenerator(gC.v_objectNames[currentSourceIndex - videoDevices.size() - videoFiles.size()]);
 	}
 	else {
-		loadImage(imgFiles[currentSourceIndex - videoDevices.size() - videoFiles.size() - gC.v_objectNames.size()].getAbsolutePath());
+		loadImage(imgFiles[currentSourceIndex - videoDevices.size() - videoFiles.size() - gC.v_objectNames.size()].getAbsolutePath().generic_string());
 	}
 
 	isResized = true;
