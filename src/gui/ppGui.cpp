@@ -23,6 +23,7 @@ ppGui::ppGui()
 	_bShowToolPalette = false;
 	_bShowStyleEditor = false;
 	_bShowMetricsWindow = false;
+	_bShowInfoPanel = true;
 
 	_bShowFps = true;
 
@@ -125,11 +126,42 @@ void ppGui::update()
 		loadPresets(getCurrentPresets());
 		_bLoadSettingsNextFrame = false;
 	}
+	windowMousePos.x = ImGui::GetIO().MousePos.x - ofGetWindowPositionX();
+	windowMousePos.y = ImGui::GetIO().MousePos.y - ofGetWindowPositionY();
 }
 
 void ppGui::draw()
 {
 	ofxGui.begin();
+
+	// 6  3  5
+	// 4     4
+	// 5  3  6
+	if ( windowMousePos.x < windowResizeMarging || windowMousePos.x > (ofGetWidth() - windowResizeMarging)) {
+		// LEFT
+		if (windowMousePos.x < windowResizeMarging && windowMousePos.y < windowResizeMarging) {
+			ImGui::SetMouseCursor(6);
+		}
+		else if (windowMousePos.x < windowResizeMarging && windowMousePos.y > (ofGetHeight() - windowResizeMarging)) {
+			ImGui::SetMouseCursor(5);
+		}
+		// RIGHT
+		else if (windowMousePos.x > (ofGetWidth() - windowResizeMarging) && windowMousePos.y < windowResizeMarging) {
+			ImGui::SetMouseCursor(5);
+		}
+		else if (windowMousePos.x > (ofGetWidth() - windowResizeMarging) && windowMousePos.y > (ofGetHeight() - windowResizeMarging)) {
+			ImGui::SetMouseCursor(6);
+		}
+		else {
+			ImGui::SetMouseCursor(4);
+		}
+	}
+	else if (windowMousePos.y < windowResizeMarging || windowMousePos.y >(ofGetHeight() - windowResizeMarging)) {
+		ImGui::SetMouseCursor(3);
+	}
+	else {
+		ImGui::SetMouseCursor(0);
+	}
 
 	if (_bShowGui) {
 		showMainDock();
@@ -141,6 +173,7 @@ void ppGui::draw()
 		if (_bShowZoomViewer)       showZoomViewer();
 		if (_bShowCanvasWindow)     showCanvasWindow();
 		if (_bShowPropertiesWindow) showPropertiesWindow();
+		if (_bShowInfoPanel)        showInfoPanel();
 
 		if (_bShowStyleEditor)      ImGui::ShowStyleEditor();
 		if (_bShowMetricsWindow)    ImGui::ShowMetricsWindow();
@@ -167,7 +200,6 @@ void ppGui::showMainMenuBar()
 
 	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(5, 8));
 	ImGui::BeginMainMenuBar();
-	ImGui::PopStyleVar();
 
 	if (ImGui::BeginMenu("PixelPlotter", &_bShowMainMenuBar)) {
 		ImGui::Checkbox("Hide GUI [g]", &_bShowGui);
@@ -276,14 +308,21 @@ void ppGui::showMainMenuBar()
 		}
 	}
 
-	if (ImGui::InvisibleButton("Drag the window", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y))) {
+	static ImVec2 butSize = {30,30};
+	if (ImGui::InvisibleButton("Drag the window", ImVec2(ImGui::GetContentRegionAvail().x-butSize.x, ImGui::GetContentRegionAvail().y))) {
 		dragWindow = false; // On release
 	}
 	if (ImGui::IsItemClicked()) { // On Click
 		dragWindow = true;
 	}
+	
+	// Needs to be encoded: ×
+	if (ImGui::Button("X", butSize)) {
+		ofExit();
+	}
 
 	ImGui::EndMainMenuBar();
+	ImGui::PopStyleVar();
 }
 
 void ppGui::showZoomViewer()
@@ -552,6 +591,25 @@ void ppGui::showProjectTree()
 		}
 	*/
 
+	ImGui::End();
+}
+
+void ppGui::showInfoPanel() {
+	static bool relative = false;
+	ImGui::Begin("Info Panel", &_bShowInfoPanel);
+	ImGui::PushItemWidth(60);
+	float mousex = ImGui::GetIO().MousePos.x;
+	float mousey = ImGui::GetIO().MousePos.y;
+	if (relative) {
+		mousex -= ofGetWindowPositionX();
+		mousey -= ofGetWindowPositionY();
+	}
+	ImGui::DragFloat("Mouse X", &mousex);
+	ImGui::SameLine();
+	ImGui::DragFloat("Mouse Y", &mousey);
+	ImGui::SameLine();
+	ImGui::Checkbox("Relative", &relative);
+	ImGui::PopItemWidth();
 	ImGui::End();
 }
 

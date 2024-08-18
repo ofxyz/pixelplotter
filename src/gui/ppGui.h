@@ -25,7 +25,8 @@ public:
 	void showCanvasWindow();
 	void showPropertiesWindow();
 	void showTextureBrowser();
-	
+	void showInfoPanel();
+
 	// Visibility
 	bool guiVisible();
 	void setGuiVisible(bool bVisible);
@@ -50,9 +51,11 @@ public:
 	
 	std::shared_ptr<ppDrawObject> _drawTexture;
 	bool dragWindow = false;
+	int windowResizeMarging = 5;
+	glm::vec2 windowMousePos;
 
 private:
-	
+
 	// TODO: Palette, Window, Panel, Have some definitions? Is Canvas a Window panel or Palette?
 
 	// GUI TRACKERS
@@ -73,6 +76,7 @@ private:
 	bool _bShowMetricsWindow;
 	bool _bShowPropertiesWindow;
 	bool _bShowStyleEditor;
+	bool _bShowInfoPanel;
 	bool _bShowFps;
 
 	// GUI Next Frame Action Tracker

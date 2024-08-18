@@ -14,7 +14,7 @@ int main() {
 #endif
 
 	settings.title = "PixelPlotter v0.610";
-	settings.decorated = true;
+	settings.decorated = false;
 	settings.windowMode = OF_WINDOW;
 	settings.setSize(1600, 900);
 	settings.setPosition(glm::vec2(50, 50));
