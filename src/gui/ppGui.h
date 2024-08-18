@@ -49,6 +49,7 @@ public:
 	ImVec4 availableSpace();
 	
 	std::shared_ptr<ppDrawObject> _drawTexture;
+	bool dragWindow = false;
 
 private:
 	

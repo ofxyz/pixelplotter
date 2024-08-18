@@ -37,6 +37,10 @@ void ofApp::exit() {
 
 //--------------------------------------------------------------
 void ofApp::update() {
+	if (myGui.dragWindow) {
+		ofSetWindowPosition(ofGetWindowPositionX() + ImGui::GetIO().MouseDelta.x, ofGetWindowPositionY() + ImGui::GetIO().MouseDelta.y);
+	}
+
 	myGui.update();
 
 	if (!myGui.renderingPaused()) {

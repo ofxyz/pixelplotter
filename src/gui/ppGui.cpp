@@ -114,6 +114,12 @@ void ppGui::setup()
 
 void ppGui::update()
 {
+	if (dragWindow) {
+		if (ImGui::IsMouseReleased(0)) {
+			dragWindow = false;
+		}
+	}
+
 	if (_bLoadSettingsNextFrame)
 	{
 		loadPresets(getCurrentPresets());
@@ -268,6 +274,13 @@ void ppGui::showMainMenuBar()
 			}
 			ImGui::EndMenu();
 		}
+	}
+
+	if (ImGui::InvisibleButton("Drag the window", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y))) {
+		dragWindow = false; // On release
+	}
+	if (ImGui::IsItemClicked()) { // On Click
+		dragWindow = true;
 	}
 
 	ImGui::EndMainMenuBar();
