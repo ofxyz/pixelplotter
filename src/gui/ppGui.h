@@ -32,7 +32,9 @@ public:
 	void setGuiVisible(bool bVisible);
 	bool menuBarVisible();
 	void setmenuBarVisible(bool bVisible);
-	
+	bool windowsVissible();
+	void setWindowsVisible(bool bVisible);
+
 	bool renderingPaused();
 	void setRenderingPaused(bool bPaused);
 
@@ -66,6 +68,7 @@ private:
 
 	// GUI Visibility Trackers
 	bool _bShowGui;
+	bool _bShowWindows;
 	bool _bShowMainMenuBar;
 	bool _bShowProjectTree;
 	bool _bShowTextureBrowser;

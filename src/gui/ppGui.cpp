@@ -12,6 +12,7 @@ ppGui::ppGui()
 {
 	pixelplotter = (ofApp*)ofGetAppPtr();
 	_bShowGui = true;
+	_bShowWindows = true;
 	_bShowMainMenuBar = true;
 
 	_bShowProjectTree = false;
@@ -166,17 +167,19 @@ void ppGui::draw()
 	if (_bShowGui) {
 		showMainDock();
 		if (_bShowMainMenuBar)      showMainMenuBar();
-		if (_bShowToolPalette)      showToolPalette();
-		if (_bShowPresetPanel)      showPresetPanel();
-		if (_bShowProjectTree)      showProjectTree();
-		if (_bShowTextureBrowser)   showTextureBrowser();
-		if (_bShowZoomViewer)       showZoomViewer();
-		if (_bShowCanvasWindow)     showCanvasWindow();
-		if (_bShowPropertiesWindow) showPropertiesWindow();
-		if (_bShowInfoPanel)        showInfoPanel();
+		if (_bShowWindows) {
+			if (_bShowToolPalette)      showToolPalette();
+			if (_bShowPresetPanel)      showPresetPanel();
+			if (_bShowProjectTree)      showProjectTree();
+			if (_bShowTextureBrowser)   showTextureBrowser();
+			if (_bShowZoomViewer)       showZoomViewer();
+			if (_bShowCanvasWindow)     showCanvasWindow();
+			if (_bShowPropertiesWindow) showPropertiesWindow();
+			if (_bShowInfoPanel)        showInfoPanel();
 
-		if (_bShowStyleEditor)      ImGui::ShowStyleEditor();
-		if (_bShowMetricsWindow)    ImGui::ShowMetricsWindow();
+			if (_bShowStyleEditor)      ImGui::ShowStyleEditor();
+			if (_bShowMetricsWindow)    ImGui::ShowMetricsWindow();
+		}	
 	}
 
 	ofxGui.end();
@@ -204,7 +207,8 @@ void ppGui::showMainMenuBar()
 	if (ImGui::BeginMenu("PixelPlotter", &_bShowMainMenuBar)) {
 		ImGui::Checkbox("Hide GUI [g]", &_bShowGui);
 		ImGui::SameLine(); ImGui::HelpMarker("Hide the Graphical User Interface press [g] to show");
-
+		ImGui::Checkbox("Hide Windows [tab]", &_bShowWindows);
+		ImGui::SameLine(); ImGui::HelpMarker("Hide all windows press [tab] to show");
 		// Sub Menu 
 		//ImGui::Separator();
 		if (ImGui::BeginMenu("Windows...")) {
@@ -680,6 +684,15 @@ bool ppGui::menuBarVisible()
 void ppGui::setmenuBarVisible(bool bVisible)
 {
 	_bShowMainMenuBar = bVisible;
+}
+
+bool ppGui::windowsVissible() {
+	return _bShowWindows;
+}
+
+void ppGui::setWindowsVisible(bool bVisible)
+{
+	_bShowWindows = bVisible;
 }
 
 bool ppGui::renderingPaused()

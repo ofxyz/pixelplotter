@@ -22,5 +22,6 @@ int main() {
 	settings.multiMonitorFullScreen = false;
 
 	ofCreateWindow(settings);
+
 	ofRunApp(new ofApp());
 }

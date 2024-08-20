@@ -89,6 +89,10 @@ void ofApp::keyPressed(int key) {
 	if (key == 'g' || key == 'G') {
 		myGui.setGuiVisible(!myGui.guiVisible());
 	}
+	else if (key == OF_KEY_TAB)
+	{
+		myGui.setWindowsVisible(!myGui.windowsVissible());
+	}
 	else if (key == 'p' || key == 'P')
 	{
 		myGui.setRenderingPaused(!myGui.renderingPaused());
