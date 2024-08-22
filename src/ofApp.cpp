@@ -38,7 +38,8 @@ void ofApp::exit() {
 //--------------------------------------------------------------
 void ofApp::update() {
 	if (myGui.dragWindow) {
-		ofSetWindowPosition(ofGetWindowPositionX() + ImGui::GetIO().MouseDelta.x, ofGetWindowPositionY() + ImGui::GetIO().MouseDelta.y);
+		ofSetWindowPosition(ofGetWindowPositionX() + (myGui.io.MousePos.x - myGui.lastClickedPos.x), ofGetWindowPositionY() + (myGui.io.MousePos.y - myGui.lastClickedPos.y));
+		myGui.lastClickedPos = myGui.io.MousePos;
 	}
 
 	myGui.update();

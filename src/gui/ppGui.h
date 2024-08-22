@@ -12,6 +12,8 @@ public:
 	ofApp* pixelplotter{ nullptr };
 	ofxImGui::Gui ofxGui;
 
+	ImGuiIO io;
+
 	void setup();
 	void update();
 	
@@ -55,6 +57,7 @@ public:
 	bool dragWindow = false;
 	int windowResizeMarging = 5;
 	glm::vec2 windowMousePos;
+	glm::vec2 lastClickedPos;
 
 private:
 

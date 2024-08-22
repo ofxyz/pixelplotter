@@ -11,6 +11,9 @@
 ppGui::ppGui()
 {
 	pixelplotter = (ofApp*)ofGetAppPtr();
+
+	lastClickedPos = { 0, 0 };
+
 	_bShowGui = true;
 	_bShowWindows = true;
 	_bShowMainMenuBar = true;
@@ -43,7 +46,9 @@ void ppGui::setup()
 	pixelplotter = (ofApp*)ofGetAppPtr();
 	ofxGui.setup(nullptr, true, ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable, true, true);
 
-	ImGui::GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
+	io = ImGui::GetIO();
+
+	io.ConfigWindowsMoveFromTitleBarOnly = true;
 
 	// Font Setup
 	float baseFontSize = 13.0f; // 13.0f is the size of the default font. Change to the font size you use.
@@ -112,10 +117,13 @@ void ppGui::setup()
 	style->Colors[ImGuiCol_PopupBg] = style->Colors[ImGuiCol_MenuBarBg];
 
 	loadPresetDir();
+
 }
 
 void ppGui::update()
 {
+	io = ImGui::GetIO();
+
 	if (dragWindow) {
 		if (ImGui::IsMouseReleased(0)) {
 			dragWindow = false;
@@ -127,8 +135,8 @@ void ppGui::update()
 		loadPresets(getCurrentPresets());
 		_bLoadSettingsNextFrame = false;
 	}
-	windowMousePos.x = ImGui::GetIO().MousePos.x - ofGetWindowPositionX();
-	windowMousePos.y = ImGui::GetIO().MousePos.y - ofGetWindowPositionY();
+	windowMousePos.x = io.MousePos.x - ofGetWindowPositionX();
+	windowMousePos.y = io.MousePos.y - ofGetWindowPositionY();
 }
 
 void ppGui::draw()
@@ -136,9 +144,9 @@ void ppGui::draw()
 	ofxGui.begin();
 
 	// 6  3  5
-	// 4     4
+	// 4  0  4
 	// 5  3  6
-	if ( windowMousePos.x < windowResizeMarging || windowMousePos.x > (ofGetWidth() - windowResizeMarging)) {
+	if (((windowMousePos.x < windowResizeMarging && windowMousePos.x >= 0) || ((windowMousePos.x > (ofGetWidth() - windowResizeMarging))) && windowMousePos.x <= ofGetWidth())) {
 		// LEFT
 		if (windowMousePos.x < windowResizeMarging && windowMousePos.y < windowResizeMarging) {
 			ImGui::SetMouseCursor(6);
@@ -157,7 +165,7 @@ void ppGui::draw()
 			ImGui::SetMouseCursor(4);
 		}
 	}
-	else if (windowMousePos.y < windowResizeMarging || windowMousePos.y >(ofGetHeight() - windowResizeMarging)) {
+	else if (((windowMousePos.y < windowResizeMarging) && (windowMousePos.y >= 0)) || ((windowMousePos.y > (ofGetHeight() - windowResizeMarging)) && (windowMousePos.y <= ofGetHeight())) ) {
 		ImGui::SetMouseCursor(3);
 	}
 	else {
@@ -318,8 +326,9 @@ void ppGui::showMainMenuBar()
 	}
 	if (ImGui::IsItemClicked()) { // On Click
 		dragWindow = true;
+		lastClickedPos = io.MousePos;
 	}
-	
+
 	// Needs to be encoded: ×
 	if (ImGui::Button("X", butSize)) {
 		ofExit();
@@ -348,7 +357,6 @@ void ppGui::showZoomViewer()
 
 	static float scale = 1;
 
-	ImGuiIO io = ImGui::GetIO();
 	ImVec2 pos = ImGui::GetCursorScreenPos();
 
 	// Where is the mouse in the region
@@ -362,7 +370,7 @@ void ppGui::showZoomViewer()
 	ImVec2 uv1 = ImVec2((mouseNormX + (availableRegion.x * scale)) / (my_tex_w), (mouseNormY + (availableRegion.y * scale)) / (my_tex_h));
 
 	ImGui::Image(textureID, availableRegion, uv0, uv1);
-	if (ImGui::IsItemHovered()) scale = std::abs(scale + (ImGui::GetIO().MouseWheel)*0.01);
+	if (ImGui::IsItemHovered()) scale = std::abs(scale + (io.MouseWheel)*0.01);
 
 	ImGui::End();
 }
@@ -602,8 +610,8 @@ void ppGui::showInfoPanel() {
 	static bool relative = false;
 	ImGui::Begin("Info Panel", &_bShowInfoPanel);
 	ImGui::PushItemWidth(60);
-	float mousex = ImGui::GetIO().MousePos.x;
-	float mousey = ImGui::GetIO().MousePos.y;
+	float mousex = io.MousePos.x;
+	float mousey = io.MousePos.y;
 	if (relative) {
 		mousex -= ofGetWindowPositionX();
 		mousey -= ofGetWindowPositionY();
