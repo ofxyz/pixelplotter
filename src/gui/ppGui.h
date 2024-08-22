@@ -60,7 +60,7 @@ public:
 	glm::vec2 lastClickedPos;
 
 private:
-
+	void updateCursor();
 	// TODO: Palette, Window, Panel, Have some definitions? Is Canvas a Window panel or Palette?
 
 	// GUI TRACKERS

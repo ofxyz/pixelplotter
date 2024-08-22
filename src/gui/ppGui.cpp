@@ -124,7 +124,12 @@ void ppGui::update()
 {
 	io = ImGui::GetIO();
 
+	windowMousePos.x = io.MousePos.x - ofGetWindowPositionX();
+	windowMousePos.y = io.MousePos.y - ofGetWindowPositionY();
+
 	if (dragWindow) {
+		ofSetWindowPosition(ofGetWindowPositionX() + (io.MousePos.x - lastClickedPos.x), ofGetWindowPositionY() + (io.MousePos.y - lastClickedPos.y));
+		lastClickedPos = io.MousePos;
 		if (ImGui::IsMouseReleased(0)) {
 			dragWindow = false;
 		}
@@ -135,42 +140,13 @@ void ppGui::update()
 		loadPresets(getCurrentPresets());
 		_bLoadSettingsNextFrame = false;
 	}
-	windowMousePos.x = io.MousePos.x - ofGetWindowPositionX();
-	windowMousePos.y = io.MousePos.y - ofGetWindowPositionY();
 }
 
 void ppGui::draw()
 {
 	ofxGui.begin();
 
-	// 6  3  5
-	// 4  0  4
-	// 5  3  6
-	if (((windowMousePos.x < windowResizeMarging && windowMousePos.x >= 0) || ((windowMousePos.x > (ofGetWidth() - windowResizeMarging))) && windowMousePos.x <= ofGetWidth())) {
-		// LEFT
-		if (windowMousePos.x < windowResizeMarging && windowMousePos.y < windowResizeMarging) {
-			ImGui::SetMouseCursor(6);
-		}
-		else if (windowMousePos.x < windowResizeMarging && windowMousePos.y > (ofGetHeight() - windowResizeMarging)) {
-			ImGui::SetMouseCursor(5);
-		}
-		// RIGHT
-		else if (windowMousePos.x > (ofGetWidth() - windowResizeMarging) && windowMousePos.y < windowResizeMarging) {
-			ImGui::SetMouseCursor(5);
-		}
-		else if (windowMousePos.x > (ofGetWidth() - windowResizeMarging) && windowMousePos.y > (ofGetHeight() - windowResizeMarging)) {
-			ImGui::SetMouseCursor(6);
-		}
-		else {
-			ImGui::SetMouseCursor(4);
-		}
-	}
-	else if (((windowMousePos.y < windowResizeMarging) && (windowMousePos.y >= 0)) || ((windowMousePos.y > (ofGetHeight() - windowResizeMarging)) && (windowMousePos.y <= ofGetHeight())) ) {
-		ImGui::SetMouseCursor(3);
-	}
-	else {
-		ImGui::SetMouseCursor(0);
-	}
+	updateCursor();
 
 	if (_bShowGui) {
 		showMainDock();
@@ -771,4 +747,35 @@ ImVec4 ppGui::availableSpace()
 	rVal.w = centralNode->Pos.y - ofGetWindowPositionY();
 
 	return rVal;
+}
+
+void ppGui::updateCursor() {
+	// 6  3  5
+	// 4  0  4
+	// 5  3  6
+	if (((windowMousePos.x < windowResizeMarging && windowMousePos.x >= 0) || ((windowMousePos.x > (ofGetWidth() - windowResizeMarging))) && windowMousePos.x <= ofGetWidth())) {
+		// LEFT
+		if (windowMousePos.x < windowResizeMarging && windowMousePos.y < windowResizeMarging) {
+			ImGui::SetMouseCursor(6);
+		}
+		else if (windowMousePos.x < windowResizeMarging && windowMousePos.y >(ofGetHeight() - windowResizeMarging)) {
+			ImGui::SetMouseCursor(5);
+		}
+		// RIGHT
+		else if (windowMousePos.x > (ofGetWidth() - windowResizeMarging) && windowMousePos.y < windowResizeMarging) {
+			ImGui::SetMouseCursor(5);
+		}
+		else if (windowMousePos.x > (ofGetWidth() - windowResizeMarging) && windowMousePos.y > (ofGetHeight() - windowResizeMarging)) {
+			ImGui::SetMouseCursor(6);
+		}
+		else {
+			ImGui::SetMouseCursor(4);
+		}
+	}
+	else if (((windowMousePos.y < windowResizeMarging) && (windowMousePos.y >= 0)) || ((windowMousePos.y > (ofGetHeight() - windowResizeMarging)) && (windowMousePos.y <= ofGetHeight()))) {
+		ImGui::SetMouseCursor(3);
+	}
+	else {
+		ImGui::SetMouseCursor(0);
+	}
 }
