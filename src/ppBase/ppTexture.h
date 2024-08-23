@@ -22,7 +22,8 @@ public:
 	void draw(glm::vec2 position);
 	void draw(glm::vec2 position, glm::vec2 dimensions);
 
-	void allocate(unsigned int width, unsigned int height, ofImageType imageType = OF_IMAGE_COLOR_ALPHA);
+	// GLint internalformat ///< GL_RGBA, GL_RGBA16F_ARB, GL_RGBA32F_ARB, GL_LUMINANCE32F_ARB etc
+	void allocate(unsigned int width, unsigned int height, GLint internalformat = GL_RGBA);
 	void resize(unsigned int width, unsigned int height);
 
 protected:

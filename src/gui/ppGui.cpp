@@ -3,7 +3,7 @@
 #include "ofApp.h"
 #include "ofx2d.h"
 #include "ppGui.h"
-#include "ImGui_General.h"
+//  ImGui headers only needed for this class
 #include "IconsFontAwesome5.h"
 
 #define FONT_FILE_PATH "fonts/InputSans-Regular.ttf"
@@ -163,7 +163,8 @@ void ppGui::draw()
 
 			if (_bShowStyleEditor)      ImGui::ShowStyleEditor();
 			if (_bShowMetricsWindow)    ImGui::ShowMetricsWindow();
-		}	
+		}
+		showPopups();
 	}
 
 	ofxGui.end();
@@ -187,12 +188,13 @@ void ppGui::showMainMenuBar()
 
 	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(5, 8));
 	ImGui::BeginMainMenuBar();
+	ImGui::PopStyleVar();
 
 	if (ImGui::BeginMenu("PixelPlotter", &_bShowMainMenuBar)) {
 		ImGui::Checkbox("Hide GUI [g]", &_bShowGui);
-		ImGui::SameLine(); ImGui::HelpMarker("Hide the Graphical User Interface press [g] to show");
+		ImGui::SameLine(); ImGui::HelpMarker("Show/Hide the Graphical User Interface [g]");
 		ImGui::Checkbox("Hide Windows [tab]", &_bShowWindows);
-		ImGui::SameLine(); ImGui::HelpMarker("Hide all windows press [tab] to show");
+		ImGui::SameLine(); ImGui::HelpMarker("Show/Hide all windows [tab]");
 		// Sub Menu 
 		//ImGui::Separator();
 		if (ImGui::BeginMenu("Windows...")) {
@@ -206,6 +208,10 @@ void ppGui::showMainMenuBar()
 			ImGui::Checkbox("Metrics Window", &_bShowMetricsWindow);
 			ImGui::Checkbox("Texture Window", &_bShowTextureBrowser);
 			ImGui::EndMenu();
+		}
+
+		if (ImGui::MenuItem("Export As...")) {
+			exportCurrentView();
 		}
 
 		ImGui::Separator();
@@ -311,7 +317,6 @@ void ppGui::showMainMenuBar()
 	}
 
 	ImGui::EndMainMenuBar();
-	ImGui::PopStyleVar();
 }
 
 void ppGui::showZoomViewer()
@@ -778,4 +783,42 @@ void ppGui::updateCursor() {
 	else {
 		ImGui::SetMouseCursor(0);
 	}
+}
+
+void ppGui::exportCurrentView() {
+	if (_drawTexture != nullptr) {
+		notifyPopup("Unable to export current view.\nNULL Pointer Exception");
+	}
+	else {
+		notifyPopup("Unable to export current view.\nNULL Pointer Exception");
+	}
+}
+
+// Override ID is a working solution see
+// https://github.com/ocornut/imgui/issues/331
+void ppGui::notifyPopup(std::string msg) {
+	sNotifyPopup = msg;
+	NotifyPopupID = ImHashStr("Notification");
+	ImGui::PushOverrideID(NotifyPopupID);
+	ImGui::OpenPopup("Notification");
+	ImGui::PopID();
+}
+
+void ppGui::showPopups() {
+	// Always center this window when appearing
+	ImVec2 center = ImGui::GetMainViewport()->GetCenter();
+	ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+	ImGui::PushOverrideID(NotifyPopupID);
+	if (ImGui::BeginPopupModal("Notification", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::Dummy(ImVec2(0.0f, 2.0f));
+		ImGui::Text(sNotifyPopup.c_str());
+		ImGui::Dummy(ImVec2(0.0f, 10.0f));
+
+		if (ImGui::Button("OK", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+		ImGui::SetItemDefaultFocus();
+		ImGui::EndPopup();
+	}
+	ImGui::PopID();
 }

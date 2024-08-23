@@ -1,7 +1,6 @@
 #pragma once
 
-#include "ofxImGui.h"
-#include "ofJson.h"
+#include "ImGui_General.h"
 #include "ppDrawObject.h"
 
 class ofApp;
@@ -28,6 +27,7 @@ public:
 	void showPropertiesWindow();
 	void showTextureBrowser();
 	void showInfoPanel();
+	void showPopups();
 
 	// Visibility
 	bool guiVisible();
@@ -61,10 +61,16 @@ public:
 
 private:
 	void updateCursor();
+	void exportCurrentView();
 	// TODO: Palette, Window, Panel, Have some definitions? Is Canvas a Window panel or Palette?
+
+	void notifyPopup(std::string msg);
 
 	// GUI TRACKERS
 	ImGuiID MainDockNodeID;
+	ImGuiID NotifyPopupID;
+	std::string sNotifyPopup = "";
+
 	std::stringstream fpsStringStream;
 	std::shared_ptr<ppBase> _selectedItem;
 	bool _bRenderingPaused;

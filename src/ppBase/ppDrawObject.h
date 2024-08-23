@@ -2,6 +2,9 @@
 #include "ppResource.h"
 #include "ofGraphicsConstants.h"
 
+//! A drawObject is any object that can be drawn to the screen
+//! Meaning it will have a draw() function
+
 class ppDrawObject : public virtual ppResource {
 public:
 	ppDrawObject();
@@ -21,14 +24,14 @@ public:
 	void setWidth(unsigned int width);
 	void setHeight(unsigned int height);
 
-	ofImageType getImageType();
+	GLint getImageType();
 
 protected:
 	unsigned int _width = 800;
 	unsigned int _height = 600;
-	ofImageType _imageType = OF_IMAGE_COLOR_ALPHA;
-	GLint minFilter = GL_NEAREST;
-	GLint magFilter = GL_NEAREST;
+	GLint _internalformat = GL_RGBA;
+	GLint _minFilter = GL_NEAREST;
+	GLint _magFilter = GL_NEAREST;
 	ofBlendMode _blendmode = OF_BLENDMODE_DISABLED;
 
 private:

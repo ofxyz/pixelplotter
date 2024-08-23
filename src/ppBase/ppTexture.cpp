@@ -2,7 +2,6 @@
 #include "ofApp.h"
 
 ppTexture::ppTexture() {
-	//allocate(getWidth(), getHeight(), GL_RGBA);
 	setName("Untitled");
 	addProperty("Name", EPT_STRING, &_sName);
 	addProperty("Width", EPT_UINT, &_width);
@@ -90,14 +89,14 @@ void ppTexture::draw(glm::vec2 pos, glm::vec2 dim) {
 	draw(pos.x, pos.y, dim.x, dim.y);
 }
 
-void ppTexture::allocate(unsigned int width, unsigned int height, ofImageType imageType /*= OF_IMAGE_COLOR_ALPHA*/) {
+void ppTexture::allocate(unsigned int width, unsigned int height, GLint internalformat /*= GL_RGBA*/) {
 	_width = width;
 	_height = height;
-	_imageType = imageType;
-	_tFbo.allocate(_width, _height, imageType);
-	_tFbo.getTexture().setTextureMinMagFilter(minFilter, magFilter);
+	_internalformat = internalformat;
+	_tFbo.allocate(_width, _height, internalformat);
+	_tFbo.getTexture().setTextureMinMagFilter(_minFilter, _magFilter);
 }
 
 void ppTexture::resize(unsigned int width, unsigned int height) {
-	allocate(width, height, _imageType);
+	allocate(width, height, _internalformat);
 }

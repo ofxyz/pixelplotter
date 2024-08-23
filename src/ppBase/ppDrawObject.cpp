@@ -45,7 +45,7 @@ void ppDrawObject::setHeight(unsigned int height)
 	_height = height;
 }
 
-ofImageType ppDrawObject::getImageType()
+GLint ppDrawObject::getImageType()
 {
-	return _imageType;
+	return _internalformat;
 }
