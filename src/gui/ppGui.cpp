@@ -179,7 +179,7 @@ void ppGui::showMainDock()
 	dockingFlags |= ImGuiDockNodeFlags_NoDockingInCentralNode;
 
 	// Define the ofWindow as a docking space
-	MainDockNodeID = ImGui::DockSpaceOverViewport(NULL, dockingFlags); // Also draws the docked windows
+	MainDockNodeID = ImGui::DockSpaceOverViewport(0, NULL, dockingFlags); // Also draws the docked windows
 }
 
 void ppGui::showMainMenuBar()

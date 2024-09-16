@@ -533,7 +533,7 @@ namespace ImGui
 
         int currentSelection = selection ? *selection : -1;
 
-        const bool hovered = ImGui::ItemHoverable(bb, id);
+        const bool hovered = ImGui::ItemHoverable(bb, id, g.LastItemData.InFlags);
 
         int pointCount = 0;
         while (pointCount < maxpoints && points[pointCount].x >= rangeMin.x)
